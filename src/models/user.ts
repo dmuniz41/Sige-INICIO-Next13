@@ -1,30 +1,30 @@
-const { Schema, model, models } = require("mongoose");
+import { Schema, model, models } from "mongoose";
 
 const UserSchema = new Schema({
   user: {
     type: String,
-    require: [true, 'user is required'],
+    required: [true, 'user is required'],
     unique: true,
   },
   userName: {
     type: String,
-    require: [true, 'userName is required'],
+    required: [true, 'userName is required'],
   },
   lastName: {
     type: String,
-    require: [true, 'lastName is required'],
+    required: [true, 'lastName is required'],
   },
   privileges: {
     type: [],
-    require: [true, 'privileges are required'],
+    required: [true, 'privileges are required'],
   },
   password: {
     type: String,
-    require: [true, 'password is required'],
+    required: [true, 'password is required'],
   },
   area: {
     type: String,
-    require: [true, 'area is required'],
+    required: [true, 'area is required'],
   },
 });
 
