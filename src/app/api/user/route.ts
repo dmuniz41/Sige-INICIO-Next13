@@ -46,16 +46,21 @@ export async function POST(request: Request) {
       area,
     });
 
-    const savedUser = await newUser.save();
+    await newUser.save();
 
     return NextResponse.json({
       ok: true,
-      savedUser,
+      user,
+      userName,
+      lastName,
+      privileges,
+      area
     });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
         {
+          ok: false,
           msg: error.message,
         },
         {
