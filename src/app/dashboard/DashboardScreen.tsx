@@ -6,8 +6,7 @@ import { Navbar } from './Navbar';
 export const DashboardScreen = () => {
   return (
     <div className='flex'>
-      <Sidebar />
-      <Navbar />
+      Dashboard
     </div>
   )
 }

@@ -12,7 +12,7 @@ const items: MenuProps["items"] = [
     key: "security",
     children: [
       {
-        label: <Link href="#">Usuarios</Link>,
+        label: <Link href="/dashboard/users">Usuarios</Link>,
         key: "users",
       },
     ],
@@ -23,7 +23,7 @@ const items: MenuProps["items"] = [
     key: "nomenclator",
     children: [
       {
-        label: <Link href="#">Nomencladores</Link>,
+        label: <Link href="/dashboard/nomenclators">Nomencladores</Link>,
         key: "nomenclator1",
       },
     ],
@@ -34,7 +34,7 @@ const items: MenuProps["items"] = [
     key: "humanResources",
     children: [
       {
-        label: <Link href="#">Trabajador</Link>,
+        label: <Link href="/dashboard/humanResources">Trabajador</Link>,
         key: "worker",
       },
     ],
@@ -45,7 +45,7 @@ const items: MenuProps["items"] = [
     key: "office",
     children: [
       {
-        label: <Link href="#">Gastos de oficina</Link>,
+        label: <Link href="/dashboard/office">Gastos de oficina</Link>,
         key: "officeExpenses",
       },
     ],
@@ -56,11 +56,11 @@ const items: MenuProps["items"] = [
     key: "warehouse",
     children: [
       {
-        label: <Link href="#">Almacén</Link>,
+        label: <Link href="/dashboard/warehouse">Almacén</Link>,
         key: "warehouse1",
       },
       {
-        label: <Link href="#">Almacen de Vales</Link>,
+        label: <Link href="/dashboard/ticketsWarehouse">Almacen de Vales</Link>,
         key: "ticketsWarehouse",
       },
     ],
@@ -71,11 +71,11 @@ const items: MenuProps["items"] = [
     key: "project",
     children: [
       {
-        label: <Link href="#">Proyectos</Link>,
+        label: <Link href="/dashboard/project">Proyectos</Link>,
         key: "projects",
       },
       {
-        label: <Link href="#">Gastos de proyectos</Link>,
+        label: <Link href="/dashboard/projectExpenses">Gastos de proyectos</Link>,
         key: "projectExpenses",
       },
     ],
@@ -91,7 +91,7 @@ export const Sidebar: React.FC = () => {
   };
 
   return <Menu 
-    className="h-screen font-segoe bg-background_light font-semibold text-base absolute mt-[5rem] pt-3" 
+    className="h-full font-segoe bg-background_light font-semibold text-base absolute mt-[5rem] pt-3" 
     mode="inline" 
     onClick={onClick} 
     selectedKeys={[current]} 

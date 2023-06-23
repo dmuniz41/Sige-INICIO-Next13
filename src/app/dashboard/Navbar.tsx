@@ -13,7 +13,7 @@ export const Navbar = () => {
         <div className="flex items-center justify-end bg-primary-500 w-full h-full p-[1rem]">
           <ul className="list-none">
             <li className="flex items-center gap-[0.5rem] font-bold text-white text-base">
-              <Image src={userImage} width={50} height={50} priority={true} alt="user image" className="rounded-full" />
+              <Image src={userImage} width={50} height={50} priority={false} alt="user image" className="rounded-full" />
               <span>Daniel</span>
               <DropdownMenu />
             </li>
