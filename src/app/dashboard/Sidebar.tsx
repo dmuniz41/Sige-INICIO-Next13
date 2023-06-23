@@ -91,7 +91,7 @@ export const Sidebar: React.FC = () => {
   };
 
   return <Menu 
-    className="h-screen font-segoe bg-background_light font-semibold text-base" 
+    className="h-screen font-segoe bg-background_light font-semibold text-base absolute mt-[5rem] pt-3" 
     mode="inline" 
     onClick={onClick} 
     selectedKeys={[current]} 
