@@ -53,7 +53,6 @@ export async function POST(request: Request) {
       savedUser,
     });
   } catch (error) {
-    console.log("🚀 ~ file: route.ts:52 ~ POST ~ error:", error);
     if (error instanceof Error) {
       return NextResponse.json(
         {
