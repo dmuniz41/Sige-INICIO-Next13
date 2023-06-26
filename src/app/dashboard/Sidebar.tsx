@@ -90,8 +90,8 @@ export const Sidebar: React.FC = () => {
     setCurrent(e.key);
   };
 
-  return <Menu 
-    className="h-full font-segoe bg-background_light font-semibold text-base absolute mt-[5rem] pt-3" 
+  return <Menu
+    className="bg-background_light"
     mode="inline" 
     onClick={onClick} 
     selectedKeys={[current]} 
