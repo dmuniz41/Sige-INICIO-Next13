@@ -5,7 +5,7 @@ import { Navbar } from "./Navbar";
 export default function layout({ children }: { children: React.ReactNode }) {
   const date: number = new Date().getFullYear()
   return (
-    <div className="h-screen w-screen">
+    <div className="h-screen w-screen animate-fade animate-once">
       <div className="h-full font-segoe bg-background_light font-semibold text-base absolute pt-[7rem]">
         <Sidebar />
       </div>

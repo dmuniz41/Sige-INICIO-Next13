@@ -1,16 +1,21 @@
-'use client'
+"use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 
 import userImage from "../../assets/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png";
 import { DropdownMenu } from "./DropdownMenu";
 import logo from "../../assets/inicio.svg";
 
-export const Navbar = () => {
+// TODO: Añadir encabezado dinámico a las secciones y breadcrum  
 
-  let sectionName: string[] = window.location.toString().split('/')
-  
+export const Navbar = () => {
+  // let sectionName: string[] = ["DASHBOARD"];
+
+  // useEffect(() => {
+  //   sectionName = window.location.toString().split("/");
+  // }, [window.location]);
+
   return (
     <>
       <div className="flex justify-between items-center h-[5rem] bg-primary-500 w-full absolute">
@@ -26,7 +31,7 @@ export const Navbar = () => {
         </div>
       </div>
       <div className="font-bold text-3xl font-segoe items-center p-8 flex relative  left-80 top-[4rem] mr-[5rem] h-[4rem] rounded-md w-[80%]  bg-white shadow-md">
-        <span >{sectionName[4].toUpperCase()}</span>
+        <span>{"Dashboard"}</span>
       </div>
     </>
   );

@@ -14,7 +14,7 @@ export const LoginScreen = () => {
   };
 
   return (
-    <div className=" flex flex-col bg-background_light items-center justify-center w-screen h-screen font-segoe">
+    <div className=" flex flex-col bg-background_light items-center justify-center w-screen h-screen font-segoe animate-fade animate-once">
       <div className="mb-[3rem] w-[15rem]">
         <Image src={logo} width={500} height={300} alt="Inicio logo" priority={true} />
       </div>
