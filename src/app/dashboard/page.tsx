@@ -1,10 +1,8 @@
 import React from "react";
-import { DashboardScreen } from "./DashboardScreen";
 
-export default function Dashboard() {
+export default function page() {
   return (
-    <div>
-      <DashboardScreen />
-    </div>
+    <>
+    </>
   );
 }

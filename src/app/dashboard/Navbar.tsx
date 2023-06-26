@@ -1,3 +1,5 @@
+'use client'
+
 import React from "react";
 import Image from "next/image";
 
@@ -6,6 +8,9 @@ import { DropdownMenu } from "./DropdownMenu";
 import logo from "../../assets/inicio.svg";
 
 export const Navbar = () => {
+
+  let sectionName: string[] = window.location.toString().split('/')
+  
   return (
     <>
       <div className="flex justify-between items-center h-[5rem] bg-primary-500 w-full absolute">
@@ -21,7 +26,7 @@ export const Navbar = () => {
         </div>
       </div>
       <div className="font-bold text-3xl font-segoe items-center p-8 flex relative  left-80 top-[4rem] mr-[5rem] h-[4rem] rounded-md w-[80%]  bg-white shadow-md">
-        <span >Dashboard</span>
+        <span >{sectionName[4].toUpperCase()}</span>
       </div>
     </>
   );
