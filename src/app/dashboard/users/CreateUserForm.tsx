@@ -60,14 +60,23 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
         <Form.Item name="password" label="Contraseña" rules={[{ required: true, message: "Por favor introduzca la contraseña" }]}>
           <Input type="password" />
         </Form.Item>
-        <Form.Item name="confirmPassword" label="Confirmar Contraseña" dependencies={['password']} hasFeedback rules={[{ required: true, message: "Las contraseñas deben ser iguales" },  ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue('password') === value) {
-                return Promise.resolve();
-              }
-              return Promise.reject(new Error('Las contraseñas deben ser iguales'));
-            },
-          }),]}>
+        <Form.Item
+          name="confirmPassword"
+          label="Confirmar Contraseña"
+          dependencies={["password"]}
+          hasFeedback
+          rules={[
+            { required: true, message: "Las contraseñas deben ser iguales" },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("password") === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error("Las contraseñas deben ser iguales"));
+              },
+            }),
+          ]}
+        >
           <Input type="password" />
         </Form.Item>
         <Form.Item name="privileges" label="Privilegios" rules={[{ required: true, message: "Seleccione un privilegio" }]}>
