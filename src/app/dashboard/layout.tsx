@@ -1,6 +1,9 @@
+'use client'
+
 import React from "react";
-import { Sidebar } from "./Sidebar";
-import { Navbar } from "./Navbar";
+import { Sidebar } from './Sidebar';
+import { Navbar } from './Navbar';
+
 
 export default function layout({ children }: { children: React.ReactNode }) {
   const date: number = new Date().getFullYear()
@@ -15,5 +18,6 @@ export default function layout({ children }: { children: React.ReactNode }) {
         Powered by Grupo INICIO {date}
       </footer>
     </div>
-  );
+    
+    );
 }
