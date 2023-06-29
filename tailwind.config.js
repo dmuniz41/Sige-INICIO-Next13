@@ -31,7 +31,17 @@ module.exports = {
       },
       white: "#FFFFFF",
       secondary: "#34395e",
-      success: "#34b042",
+      success: {
+        100: "#d6efd9",
+        200: "#aedfb3",
+        300: "#85d08e",
+        400: "#5dc068",
+        500: "#34b042",
+        600: "#2a8d35",
+        700: "#1f6a28",
+        800: "#15461a",
+        900: "#0a230d",
+      },
       info: "#3abaf4",
       warning: "#ffa426",
       danger: {
