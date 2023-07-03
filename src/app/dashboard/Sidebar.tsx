@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import { AppstoreOutlined, FolderOpenOutlined, LockOutlined, SettingOutlined, ShopOutlined, UserOutlined } from "@ant-design/icons";
@@ -90,12 +90,15 @@ export const Sidebar: React.FC = () => {
     setCurrent(e.key);
   };
 
-  return <Menu
-    className="bg-background_light"
-    mode="inline" 
-    onClick={onClick} 
-    selectedKeys={[current]} 
-    style={{ width: 250}} 
-    items={items} 
-  />;
+  return (
+    <Menu
+      id="sidebar"
+      className="bg-background_light"
+      mode="inline"
+      onClick={onClick}
+      selectedKeys={[current]}
+      style={{ width: 250 }}
+      items={items}
+    />
+  );
 };

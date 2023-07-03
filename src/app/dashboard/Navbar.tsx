@@ -30,7 +30,7 @@ export const Navbar = () => {
           </ul>
         </div>
       </div>
-      <div className="font-bold text-3xl font-segoe items-center p-8 flex relative  left-80 top-[4rem] mr-[5rem] h-[4rem] rounded-md w-[80%]  bg-white shadow-md">
+      <div className="font-bold  text-3xl font-segoe items-center p-8 flex absolute left-80 top-[3rem] mr-[5rem] h-[4rem] rounded-md w-[75%] bg-white shadow-md">
         <span>{"Dashboard"}</span>
       </div>
     </>

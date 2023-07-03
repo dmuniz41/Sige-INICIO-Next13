@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, Form, Input, Modal, Select } from "antd";
+import { Form, Input, Modal, Select, } from "antd";
 import { useState } from "react";
 
 const PRIVILEGES = ["ADMIN", "COMMERCIAL", "USER", "HR", "PROJECT", "WAREHOUSE", "OFFICE"];

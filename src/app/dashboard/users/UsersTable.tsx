@@ -200,7 +200,6 @@ const UserTable: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [createNewModal, setCreateNewModal] = useState(false);
-  const [editModal, setEditModal] = useState(false);
 
   const searchInput = useRef<InputRef>(null);
 
@@ -209,7 +208,7 @@ const UserTable: React.FC = () => {
   };
 
   const onCreate = (values: any) => {
-    console.log('Received values of form: ', values);
+    console.log("Received values of form: ", values);
     setCreateNewModal(false);
   };
 
@@ -411,9 +410,10 @@ const UserTable: React.FC = () => {
           className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-background_light ease-in-out duration-300"
         />
       </div>
-      
-        <CreateUserForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
+
+      <CreateUserForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
       <Table
+        size="middle"
         columns={columns}
         dataSource={data}
         pagination={{ position: ["bottomCenter"], pageSize: 15 }}
