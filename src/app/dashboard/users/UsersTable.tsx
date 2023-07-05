@@ -2,11 +2,13 @@
 
 import { DeleteOutlined, EditOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import type { InputRef } from "antd";
-import { Button, Input, Space, Table, Tag, Modal } from "antd";
+import { Button, Input, Space, Table, Tag, message  } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
+import axios, {AxiosError} from "axios";
+
 import { CreateUserForm } from "./CreateUserForm";
 
 interface DataType {
@@ -16,11 +18,6 @@ interface DataType {
   lastName: string;
   privileges: string[];
   area: string;
-}
-interface Values {
-  title: string;
-  description: string;
-  modifier: string;
 }
 
 type DataIndex = keyof DataType;
@@ -198,6 +195,7 @@ const data: DataType[] = [
 
 const UserTable: React.FC = () => {
   const [searchText, setSearchText] = useState("");
+
   const [searchedColumn, setSearchedColumn] = useState("");
   const [createNewModal, setCreateNewModal] = useState(false);
 
@@ -208,8 +206,8 @@ const UserTable: React.FC = () => {
   };
 
   const onCreate = (values: any) => {
-    console.log("Received values of form: ", values);
-    setCreateNewModal(false);
+  console.log("🚀 ~ file: UsersTable.tsx:215 ~ onCreate ~ values:", values)
+  setCreateNewModal(false);
   };
 
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
@@ -412,6 +410,7 @@ const UserTable: React.FC = () => {
       </div>
 
       <CreateUserForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
+      
       <Table
         size="middle"
         columns={columns}

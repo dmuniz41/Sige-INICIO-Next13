@@ -1,16 +1,37 @@
 "use client";
-import React, { FormEvent } from "react";
+import React, { FormEvent, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 import logo from "../../assets/inicio.svg";
 
 export const LoginScreen = () => {
+  const [error, setError] = useState("");
+
   const router = useRouter();
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    const formData = new FormData(e.currentTarget);
     e.preventDefault();
-    router.push("/dashboard");
+
+    const res = await signIn("credentials", {
+      user: formData.get("user"),
+      password: formData.get("password"),
+      redirect: false,
+    });
+    console.log(res);
+    
+    if (res?.error){
+      console.log(error);
+      
+      return setError(res.error as string);
+    } 
+    if (res?.ok) {
+      console.log(res);
+      
+      return router.push("/dashboard");
+    }
   };
 
   return (
