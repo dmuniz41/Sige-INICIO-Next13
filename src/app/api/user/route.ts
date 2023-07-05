@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ok: false,
-        msg: "La contraseña debe tener mas de 6 caracteres",
+        msg: "La contraseña debe tener mas de 7 caracteres",
       },
       {
         status: 400,
