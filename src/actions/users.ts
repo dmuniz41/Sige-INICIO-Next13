@@ -2,39 +2,25 @@ import Swal from "sweetalert2";
 import { fetchSinToken } from "../helpers/fetch";
 import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
-import axios, {isCancel, AxiosError} from 'axios';
+import axios, { AxiosError } from "axios";
 
-// const apiURL = 'http://localhost:3000/api'
-
-
-export const startAddUser = (
-  user: string,
-  userName: string,
-  lastName: string,
-  privileges: string[],
-  password: string,
-  area: string,
-): any => {
-  return async (dispatch: any)=> {
-      const resp = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user`,{user, userName, lastName, privileges, password, area,})
-        .then(function(resp){
-        console.log("🚀 ~ file: users.ts:18 ~ .then ~ resp:", resp)
-        })
-        .catch(function(error){
-          console.log("🚀 ~ file: users.ts:21 ~ return ~ error:", error)
-          
-        })
-
-      // if (body.ok) {
-      //   Toast.fire({
-      //     icon: "success",
-      //     title: "Usuario Creado",
-      //   });
-      //   dispatch(addUser(user, userName, lastName, privileges, password, area));
-      // } else {
-      //   Swal.fire("Error", body.msg, "error");
-      }
+export const startAddUser = (user: string, userName: string, lastName: string, privileges: string[], password: string, area: string): any => {
+  return async (dispatch: any) => {
+    await axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user, userName, lastName, privileges, password, area })
+      .then(() => {
+        dispatch(addUser(user, userName, lastName, privileges, password, area));
+        Toast.fire({
+          icon: "success",
+          title: "Usuario Creado",
+        });
+      })
+      .catch(function (error: AxiosError) {
+        let { msg }: any = error.response?.data;
+        Swal.fire("Error", msg, "error");
+      });
   };
+};
 export const startUserUpdate = (
   user: string,
   userName: string,
@@ -83,16 +69,23 @@ export const startDeleteUser = (user: string): any => {
 };
 export const usersStartLoading = () => {
   return async (dispatch: any) => {
-    const resp = await fetchSinToken(`auth/`, "GET");
-    const body = await resp.json();
-
-    dispatch(usersLoaded(body.listOfUsers));
+    await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/user`)
+      .then((resp) => {
+        let { listOfUsers } = resp.data;
+        dispatch(usersLoaded(listOfUsers));
+      })
+      .catch((error: AxiosError) => {
+        let { msg }: any = error.response?.data;
+        Swal.fire("Error", msg, "error");
+      });
   };
 };
 export const usersLoaded = (users: any) => ({
   type: types.usersLoaded,
   payload: users,
 });
+
 // export const selectedUser = (selectedUser) => ({
 //   type: types.selectedUser,
 //   payload: selectedUser,

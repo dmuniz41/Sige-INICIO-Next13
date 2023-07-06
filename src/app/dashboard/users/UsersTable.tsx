@@ -9,7 +9,7 @@ import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 
 import { CreateUserForm } from "./CreateUserForm";
-import { startAddUser } from "@/actions/users";
+import { startAddUser, usersStartLoading } from "@/actions/users";
 import { useAppDispatch } from "@/hooks/hooks";
 
 interface DataType {
@@ -196,6 +196,7 @@ const data: DataType[] = [
 
 const UserTable: React.FC = () => {
   const dispatch = useAppDispatch()
+  dispatch(usersStartLoading())
   const [searchText, setSearchText] = useState("");
 
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -208,7 +209,6 @@ const UserTable: React.FC = () => {
   };
 
   const onCreate = (values: any) => {
-  console.log("🚀 ~ file: UsersTable.tsx:215 ~ onCreate ~ values:", values)
   dispatch(startAddUser(values.user, values.userName, values.lastName, values.privileges, values.password, values.area))
   setCreateNewModal(false);
   };
