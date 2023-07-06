@@ -1,6 +1,9 @@
 import { Schema, model, models } from "mongoose";
 
 const UserSchema = new Schema({
+  key: {
+    type: String
+  },
   user: {
     type: String,
     required: [true, 'user is required'],

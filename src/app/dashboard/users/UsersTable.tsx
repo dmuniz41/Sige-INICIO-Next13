@@ -1,18 +1,20 @@
 "use client";
 
+import Highlighter from "react-highlight-words";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { DeleteOutlined, EditOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, Input, Space, Table, Tag, message } from "antd";
 import type { InputRef } from "antd";
-import { Button, Input, Space, Table, Tag, message  } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
-import React, { useRef, useState } from "react";
-import Highlighter from "react-highlight-words";
 
 import { CreateUserForm } from "./CreateUserForm";
 import { startAddUser, usersStartLoading } from "@/actions/users";
 import { useAppDispatch } from "@/hooks/hooks";
+import { RootState, useAppSelector } from "@/store/store";
 
 interface DataType {
+  _id: string;
   key: string;
   user: string;
   userName: string;
@@ -23,194 +25,31 @@ interface DataType {
 
 type DataIndex = keyof DataType;
 
-const data: DataType[] = [
-  {
-    key: "1",
-    user: "dmuniz",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "2",
-    user: "dmuniz2",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "3",
-    user: "dmuniz3",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "4",
-    user: "dmuniz4",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "5",
-    user: "dmuniz4",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "6",
-    user: "dmuniz4",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "7",
-    user: "dmuniz4",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "8",
-    user: "dmuniz4",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "9",
-    user: "dmuniz4",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "10",
-    user: "dmuniz4",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "11",
-    user: "juan",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "12",
-    user: "juan",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "13",
-    user: "juan",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "14",
-    user: "juan",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "15",
-    user: "juan",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "16",
-    user: "juan",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "17",
-    user: "juan",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "18",
-    user: "juan",
-    userName: "Daniel",
-    lastName: "Gonzales",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "19",
-    user: "juan",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "20",
-    user: "miguel",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-  {
-    key: "21",
-    user: "pedro",
-    userName: "Daniel",
-    lastName: "Muniz Turtos",
-    privileges: ["ADMIN", "USER", "COMERCIAL", "HR", "OFFICE", "PROJECT", "WAREHOUSE"],
-    area: "INICIO",
-  },
-];
-
 const UserTable: React.FC = () => {
-  const dispatch = useAppDispatch()
-  dispatch(usersStartLoading())
+  const dispatch = useAppDispatch();
   const [searchText, setSearchText] = useState("");
-
   const [searchedColumn, setSearchedColumn] = useState("");
   const [createNewModal, setCreateNewModal] = useState(false);
-
   const searchInput = useRef<InputRef>(null);
+
+  useEffect(() => {
+    dispatch(usersStartLoading());
+  }, [dispatch]);
+
+  const { users } = useAppSelector((state: RootState) => state?.user);
+  const data: DataType[] = useMemo(() => users, [users]);
+
+  data.map((item)=>{
+    item.key = item.user
+  })
 
   const handleNew = (): void => {
     setCreateNewModal(true);
   };
 
   const onCreate = (values: any) => {
-  dispatch(startAddUser(values.user, values.userName, values.lastName, values.privileges, values.password, values.area))
-  setCreateNewModal(false);
+    dispatch(startAddUser(values.user, values.userName, values.lastName, values.privileges, values.password, values.area));
+    setCreateNewModal(false);
   };
 
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
@@ -413,7 +252,7 @@ const UserTable: React.FC = () => {
       </div>
 
       <CreateUserForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
-      
+
       <Table
         size="middle"
         columns={columns}

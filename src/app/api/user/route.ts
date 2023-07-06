@@ -38,6 +38,7 @@ export async function POST(request: Request) {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const newUser = new User({
+      key: user,
       user,
       userName,
       lastName,
@@ -50,11 +51,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       ok: true,
-      user,
-      userName,
-      lastName,
-      privileges,
-      area,
+      newUser
     });
   } catch (error) {
     if (error instanceof Error) {

@@ -73,15 +73,7 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
             dependencies={["password"]}
             hasFeedback
             rules={[
-              { min: 7, required: true, message: "Las contraseñas deben ser iguales" },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue("password") === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(new Error("Las contraseñas deben ser iguales"));
-                },
-              }),
+              { min: 7, required: true },
             ]}
           >
             <Input type="password" />
