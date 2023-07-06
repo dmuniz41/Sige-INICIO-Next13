@@ -1,6 +1,6 @@
 "use client";
 
-import { ConfigProvider, Form, Input, Modal, Select } from "antd";
+import {  Form, Input, Modal, Select } from "antd";
 import { useState } from "react";
 
 const PRIVILEGES = ["ADMIN", "COMMERCIAL", "USER", "HR", "PROJECT", "WAREHOUSE", "OFFICE"];
@@ -53,7 +53,7 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
       okText="Crear"
       cancelText="Cancelar"
     >
-      <ConfigProvider form={{ validateMessages }}>
+      
         <Form form={form} layout="vertical" name="createUserForm" size="large">
           <Form.Item name="user" label="Usuario" rules={[{ required: true }]}>
             <Input />
@@ -104,7 +104,6 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
             <Input />
           </Form.Item>
         </Form>
-      </ConfigProvider>
     </Modal>
   );
 };
