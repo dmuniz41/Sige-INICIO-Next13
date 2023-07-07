@@ -3,7 +3,7 @@
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { DeleteOutlined, EditOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, Tag, message } from "antd";
+import { Button, Input, Space, Table, Tag } from "antd";
 import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
@@ -39,9 +39,9 @@ const UserTable: React.FC = () => {
   const { users } = useAppSelector((state: RootState) => state?.user);
   const data: DataType[] = useMemo(() => users, [users]);
 
-  data.map((item)=>{
-    item.key = item.user
-  })
+  data.map((item) => {
+    item.key = item.user;
+  });
 
   const handleNew = (): void => {
     setCreateNewModal(true);
@@ -68,7 +68,6 @@ const UserTable: React.FC = () => {
       console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRows: ", selectedRows);
     },
   };
-
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
@@ -215,16 +214,6 @@ const UserTable: React.FC = () => {
       width: "30%",
       ...getColumnSearchProps("area"),
     },
-    // {
-    //   title: 'Acciones',
-    //   key: 'action',
-    //   render: (_) => (
-    //     <Space size="large">
-    //       <div className=" duration-300 transition-all ease-in-out cursor-pointer bg-blue-400 w-[3.5rem] h-[2rem] font-bold text-white text-center items-center pt-1 rounded-lg hover:bg-blue-600">Editar</div>
-    //       <div className=" duration-300 transition-all ease-in-out cursor-pointer bg-danger-500 w-[3.5rem] h-[2rem] font-bold text-white text-center items-center pt-1 rounded-lg hover:bg-danger-700">Borrar</div>
-    //     </Space>
-    //   ),
-    // },
   ];
 
   return (
@@ -237,16 +226,14 @@ const UserTable: React.FC = () => {
           <PlusOutlined />
           Nuevo
         </div>
-        <EditOutlined
-          onClick={() => alert("Editar usuario")}
-          className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-background_light ease-in-out duration-300"
-        />
-        <DeleteOutlined
-          onClick={() => alert("Eliminar usuario")}
-          className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-background_light ease-in-out duration-300"
-        />
+        <button className="cursor-pointer" id="edit_user_btn" onClick={() => alert("Editar usuario")}>
+          <EditOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-background_light ease-in-out duration-300" />
+        </button>
+        <button className="cursor-pointer" id="delete_user_btn" onClick={() => alert("Eliminar usuario")}>
+          <DeleteOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-background_light ease-in-out duration-300" />
+        </button>
         <ReloadOutlined
-          onClick={() => alert("Refrescar pagina")}
+          onClick={() => dispatch(usersStartLoading())}
           className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-background_light ease-in-out duration-300"
         />
       </div>
