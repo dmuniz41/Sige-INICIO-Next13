@@ -9,9 +9,10 @@ import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 
 import { CreateUserForm } from "./CreateUserForm";
-import { startAddUser, usersStartLoading } from "@/actions/users";
+import { startAddUser, startDeleteUser, usersStartLoading } from "@/actions/users";
 import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
+import { Toast } from "@/helpers/customAlert";
 
 interface DataType {
   _id: string;
@@ -30,6 +31,7 @@ const UserTable: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [createNewModal, setCreateNewModal] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<DataType>();
   const searchInput = useRef<InputRef>(null);
 
   useEffect(() => {
@@ -38,10 +40,6 @@ const UserTable: React.FC = () => {
 
   const { users } = useAppSelector((state: RootState) => state?.user);
   const data: DataType[] = useMemo(() => users, [users]);
-
-  data.map((item) => {
-    item.key = item.user;
-  });
 
   const handleNew = (): void => {
     setCreateNewModal(true);
@@ -58,6 +56,18 @@ const UserTable: React.FC = () => {
     setSearchedColumn(dataIndex);
   };
 
+  const handleDelete = () => {
+    if (selectedRow) {
+      dispatch(startDeleteUser(selectedRow?.user));
+      dispatch(usersStartLoading());
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "Seleccione un usuario a eliminar",
+      });
+    }
+  };
+
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText("");
@@ -65,6 +75,7 @@ const UserTable: React.FC = () => {
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+      setSelectedRow(selectedRows[0]);
       console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRows: ", selectedRows);
     },
   };
@@ -229,7 +240,7 @@ const UserTable: React.FC = () => {
         <button className="cursor-pointer" id="edit_user_btn" onClick={() => alert("Editar usuario")}>
           <EditOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-background_light ease-in-out duration-300" />
         </button>
-        <button className="cursor-pointer" id="delete_user_btn" onClick={() => alert("Eliminar usuario")}>
+        <button className="cursor-pointer" id="delete_user_btn" onClick={handleDelete}>
           <DeleteOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-background_light ease-in-out duration-300" />
         </button>
         <ReloadOutlined
@@ -238,7 +249,13 @@ const UserTable: React.FC = () => {
         />
       </div>
 
-      <CreateUserForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
+      <CreateUserForm
+        open={createNewModal}
+        onCancel={() => {
+          setCreateNewModal(false);
+        }}
+        onCreate={onCreate}
+      />
 
       <Table
         size="middle"

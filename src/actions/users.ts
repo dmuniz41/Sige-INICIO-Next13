@@ -15,7 +15,7 @@ export const startAddUser = (user: string, userName: string, lastName: string, p
           title: "Usuario Creado",
         });
       })
-      .catch(function (error: AxiosError) {
+      .catch((error: AxiosError) => {
         let { msg }: any = error.response?.data;
         Swal.fire("Error", msg, "error");
       });
@@ -50,21 +50,19 @@ export const startUserUpdate = (
 };
 export const startDeleteUser = (user: string): any => {
   return async (dispatch: any) => {
-    const resp = await fetchSinToken(`api/user`, { user }, "PATCH");
-    const body = await resp.json();
-    try {
-      if (body.ok) {
+    await axios
+      .patch(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user })
+      .then(() => {
         dispatch(deleteUser(user));
         Toast.fire({
           icon: "success",
           title: "Usuario Eliminado",
         });
-      } else {
-        Swal.fire("Error", body.msg, "error");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+      })
+      .catch((error: AxiosError) => {
+        let { msg }: any = error.response?.data;
+        Swal.fire("Error", msg, "error");
+      });
   };
 };
 export const usersStartLoading = () => {
