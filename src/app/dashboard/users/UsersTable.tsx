@@ -6,13 +6,14 @@ import { DeleteOutlined, EditOutlined, PlusOutlined, ReloadOutlined, SearchOutli
 import { Button, Input, Space, Table, Tag } from "antd";
 import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
-import type { FilterConfirmProps } from "antd/es/table/interface";
+import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
 
 import { CreateUserForm } from "./CreateUserForm";
-import { startAddUser, startDeleteUser, usersStartLoading } from "@/actions/users";
+import { startAddUser, startDeleteUser, startUpdateUser, usersStartLoading } from "@/actions/users";
 import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
+import { EditUserForm } from "./EditUserForm";
 
 interface DataType {
   _id: string;
@@ -31,6 +32,7 @@ const UserTable: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [createNewModal, setCreateNewModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState<DataType>();
   const searchInput = useRef<InputRef>(null);
 
@@ -45,9 +47,20 @@ const UserTable: React.FC = () => {
     setCreateNewModal(true);
   };
 
-  const onCreate = (values: any) => {
+  const handleEdit = (): void => {
+    setEditModal(true);
+  };
+
+  const onCreate = (values: any): void => {
     dispatch(startAddUser(values.user, values.userName, values.lastName, values.privileges, values.password, values.area));
     setCreateNewModal(false);
+  };
+
+  const onEdit = (values: any): void => {
+    console.log(values);
+    dispatch(startUpdateUser(values.user, values.userName, values.lastName, values.privileges, values.password, values.area));
+    dispatch(usersStartLoading())
+    setEditModal(false);
   };
 
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
@@ -73,12 +86,13 @@ const UserTable: React.FC = () => {
     setSearchText("");
   };
 
-  const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-      setSelectedRow(selectedRows[0]);
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRows: ", selectedRows);
+  const rowSelection: TableRowSelection<DataType> = {
+    onChange: async (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+      setSelectedRow(selectedRows[ 0 ]);
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows, selectedRows);
     },
   };
+
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
@@ -237,7 +251,7 @@ const UserTable: React.FC = () => {
           <PlusOutlined />
           Nuevo
         </div>
-        <button className="cursor-pointer" id="edit_user_btn" onClick={() => alert("Editar usuario")}>
+        <button className="cursor-pointer" id="edit_user_btn" onClick={handleEdit}>
           <EditOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-background_light ease-in-out duration-300" />
         </button>
         <button className="cursor-pointer" id="delete_user_btn" onClick={handleDelete}>
@@ -249,13 +263,8 @@ const UserTable: React.FC = () => {
         />
       </div>
 
-      <CreateUserForm
-        open={createNewModal}
-        onCancel={() => {
-          setCreateNewModal(false);
-        }}
-        onCreate={onCreate}
-      />
+      <CreateUserForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
+      <EditUserForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />
 
       <Table
         size="middle"

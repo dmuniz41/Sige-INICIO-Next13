@@ -21,31 +21,21 @@ export const startAddUser = (user: string, userName: string, lastName: string, p
       });
   };
 };
-export const startUserUpdate = (
-  user: string,
-  userName: string,
-  lastName: string,
-  privileges: string[],
-  password: string,
-  area: string,
-  password2: string
-): any => {
+export const startUpdateUser = (user: string, userName: string, lastName: string, privileges: string[], password: string, area: string): any => {
   return async (dispatch: any) => {
-    try {
-      const resp = await fetchSinToken(`api/user`, { user, userName, lastName, privileges, password, area, password2 }, "PUT");
-      const body = await resp.json();
-      if (body.ok) {
+    await axios
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user, userName, lastName, privileges, password, area })
+      .then(() => {
+        dispatch(updateUser(user, userName, lastName, privileges, password, area));
         Toast.fire({
           icon: "success",
           title: "Usuario Actualizado",
         });
-        dispatch(updateUser(user, userName, lastName, privileges, password, area, password2));
-      } else {
-        Swal.fire("Error", body.msg, "error");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+      })
+      .catch((error: AxiosError) => {
+        let { msg }: any = error.response?.data;
+        Swal.fire("Error", msg, "error");
+      });
   };
 };
 export const startDeleteUser = (user: string): any => {
@@ -84,11 +74,6 @@ export const usersLoaded = (users: any) => ({
   payload: users,
 });
 
-// export const selectedUser = (selectedUser) => ({
-//   type: types.selectedUser,
-//   payload: selectedUser,
-// });
-
 const addUser = (user: string, userName: string, lastName: string, privileges: string[], password: string, area: string) => ({
   type: types.addUser,
   payload: {
@@ -100,7 +85,7 @@ const addUser = (user: string, userName: string, lastName: string, privileges: s
     area,
   },
 });
-const updateUser = (user: string, userName: string, lastName: string, privileges: string[], password: string, area: string, password2: string) => ({
+const updateUser = (user: string, userName: string, lastName: string, privileges: string[], password: string, area: string) => ({
   type: types.updateUser,
   payload: {
     user,
@@ -109,7 +94,6 @@ const updateUser = (user: string, userName: string, lastName: string, privileges
     privileges,
     password,
     area,
-    password2,
   },
 });
 const deleteUser = (user: string) => ({
