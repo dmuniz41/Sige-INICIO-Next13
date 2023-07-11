@@ -1,20 +1,19 @@
+import { connectDB } from "@/libs/mongodb";
+import Worker from "@/models/worker";
 import { NextResponse } from "next/server";
 
-import Nomenclator from "@/models/nomenclators";
-import { connectDB } from "@/libs/mongodb";
-
 export async function POST(request: Request) {
-  const { code, description, name } = await request.json();
+  const { name, CI, role, address, phoneNumber, bankAccount, salary, taxes } = await request.json();
 
   try {
     await connectDB();
-    const BDnomenclator = await Nomenclator.findOne({ code });
+    const BDworker = await Worker.findOne({ name });
 
-    if (BDnomenclator) {
+    if (BDworker) {
       return NextResponse.json(
         {
           ok: false,
-          msg: "Ya existe un nomenclador con ese código",
+          msg: "Ya existe un trabajador con ese nombre",
         },
         {
           status: 409,
@@ -22,19 +21,24 @@ export async function POST(request: Request) {
       );
     }
 
-    const newNomenclator = new Nomenclator({
-      key: code,
-      code,
+    const newWorker = new Worker({
       name,
-      description,
+      CI,
+      role,
+      address,
+      phoneNumber,
+      bankAccount,
+      salary,
+      taxes,
+      key: name,
     });
 
-    await newNomenclator.save();
+    await newWorker.save();
 
     return NextResponse.json({
       ok: true,
-      message: "Nomenclador creado",
-      newNomenclator,
+      message: "Trabajador creado",
+      newWorker,
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -54,10 +58,10 @@ export async function POST(request: Request) {
 export async function GET() {
   try {
     await connectDB();
-    const listOfNomenclators = await Nomenclator.find();
+    const listOfWorkers = await Worker.find();
     return NextResponse.json({
       ok: true,
-      listOfNomenclators,
+      listOfWorkers,
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -75,25 +79,25 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const { code, description, name } = await request.json();
+  const { name, CI, role, address, phoneNumber, bankAccount, salary, taxes } = await request.json();
 
   try {
     await connectDB();
-    const nomenclatorToUpdate = await Nomenclator.findOne({ code });
+    const workerToUpdate = await Worker.findOne({ name });
 
-    if (!nomenclatorToUpdate) {
+    if (!workerToUpdate) {
       return NextResponse.json({
         ok: false,
-        message: "El nomenclador a actualizar no existe",
+        message: "El trabajador a actualizar no existe",
       });
     }
 
-    await Nomenclator.findOneAndUpdate({ code }, { code, name, description }, { new: true });
+    await Worker.findOneAndUpdate({ name }, { name, CI, role, address, phoneNumber, bankAccount, salary, taxes }, { new: true });
 
     return NextResponse.json({
       ok: true,
-      message: "Nomenclador actualizado",
-      nomenclatorToUpdate,
+      message: "Trabajador actualizado",
+      workerToUpdate,
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -111,25 +115,25 @@ export async function PUT(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const { code } = await request.json();
+  const { name } = await request.json();
 
   try {
     await connectDB();
-    const nomenclatorToDelete = await Nomenclator.findOne({ code });
+    const workerToDelete = await Worker.findOne({ name });
 
-    if (!nomenclatorToDelete) {
+    if (!workerToDelete) {
       return NextResponse.json({
         ok: true,
-        message: "El nomenclador a borrar no existe",
+        message: "El trabajador a borrar no existe",
       });
     }
 
-    const deletedNomenclator = await Nomenclator.findOneAndDelete({ code });
+    const deletedWorker = await Worker.findOneAndDelete({ name });
 
     return NextResponse.json({
       ok: true,
-      message: "Nomenclador eliminado",
-      deletedNomenclator,
+      message: "Trabajador eliminado",
+      deletedWorker,
     });
   } catch (error) {
     if (error instanceof Error) {
