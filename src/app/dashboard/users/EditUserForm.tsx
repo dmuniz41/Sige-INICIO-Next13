@@ -1,9 +1,6 @@
 "use client";
 
-import { Form, Input, Modal, Select } from "antd";
-import { useState } from "react";
-
-const PRIVILEGES = ["ADMIN", "COMMERCIAL", "USER", "HR", "PROJECT", "WAREHOUSE", "OFFICE"];
+import { Form, Input, Modal, Select, SelectProps } from "antd";
 
 interface Values {
   user: string;
@@ -20,12 +17,42 @@ interface CollectionCreateFormProps {
   defaultValues?: Values;
 }
 
-// TODO: Arreglar interaccion del select con el resto de campos del formulario
-
 export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
-  const [selectedPrivileges, setSelectedPrivileges] = useState<string[]>(["ADMIN"]);
+  const options: SelectProps["options"] = [
+    {
+      label: "ADMIN",
+      value: "ADMIN",
+    },
+    {
+      label: "COMMERCIAL",
+      value: "COMMERCIAL",
+    },
+    {
+      label: "USER",
+      value: "USER",
+    },
+    {
+      label: "HR",
+      value: "HR",
+    },
+    {
+      label: "PROJECT",
+      value: "PROJECT",
+    },
+    {
+      label: "WAREHOUSE",
+      value: "WAREHOUSE",
+    },
+    {
+      label: "OFFICE",
+      value: "OFFICE",
+    },
+  ];
 
-  const filteredPrivileges = PRIVILEGES.filter((o) => !selectedPrivileges.includes(o));
+  const handleChange = (value: string[]) => {
+    console.log(`selected ${value}`);
+  };
+
   const [form] = Form.useForm();
   return (
     <Modal
@@ -75,7 +102,7 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCrea
         ]}
       >
         <Form.Item name="user" label="Usuario" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input disabled/>
+          <Input disabled />
         </Form.Item>
         <Form.Item name="userName" label="Nombre" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
@@ -107,16 +134,7 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCrea
         </Form.Item>
 
         <Form.Item name="privileges" label="Privilegios" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Select
-            mode="multiple"
-            value={selectedPrivileges}
-            onChange={setSelectedPrivileges}
-            style={{ width: "100%" }}
-            options={filteredPrivileges.map((item) => ({
-              value: item,
-              label: item,
-            }))}
-          />
+          <Select mode="multiple" allowClear style={{ width: "100%" }} onChange={handleChange} options={options} />
         </Form.Item>
         <Form.Item name="area" label="Área" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
