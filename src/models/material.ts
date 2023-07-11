@@ -7,7 +7,7 @@ export interface IMaterial {
   category?        : string,
   unitMeasure?     : string,
   costPrice?       : number,
-  minimumExistence?: number
+  minimumExistence: number
 }
 
 const MaterialSchema = new Schema<IMaterial, Model<IMaterial>>({
@@ -29,7 +29,8 @@ const MaterialSchema = new Schema<IMaterial, Model<IMaterial>>({
     type: Number
   },
   minimumExistence:{
-    type:Number
+    type:Number,
+    required: [true, "La existencia mínima es requerida"]
   }
 });
 
