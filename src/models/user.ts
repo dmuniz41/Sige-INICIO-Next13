@@ -6,28 +6,28 @@ const UserSchema = new Schema({
   },
   user: {
     type: String,
-    required: [true, 'user is required'],
+    required: [true, 'El usuario es requerido'],
     unique: true,
   },
   userName: {
     type: String,
-    required: [true, 'userName is required'],
+    required: [true, 'El nombre es requerido'],
   },
   lastName: {
     type: String,
-    required: [true, 'lastName is required'],
+    required: [true, 'Los apellidos son requeridos'],
   },
   privileges: {
     type: [],
-    required: [true, 'privileges are required'],
+    required: [true, 'Los privilegios son requeridos'],
   },
   password: {
     type: String,
-    required: [true, 'password is required'],
+    required: [true, 'La contraseña es requerida'],
   },
   area: {
     type: String,
-    required: [true, 'area is required'],
+    required: [true, 'El area es requerida'],
   },
 });
 

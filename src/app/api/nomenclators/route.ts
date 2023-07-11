@@ -1,33 +1,20 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
 
-import User from "@/models/user";
+import Nomenclator from "@/models/nomenclators";
 import { connectDB } from "@/libs/mongodb";
 
 export async function POST(request: Request) {
-  const { user, userName, lastName, privileges, password, area } = await request.json();
-
-  if (!password || password.length < 6) {
-    return NextResponse.json(
-      {
-        ok: false,
-        msg: "La contraseña debe tener mas de 7 caracteres",
-      },
-      {
-        status: 400,
-      }
-    );
-  }
+  const { code, description, name } = await request.json();
 
   try {
     await connectDB();
-    const BDuser = await User.findOne({ user });
+    const BDnomenclator = await Nomenclator.findOne({ code});
 
-    if (BDuser) {
+    if (BDnomenclator) {
       return NextResponse.json(
         {
           ok: false,
-          msg: "El usuario ya existe en la base de datos",
+          msg: "Ya existe un nomenclador con ese código",
         },
         {
           status: 409,
@@ -35,24 +22,19 @@ export async function POST(request: Request) {
       );
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12);
-
-    const newUser = new User({
-      key: user,
-      user,
-      userName,
-      lastName,
-      privileges,
-      password: hashedPassword,
-      area,
+    const newNomenclator = new Nomenclator({
+      key: code,
+      code,
+      name,
+      description,
     });
 
-    await newUser.save();
+    await newNomenclator.save();
 
     return NextResponse.json({
       ok: true,
-      message: "Usuario creado",
-      newUser
+      message: "Nomenclador creado",
+      newNomenclator,
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -72,10 +54,10 @@ export async function POST(request: Request) {
 export async function GET() {
   try {
     await connectDB();
-    const listOfUsers = await User.find();
+    const listOfNomenclators = await Nomenclator.find();
     return NextResponse.json({
       ok: true,
-      listOfUsers,
+      listOfNomenclators,
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -93,26 +75,25 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const { user, userName, lastName, privileges, password, area } = await request.json();
+    const { code, description, name } = await request.json();
 
   try {
     await connectDB();
-    const userToUpdate = await User.findOne({ user });
+    const nomenclatorToUpdate = await Nomenclator.findOne({ code });
 
-    if (!userToUpdate) {
+    if (!nomenclatorToUpdate) {
       return NextResponse.json({
         ok: false,
-        message: "El usuario a actualizar no existe",
+        message: "El nomenclador a actualizar no existe",
       });
     }
-    const hashedPassword = await bcrypt.hash(password, 12);
 
-    await User.findOneAndUpdate({ user }, { user, userName, lastName, privileges, password: hashedPassword, area }, { new: true });
+    await Nomenclator.findOneAndUpdate({ code }, { code, name, description }, { new: true });
 
     return NextResponse.json({
       ok: true,
-      message: "Usuario actualizado",
-      userToUpdate,
+      message: "Nomenclador actualizado",
+      nomenclatorToUpdate,
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -129,26 +110,27 @@ export async function PUT(request: Request) {
   }
 }
 
+
 export async function PATCH(request: Request) {
-  const { user } = await request.json();
+  const { code } = await request.json();
 
   try {
     await connectDB();
-    const userToDelete = await User.findOne({ user });
+    const nomenclatorToDelete = await Nomenclator.findOne({ code });
 
-    if (!userToDelete) {
+    if (!nomenclatorToDelete) {
       return NextResponse.json({
         ok: true,
-        message: "El usuario a borrar no existe",
+        message: "El nomenclador a borrar no existe",
       });
     }
 
-    const deletedUser = await User.findOneAndDelete({ user });
+    const deletedNomenclator = await Nomenclator.findOneAndDelete({ code });
 
     return NextResponse.json({
       ok: true,
-      message: "Usuario eliminado",
-      deletedUser,
+      message: "Nomenclador eliminado",
+      deletedNomenclator,
     });
   } catch (error) {
     if (error instanceof Error) {

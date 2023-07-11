@@ -16,38 +16,38 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
   defaultValues?: Values;
 }
+const options: SelectProps["options"] = [
+  {
+    label: "ADMIN",
+    value: "ADMIN",
+  },
+  {
+    label: "COMMERCIAL",
+    value: "COMMERCIAL",
+  },
+  {
+    label: "USER",
+    value: "USER",
+  },
+  {
+    label: "HR",
+    value: "HR",
+  },
+  {
+    label: "PROJECT",
+    value: "PROJECT",
+  },
+  {
+    label: "WAREHOUSE",
+    value: "WAREHOUSE",
+  },
+  {
+    label: "OFFICE",
+    value: "OFFICE",
+  },
+];
 
 export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
-  const options: SelectProps["options"] = [
-    {
-      label: "ADMIN",
-      value: "ADMIN",
-    },
-    {
-      label: "COMMERCIAL",
-      value: "COMMERCIAL",
-    },
-    {
-      label: "USER",
-      value: "USER",
-    },
-    {
-      label: "HR",
-      value: "HR",
-    },
-    {
-      label: "PROJECT",
-      value: "PROJECT",
-    },
-    {
-      label: "WAREHOUSE",
-      value: "WAREHOUSE",
-    },
-    {
-      label: "OFFICE",
-      value: "OFFICE",
-    },
-  ];
 
   const handleChange = (value: string[]) => {
     console.log(`selected ${value}`);
