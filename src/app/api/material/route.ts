@@ -1,43 +1,83 @@
 import { connectDB } from "@/libs/mongodb";
-import Material from "@/models/material";
+import Material, { IMaterial } from "@/models/material";
+import moment from "moment";
 import { NextResponse } from "next/server";
 
-
 export async function POST(request: Request) {
-  const { name, category, unitMeasure, costPrice, minimumExistence } = await request.json();
+  const { operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1, unitsTotal = 0 } = await request.json();
+
+  let date = moment();
+  let currentDate = date.format("MMMM Do YYYY, h:mm:ss a");
 
   try {
     await connectDB();
-    const BDMaterial = await Material.findOne({ name });
+    let BDMaterial = (await Material.findOne({ materialName, category, costPerUnit })) as IMaterial;
 
-    if (BDMaterial) {
+    // * Si ya existe un material con ese código suma la cantidad que se está entrando al total *
+    if (BDMaterial && operation.type === "Añadir") {
+      let newTotal = BDMaterial.unitsTotal + operation?.amount;
+      let UpdatedMaterial = await Material.findOneAndUpdate(
+        { materialName, category, costPerUnit },
+        { materialName, category, unitMeasure, costPerUnit, minimumExistence, unitsTotal: newTotal},
+        { new: true }
+      );
       return NextResponse.json(
         {
-          ok: false,
-          msg: "Ya existe un material con ese nombre",
+          ok: true,
+          msg: "Material añadido",
+          UpdatedMaterial,
         },
         {
           status: 409,
         }
       );
     }
+    // * Si ya existe un material con ese código sustrae la cantidad que se está entrando al total *
+    if (BDMaterial && operation.type === "Sustraer") {
+      let newTotal = BDMaterial.unitsTotal - operation?.amount;
+      let UpdatedMaterial = await Material.findOneAndUpdate(
+        { materialName, category, costPerUnit },
+        { materialName, category, unitMeasure, costPerUnit, minimumExistence, unitsTotal: newTotal },
+        { new: true }
+      );
+      return NextResponse.json(
+        {
+          ok: true,
+          msg: "Material sustraído",
+          UpdatedMaterial,
+        },
+        {
+          status: 409,
+        }
+      );
+      // * Si no existe un material con ese código crea una nueva entrada en el almacén *
+    } else {
+      // const operation= {
+      //   date: currentDate,
+      //   type: "Añadir",
+      //   amount: amount,
+      // };
+      const newMaterial = new Material({
+        materialName,
+        category,
+        unitMeasure,
+        costPerUnit,
+        minimumExistence,
+        enterDate: currentDate,
+        unitsTotal,
+        key: materialName,
+        code: category + materialName + costPerUnit,
+        operations: [operation],
+      });
 
-    const newMaterial = new Material({
-      name,
-      category,
-      unitMeasure, 
-      costPrice, 
-      minimumExistence,
-      key: name,
-    });
-
-    await newMaterial.save();
-
-    return NextResponse.json({
-      ok: true,
-      message: "Material creado",
-      newMaterial,
-    });
+      await newMaterial.save();
+      return NextResponse.json({
+        ok: true,
+        message: "Material creado",
+        id: newMaterial._id.toString(),
+        newMaterial,
+      });
+    }
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
@@ -77,7 +117,7 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const { name, category, unitMeasure, costPrice, minimumExistence } = await request.json();
+  const { materialName, category, unitMeasure, costPerUnit, minimumExistence = 1, enterDate, unitsTotal = 0 } = await request.json();
 
   try {
     await connectDB();
@@ -90,7 +130,11 @@ export async function PUT(request: Request) {
       });
     }
 
-    await Material.findOneAndUpdate({ name }, { name, category, unitMeasure, costPrice, minimumExistence }, { new: true });
+    await Material.findOneAndUpdate(
+      { materialName },
+      { materialName, category, unitMeasure, costPerUnit, minimumExistence, enterDate, unitsTotal },
+      { new: true }
+    );
 
     return NextResponse.json({
       ok: true,
@@ -113,11 +157,11 @@ export async function PUT(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const { name } = await request.json();
+  const { materialName } = await request.json();
 
   try {
     await connectDB();
-    const materialToDelete = await Material.findOne({ name });
+    const materialToDelete = await Material.findOne({ materialName });
 
     if (!materialToDelete) {
       return NextResponse.json({
@@ -126,7 +170,7 @@ export async function PATCH(request: Request) {
       });
     }
 
-    const deletedMaterial = await Material.findOneAndDelete({ name });
+    const deletedMaterial = await Material.findOneAndDelete({ materialName });
 
     return NextResponse.json({
       ok: true,
