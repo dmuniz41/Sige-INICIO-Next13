@@ -11,4 +11,12 @@ export const types = {
   deleteUser:     "[User] Delete User",
   usersLoaded:    "[User] Users Loaded",
   selectedUser:   "[User] User Selected",
+
+
+  addWorker:        "[Worker] Add worker",
+  startAddWorker:   "[Worker] Start add worker",
+  updateWorker:     "[Worker] Update worker",
+  deleteWorker:     "[Worker] Delete worker",
+  workersLoaded:    "[Worker] Workers loaded",
+  selectedWorker:   "[Worker] Worker selected",
 };

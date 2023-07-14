@@ -1,5 +1,4 @@
 import Swal from "sweetalert2";
-import { fetchSinToken } from "../helpers/fetch";
 import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
 import axios, { AxiosError } from "axios";

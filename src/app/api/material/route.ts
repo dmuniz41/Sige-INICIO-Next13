@@ -3,6 +3,8 @@ import Material, { IMaterial } from "@/models/material";
 import moment from "moment";
 import { NextResponse } from "next/server";
 
+// TODO: Hacer que se vean las operaciones de adicion y sustraccion de materiales
+
 export async function POST(request: Request) {
   const { operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1, unitsTotal = 0 } = await request.json();
 

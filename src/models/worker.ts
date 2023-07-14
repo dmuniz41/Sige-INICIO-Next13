@@ -3,12 +3,12 @@ import { Model, Schema, Types, model, models } from "mongoose";
 interface IWorker {
   key         : string,
   name        : string,
-  CI          : string,
-  role        : string,
+  CI          : number,
+  role        : string[],
   address?    : string,
   phoneNumber : number,
   bankAccount?: number,
-  salary?     : number,
+  // salary?     : number,
   taxes?      : number
 }
 
@@ -22,12 +22,12 @@ const WorkerSchema = new Schema<IWorker, Model<IWorker>>({
     unique: true,
   },
   CI: {
-    type: String,
+    type: Number,
     required: [true, "El carnet de identidad es requerido"],
     unique: true,
   },
   role: {
-    type: String,
+    type: [String],
     required: [true, "El cargo es requerido"],
   },
   address: {
@@ -40,12 +40,12 @@ const WorkerSchema = new Schema<IWorker, Model<IWorker>>({
   bankAccount: {
     type: Number,
   },
-  salary: {
-    type: Number,
-  },
-  taxes: {
-    type: Number,
-  },
+  // salary: {
+  //   type: Number,
+  // },
+  // taxes: {
+  //   type: Number,
+  // },
 });
 
 const Worker = models.Worker || model("Worker", WorkerSchema);

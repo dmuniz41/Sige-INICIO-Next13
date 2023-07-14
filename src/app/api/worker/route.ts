@@ -3,7 +3,7 @@ import Worker from "@/models/worker";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const { name, CI, role, address, phoneNumber, bankAccount, salary, taxes } = await request.json();
+  const { name, CI, role, address, phoneNumber, bankAccount } = await request.json();
 
   try {
     await connectDB();
@@ -28,8 +28,6 @@ export async function POST(request: Request) {
       address,
       phoneNumber,
       bankAccount,
-      salary,
-      taxes,
       key: name,
     });
 
@@ -79,7 +77,7 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const { name, CI, role, address, phoneNumber, bankAccount, salary, taxes } = await request.json();
+  const { name, CI, role, address, phoneNumber, bankAccount } = await request.json();
 
   try {
     await connectDB();
@@ -92,7 +90,7 @@ export async function PUT(request: Request) {
       });
     }
 
-    await Worker.findOneAndUpdate({ name }, { name, CI, role, address, phoneNumber, bankAccount, salary, taxes }, { new: true });
+    await Worker.findOneAndUpdate({ name }, { name, CI, role, address, phoneNumber, bankAccount }, { new: true });
 
     return NextResponse.json({
       ok: true,
