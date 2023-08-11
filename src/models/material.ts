@@ -1,21 +1,26 @@
 import { Model, Schema, Types, model, models } from "mongoose";
 
-// export interface IOperation {
-//   date: string;
-//   type: string;
-//   amount: number;
-// }
+const Operation = new Schema<IOperation, Model<IOperation>>({
+  date  : {type: String}, 
+  type  : {type: String},
+  amount: {type:Number}
+});
+export interface IOperation {
+  date  : string;
+  type  : string;
+  amount: number;
+}
 export interface IMaterial {
-  code: string;
-  key: string;
-  materialName: string;
-  enterDate: string;
-  category: string;
-  unitMeasure?: string;
-  unitsTotal: number;
-  costPerUnit: number;
+  code            : string;
+  key             : string;
+  materialName    : string;
+  enterDate       : string;
+  category        : string;
+  costPerUnit     : number;
+  unitsTotal      : number;
   minimumExistence: number;
-  operations?: [];
+  unitMeasure?    : string;
+  operations?     : Types.DocumentArray<IOperation>;
 }
 
 const MaterialSchema = new Schema<IMaterial, Model<IMaterial>>({
@@ -32,7 +37,7 @@ const MaterialSchema = new Schema<IMaterial, Model<IMaterial>>({
   },
   category: {
     type: String,
-    required: [true, "La categoría del material es requerida"],
+    required: [true, "La categoría del material es reTypes.DocumentArray<IOperation>querida"],
   },
   enterDate: {
     type: String,
@@ -53,13 +58,7 @@ const MaterialSchema = new Schema<IMaterial, Model<IMaterial>>({
     required: [true, "La existencia mínima es requerida"],
   },
   operations: {
-    type: [
-      // {
-      //   date: String,
-      //   type: String,
-      //   amount: Number,
-      // },
-    ],
+    type: [Operation]
   },
 });
 

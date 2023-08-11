@@ -13,7 +13,7 @@ const items: MenuProps["items"] = [
   },
   {
     key: "logout",
-    label: <a href="/login">Logout</a>,
+    label: <a href="/auth/login">Logout</a>,
     icon: <LogoutOutlined />,
   },
 ];

@@ -1,5 +1,6 @@
 import { Model, Schema, Types, model, models } from "mongoose";
-import { IMaterial } from "./material";
+import { IMaterial } from './material';
+
 
 interface IWarehouse {
   key: string;

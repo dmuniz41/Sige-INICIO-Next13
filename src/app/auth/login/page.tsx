@@ -2,10 +2,12 @@
 import React, { FormEvent, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 
-import logo from "../../assets/inicio.svg";
+import logo from "../../../assets/inicio.svg";
+import Swal from "sweetalert2";
+import { Toast } from "@/helpers/customAlert";
 
 export default function Login() {
 
@@ -15,17 +17,21 @@ export default function Login() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     const formData = new FormData(e.currentTarget);
-    e.preventDefault();
+    e.preventDefault();    
 
     const res = await signIn("credentials", {
       user: formData.get("user"),
       password: formData.get("password"),
       redirect: false,
+      callbackUrl: '/dashboard'
     });
-    console.log(res);
     
     if (res?.error){
       console.log(error);
+      Toast.fire({
+        icon: "error",
+        title: "Usuario o contraseña incorrecto",
+      });
       
       return setError(res.error as string);
     } 
