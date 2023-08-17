@@ -1,5 +1,7 @@
 "use client";
 
+import { usersStartLoading } from "@/actions/users";
+import { useAppDispatch } from "@/hooks/hooks";
 import { Form, Input, Modal, Select } from "antd";
 import { useState } from "react";
 
@@ -20,6 +22,7 @@ interface CollectionCreateFormProps {
 }
 
 export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+  const dispatch = useAppDispatch()
   const [selectedPrivileges, setSelectedPrivileges] = useState<string[]>(["ADMIN"]);
 
   const filteredPrivileges = PRIVILEGES.filter((o) => !selectedPrivileges.includes(o));

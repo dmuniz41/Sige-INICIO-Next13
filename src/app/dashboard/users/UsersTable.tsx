@@ -14,7 +14,6 @@ import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
 import { EditUserForm } from "./EditUserForm";
-import { useSession } from "next-auth/react";
 
 interface DataType {
   _id: string;
@@ -36,10 +35,6 @@ const UserTable: React.FC = () => {
   const [editModal, setEditModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState<DataType>();
   const searchInput = useRef<InputRef>(null);
-
-  // const {data:sessionData} = useSession()
-  // console.log("🚀 ~ file: UsersTable.tsx:41 ~ sessionData:", sessionData?.user?.accessToken)
-  
 
   useEffect(() => {
     dispatch(usersStartLoading());
@@ -64,7 +59,6 @@ const UserTable: React.FC = () => {
   const onEdit = (values: any): void => {
     console.log(values);
     dispatch(startUpdateUser(values.user, values.userName, values.lastName, values.privileges, values.password, values.area));
-    dispatch(usersStartLoading())
     setEditModal(false);
   };
 
@@ -93,7 +87,7 @@ const UserTable: React.FC = () => {
 
   const rowSelection: TableRowSelection<DataType> = {
     onChange: async (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-      setSelectedRow(selectedRows[ 0 ]);
+      setSelectedRow(selectedRows[0]);
       console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows, selectedRows);
     },
   };

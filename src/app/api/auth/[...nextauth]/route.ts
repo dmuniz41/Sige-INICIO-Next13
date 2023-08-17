@@ -24,7 +24,6 @@ const handler = NextAuth({
         });
 
         const DBUser = await res.json();
-        console.log("🚀 ~ file: route.ts:27 ~ authorize ~ DBUser:", DBUser)
         
         if (DBUser) return DBUser;
         else return null;
