@@ -20,6 +20,7 @@
     "bcryptjs": "^2.4.3",
     "eslint": "8.43.0",
     "eslint-config-next": "13.4.6",
+    "jsonwebtoken": "^9.0.1",
     "moment": "^2.29.4",
     "mongoose": "^7.3.0",
     "next": "13.4.7",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^9.0.2",
     "@types/react-highlight-words": "^0.16.4",
     "@types/react-redux": "^7.1.25",
     "@types/redux": "^3.6.0",

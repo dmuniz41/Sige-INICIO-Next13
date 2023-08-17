@@ -6,12 +6,13 @@ import { signIn, useSession } from "next-auth/react";
 
 
 import logo from "../../../assets/inicio.svg";
-import Swal from "sweetalert2";
 import { Toast } from "@/helpers/customAlert";
 
 export default function Login() {
 
   const [error, setError] = useState("");
+  const Session = useSession()
+  console.log("🚀 ~ file: page.tsx:8 ~ page ~ Session:", Session)
 
   const router = useRouter();
 
@@ -36,7 +37,6 @@ export default function Login() {
       return setError(res.error as string);
     } 
     if (res?.ok) {
-      console.log(res);
       
       return router.push("/dashboard");
     }

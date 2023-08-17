@@ -4,8 +4,9 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 
 import userImage from "../../assets/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png";
-import { DropdownMenu } from "./DropdownMenu";
 import logo from "../../assets/inicio.svg";
+import { LogoutOutlined } from "@ant-design/icons";
+import { signOut } from "next-auth/react";
 
 // TODO: Añadir encabezado dinámico a las secciones y breadcrum  
 
@@ -25,7 +26,7 @@ export const Navbar = () => {
             <li className="flex items-center gap-[0.5rem] font-bold text-white text-base">
               <Image src={userImage} width={50} height={50} priority={false} alt="user image" className="rounded-full" />
               <span>Daniel</span>
-              <DropdownMenu />
+              <LogoutOutlined onClick={()=>{signOut()}} className="mb-0.5"/>
             </li>
           </ul>
         </div>

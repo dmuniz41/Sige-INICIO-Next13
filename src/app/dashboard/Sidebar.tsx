@@ -5,6 +5,7 @@ import { AppstoreOutlined, FolderOpenOutlined, LockOutlined, SettingOutlined, Sh
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const items: MenuProps["items"] = [
   {
@@ -84,6 +85,9 @@ const items: MenuProps["items"] = [
 ];
 
 export const Sidebar: React.FC = () => {
+
+  const session = useSession()
+  console.log("🚀 ~ file: page.tsx:8 ~ page ~ session:", session)
   const [current, setCurrent] = useState("users");
 
   const onClick: MenuProps["onClick"] = (e) => {
