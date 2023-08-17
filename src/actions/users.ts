@@ -2,11 +2,14 @@ import Swal from "sweetalert2";
 import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
 import axios, { AxiosError } from "axios";
-
+import { cookies } from "next/headers";
+import User from "@/models/user";
 export const startAddUser = (user: string, userName: string, lastName: string, privileges: string[], password: string, area: string): any => {
+  const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user, userName, lastName, privileges, password, area })
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user, userName, lastName, privileges, password, area }, 
+        {headers: { accessToken: token }})
       .then(() => {
         dispatch(addUser(user, userName, lastName, privileges, password, area));
         Toast.fire({
@@ -21,9 +24,11 @@ export const startAddUser = (user: string, userName: string, lastName: string, p
   };
 };
 export const startUpdateUser = (user: string, userName: string, lastName: string, privileges: string[], password: string, area: string): any => {
+  const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user, userName, lastName, privileges, password, area })
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user, userName, lastName, privileges, password, area }, 
+        {headers: { accessToken: token }})
       .then(() => {
         dispatch(updateUser(user, userName, lastName, privileges, password, area));
         Toast.fire({
@@ -38,9 +43,11 @@ export const startUpdateUser = (user: string, userName: string, lastName: string
   };
 };
 export const startDeleteUser = (user: string): any => {
+  const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .patch(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user })
+      .patch(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user }, 
+        { headers: { accessToken: token } })
       .then(() => {
         dispatch(deleteUser(user));
         Toast.fire({
@@ -55,9 +62,12 @@ export const startDeleteUser = (user: string): any => {
   };
 };
 export const usersStartLoading = () => {
+  const token = localStorage.getItem("accessToken");
+
   return async (dispatch: any) => {
     await axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/user`)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/user`, 
+        {headers: { accessToken: token }})
       .then((resp) => {
         let { listOfUsers } = resp.data;
         dispatch(usersLoaded(listOfUsers));

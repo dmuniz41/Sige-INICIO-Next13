@@ -14,6 +14,7 @@ import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
 import { EditUserForm } from "./EditUserForm";
+import { useSession } from "next-auth/react";
 
 interface DataType {
   _id: string;
@@ -35,6 +36,10 @@ const UserTable: React.FC = () => {
   const [editModal, setEditModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState<DataType>();
   const searchInput = useRef<InputRef>(null);
+
+  // const {data:sessionData} = useSession()
+  // console.log("🚀 ~ file: UsersTable.tsx:41 ~ sessionData:", sessionData?.user?.accessToken)
+  
 
   useEffect(() => {
     dispatch(usersStartLoading());

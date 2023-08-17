@@ -3,9 +3,22 @@ import bcrypt from "bcryptjs";
 
 import User from "@/models/user";
 import { connectDB } from "@/libs/mongodb";
+import { verifyJWT } from "@/libs/jwt";
 
 export async function POST(request: Request) {
   const { user, userName, lastName, privileges, password, area } = await request.json();
+  const accessToken = request.headers.get("accessToken");
+  if (!accessToken || !verifyJWT(accessToken)) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "No hay token en la peticion",
+      },
+      {
+        status: 401,
+      }
+    );
+  }
 
   if (!password || password.length < 6) {
     return NextResponse.json(
@@ -52,7 +65,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       ok: true,
       message: "Usuario creado",
-      newUser
+      newUser,
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -69,8 +82,20 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  const accessToken = request.headers.get("accessToken");
   try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "No hay token en la peticion",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
     await connectDB();
     const listOfUsers = await User.find();
     return NextResponse.json({
@@ -94,8 +119,20 @@ export async function GET() {
 
 export async function PUT(request: Request) {
   const { user, userName, lastName, privileges, password, area } = await request.json();
+  const accessToken = request.headers.get("accessToken");
 
   try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "No hay token en la peticion",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
     await connectDB();
     const userToUpdate = await User.findOne({ user });
 
@@ -131,8 +168,20 @@ export async function PUT(request: Request) {
 
 export async function PATCH(request: Request) {
   const { user } = await request.json();
+  const accessToken = request.headers.get("accessToken");
 
   try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "No hay token en la peticion",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
     await connectDB();
     const userToDelete = await User.findOne({ user });
 

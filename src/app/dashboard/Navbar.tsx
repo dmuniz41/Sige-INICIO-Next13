@@ -6,11 +6,13 @@ import Image from "next/image";
 import userImage from "../../assets/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png";
 import logo from "../../assets/inicio.svg";
 import { LogoutOutlined } from "@ant-design/icons";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 // TODO: Añadir encabezado dinámico a las secciones y breadcrum  
 
 export const Navbar = () => {
+  const {data:sessionData} = useSession()
+  localStorage.setItem('accessToken', sessionData?.user?.accessToken)
   // let sectionName: string[] = ["DASHBOARD"];
 
   // useEffect(() => {
