@@ -28,7 +28,7 @@ export const Navbar = () => {
             <li className="flex items-center gap-[0.5rem] font-bold text-white text-base">
               <Image src={userImage} width={50} height={50} priority={false} alt="user image" className="rounded-full" />
               <span>Daniel</span>
-              <LogoutOutlined onClick={()=>{signOut()}} className="mb-0.5"/>
+              <LogoutOutlined onClick={()=>{signOut()}} className="mb-0.5 text-md"/>
             </li>
           </ul>
         </div>
