@@ -1,6 +1,5 @@
 import "./globals.css";
 import { Providers } from "../providers/providers";
-import { Provider } from "react-redux";
 
 export const metadata = {
   title: "Sige INICIO",
