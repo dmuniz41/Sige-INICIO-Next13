@@ -1,8 +1,16 @@
 import React from 'react'
-import { NomenclatorsScreen } from './NomenclatorsScreen';
 
 export default function page ()  {
+  console.log('nomenclator page');
+  
   return (
-    <div><NomenclatorsScreen /></div>
+    <div id="nomenclatorsScreen-wrapper" className="flex w-full h-full items-center pt-[6rem] pl-[300px] pr-[3rem] overflow-hidden">
+    <div
+      id="nomenclatorSection-content"
+      className="w-[80%] items-start justify-start mt-10 flex-col gap-2 h-full p-4 animate-fade animate-once animate-duration-150 grow overflow-auto"
+    >
+      <h1 className='text-2xl'>Nomenclator Page</h1>
+    </div>
+  </div>
   )
 }

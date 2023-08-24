@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       const accessToken = signJwtAccessToken(DBUser.toJSON());
       const DBUserJSON = DBUser.toJSON();
       const result = {
-        user: DBUserJSON,
+        ...DBUserJSON,
         accessToken,
       };
 
