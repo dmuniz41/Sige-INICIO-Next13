@@ -203,9 +203,6 @@ const UserTable: React.FC = () => {
               case "COMMERCIAL":
                 color = "#34395e";
                 break;
-              case "USER":
-                color = "#34b042";
-                break;
               case "HR":
                 color = "#ffa426";
                 break;

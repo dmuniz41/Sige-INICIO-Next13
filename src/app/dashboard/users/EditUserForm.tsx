@@ -26,10 +26,6 @@ const options: SelectProps["options"] = [
     value: "COMMERCIAL",
   },
   {
-    label: "USER",
-    value: "USER",
-  },
-  {
     label: "HR",
     value: "HR",
   },

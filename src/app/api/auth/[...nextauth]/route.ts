@@ -36,12 +36,16 @@ const handler = NextAuth({
   },
   callbacks: {
     async session({ session, token }) {
-      session.user = token.user!
+      if(session?.user){
+        session.user = token.user!
+        session.user.role = token.user?.privileges!
+      }
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
         token.user = user;
+        token.role = user.role
       }
       return token;
     },
