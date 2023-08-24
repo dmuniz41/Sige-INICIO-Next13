@@ -52,8 +52,10 @@ export const Navbar = () => {
   return (
     <>
       <div className="flex justify-between items-center h-[5rem] bg-primary-500 w-full absolute">
-        <Image src={logo} width={250} height={"10"} alt="inicio-logo" className="h-5rem bg-background_light p-7" />
-        <div className="flex items-center justify-end bg-primary-500 w-full h-full p-[1rem]">
+        <div className="min-w-[240px] h-full flex items-center justify-center bg-background_light">
+        <Image src={logo} width={100} height={10} alt="inicio-logo" className="h-full w-full p-2 bg-background_light"/>
+        </div>
+        <div className="flex items-center justify-end bg-primary-500 w-full h-full p-[1rem] bg-transparent">
           <ul className="list-none">
             <li className="flex items-center gap-[0.5rem] font-bold text-white text-base">
               <Image src={userImage} width={50} height={50} priority={false} alt="user image" className="rounded-full" />

@@ -2,9 +2,10 @@
 
 import React, { useState } from "react";
 import { AppstoreOutlined, FolderOpenOutlined, LockOutlined, SettingOutlined, ShopOutlined, UserOutlined } from "@ant-design/icons";
-import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import type { MenuProps } from "antd";
 
 const items: MenuProps["items"] = [
   {
@@ -84,6 +85,8 @@ const items: MenuProps["items"] = [
 ];
 
 export const Sidebar: React.FC = () => {
+  const { data: sessionData } = useSession();
+  const username = sessionData?.user.role;
 
   const [current, setCurrent] = useState("users");
 
@@ -94,11 +97,10 @@ export const Sidebar: React.FC = () => {
   return (
     <Menu
       id="sidebar"
-      className="bg-background_light"
       mode="inline"
       onClick={onClick}
       selectedKeys={[current]}
-      style={{ width: 250 }}
+      style={{ width: "240px", backgroundColor: "#f4f6f9", fontWeight: "bold", fontSize: "14px" }}
       items={items}
     />
   );
