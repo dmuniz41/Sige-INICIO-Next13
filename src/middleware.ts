@@ -9,7 +9,7 @@ export default withAuth(
 
     //* Allow only users with administrator role to access the users page  */
     if (request.nextUrl.pathname.startsWith("/dashboard/users") && !request.nextauth.token?.user?.role?.includes("ADMIN")) {
-      return NextResponse.rewrite(new URL("/dashboard", request.url));
+      return NextResponse.rewrite(new URL("/unauthorized", request.url));
     }
     //* Allow only users with administrator and human resources roles to access the human resources page */
     if (
@@ -17,7 +17,7 @@ export default withAuth(
       !request.nextauth.token?.user?.role?.includes("ADMIN") &&
       !request.nextauth.token?.user?.role?.includes("HR")
     ) {
-      return NextResponse.rewrite(new URL("/dashboard", request.url));
+      return NextResponse.rewrite(new URL("/unauthorized", request.url));
     }
     //* Allow only users with administrator and office roles to access the office page  */
     if (
@@ -25,7 +25,7 @@ export default withAuth(
       !request.nextauth.token?.user?.role?.includes("ADMIN") &&
       !request.nextauth.token?.user?.role?.includes("OFFICE")
     ) {
-      return NextResponse.rewrite(new URL("/dashboard", request.url));
+      return NextResponse.rewrite(new URL("/unauthorized", request.url));
     }
     //* Allow only users with administrator and warehouse roles to access the warehouse page  */
     if (
@@ -33,7 +33,7 @@ export default withAuth(
       !request.nextauth.token?.user?.role?.includes("ADMIN") &&
       !request.nextauth.token?.user?.role?.includes("WAREHOUSE")
     ) {
-      return NextResponse.rewrite(new URL("/dashboard", request.url));
+      return NextResponse.rewrite(new URL("/unauthorized", request.url));
     }
     //* Allow only users with administrator and warehouse roles to access the tickets warehouse page  */
     if (
@@ -41,7 +41,7 @@ export default withAuth(
       !request.nextauth.token?.user?.role?.includes("ADMIN") &&
       !request.nextauth.token?.user?.role?.includes("WAREHOUSE")
     ) {
-      return NextResponse.rewrite(new URL("/dashboard", request.url));
+      return NextResponse.rewrite(new URL("/unauthorized", request.url));
     }
     //* Allow only users with administrator and project roles to access the project page  */
     if (
@@ -49,7 +49,7 @@ export default withAuth(
       !request.nextauth.token?.user?.role?.includes("ADMIN") &&
       !request.nextauth.token?.user?.role?.includes("PROJECT")
     ) {
-      return NextResponse.rewrite(new URL("/dashboard", request.url));
+      return NextResponse.rewrite(new URL("/unauthorized", request.url));
     }
     //* Allow only users with administrator and project roles to access the project expenses page  */
     if (
@@ -57,7 +57,7 @@ export default withAuth(
       !request.nextauth.token?.user?.role?.includes("ADMIN") &&
       !request.nextauth.token?.user?.role?.includes("PROJECT")
     ) {
-      return NextResponse.rewrite(new URL("/dashboard", request.url));
+      return NextResponse.rewrite(new URL("/unauthorized", request.url));
     }
     // TODO: Establecer los permisos de acceso del rol COMERCIAL
   },

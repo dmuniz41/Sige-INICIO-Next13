@@ -4,40 +4,37 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 
-
 import logo from "../../../assets/inicio.svg";
 import { Toast } from "@/helpers/customAlert";
 
 export default function Login() {
-
   const [error, setError] = useState("");
-  const Session = useSession()
-  console.log("🚀 ~ file: page.tsx:8 ~ page ~ Session:", Session)
+  const Session = useSession();
+  console.log("🚀 ~ file: page.tsx:8 ~ page ~ Session:", Session);
 
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     const formData = new FormData(e.currentTarget);
-    e.preventDefault();    
+    e.preventDefault();
 
     const res = await signIn("credentials", {
       user: formData.get("user"),
       password: formData.get("password"),
       redirect: false,
-      callbackUrl: '/dashboard'
+      callbackUrl: "/dashboard",
     });
-    
-    if (res?.error){
+
+    if (res?.error) {
       console.log(error);
       Toast.fire({
         icon: "error",
         title: "Usuario o contraseña incorrecto",
       });
-      
+
       return setError(res.error as string);
-    } 
+    }
     if (res?.ok) {
-      
       return router.push("/dashboard");
     }
   };
@@ -67,11 +64,13 @@ export default function Login() {
           id="input_password"
           autoComplete="current-password"
         />
-        <button className="text-white font-bold pointer bg-primary-500 rounded-md mt-2 w-full h-[50px] border-none transition ease-in delay-50 hover:bg-primary-600">
-          ENTRAR
+        <button type="submit">
+          <a className="cursor-pointer text-xl justify-center items-center flex bg-primary-500 rounded-md mt-2 w-full h-[50px] border-none transition ease-in delay-50 hover:bg-primary-600 shadow-md">
+            <span className="text-white font-black">Entrar</span>
+          </a>
         </button>
       </form>
       <p className="font-semibold mt-20 text-border_input">Copyright © INICIO-TEAM 2022</p>
     </div>
-  )
+  );
 }
