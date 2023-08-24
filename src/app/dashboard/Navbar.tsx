@@ -15,7 +15,7 @@ export const Navbar = () => {
   let secondaryPath = mainPath[2];
   const { data: sessionData } = useSession();
   const username = sessionData?.user?.user;
-  localStorage.setItem("accessToken", sessionData?.user?.accessToken);
+  
 
   if (mainPath.includes("dashboard")) mainPath[1] = "Menú Principal";
 

@@ -7,8 +7,7 @@ export const startAddUser = (user: string, userName: string, lastName: string, p
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user, userName, lastName, privileges, password, area }, 
-        {headers: { accessToken: token }})
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user, userName, lastName, privileges, password, area }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(addUser(user, userName, lastName, privileges, password, area));
         Toast.fire({
@@ -27,8 +26,7 @@ export const startUpdateUser = (user: string, userName: string, lastName: string
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user, userName, lastName, privileges, password, area }, 
-        {headers: { accessToken: token }})
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user, userName, lastName, privileges, password, area }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(updateUser(user, userName, lastName, privileges, password, area));
         Toast.fire({
@@ -47,8 +45,7 @@ export const startDeleteUser = (user: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .patch(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user }, 
-        { headers: { accessToken: token } })
+      .patch(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(deleteUser(user));
         Toast.fire({
@@ -68,8 +65,7 @@ export const usersStartLoading = () => {
 
   return async (dispatch: any) => {
     await axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/user`, 
-        {headers: { accessToken: token }})
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/user`, { headers: { accessToken: token } })
       .then((resp) => {
         let { listOfUsers } = resp.data;
         dispatch(usersLoaded(listOfUsers));

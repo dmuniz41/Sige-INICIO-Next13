@@ -1,5 +1,7 @@
 {
+  
   "compilerOptions": {
+    
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -24,5 +26,6 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/helpers/toCamelCase.js"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
 }
+
