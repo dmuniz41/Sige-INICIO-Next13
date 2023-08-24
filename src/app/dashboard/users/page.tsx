@@ -1,12 +1,15 @@
 import React from "react";
-import UsersScreen from "./UsersScreen";
+import UserTable from "./UsersTable";
 
 export default function page() {
-  console.log('users page');
-  
   return (
-    <div id="userScreen-wrapper" className="flex w-full h-80% items-center pt-[3rem] pl-[300px] pr-[3rem] overflow-hidden">
-      <UsersScreen />
+    <div id="userScreen-wrapper" className="flex w-full min-h-[90%] pt-[3rem] pl-[300px] pr-[3rem] overflow-hidden">
+      <div
+        id="userTable_wrapper"
+        className="w-[80%] items-start justify-start flex-col gap-2 h-full p-4 animate-fade animate-once animate-duration-150 grow overflow-auto"
+      >
+        <UserTable />
+      </div>
     </div>
   );
 }
