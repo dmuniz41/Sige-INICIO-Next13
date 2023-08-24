@@ -26,8 +26,9 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
   const [form] = Form.useForm();
   return (
     <Modal
-      className="flex flex-col"
+      className="flex flex-col font-black"
       title="Nuevo Usuario"
+      style={{textAlign: "center"}}
       centered
       open={open}
       destroyOnClose
@@ -47,7 +48,7 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
       okText="Crear"
       cancelText="Cancelar"
     >
-      <Form form={form} layout="vertical" name="createUserForm" size="large">
+      <Form form={form} layout="vertical" name="createUserForm" size="middle">
         <Form.Item name="user" label="Usuario" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>

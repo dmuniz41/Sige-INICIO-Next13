@@ -52,10 +52,11 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCrea
   const [form] = Form.useForm();
   return (
     <Modal
-      className="flex flex-col"
+      className="flex flex-col font-black"
       title="Editar Usuario"
       centered
       open={open}
+      style={{textAlign: "center"}}
       destroyOnClose
       onOk={() => {
         form
@@ -77,7 +78,7 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCrea
         form={form}
         layout="vertical"
         name="editUserForm"
-        size="large"
+        size="middle"
         fields={[
           {
             name: "user",

@@ -6,13 +6,13 @@ import { useState } from "react";
 const ROLES = ["ADMINISTRADOR", "COMMERCIAL", "CHOFER", "MONTADOR", "IMPRESIÓN", "ROUTER"];
 
 interface Values {
-  key         : string,
-  name        : string,
-  CI          : number,
-  role        : string[],
-  address     : string,
-  phoneNumber : number,
-  bankAccount : number,
+  key: string;
+  name: string;
+  CI: number;
+  role: string[];
+  address: string;
+  phoneNumber: number;
+  bankAccount: number;
 }
 interface CollectionCreateFormProps {
   open: boolean;
@@ -27,10 +27,11 @@ export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, on
   const [form] = Form.useForm();
   return (
     <Modal
-      className="flex flex-col"
+      className="flex flex-col font-black"
       title="Nuevo Trabajador"
       centered
       open={open}
+      style={{ textAlign: "center" }}
       destroyOnClose
       onOk={() => {
         form
@@ -48,7 +49,7 @@ export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, on
       okText="Crear"
       cancelText="Cancelar"
     >
-      <Form form={form} layout="vertical" name="createUserForm" size="large">
+      <Form form={form} layout="vertical" name="createUserForm" size="middle">
         <Form.Item name="name" label="Nombre" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
@@ -72,7 +73,7 @@ export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, on
         </Form.Item>
         <Form.Item name="phoneNumber" label="Teléfono" rules={[{ required: true, min: 7, message: "Campo requerido" }]}>
           <Input />
-        </Form.Item>  
+        </Form.Item>
         <Form.Item name="bankAccount" label="Cuenta Bancaria" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
