@@ -3,6 +3,7 @@ import moment from "moment";
 import { NextResponse } from "next/server";
 
 import Material, { IMaterial } from "@/models/material";
+import Operation from "@/models/operation";
 
 // TODO: Hacer que se vean las operaciones de adicion y sustraccion de materiales
 
@@ -18,13 +19,11 @@ export async function POST(request: Request) {
 
     // * Si ya existe un material con ese código suma la cantidad que se está entrando al total y agrega la nueva operacion a la lista de operaciones del material ya existente*
 
-    if (BDMaterial && operation.type === "Añadir") {
-      console.log(operation);
-      
+    if (BDMaterial && operation.tipo === "Añadir") {
       let newTotal = BDMaterial.unitsTotal + operation?.amount;
       let UpdatedMaterial = await Material.findOneAndUpdate(
         { materialName, category, costPerUnit },
-        { materialName, category, unitMeasure, costPerUnit, minimumExistence, unitsTotal: newTotal, operations: operation},
+        { $push: { operations: operation }, materialName, category, unitMeasure, costPerUnit, minimumExistence, unitsTotal: newTotal },
         { new: true }
       );
       return NextResponse.json(
@@ -39,7 +38,7 @@ export async function POST(request: Request) {
       );
     }
     // * Si ya existe un material con ese código sustrae la cantidad que se está entrando al total  agrega la nueva operacion a la lista de operaciones del material ya existente*
-    
+
     if (BDMaterial && operation.type === "Sustraer") {
       let newTotal = BDMaterial.unitsTotal - operation?.amount;
       let UpdatedMaterial = await Material.findOneAndUpdate(
@@ -59,11 +58,9 @@ export async function POST(request: Request) {
       );
       // * Si no existe un material con ese código crea una nueva entrada en el almacén *
     } else {
-      // const operation= {
-      //   date: currentDate,
-      //   type: "Añadir",
-      //   amount: amount,
-      // };
+      let newOperation = new Operation(operation);
+
+      console.log("Nuevo material");
       const newMaterial = new Material({
         materialName,
         category,
@@ -71,19 +68,18 @@ export async function POST(request: Request) {
         costPerUnit,
         minimumExistence,
         enterDate: currentDate,
-        unitsTotal,
+        unitsTotal: operation?.amount,
         key: materialName,
         code: category + materialName + costPerUnit,
-        operations: operation,
       });
-      console.log(operation);
+
+      newMaterial.operations.push(newOperation);
 
       await newMaterial.save();
       return NextResponse.json({
         ok: true,
         message: "Material creado",
         id: newMaterial._id.toString(),
-        
         newMaterial,
       });
     }
