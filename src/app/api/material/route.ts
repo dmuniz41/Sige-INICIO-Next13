@@ -5,10 +5,8 @@ import { NextResponse } from "next/server";
 import Material, { IMaterial } from "@/models/material";
 import Operation from "@/models/operation";
 
-// TODO: Hacer que se vean las operaciones de adicion y sustraccion de materiales
-
 export async function POST(request: Request) {
-  const { operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1, unitsTotal = 0 } = await request.json();
+  const { operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1 } = await request.json();
 
   let date = moment();
   let currentDate = date.format("MMMM Do YYYY, h:mm:ss a");
@@ -39,11 +37,11 @@ export async function POST(request: Request) {
     }
     // * Si ya existe un material con ese código sustrae la cantidad que se está entrando al total  agrega la nueva operacion a la lista de operaciones del material ya existente*
 
-    if (BDMaterial && operation.type === "Sustraer") {
+    if (BDMaterial && operation.tipo === "Sustraer") {
       let newTotal = BDMaterial.unitsTotal - operation?.amount;
       let UpdatedMaterial = await Material.findOneAndUpdate(
         { materialName, category, costPerUnit },
-        { materialName, category, unitMeasure, costPerUnit, minimumExistence, unitsTotal: newTotal },
+        { $push: { operations: operation }, materialName, category, unitMeasure, costPerUnit, minimumExistence, unitsTotal: newTotal },
         { new: true }
       );
       return NextResponse.json(
@@ -60,8 +58,8 @@ export async function POST(request: Request) {
     } else {
       let newOperation = new Operation(operation);
 
-      console.log("Nuevo material");
       const newMaterial = new Material({
+        code: category + materialName + costPerUnit,
         materialName,
         category,
         unitMeasure,
@@ -70,7 +68,6 @@ export async function POST(request: Request) {
         enterDate: currentDate,
         unitsTotal: operation?.amount,
         key: materialName,
-        code: category + materialName + costPerUnit,
       });
 
       newMaterial.operations.push(newOperation);
@@ -122,11 +119,11 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const { materialName, category, unitMeasure, costPerUnit, minimumExistence = 1, enterDate, unitsTotal = 0 } = await request.json();
+  const { minimumExistence = 1, code } = await request.json();
 
   try {
     await connectDB();
-    const materialToUpdate = await Material.findOne({ name });
+    const materialToUpdate = await Material.findOne({ code });
 
     if (!materialToUpdate) {
       return NextResponse.json({
@@ -135,16 +132,12 @@ export async function PUT(request: Request) {
       });
     }
 
-    await Material.findOneAndUpdate(
-      { materialName },
-      { materialName, category, unitMeasure, costPerUnit, minimumExistence, enterDate, unitsTotal },
-      { new: true }
-    );
+    const updatedMaterial = await Material.findOneAndUpdate({ code }, { minimumExistence }, { new: true });
 
     return NextResponse.json({
       ok: true,
       message: "Material actualizado",
-      materialToUpdate,
+      updatedMaterial,
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -162,11 +155,11 @@ export async function PUT(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const { materialName } = await request.json();
+  const { code } = await request.json();
 
   try {
     await connectDB();
-    const materialToDelete = await Material.findOne({ materialName });
+    const materialToDelete = await Material.findOne({ code });
 
     if (!materialToDelete) {
       return NextResponse.json({
@@ -175,7 +168,7 @@ export async function PATCH(request: Request) {
       });
     }
 
-    const deletedMaterial = await Material.findOneAndDelete({ materialName });
+    const deletedMaterial = await Material.findOneAndDelete({ code });
 
     return NextResponse.json({
       ok: true,
