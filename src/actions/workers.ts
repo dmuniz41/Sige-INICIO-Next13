@@ -9,6 +9,7 @@ export const startAddWorker = (name: string, CI: string, address: string, role: 
       .post(`${process.env.NEXT_PUBLIC_API_URL}/worker`, { name, CI, address, role, phoneNumber, bankAccount })
       .then(() => {
         dispatch(addWorker(name, CI, address, role, phoneNumber, bankAccount));
+        dispatch(workersStartLoading())
         Toast.fire({
           icon: "success",
           title: "Trabajador Creado",
@@ -26,6 +27,7 @@ export const startUpdateWorker = (name: string, CI: string, address: string, rol
       .put(`${process.env.NEXT_PUBLIC_API_URL}/worker`, { name, CI, address, role, phoneNumber, bankAccount })
       .then(() => {
         dispatch(updateWorker(name, CI, address, role, phoneNumber, bankAccount));
+        dispatch(workersStartLoading())
         Toast.fire({
           icon: "success",
           title: "Trabajador Actualizado",
@@ -43,6 +45,7 @@ export const startDeleteWorker = (name: string): any => {
       .patch(`${process.env.NEXT_PUBLIC_API_URL}/worker`, { name })
       .then(() => {
         dispatch(deleteWorker(name));
+        dispatch(workersStartLoading())
         Toast.fire({
           icon: "success",
           title: "Trabajador Eliminado",
