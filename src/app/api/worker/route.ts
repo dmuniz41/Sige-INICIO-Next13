@@ -7,13 +7,13 @@ export async function POST(request: Request) {
 
   try {
     await connectDB();
-    const BDworker = await Worker.findOne({ name });
+    const BDworker = await Worker.findOne({ CI });
 
     if (BDworker) {
       return NextResponse.json(
         {
           ok: false,
-          msg: "Ya existe un trabajador con ese nombre",
+          msg: "Ya existe un trabajador con ese carnet de identidad",
         },
         {
           status: 409,
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: 'Error al crear el trabajador',
         },
         {
           status: 400,
@@ -66,7 +66,7 @@ export async function GET() {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: 'Error al listar los trabajadores',
         },
         {
           status: 400,
@@ -77,11 +77,11 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const { name, CI, role, address, phoneNumber, bankAccount } = await request.json();
+  const { _id, name, CI, role, address, phoneNumber, bankAccount } = await request.json();
 
   try {
     await connectDB();
-    const workerToUpdate = await Worker.findOne({ name });
+    const workerToUpdate = await Worker.findOne({ _id });
 
     if (!workerToUpdate) {
       return NextResponse.json({
@@ -90,7 +90,7 @@ export async function PUT(request: Request) {
       });
     }
 
-    await Worker.findOneAndUpdate({ name }, { name, CI, role, address, phoneNumber, bankAccount }, { new: true });
+    await Worker.findOneAndUpdate({ _id }, { name, CI, role, address, phoneNumber, bankAccount }, { new: true });
 
     return NextResponse.json({
       ok: true,
@@ -102,7 +102,7 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: 'Error al actualizar el trabajador',
         },
         {
           status: 400,
@@ -113,11 +113,11 @@ export async function PUT(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const { name } = await request.json();
+  const { CI } = await request.json();
 
   try {
     await connectDB();
-    const workerToDelete = await Worker.findOne({ name });
+    const workerToDelete = await Worker.findOne({ CI });
 
     if (!workerToDelete) {
       return NextResponse.json({
@@ -126,7 +126,7 @@ export async function PATCH(request: Request) {
       });
     }
 
-    const deletedWorker = await Worker.findOneAndDelete({ name });
+    const deletedWorker = await Worker.findOneAndDelete({ CI });
 
     return NextResponse.json({
       ok: true,
@@ -138,7 +138,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: 'Error al eliminar el trabajador',
         },
         {
           status: 400,

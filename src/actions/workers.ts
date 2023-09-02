@@ -3,10 +3,11 @@ import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
 import axios, { AxiosError } from "axios";
 
-export const startAddWorker = (name: string, CI: string, address: string, role: string[], phoneNumber: number, bankAccount: number): any => {
+export const startAddWorker = (name: string, CI: number, address: string, role: string[], phoneNumber: number, bankAccount: number): any => {
+  const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/worker`, { name, CI, address, role, phoneNumber, bankAccount })
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/worker`, { name, CI, address, role, phoneNumber, bankAccount }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(addWorker(name, CI, address, role, phoneNumber, bankAccount));
         dispatch(workersStartLoading())
@@ -21,10 +22,11 @@ export const startAddWorker = (name: string, CI: string, address: string, role: 
       });
   };
 };
-export const startUpdateWorker = (name: string, CI: string, address: string, role: string[], phoneNumber: number, bankAccount: number): any => {
+export const startUpdateWorker = (_id: string ,name: string, CI: number, address: string, role: string[], phoneNumber: number, bankAccount: number): any => {
+  const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/worker`, { name, CI, address, role, phoneNumber, bankAccount })
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/worker`, { _id, name, CI, address, role, phoneNumber, bankAccount },{ headers: { accessToken: token } })
       .then(() => {
         dispatch(updateWorker(name, CI, address, role, phoneNumber, bankAccount));
         dispatch(workersStartLoading())
@@ -39,12 +41,13 @@ export const startUpdateWorker = (name: string, CI: string, address: string, rol
       });
   };
 };
-export const startDeleteWorker = (name: string): any => {
+export const startDeleteWorker = (CI: number): any => {
+  const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .patch(`${process.env.NEXT_PUBLIC_API_URL}/worker`, { name })
+      .patch(`${process.env.NEXT_PUBLIC_API_URL}/worker`, { CI }, { headers: { accessToken: token } })
       .then(() => {
-        dispatch(deleteWorker(name));
+        dispatch(deleteWorker(CI));
         dispatch(workersStartLoading())
         Toast.fire({
           icon: "success",
@@ -58,9 +61,10 @@ export const startDeleteWorker = (name: string): any => {
   };
 };
 export const workersStartLoading = () => {
+  const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/worker`)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/worker`, { headers: { accessToken: token } })
       .then((resp) => {
         let { listOfWorkers } = resp.data;
         dispatch(workersLoaded(listOfWorkers));
@@ -76,7 +80,7 @@ export const workersLoaded = (workers: any) => ({
   payload: workers,
 });
 
-const addWorker = (name: string, CI: string, address: string, role: string[], phoneNumber: number, bankAccount: number) => ({
+const addWorker = (name: string, CI: number, address: string, role: string[], phoneNumber: number, bankAccount: number) => ({
   type: types.addWorker,
   payload: {
     name,
@@ -87,7 +91,7 @@ const addWorker = (name: string, CI: string, address: string, role: string[], ph
     bankAccount,
   },
 });
-const updateWorker = (name: string, CI: string, address: string, role: string[], phoneNumber: number, bankAccount: number) => ({
+const updateWorker = (name: string, CI: number, address: string, role: string[], phoneNumber: number, bankAccount: number) => ({
   type: types.updateWorker,
   payload: {
     name,
@@ -98,9 +102,9 @@ const updateWorker = (name: string, CI: string, address: string, role: string[],
     bankAccount,
   },
 });
-const deleteWorker = (name: string) => ({
+const deleteWorker = (CI: number) => ({
   type: types.deleteWorker,
   payload: {
-    name,
+    CI,
   },
 });

@@ -13,10 +13,12 @@ import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
 import { startAddWorker, startDeleteWorker, startUpdateWorker, workersStartLoading } from "@/actions/workers";
 import { CreateWorkerForm } from "./CreateWorkerForm";
+import { EditWorkerForm } from "./EditWorkerForm";
 
-// TODO: Hacer la funcionalidad de editar trabajador
+// TODO: Hacer que al editar un trabajador y volver a presionar editar en el formulario aparezcan los datos actualizados
 
 interface DataType {
+  _id: string,
   key: string;
   name: string;
   CI: number;
@@ -58,9 +60,9 @@ const WorkersTable: React.FC = () => {
   };
 
   const onEdit = (values: any): void => {
-    console.log(values);
-    dispatch(startUpdateWorker(values.name, values.CI, values.address, values.role, values.phoneNumber, values.bankAccount));
-    dispatch(workersStartLoading());
+    console.log("🚀 ~ file: WorkersTable.tsx:63 ~ onEdit ~ values:", values)
+    dispatch(startUpdateWorker(selectedRow?._id!,values.name, values.CI, values.address, values.role, values.phoneNumber, values.bankAccount));
+    setSelectedRow(undefined);
     setEditModal(false);
   };
 
@@ -72,8 +74,7 @@ const WorkersTable: React.FC = () => {
 
   const handleDelete = () => {
     if (selectedRow) {
-      dispatch(startDeleteWorker(selectedRow?.name));
-      dispatch(workersStartLoading());
+      dispatch(startDeleteWorker(selectedRow?.CI));
     } else {
       Toast.fire({
         icon: "error",
@@ -90,7 +91,7 @@ const WorkersTable: React.FC = () => {
   const rowSelection: TableRowSelection<DataType> = {
     onChange: async (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
       setSelectedRow(selectedRows[0]);
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows, selectedRows);
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows);
     },
   };
 
@@ -269,7 +270,7 @@ const WorkersTable: React.FC = () => {
       </div>
 
       <CreateWorkerForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
-      {/* <EditWorkerForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} /> */}
+      <EditWorkerForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />
 
       <Table
         size="middle"
