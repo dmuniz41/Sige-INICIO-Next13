@@ -53,7 +53,8 @@ const UserTable: React.FC = () => {
 
   const onCreate = (values: any): void => {
     dispatch(startAddUser(values.user, values.userName, values.lastName, values.privileges, values.password, values.area));
-    setCreateNewModal(false);
+    setCreateNewModal(false)
+    dispatch(usersStartLoading());
   };
 
   const onEdit = (values: any): void => {
