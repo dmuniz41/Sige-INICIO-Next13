@@ -17,8 +17,8 @@ export const startAddWorker = (name: string, CI: number, address: string, role: 
         });
       })
       .catch((error: AxiosError) => {
-        let { msg }: any = error.response?.data;
-        Swal.fire("Error", msg, "error");
+        let { message }: any = error.response?.data;
+        Swal.fire("Error", message, "error");
       });
   };
 };
@@ -36,8 +36,8 @@ export const startUpdateWorker = (_id: string ,name: string, CI: number, address
         });
       })
       .catch((error: AxiosError) => {
-        let { msg }: any = error.response?.data;
-        Swal.fire("Error", msg, "error");
+        let { message }: any = error.response?.data;
+        Swal.fire("Error", message, "error");
       });
   };
 };
@@ -55,8 +55,8 @@ export const startDeleteWorker = (CI: number): any => {
         });
       })
       .catch((error: AxiosError) => {
-        let { msg }: any = error.response?.data;
-        Swal.fire("Error", msg, "error");
+        let { message }: any = error.response?.data;
+        Swal.fire("Error", message, "error");
       });
   };
 };
@@ -70,8 +70,8 @@ export const workersStartLoading = () => {
         dispatch(workersLoaded(listOfWorkers));
       })
       .catch((error: AxiosError) => {
-        let { msg }: any = error.response?.data;
-        Swal.fire("Error", msg, "error");
+        let { message }: any = error.response?.data;
+        Swal.fire("Error", message, "error");
       });
   };
 };

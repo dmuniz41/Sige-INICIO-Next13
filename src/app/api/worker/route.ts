@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          msg: "Ya existe un trabajador con ese carnet de identidad",
+          message: "Ya existe un trabajador con ese carnet de identidad",
         },
         {
           status: 409,
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: 'Error al crear el trabajador',
+          message: "Error al crear el trabajador",
         },
         {
           status: 400,
@@ -66,7 +66,7 @@ export async function GET() {
       return NextResponse.json(
         {
           ok: false,
-          message: 'Error al listar los trabajadores',
+          message: "Error al listar los trabajadores",
         },
         {
           status: 400,
@@ -81,16 +81,23 @@ export async function PUT(request: Request) {
 
   try {
     await connectDB();
-    const workerToUpdate = await Worker.findOne({ _id });
+    const workerToUpdate = await Worker.findById(_id);
+
 
     if (!workerToUpdate) {
-      return NextResponse.json({
-        ok: false,
-        message: "El trabajador a actualizar no existe",
-      });
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "El trabajador a actualizar no existe",
+        },
+        {
+          status: 409,
+        }
+      );
     }
+  
 
-    await Worker.findOneAndUpdate({ _id }, { name, CI, role, address, phoneNumber, bankAccount }, { new: true });
+    await Worker.findByIdAndUpdate( _id , { name, CI, role, address, phoneNumber, bankAccount }, { new: true });
 
     return NextResponse.json({
       ok: true,
@@ -102,7 +109,7 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: 'Error al actualizar el trabajador',
+          message: "Error al actualizar el trabajador (Revise que los datos introducidos son correctos)",
         },
         {
           status: 400,
@@ -138,7 +145,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: 'Error al eliminar el trabajador',
+          message: "Error al eliminar el trabajador",
         },
         {
           status: 400,

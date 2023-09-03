@@ -136,24 +136,10 @@ export async function PUT(request: Request) {
     await connectDB();
     const userToUpdate = await User.findOne({ _id });
 
-    const existUser = await User.findOne({user})
-
     if (!userToUpdate) {
       return NextResponse.json({
         ok: false,
         message: "El usuario a actualizar no existe",
-      },
-      {
-        status: 409
-      }
-      );
-    }
-    if (existUser) {
-      console.log('usuario existente');
-      
-      return NextResponse.json({
-        ok: false,
-        message: "El usuario ya existe en la base de datos",
       },
       {
         status: 409
@@ -174,7 +160,7 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: 'Error al actualizar el usuario',
+          message: 'Error al actualizar el usuario (Revise que los datos introducidos son correctos)',
         },
         {
           status: 400,
