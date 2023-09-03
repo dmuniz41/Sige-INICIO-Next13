@@ -10,33 +10,35 @@ export const startAddUser = (user: string, userName: string, lastName: string, p
       .post(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user, userName, lastName, privileges, password, area }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(addUser(user, userName, lastName, privileges, password, area));
+        dispatch(usersStartLoading())
         Toast.fire({
           icon: "success",
           title: "Usuario Creado",
         });
       })
       .catch((error: AxiosError) => {
-        let { msg }: any = error.response?.data;
-        Swal.fire("Error", msg, "error");
+        let { message }: any = error.response?.data;
+        Swal.fire("Error", message, "error");
       });
   };
 };
 
-export const startUpdateUser = (user: string, userName: string, lastName: string, privileges: string[], password: string, area: string): any => {
+export const startUpdateUser = (_id: string, user: string, userName: string, lastName: string, privileges: string[], password: string, area: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user, userName, lastName, privileges, password, area }, { headers: { accessToken: token } })
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/user`, { _id ,user, userName, lastName, privileges, password, area }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(updateUser(user, userName, lastName, privileges, password, area));
+        dispatch(usersStartLoading())
         Toast.fire({
           icon: "success",
           title: "Usuario Actualizado",
         });
       })
       .catch((error: AxiosError) => {
-        let { msg }: any = error.response?.data;
-        Swal.fire("Error", msg, "error");
+        let { message }: any = error.response?.data;
+        Swal.fire("Error", message, "error");
       });
   };
 };
@@ -48,14 +50,15 @@ export const startDeleteUser = (user: string): any => {
       .patch(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(deleteUser(user));
+        dispatch(usersStartLoading())
         Toast.fire({
           icon: "success",
           title: "Usuario Eliminado",
         });
       })
       .catch((error: AxiosError) => {
-        let { msg }: any = error.response?.data;
-        Swal.fire("Error", msg, "error");
+        let { message }: any = error.response?.data;
+        Swal.fire("Error", message, "error");
       });
   };
 };
@@ -71,8 +74,8 @@ export const usersStartLoading = () => {
         dispatch(usersLoaded(listOfUsers));
       })
       .catch((error: AxiosError) => {
-        let { msg }: any = error.response?.data;
-        Swal.fire("Error", msg, "error");
+        let { message }: any = error.response?.data;
+        Swal.fire("Error", message, "error");
       });
   };
 };

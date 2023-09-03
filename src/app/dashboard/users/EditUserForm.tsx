@@ -93,13 +93,17 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCrea
             value: defaultValues?.lastName,
           },
           {
+            name: "privileges",
+            value: defaultValues?.privileges,
+          },
+          {
             name: "area",
             value: defaultValues?.area,
           },
         ]}
       >
         <Form.Item name="user" label="Usuario" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input disabled />
+          <Input />
         </Form.Item>
         <Form.Item name="userName" label="Nombre" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />

@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ok: false,
-        msg: "La contraseña debe tener mas de 7 caracteres",
+        message: "La contraseña debe tener mas de 7 caracteres",
       },
       {
         status: 400,
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          msg: "El usuario ya existe en la base de datos",
+          message: "El usuario ya existe en la base de datos",
         },
         {
           status: 409,
@@ -72,7 +72,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: 'Error al crear el usuario',
         },
         {
           status: 400,
@@ -107,7 +107,7 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: 'Error al listar los usuarios',
         },
         {
           status: 400,
@@ -118,7 +118,7 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const { user, userName, lastName, privileges, password, area } = await request.json();
+  const { _id ,user, userName, lastName, privileges, password, area } = await request.json();
   const accessToken = request.headers.get("accessToken");
 
   try {
@@ -134,17 +134,21 @@ export async function PUT(request: Request) {
       );
     }
     await connectDB();
-    const userToUpdate = await User.findOne({ user });
+    const userToUpdate = await User.findOne({ _id });
 
     if (!userToUpdate) {
       return NextResponse.json({
         ok: false,
         message: "El usuario a actualizar no existe",
-      });
+      },
+      {
+        status: 409
+      }
+      );
     }
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    await User.findOneAndUpdate({ user }, { user, userName, lastName, privileges, password: hashedPassword, area }, { new: true });
+    await User.findOneAndUpdate({ _id }, { user, userName, lastName, privileges, password: hashedPassword, area }, { new: true });
 
     return NextResponse.json({
       ok: true,
@@ -156,7 +160,7 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: 'Error al actualizar el usuario (Revise que los datos introducidos son correctos)',
         },
         {
           status: 400,
@@ -204,7 +208,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: 'Error al eliminar el usuario',
         },
         {
           status: 400,
