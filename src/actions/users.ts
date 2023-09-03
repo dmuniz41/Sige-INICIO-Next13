@@ -17,13 +17,13 @@ export const startAddUser = (user: string, userName: string, lastName: string, p
         });
       })
       .catch((error: AxiosError) => {
-        let { msg }: any = error.response?.data;
-        Swal.fire("Error", msg, "error");
+        let { message }: any = error.response?.data;
+        Swal.fire("Error", message, "error");
       });
   };
 };
 
-export const startUpdateUser = (_id: string,user: string, userName: string, lastName: string, privileges: string[], password: string, area: string): any => {
+export const startUpdateUser = (_id: string, user: string, userName: string, lastName: string, privileges: string[], password: string, area: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
@@ -37,8 +37,8 @@ export const startUpdateUser = (_id: string,user: string, userName: string, last
         });
       })
       .catch((error: AxiosError) => {
-        let { msg }: any = error.response?.data;
-        Swal.fire("Error", msg, "error");
+        let { message }: any = error.response?.data;
+        Swal.fire("Error", message, "error");
       });
   };
 };
@@ -57,8 +57,8 @@ export const startDeleteUser = (user: string): any => {
         });
       })
       .catch((error: AxiosError) => {
-        let { msg }: any = error.response?.data;
-        Swal.fire("Error", msg, "error");
+        let { message }: any = error.response?.data;
+        Swal.fire("Error", message, "error");
       });
   };
 };
@@ -74,8 +74,8 @@ export const usersStartLoading = () => {
         dispatch(usersLoaded(listOfUsers));
       })
       .catch((error: AxiosError) => {
-        let { msg }: any = error.response?.data;
-        Swal.fire("Error", msg, "error");
+        let { message }: any = error.response?.data;
+        Swal.fire("Error", message, "error");
       });
   };
 };

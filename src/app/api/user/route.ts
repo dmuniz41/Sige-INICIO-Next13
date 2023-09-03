@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ok: false,
-        msg: "La contraseña debe tener mas de 7 caracteres",
+        message: "La contraseña debe tener mas de 7 caracteres",
       },
       {
         status: 400,
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          msg: "El usuario ya existe en la base de datos",
+          message: "El usuario ya existe en la base de datos",
         },
         {
           status: 409,
@@ -136,11 +136,29 @@ export async function PUT(request: Request) {
     await connectDB();
     const userToUpdate = await User.findOne({ _id });
 
+    const existUser = await User.findOne({user})
+
     if (!userToUpdate) {
       return NextResponse.json({
         ok: false,
         message: "El usuario a actualizar no existe",
-      });
+      },
+      {
+        status: 409
+      }
+      );
+    }
+    if (existUser) {
+      console.log('usuario existente');
+      
+      return NextResponse.json({
+        ok: false,
+        message: "El usuario ya existe en la base de datos",
+      },
+      {
+        status: 409
+      }
+      );
     }
     const hashedPassword = await bcrypt.hash(password, 12);
 
