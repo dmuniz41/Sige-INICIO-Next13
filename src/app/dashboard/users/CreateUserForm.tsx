@@ -1,10 +1,6 @@
 "use client";
 
-import { Form, Input, Modal, Select } from "antd";
-import { useState } from "react";
-
-const PRIVILEGES = ["ADMIN", "COMMERCIAL", "HR", "PROJECT", "WAREHOUSE", "OFFICE"];
-
+import { Form, Input, Modal, Select, SelectProps } from "antd";
 interface Values {
   user: string;
   userName: string;
@@ -19,16 +15,53 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
-  const [selectedPrivileges, setSelectedPrivileges] = useState<string[]>(["OFFICE"]);
+const privileges: SelectProps["options"] = [
+  {
+    label: "ADMINISTRADOR",
+    value: "ADMIN",
+  },
+  {
+    label: "COMERCIAL",
+    value: "COMMERCIAL",
+  },
+  {
+    label: "RECURSOS HUMANOS",
+    value: "HR",
+  },
+  {
+    label: "PROYECTOS",
+    value: "PROJECT",
+  },
+  {
+    label: "ALMACEN",
+    value: "WAREHOUSE",
+  },
+  {
+    label: "OFICINA",
+    value: "OFFICE",
+  },
+];
 
-  const filteredPrivileges = PRIVILEGES.filter((o) => !selectedPrivileges.includes(o));
+const areas: SelectProps["options"] = [
+  {
+    label: "INICIO",
+    value: "INICIO",
+  },
+  {
+    label: "HP",
+    value: "HP",
+  },
+
+];
+
+export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+  
   const [form] = Form.useForm();
   return (
     <Modal
       className="flex flex-col font-black"
       title="Nuevo Usuario"
-      style={{textAlign: "center"}}
+      style={{textAlign: "left"}}
       centered
       open={open}
       destroyOnClose
@@ -80,21 +113,11 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
         >
           <Input type="password" />
         </Form.Item>
-
         <Form.Item name="privileges" label="Privilegios" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Select
-            mode="multiple"
-            value={selectedPrivileges}
-            onChange={setSelectedPrivileges}
-            style={{ width: "100%" }}
-            options={filteredPrivileges.map((item) => ({
-              value: item,
-              label: item,
-            }))}
-          />
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={privileges} />
         </Form.Item>
         <Form.Item name="area" label="Área" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input />
+        <Select mode="multiple" allowClear style={{ width: "100%" }} options={areas} />
         </Form.Item>
       </Form>
     </Modal>

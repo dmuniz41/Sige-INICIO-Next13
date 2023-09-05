@@ -1,15 +1,16 @@
 "use client";
 
-import { Form, Input, Modal, Select, SelectProps } from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
+import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
 
 interface Values {
-  _id: string,
-  CI: number,
-  name: string,
-  address: string,
-  bankAccount: number,
-  phoneNumber: number,
-  role: string[]
+  _id: string;
+  CI: number;
+  name: string;
+  address: string;
+  bankAccount: number;
+  phoneNumber: number;
+  role: string[];
 }
 interface CollectionCreateFormProps {
   open: boolean;
@@ -45,15 +46,15 @@ const options: SelectProps["options"] = [
 ];
 
 export const EditWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
-
   const [form] = Form.useForm();
+  
   return (
     <Modal
       className="flex flex-col font-black"
       title="Editar Trabajador"
       centered
       open={open}
-      style={{textAlign: "center"}}
+      style={{ textAlign: "left" }}
       destroyOnClose
       onOk={() => {
         form
@@ -103,23 +104,41 @@ export const EditWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
           },
         ]}
       >
-        <Form.Item name="CI" label="Carnet de identidad" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item name="name" label="Nombre y Apellidos" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="name" label="Nombre" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input />
+        <Form.Item
+          messageVariables={{ CI: "Carnet de identidad" }}
+          name="CI"
+          label="Carnet de Identidad"
+          rules={[{ required: true, message: "${CI} debe tener 11 números" }]}
+          tooltip={{ title: "El carnet debe tener 11 números", icon: <InfoCircleOutlined /> }}
+        >
+          <InputNumber className="w-full" />
+        </Form.Item>
+        <Form.Item name="role" label="Cargos" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={options} />
         </Form.Item>
         <Form.Item name="address" label="Dirección" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="bankAccount" label="Cuenta Bancaria"  rules={[{ required: true,  message: "La cuenta bancaria debe tener 16 numeros" }]}>
-          <Input />
+        <Form.Item
+          messageVariables={{ phoneNumber: "Telefono" }}
+          name="phoneNumber"
+          label="Teléfono"
+          rules={[{ required: true, message: "${phoneNumber} debe tener 8 números" }]}
+          tooltip={{ title: "El telefono debe tener 8 números", icon: <InfoCircleOutlined /> }}
+        >
+          <InputNumber className="w-full"/>
         </Form.Item>
-        <Form.Item name="phoneNumber" label="Teléfono"  rules={[{ required: true, message: "El telefono debe tener al menos 7 numeros" }]}>
-          <Input />
-        </Form.Item>
-        <Form.Item name="role" label="Cargos" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Select mode="multiple" allowClear style={{ width: "100%" }} options={options} />
+        <Form.Item
+          messageVariables={{ bankAccount: "Cuenta bancaria" }}
+          name="bankAccount"
+          label="Cuenta Bancaria"
+          rules={[{ required: true, message: "${bankAccount} debe tener 16 números" }]}
+          tooltip={{ title: "La cuenta bancaria debe tener 16 números", icon: <InfoCircleOutlined /> }}
+        >
+          <InputNumber className="w-full" />
         </Form.Item>
       </Form>
     </Modal>

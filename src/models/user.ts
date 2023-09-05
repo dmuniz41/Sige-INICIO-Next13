@@ -26,7 +26,7 @@ const UserSchema = new Schema({
     required: [true, 'La contraseña es requerida'],
   },
   area: {
-    type: String,
+    type: [],
     required: [true, 'El area es requerida'],
   },
 });

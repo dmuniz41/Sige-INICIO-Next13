@@ -51,7 +51,15 @@ const WorkersTable: React.FC = () => {
   };
 
   const handleEdit = (): void => {
-    setEditModal(true);
+    if (selectedRow) {
+      setEditModal(true);
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "Seleccione un trabajador a editar",
+      });
+    }
+    
   };
 
   const onCreate = (values: any): void => {
@@ -60,7 +68,6 @@ const WorkersTable: React.FC = () => {
   };
 
   const onEdit = (values: any): void => {
-    console.log("🚀 ~ file: WorkersTable.tsx:63 ~ onEdit ~ values:", values)
     dispatch(startUpdateWorker(selectedRow?._id!,values.name, values.CI, values.address, values.role, values.phoneNumber, values.bankAccount));
     setSelectedRow(undefined);
     setEditModal(false);

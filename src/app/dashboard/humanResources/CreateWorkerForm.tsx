@@ -1,10 +1,7 @@
 "use client";
 
-import { Form, Input, Modal, Select } from "antd";
-import { useState } from "react";
-
-const ROLES = ["ADMINISTRADOR", "COMMERCIAL", "CHOFER", "MONTADOR", "IMPRESIÓN", "ROUTER"];
-
+import { InfoCircleOutlined } from "@ant-design/icons";
+import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
 interface Values {
   key: string;
   name: string;
@@ -20,10 +17,34 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
-  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+const options: SelectProps["options"] = [
+  {
+    label: "ADMINISTRADOR",
+    value: "ADMINISTRADOR",
+  },
+  {
+    label: "COMMERCIAL",
+    value: "COMMERCIAL",
+  },
+  {
+    label: "CHOFER",
+    value: "CHOFER",
+  },
+  {
+    label: "MONTADOR",
+    value: "MONTADOR",
+  },
+  {
+    label: "IMPRESION",
+    value: "IMPRESION",
+  },
+  {
+    label: "ROUTER",
+    value: "ROUTER",
+  },
+];
 
-  const filteredRoles = ROLES.filter((o) => !selectedRoles.includes(o));
+export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
   const [form] = Form.useForm();
   return (
     <Modal
@@ -31,7 +52,7 @@ export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, on
       title="Nuevo Trabajador"
       centered
       open={open}
-      style={{ textAlign: "center" }}
+      style={{ textAlign: "left" }}
       destroyOnClose
       onOk={() => {
         form
@@ -49,33 +70,42 @@ export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, on
       okText="Crear"
       cancelText="Cancelar"
     >
-      <Form form={form} layout="vertical" name="createUserForm" size="middle">
-        <Form.Item name="name" label="Nombre" rules={[{ required: true, message: "Campo requerido" }]}>
+      <Form form={form} layout="vertical" name="createWorkerForm" size="middle">
+        <Form.Item name="name" label="Nombre y Apellidos" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="CI" label="Carnet de Identidad" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input />
+        <Form.Item
+          messageVariables={{ CI: "Carnet de identidad" }}
+          name="CI"
+          label="Carnet de Identidad"
+          rules={[{ required: true, message: "${CI} debe tener 11 números" }]}
+          tooltip={{ title: "El carnet debe tener 11 números", icon: <InfoCircleOutlined /> }}
+        >
+          <InputNumber className="w-full"/>
         </Form.Item>
         <Form.Item name="role" label="Cargos" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Select
-            mode="multiple"
-            value={selectedRoles}
-            onChange={setSelectedRoles}
-            style={{ width: "100%" }}
-            options={filteredRoles.map((item) => ({
-              value: item,
-              label: item,
-            }))}
-          />
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={options} />
         </Form.Item>
         <Form.Item name="address" label="Dirección" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="phoneNumber" label="Teléfono" rules={[{ required: true, min: 7, message: "Campo requerido" }]}>
-          <Input />
+        <Form.Item
+          messageVariables={{ phoneNumber: "Telefono" }}
+          name="phoneNumber"
+          label="Teléfono"
+          rules={[{ required: true, message: "${phoneNumber} debe tener 8 números" }]}
+          tooltip={{ title: "El telefono debe tener 8 números", icon: <InfoCircleOutlined /> }}
+        >
+          <InputNumber className="w-full" />
         </Form.Item>
-        <Form.Item name="bankAccount" label="Cuenta Bancaria" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input />
+        <Form.Item
+          messageVariables={{ bankAccount: "Cuenta bancaria" }}
+          name="bankAccount"
+          label="Cuenta Bancaria"
+          rules={[{ required: true, message: "${bankAccount} debe tener 16 números" }]}
+          tooltip={{ title: "La cuenta bancaria debe tener 16 números", icon: <InfoCircleOutlined /> }}
+        >
+          <InputNumber className="w-full" />
         </Form.Item>
       </Form>
     </Modal>

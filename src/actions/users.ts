@@ -3,7 +3,7 @@ import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
 import axios, { AxiosError } from "axios";
 
-export const startAddUser = (user: string, userName: string, lastName: string, privileges: string[], password: string, area: string): any => {
+export const startAddUser = (user: string, userName: string, lastName: string, privileges: string[], password: string, area: string[]): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
@@ -23,7 +23,7 @@ export const startAddUser = (user: string, userName: string, lastName: string, p
   };
 };
 
-export const startUpdateUser = (_id: string, user: string, userName: string, lastName: string, privileges: string[], password: string, area: string): any => {
+export const startUpdateUser = (_id: string, user: string, userName: string, lastName: string, privileges: string[], password: string, area: string[]): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
@@ -85,7 +85,7 @@ export const usersLoaded = (users: any) => ({
   payload: users,
 });
 
-const addUser = (user: string, userName: string, lastName: string, privileges: string[], password: string, area: string) => ({
+const addUser = (user: string, userName: string, lastName: string, privileges: string[], password: string, area: string[]) => ({
   type: types.addUser,
   payload: {
     user,
@@ -97,7 +97,7 @@ const addUser = (user: string, userName: string, lastName: string, privileges: s
   },
 });
 
-const updateUser = (user: string, userName: string, lastName: string, privileges: string[], password: string, area: string) => ({
+const updateUser = (user: string, userName: string, lastName: string, privileges: string[], password: string, area: string[]) => ({
   type: types.updateUser,
   payload: {
     user,

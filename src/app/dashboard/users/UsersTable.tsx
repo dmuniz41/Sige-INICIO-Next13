@@ -22,7 +22,7 @@ interface DataType {
   userName: string;
   lastName: string;
   privileges: string[];
-  area: string;
+  area: string[]
 }
 
 type DataIndex = keyof DataType;
@@ -48,7 +48,14 @@ const UserTable: React.FC = () => {
   };
 
   const handleEdit = (): void => {
-    setEditModal(true);
+    if (selectedRow) {
+      setEditModal(true);
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "Seleccione un usuario a editar",
+      });
+    }
   };
 
   const onCreate = (values: any): void => {
@@ -236,6 +243,29 @@ const UserTable: React.FC = () => {
       key: "area",
       width: "30%",
       ...getColumnSearchProps("area"),
+      render: (_, { area }) => (
+        <>
+          {area.map((a) => {
+            let color = "#3abaf4";
+            switch (a) {
+              case "INICIO":
+                color = "#ff6600";
+                break;
+              case "HP":
+                color = "#34395e";
+                break;
+
+              default:
+                break;
+            }
+            return (
+              <Tag  key={a}>
+                {a}
+              </Tag>
+            );
+          })}
+        </>
+      ),
     },
   ];
 

@@ -8,7 +8,7 @@ interface Values {
   lastName: string;
   password?: string;
   privileges: string[];
-  area: string;
+  area: string[];
 }
 interface CollectionCreateFormProps {
   open: boolean;
@@ -18,33 +18,43 @@ interface CollectionCreateFormProps {
 }
 const options: SelectProps["options"] = [
   {
-    label: "ADMIN",
+    label: "ADMINISTRADOR",
     value: "ADMIN",
   },
   {
-    label: "COMMERCIAL",
+    label: "COMERCIAL",
     value: "COMMERCIAL",
   },
   {
-    label: "HR",
+    label: "RECURSOS HUMANOS",
     value: "HR",
   },
   {
-    label: "PROJECT",
+    label: "PROYECTOS",
     value: "PROJECT",
   },
   {
-    label: "WAREHOUSE",
+    label: "ALMACEN",
     value: "WAREHOUSE",
   },
   {
-    label: "OFFICE",
+    label: "OFICINA",
     value: "OFFICE",
   },
 ];
 
-export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
+const areas: SelectProps["options"] = [
+  {
+    label: "INICIO",
+    value: "INICIO",
+  },
+  {
+    label: "HP",
+    value: "HP",
+  },
+];
 
+export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
   const handleChange = (value: string[]) => {
     console.log(`selected ${value}`);
   };
@@ -56,7 +66,7 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCrea
       title="Editar Usuario"
       centered
       open={open}
-      style={{textAlign: "center"}}
+      style={{ textAlign: "left" }}
       destroyOnClose
       onOk={() => {
         form
@@ -133,12 +143,11 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCrea
         >
           <Input type="password" />
         </Form.Item>
-
         <Form.Item name="privileges" label="Privilegios" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select mode="multiple" allowClear style={{ width: "100%" }} onChange={handleChange} options={options} />
         </Form.Item>
         <Form.Item name="area" label="Área" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input />
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={areas} />
         </Form.Item>
       </Form>
     </Modal>
