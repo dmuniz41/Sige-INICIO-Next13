@@ -11,7 +11,8 @@ import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interf
 import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
-import { startAddWarehouse, startUpdateWarehouse, warehousesStartLoading } from "@/actions/warehouse";
+import { startAddWarehouse, startDeleteWarehouse, startUpdateWarehouse, warehousesStartLoading } from "@/actions/warehouse";
+import { CreateWarehouseForm } from "./CreateWarehouseForm";
 interface DataType {
   _id: string,
   key: string;
@@ -71,14 +72,14 @@ const WarehousesTable: React.FC = () => {
   };
 
   const handleDelete = () => {
-    // if (selectedRow) {
-    //   dispatch(startDeleteWarehouse(selectedRow?.name));
-    // } else {
-    //   Toast.fire({
-    //     icon: "error",
-    //     title: "Seleccione un almacén a eliminar",
-    //   });
-    // }
+    if (selectedRow) {
+      dispatch(startDeleteWarehouse(selectedRow?.name));
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "Seleccione un almacén a eliminar",
+      });
+    }
     console.log('Delete warehouse');
     
   };
@@ -207,8 +208,8 @@ const WarehousesTable: React.FC = () => {
         />
       </div>
 
-      {/* <CreateWarehouseForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
-      <EditWarehouseForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />  */}
+      <CreateWarehouseForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
+      {/* <EditWarehouseForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />  */}
 
       <Table
         size="middle"
