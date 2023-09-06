@@ -3,7 +3,7 @@
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { DeleteOutlined, EditOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, Tag } from "antd";
+import { Button, Input, Space, Table } from "antd";
 import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
@@ -11,9 +11,7 @@ import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interf
 import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
-import { startAddWorker, startDeleteWorker, startUpdateWorker, workersStartLoading } from "@/actions/workers";
-
-
+import { startAddWarehouse, startUpdateWarehouse, warehousesStartLoading } from "@/actions/warehouse";
 interface DataType {
   _id: string,
   key: string;
@@ -23,7 +21,7 @@ interface DataType {
 
 type DataIndex = keyof DataType;
 
-const WorkersTable: React.FC = () => {
+const WarehousesTable: React.FC = () => {
   const dispatch = useAppDispatch();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -33,11 +31,11 @@ const WorkersTable: React.FC = () => {
   const searchInput = useRef<InputRef>(null);
 
   useEffect(() => {
-    dispatch(workersStartLoading());
+    dispatch(warehousesStartLoading());
   }, [dispatch]);
 
-  const { workers } = useAppSelector((state: RootState) => state?.worker);
-  const data: DataType[] = useMemo(() => workers, [workers]);
+  const { warehouses } = useAppSelector((state: RootState) => state?.warehouse);
+  const data: DataType[] = useMemo(() => warehouses, [warehouses]);
 
   const handleNew = (): void => {
     setCreateNewModal(true);
@@ -49,19 +47,19 @@ const WorkersTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione un almacen a editar",
+        title: "Seleccione un almacén a editar",
       });
     }
     
   };
 
   const onCreate = (values: any): void => {
-    dispatch(startAddWorker(values.name, values.CI, values.address, values.role, values.phoneNumber, values.bankAccount));
+    dispatch(startAddWarehouse(values.name));
     setCreateNewModal(false);
   };
 
   const onEdit = (values: any): void => {
-    dispatch(startUpdateWorker(selectedRow?._id!,values.name, values.CI, values.address, values.role, values.phoneNumber, values.bankAccount));
+    dispatch(startUpdateWarehouse(selectedRow?._id!,values.name));
     setSelectedRow(undefined);
     setEditModal(false);
   };
@@ -73,14 +71,16 @@ const WorkersTable: React.FC = () => {
   };
 
   const handleDelete = () => {
-    if (selectedRow) {
-      dispatch(startDeleteWarehouse(selectedRow?.name));
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un almacen a eliminar",
-      });
-    }
+    // if (selectedRow) {
+    //   dispatch(startDeleteWarehouse(selectedRow?.name));
+    // } else {
+    //   Toast.fire({
+    //     icon: "error",
+    //     title: "Seleccione un almacén a eliminar",
+    //   });
+    // }
+    console.log('Delete warehouse');
+    
   };
 
   const handleReset = (clearFilters: () => void) => {
@@ -195,20 +195,20 @@ const WorkersTable: React.FC = () => {
           <PlusOutlined />
           Nuevo
         </div>
-        <button className="cursor-pointer" id="edit_worker_btn" onClick={handleEdit}>
+        <button className="cursor-pointer" id="edit_warehouse_btn" onClick={handleEdit}>
           <EditOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-background_light ease-in-out duration-300" />
         </button>
-        <button className="cursor-pointer" id="delete_worker_btn" onClick={handleDelete}>
+        <button className="cursor-pointer" id="delete_warehouse_btn" onClick={handleDelete}>
           <DeleteOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-background_light ease-in-out duration-300" />
         </button>
         <ReloadOutlined
-          onClick={() => dispatch(workersStartLoading())}
+          onClick={() => dispatch(warehousesStartLoading())}
           className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-background_light ease-in-out duration-300"
         />
       </div>
 
-      {/* <CreateWorkerForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
-      <EditWorkerForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} /> */}
+      {/* <CreateWarehouseForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
+      <EditWarehouseForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />  */}
 
       <Table
         size="middle"
@@ -225,4 +225,4 @@ const WorkersTable: React.FC = () => {
   );
 };
 
-export default WorkersTable;
+export default WarehousesTable;

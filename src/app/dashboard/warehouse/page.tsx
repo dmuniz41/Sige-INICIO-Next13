@@ -1,5 +1,5 @@
 import React from "react";
-import WorkersTable from "./WarehouseTable";
+import WarehousesTable from "./WarehouseTable";
 
 export default function page() {
   return (
@@ -8,7 +8,7 @@ export default function page() {
         id="userTable_wrapper"
         className="w-[80%] items-start justify-start flex-col gap-2 h-full p-4 animate-fade animate-once animate-duration-150 grow overflow-auto"
       >
-        <WorkersTable />
+        <WarehousesTable />
       </div>
     </div>
   );
