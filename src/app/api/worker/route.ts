@@ -97,12 +97,12 @@ export async function PUT(request: Request) {
     }
   
 
-    await Worker.findByIdAndUpdate( _id , { name, CI, role, address, phoneNumber, bankAccount }, { new: true });
+    const updatedWorker =  await Worker.findByIdAndUpdate( _id , { name, CI, role, address, phoneNumber, bankAccount }, { new: true });
 
     return NextResponse.json({
       ok: true,
       message: "Trabajador actualizado",
-      workerToUpdate,
+      updatedWorker,
     });
   } catch (error) {
     if (error instanceof Error) {

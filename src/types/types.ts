@@ -1,9 +1,4 @@
 export const types = {
-  // login :         "[Auth] Login",
-  // logout:         "[Auth] Logout",
-  // startTokenRenew:"[Auth] Start token renew",
-  // checkingFinish: "[Auth] Finish checking login state",
-  // startLogin:     "[Auth] Start login",
 
   addUser:        "[User] Add User",
   startAddUser:   "[User] Start add user",
@@ -12,11 +7,17 @@ export const types = {
   usersLoaded:    "[User] Users Loaded",
   selectedUser:   "[User] User Selected",
 
-
   addWorker:        "[Worker] Add worker",
   startAddWorker:   "[Worker] Start add worker",
   updateWorker:     "[Worker] Update worker",
   deleteWorker:     "[Worker] Delete worker",
   workersLoaded:    "[Worker] Workers loaded",
   selectedWorker:   "[Worker] Worker selected",
+
+  addWarehouse:        "[Warehouse] Add Warehouse",
+  startAddWarehouse:   "[Warehouse] Start add Warehouse",
+  updateWarehouse:     "[Warehouse] Update Warehouse",
+  deleteWarehouse:     "[Warehouse] Delete Warehouse",
+  warehousesLoaded:    "[Warehouse] Warehouses loaded",
+  selectedWarehouse:   "[Warehouse] Warehouse selected",
 };
