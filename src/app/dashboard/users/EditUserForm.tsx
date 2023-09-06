@@ -55,9 +55,7 @@ const areas: SelectProps["options"] = [
 ];
 
 export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
-  const handleChange = (value: string[]) => {
-    console.log(`selected ${value}`);
-  };
+
 
   const [form] = Form.useForm();
   return (
@@ -144,7 +142,7 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCrea
           <Input type="password" />
         </Form.Item>
         <Form.Item name="privileges" label="Privilegios" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Select mode="multiple" allowClear style={{ width: "100%" }} onChange={handleChange} options={options} />
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={options} />
         </Form.Item>
         <Form.Item name="area" label="Área" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={areas} />

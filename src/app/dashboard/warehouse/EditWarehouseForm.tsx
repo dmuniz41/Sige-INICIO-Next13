@@ -1,6 +1,7 @@
 "use client";
 
-import { Form, Input, Modal } from "antd";
+import { Form, Input, Modal, Select, SelectProps } from "antd";
+
 interface Values {
   name: string;
 }
@@ -8,16 +9,19 @@ interface CollectionCreateFormProps {
   open: boolean;
   onCreate: (values: Values) => void;
   onCancel: () => void;
+  defaultValues?: Values;
 }
-export const CreateWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+
+export const EditWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
+
   const [form] = Form.useForm();
   return (
     <Modal
       className="flex flex-col font-black"
-      title="Nuevo Almacén"
-      style={{ textAlign: "left" }}
+      title="Editar Almacén"
       centered
       open={open}
+      style={{ textAlign: "left" }}
       destroyOnClose
       onOk={() => {
         form
@@ -32,13 +36,26 @@ export const CreateWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open,
       }}
       onCancel={onCancel}
       okType="default"
-      okText="Crear"
+      okText="Editar"
       cancelText="Cancelar"
     >
-      <Form form={form} layout="vertical" name="createUserForm" size="middle">
+      <Form
+        form={form}
+        layout="vertical"
+        name="editWarehouseForm"
+        size="middle"
+        fields={[
+          {
+            name: "name",
+            value: defaultValues?.name,
+          },
+          
+        ]}
+      >
         <Form.Item name="name" label="Nombre de Almacén" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
+
       </Form>
     </Modal>
   );

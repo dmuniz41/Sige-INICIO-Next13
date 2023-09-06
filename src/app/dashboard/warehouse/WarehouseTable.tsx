@@ -13,6 +13,7 @@ import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
 import { startAddWarehouse, startDeleteWarehouse, startUpdateWarehouse, warehousesStartLoading } from "@/actions/warehouse";
 import { CreateWarehouseForm } from "./CreateWarehouseForm";
+import { EditWarehouseForm } from "./EditWarehouseForm";
 interface DataType {
   _id: string,
   key: string;
@@ -209,7 +210,7 @@ const WarehousesTable: React.FC = () => {
       </div>
 
       <CreateWarehouseForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
-      {/* <EditWarehouseForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />  */}
+      <EditWarehouseForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} /> 
 
       <Table
         size="middle"
