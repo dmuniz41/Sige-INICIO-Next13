@@ -46,7 +46,7 @@ export default function Login() {
       </div>
       <form
         onSubmit={handleSubmit}
-        className="grid w-[380px] p-[30px] h-[300px] border-t-[4px] border-solid border-t-primary-500 font-bold bg-white rounded-[5px] shadow-xl"
+        className="grid w-[380px] p-[30px] h-[300px] border-t-[4px] border-solid border-t-primary-500 font-bold bg-white-100 rounded-[5px] shadow-xl"
       >
         <h5 className="h-[15px] mb-0">Usuario</h5>
         <input
@@ -67,7 +67,7 @@ export default function Login() {
         />
         <button type="submit">
           <a className="cursor-pointer text-xl justify-center items-center flex bg-primary-500 rounded-md mt-2 w-full h-[50px] border-none transition ease-in delay-50 hover:bg-primary-600 shadow-md">
-            <span className="text-white font-black">Entrar</span>
+            <span className="text-white-100 font-black">Entrar</span>
           </a>
         </button>
       </form>

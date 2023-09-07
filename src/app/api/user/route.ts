@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ok: false,
-        message: "No hay token en la peticion",
+        message: "Su sesión ha expirado, por favor autentiquese nuevamente",
       },
       {
         status: 401,
@@ -89,7 +89,7 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "No hay token en la peticion",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
         },
         {
           status: 401,
@@ -126,7 +126,7 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "No hay token en la peticion",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
         },
         {
           status: 401,
@@ -179,7 +179,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "No hay token en la peticion",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
         },
         {
           status: 401,

@@ -2,7 +2,7 @@
 
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined, OrderedListOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Input, Space, Table } from "antd";
 import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
@@ -11,21 +11,23 @@ import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interf
 import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
-import { startAddWarehouse, startDeleteWarehouse, startUpdateWarehouse, warehousesStartLoading, selectedWarehouse } from "@/actions/warehouse";
-import { CreateWarehouseForm } from "./CreateWarehouseForm";
-import { EditWarehouseForm } from "./EditWarehouseForm";
-import Link from "next/link";
 import { materialsStartLoading } from "@/actions/material";
 interface DataType {
-  _id: string;
+  _id: string
+  code: string;
   key: string;
-  name: string;
-  totalValue: number;
+  materialName: string;
+  enterDate: string;
+  category: string;
+  costPerUnit: number;
+  unitsTotal: number;
+  minimumExistence: number;
+  unitMeasure: string;
 }
 
 type DataIndex = keyof DataType;
 
-const WarehousesTable: React.FC = () => {
+const MaterialsTable: React.FC = () => {
   const dispatch = useAppDispatch();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -34,12 +36,15 @@ const WarehousesTable: React.FC = () => {
   const [selectedRow, setSelectedRow] = useState<DataType>();
   const searchInput = useRef<InputRef>(null);
 
-  useEffect(() => {
-    dispatch(warehousesStartLoading());
-  }, [dispatch]);
+  
+  const { materials } = useAppSelector((state: RootState) => state?.material);
+  const  {selectedWarehouse} = useAppSelector((state: RootState) => state?.warehouse);
+  console.log("🚀 ~ file: MaterialsTable.tsx:42 ~ selectedWarehouse:", selectedWarehouse)
+  const data: DataType[] = useMemo(() => materials, [materials]);
 
-  const { warehouses } = useAppSelector((state: RootState) => state?.warehouse);
-  const data: DataType[] = useMemo(() => warehouses, [warehouses]);
+  useEffect(() => {
+    dispatch(materialsStartLoading(selectedWarehouse.id));
+  }, [dispatch]);
 
   const handleNew = (): void => {
     setCreateNewModal(true);
@@ -51,21 +56,25 @@ const WarehousesTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione un almacén a editar",
+        title: "Seleccione un material a editar",
       });
     }
   };
 
-  const onCreate = (values: any): void => {
-    dispatch(startAddWarehouse(values.name));
-    setCreateNewModal(false);
-  };
+  const handleRefresh = ()=>{
+    dispatch(materialsStartLoading(selectedWarehouse.id))
+  }
 
-  const onEdit = (values: any): void => {
-    dispatch(startUpdateWarehouse(selectedRow?._id!, values.name));
-    setSelectedRow(undefined);
-    setEditModal(false);
-  };
+  // const onCreate = (values: any): void => {
+  //   dispatch(startAddMaterial(values.name));
+  //   setCreateNewModal(false);
+  // };
+
+  // const onEdit = (values: any): void => {
+  //   dispatch(startUpdateMaterial(selectedRow?._id!, values.name));
+  //   setSelectedRow(undefined);
+  //   setEditModal(false);
+  // };
 
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
@@ -73,17 +82,17 @@ const WarehousesTable: React.FC = () => {
     setSearchedColumn(dataIndex);
   };
 
-  const handleDelete = () => {
-    if (selectedRow) {
-      dispatch(startDeleteWarehouse(selectedRow?.name));
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un almacén a eliminar",
-      });
-    }
-    console.log("Delete warehouse");
-  };
+  // const handleDelete = () => {
+  //   if (selectedRow) {
+  //     dispatch(startDeleteMaterial(selectedRow?.name));
+  //   } else {
+  //     Toast.fire({
+  //       icon: "error",
+  //       title: "Seleccione un almacén a eliminar",
+  //     });
+  //   }
+  //   console.log("Delete material");
+  // };
 
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
@@ -93,7 +102,6 @@ const WarehousesTable: React.FC = () => {
   const rowSelection: TableRowSelection<DataType> = {
     onChange: async (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
       setSelectedRow(selectedRows[0]);
-      dispatch(selectedWarehouse(selectedRows[0]._id))
       console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows);
     },
   };
@@ -172,19 +180,55 @@ const WarehousesTable: React.FC = () => {
 
   const columns: ColumnsType<DataType> = [
     {
-      title: "Nombre",
-      dataIndex: "name",
+      title: "Código",
+      dataIndex: "code",
       key: "name",
-      width: "75%",
-      ...getColumnSearchProps("name"),
+      width: "20%",
+      ...getColumnSearchProps("code"),
     },
     {
-      title: "Valor Total",
-      dataIndex: "totalValue",
-      key: "totalValue",
-      width: "25%",
-      ...getColumnSearchProps("totalValue"),
+      title: "Categoría",
+      dataIndex: "category",
+      key: "name",
+      width: "15%",
+      ...getColumnSearchProps("category"),
     },
+    {
+      title: "Nombre",
+      dataIndex: "materialName",
+      key: "totalValue",
+      width: "15%",
+      ...getColumnSearchProps("materialName"),
+    },
+    {
+      title: "Existencias",
+      dataIndex: "costPerUnit",
+      key: "unitsTotal",
+      width: "10%",
+      ...getColumnSearchProps("unitsTotal"),
+    },
+    {
+      title: "Fecha de Entrada",
+      dataIndex: "enterDate",
+      key: "totalValue",
+      width: "20%",
+      ...getColumnSearchProps("enterDate"),
+    },
+    {
+      title: "Coste Unitario",
+      dataIndex: "costPerUnit",
+      key: "totalValue",
+      width: "10%",
+      ...getColumnSearchProps("costPerUnit"),
+    },
+    {
+      title: "Existencias Mínimas",
+      dataIndex: "minimumExistence",
+      key: "totalValue",
+      width: "10%",
+      ...getColumnSearchProps("minimumExistence"),
+    },
+    
   ];
 
   return (
@@ -197,27 +241,25 @@ const WarehousesTable: React.FC = () => {
           <PlusOutlined />
           Nuevo
         </div>
-        <button className="cursor-pointer" id="edit_warehouse_btn" onClick={handleEdit}>
+        <button className="cursor-pointer" id="edit_material_btn" onClick={handleEdit}>
           <EditOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
         </button>
-        <button className="cursor-pointer" id="delete_warehouse_btn" onClick={handleDelete}>
+        <button className="cursor-pointer" id="delete_material_btn">
           <DeleteOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
         </button>
         <button className="cursor-pointer">
           <ReloadOutlined
-            onClick={() => dispatch(warehousesStartLoading())}
+            onClick={handleRefresh}
             className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300"
           />
         </button>
         <button className="cursor-pointer">
-          <Link href={`/dashboard/warehouse/${selectedRow?._id}`}>
-            <EyeOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" onClick={()=>{dispatch(materialsStartLoading(selectedRow?._id!))}}/>
-          </Link>
+            <OrderedListOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
         </button>
       </div>
 
-      <CreateWarehouseForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
-      <EditWarehouseForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />
+      {/* <CreateMaterialForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
+      <EditMaterialForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} /> */}
 
       <Table
         size="middle"
@@ -234,4 +276,4 @@ const WarehousesTable: React.FC = () => {
   );
 };
 
-export default WarehousesTable;
+export default MaterialsTable;

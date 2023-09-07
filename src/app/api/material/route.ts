@@ -4,14 +4,27 @@ import { NextResponse } from "next/server";
 
 import Material, { IMaterial } from "@/models/material";
 import Operation from "@/models/operation";
+import { verifyJWT } from "@/libs/jwt";
 
 export async function POST(request: Request) {
-  const { operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1 } = await request.json();
+  const { warehouse ,operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1 } = await request.json();
+  const accessToken = request.headers.get("accessToken");
 
   let date = moment();
   let currentDate = date.format("MMMM Do YYYY, h:mm:ss a");
 
   try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
     await connectDB();
     let BDMaterial = (await Material.findOne({ materialName, category, costPerUnit })) as IMaterial;
 
@@ -65,6 +78,7 @@ export async function POST(request: Request) {
         unitMeasure,
         costPerUnit,
         minimumExistence,
+        warehouse,
         enterDate: currentDate,
         unitsTotal: operation?.amount,
         key: materialName,
@@ -95,8 +109,20 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  const accessToken = request.headers.get("accessToken");
   try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
     await connectDB();
     const listOfMaterials = await Material.find();
     return NextResponse.json({
@@ -120,8 +146,20 @@ export async function GET() {
 
 export async function PUT(request: Request) {
   const { minimumExistence = 1, code } = await request.json();
+  const accessToken = request.headers.get("accessToken");
 
   try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
     await connectDB();
     const materialToUpdate = await Material.findOne({ code });
 
@@ -156,8 +194,20 @@ export async function PUT(request: Request) {
 
 export async function PATCH(request: Request) {
   const { code } = await request.json();
+  const accessToken = request.headers.get("accessToken");
 
   try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
     await connectDB();
     const materialToDelete = await Material.findOne({ code });
 

@@ -57,7 +57,7 @@ export const Navbar = () => {
         </div>
         <div className="flex items-center justify-end bg-primary-500 w-full h-full p-[1rem] bg-transparent">
           <ul className="list-none">
-            <li className="flex items-center gap-[0.5rem] font-bold text-white text-base">
+            <li className="flex items-center gap-[0.5rem] font-bold text-white-100 text-base">
               <Image src={userImage} width={50} height={50} priority={false} alt="user image" className="rounded-full" />
               <span>{`${username}`}</span>
               <LogoutOutlined
@@ -70,7 +70,7 @@ export const Navbar = () => {
           </ul>
         </div>
       </div>
-      <div className=" items-center p-8 flex relative top-[3rem] ml-[19.5rem] h-[4rem] rounded-md w-[70%] bg-white shadow-md">
+      <div className=" items-center p-8 flex relative top-[3rem] ml-[19.5rem] h-[4rem] rounded-md w-[70%] bg-white-100 shadow-md">
         {secondaryPath ? (
           <span className="font-bold text-2xl font-segoe ">{`${secondaryPath}`}</span>
         ) : (

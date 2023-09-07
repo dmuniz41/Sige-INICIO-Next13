@@ -79,6 +79,12 @@ export const warehousesLoaded = (warehouses: any) => ({
   type: types.warehousesLoaded,
   payload: warehouses,
 });
+export const selectedWarehouse = ( id: string) => ({
+  type: types.selectedWarehouse,
+  payload: {
+    id,
+  },
+});
 const addWarehouse = (name: string, ) => ({
   type: types.addWarehouse,
   payload: {

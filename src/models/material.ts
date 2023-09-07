@@ -11,6 +11,7 @@ export interface IMaterial {
   unitsTotal: number;
   minimumExistence: number;
   unitMeasure?: string;
+  warehouse: string
   operations?: Types.DocumentArray<IOperation>;
 }
 
@@ -47,6 +48,10 @@ const MaterialSchema = new Schema<IMaterial, Model<IMaterial>>({
   minimumExistence: {
     type: Number,
     required: [true, "La existencia mínima es requerida"],
+  },
+  warehouse: {
+    type: String,
+    required: [true, "El almacén al que pertenece es requerido"],
   },
   operations: [
     {
