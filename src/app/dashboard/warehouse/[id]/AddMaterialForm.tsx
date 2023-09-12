@@ -96,11 +96,11 @@ export const AddMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
         <Form.Item name="materialName" label="Nombre del material" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="unitMeasure" label="Unidad de medida" rules={[{ required: true, message: "Campo requerido" }]}>
-        <Select  allowClear style={{ width: "100%" }} options={unitMeasure} />
-        </Form.Item>
         <Form.Item name="costPerUnit" label="Costo por unidad de medida" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber className="w-full"/>
+        </Form.Item>
+        <Form.Item name="unitMeasure" label="Unidad de medida" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Select  allowClear style={{ width: "100%" }} options={unitMeasure} />
         </Form.Item>
         <Form.Item name="unitsTotal" label="Cantidad a añadir" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber className="w-full"/>

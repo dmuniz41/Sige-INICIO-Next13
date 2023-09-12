@@ -2,7 +2,7 @@
 
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { DeleteOutlined, EditOutlined, OrderedListOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, MinusOutlined, OrderedListOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Input, Space, Table } from "antd";
 import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
@@ -17,6 +17,7 @@ import { IOperation } from "@/models/operation";
 import moment from "moment";
 import Swal from "sweetalert2";
 import { EditMaterialForm } from "./EditMaterialForm";
+import { selectedWarehouse } from '../../../../actions/warehouse';
 interface DataType {
   _id: string;
   code: string;
@@ -45,12 +46,12 @@ const MaterialsTable: React.FC = () => {
   const searchInput = useRef<InputRef>(null);
 
   const { materials } = useAppSelector((state: RootState) => state?.material);
-  const { selectedWarehouse } = useAppSelector((state: RootState) => state?.warehouse);
+  const { selectedWarehouse }: {selectedWarehouse: {id: string}} = useAppSelector((state: RootState) => state?.warehouse);
   const data: DataType[] = useMemo(() => materials, [materials]);
 
   useEffect(() => {
     dispatch(materialsStartLoading(selectedWarehouse.id));
-  }, [dispatch]);
+  }, [dispatch, selectedWarehouse]);
 
   const handleNew = (): void => {
     setCreateNewModal(true);
@@ -280,13 +281,27 @@ const MaterialsTable: React.FC = () => {
   return (
     <>
       <div className="flex h-14 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-2">
-        <div
+        <button
           onClick={handleNew}
           className="bg-success-500 w-[6rem] h-[2.5rem] flex items-center p-1 font-black text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-success-600 ease-in-out duration-300"
         >
           <PlusOutlined />
           Nuevo
-        </div>
+        </button>
+        <button
+          onClick={handleNew}
+          className="bg-secondary-500 w-[6rem] h-[2.5rem] flex items-center p-1 font-black text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-secondary-600 ease-in-out duration-300"
+        >
+          <PlusOutlined />
+          Añadir
+        </button>
+        <button
+          onClick={handleNew}
+          className="bg-danger-500 w-[6rem] h-[2.5rem] flex items-center p-1 font-black text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-danger-600 ease-in-out duration-300"
+        >
+          <MinusOutlined  />
+          Sustraer
+        </button>
         <button className="cursor-pointer" id="edit_material_btn" onClick={handleEdit}>
           <EditOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
         </button>
