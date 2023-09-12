@@ -81,7 +81,7 @@ export async function POST(request: Request) {
         warehouse,
         enterDate: currentDate,
         unitsTotal: operation?.amount,
-        key: materialName,
+        key: category + materialName + costPerUnit,
       });
 
       newMaterial.operations.push(newOperation);
