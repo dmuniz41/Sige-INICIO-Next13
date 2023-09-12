@@ -59,8 +59,8 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
   const [form] = Form.useForm();
   return (
     <Modal
-      className="flex flex-col font-black"
-      title="Nuevo Usuario"
+      className="flex flex-col"
+      title={<div className="flex w-full justify-center"><span className="font-black text-lg">Nuevo Usuario</span></div>}
       style={{textAlign: "left"}}
       centered
       open={open}

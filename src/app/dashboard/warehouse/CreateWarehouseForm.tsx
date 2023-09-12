@@ -13,8 +13,8 @@ export const CreateWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open,
   const [form] = Form.useForm();
   return (
     <Modal
-      className="flex flex-col font-black"
-      title="Nuevo Almacén"
+      className="flex flex-col"
+      title={<div className="flex w-full justify-center"><span className="font-black text-lg">Nuevo Almacén</span></div>}
       style={{ textAlign: "left" }}
       centered
       open={open}

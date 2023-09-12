@@ -60,8 +60,8 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCrea
   const [form] = Form.useForm();
   return (
     <Modal
-      className="flex flex-col font-black"
-      title="Editar Usuario"
+      className="flex flex-col"
+      title={<div className="flex w-full justify-center"><span className="font-black text-lg">Editar Usuario</span></div>}
       centered
       open={open}
       style={{ textAlign: "left" }}

@@ -48,8 +48,8 @@ export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, on
   const [form] = Form.useForm();
   return (
     <Modal
-      className="flex flex-col font-black"
-      title="Nuevo Trabajador"
+      className="flex flex-col"
+      title={<div className="flex w-full justify-center"><span className="font-black text-lg">Nuevo Trabajador</span></div>}
       centered
       open={open}
       style={{ textAlign: "left" }}

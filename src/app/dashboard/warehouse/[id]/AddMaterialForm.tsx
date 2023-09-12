@@ -67,8 +67,8 @@ export const AddMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
   const [form] = Form.useForm();
   return (
     <Modal
-      className="flex flex-col font-black"
-      title="Nuevo Material"
+      className="flex flex-col"
+      title={<div className="flex w-full justify-center"><span className="font-black text-lg">Nuevo Material</span></div>}
       style={{textAlign: "left"}}
       centered
       open={open}
