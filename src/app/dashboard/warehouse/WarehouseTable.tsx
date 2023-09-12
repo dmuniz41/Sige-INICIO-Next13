@@ -16,6 +16,7 @@ import { CreateWarehouseForm } from "./CreateWarehouseForm";
 import { EditWarehouseForm } from "./EditWarehouseForm";
 import Link from "next/link";
 import { materialsStartLoading } from "@/actions/material";
+import Swal from "sweetalert2";
 interface DataType {
   _id: string;
   key: string;
@@ -75,7 +76,20 @@ const WarehousesTable: React.FC = () => {
 
   const handleDelete = () => {
     if (selectedRow) {
-      dispatch(startDeleteWarehouse(selectedRow?.name));
+      Swal.fire({
+        title: 'Eliminar Material',
+        text: "El material seleccionado se borrará de forma permanente",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Eliminar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch(startDeleteWarehouse(selectedRow?.name));
+        }
+      })
     } else {
       Toast.fire({
         icon: "error",

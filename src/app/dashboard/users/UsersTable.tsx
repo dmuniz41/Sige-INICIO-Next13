@@ -14,6 +14,7 @@ import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
 import { EditUserForm } from "./EditUserForm";
+import Swal from "sweetalert2";
 
 interface DataType {
   _id: string;
@@ -22,7 +23,7 @@ interface DataType {
   userName: string;
   lastName: string;
   privileges: string[];
-  area: string[]
+  area: string[];
 }
 
 type DataIndex = keyof DataType;
@@ -60,14 +61,14 @@ const UserTable: React.FC = () => {
 
   const onCreate = (values: any): void => {
     dispatch(startAddUser(values.user, values.userName, values.lastName, values.privileges, values.password, values.area));
-    setCreateNewModal(false)
+    setCreateNewModal(false);
     dispatch(usersStartLoading());
   };
 
   const onEdit = (values: any): void => {
     console.log(values);
-    dispatch(startUpdateUser(selectedRow?._id!,values.user, values.userName, values.lastName, values.privileges, values.password, values.area));
-    setSelectedRow(undefined)
+    dispatch(startUpdateUser(selectedRow?._id!, values.user, values.userName, values.lastName, values.privileges, values.password, values.area));
+    setSelectedRow(undefined);
     setEditModal(false);
   };
 
@@ -79,8 +80,20 @@ const UserTable: React.FC = () => {
 
   const handleDelete = () => {
     if (selectedRow) {
-      dispatch(startDeleteUser(selectedRow?.user));
-      dispatch(usersStartLoading());
+      Swal.fire({
+        title: "Eliminar Material",
+        text: "El material seleccionado se borrará de forma permanente",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Eliminar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch(startDeleteUser(selectedRow?.user));
+        }
+      });
     } else {
       Toast.fire({
         icon: "error",
@@ -258,11 +271,7 @@ const UserTable: React.FC = () => {
               default:
                 break;
             }
-            return (
-              <Tag  key={a}>
-                {a}
-              </Tag>
-            );
+            return <Tag key={a}>{a}</Tag>;
           })}
         </>
       ),

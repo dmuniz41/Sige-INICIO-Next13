@@ -14,6 +14,7 @@ import { Toast } from "@/helpers/customAlert";
 import { startAddWorker, startDeleteWorker, startUpdateWorker, workersStartLoading } from "@/actions/workers";
 import { CreateWorkerForm } from "./CreateWorkerForm";
 import { EditWorkerForm } from "./EditWorkerForm";
+import Swal from "sweetalert2";
 
 // TODO: Hacer que al editar un trabajador y volver a presionar editar en el formulario aparezcan los datos actualizados
 
@@ -81,7 +82,20 @@ const WorkersTable: React.FC = () => {
 
   const handleDelete = () => {
     if (selectedRow) {
-      dispatch(startDeleteWorker(selectedRow?.CI));
+      Swal.fire({
+        title: 'Eliminar Material',
+        text: "El material seleccionado se borrará de forma permanente",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Eliminar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch(startDeleteWorker(selectedRow?.CI));
+        }
+      })
     } else {
       Toast.fire({
         icon: "error",

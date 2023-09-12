@@ -15,6 +15,7 @@ import { materialsStartLoading, startAddMaterial, startDeleteMaterial } from "@/
 import { AddMaterialForm } from "./AddMaterialForm";
 import { IOperation } from "@/models/operation";
 import moment from "moment";
+import Swal from "sweetalert2";
 interface DataType {
   _id: string;
   code: string;
@@ -104,7 +105,20 @@ const MaterialsTable: React.FC = () => {
 
   const handleDelete = () => {
     if (selectedRow) {
-      dispatch(startDeleteMaterial(selectedRow?.code, selectedWarehouse?.id));
+      Swal.fire({
+        title: 'Eliminar Material',
+        text: "El material seleccionado se borrará de forma permanente",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Eliminar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch(startDeleteMaterial(selectedRow?.code, selectedWarehouse?.id));
+        }
+      })
     } else {
       Toast.fire({
         icon: "error",
