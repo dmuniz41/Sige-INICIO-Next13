@@ -10,8 +10,8 @@ export interface IMaterial {
   costPerUnit: number;
   unitsTotal: number;
   minimumExistence: number;
-  unitMeasure?: string;
   warehouse: string
+  unitMeasure?: string;
   operations?: Types.DocumentArray<IOperation>;
 }
 

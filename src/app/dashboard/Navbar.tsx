@@ -70,7 +70,7 @@ export const Navbar = () => {
           </ul>
         </div>
       </div>
-      <div className=" items-center p-8 flex relative top-[3rem] ml-[19.5rem] h-[4rem] rounded-md w-[70%] bg-white-100 shadow-md">
+      <div className=" items-center p-8 flex relative top-[3rem] ml-[16.5rem] h-[4rem] rounded-md w-[75%] bg-white-100 shadow-md">
         {secondaryPath ? (
           <span className="font-bold text-2xl font-segoe ">{`${secondaryPath}`}</span>
         ) : (

@@ -11,9 +11,12 @@ import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interf
 import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
-import { materialsStartLoading } from "@/actions/material";
+import { materialsStartLoading, startAddMaterial } from "@/actions/material";
+import { AddMaterialForm } from "./AddMaterialForm";
+import { IOperation } from "@/models/operation";
+import moment from "moment";
 interface DataType {
-  _id: string
+  _id: string;
   code: string;
   key: string;
   materialName: string;
@@ -27,6 +30,9 @@ interface DataType {
 
 type DataIndex = keyof DataType;
 
+let date = moment();
+let currentDate = date.format("MMMM Do YYYY, h:mm:ss a");
+
 const MaterialsTable: React.FC = () => {
   const dispatch = useAppDispatch();
   const [searchText, setSearchText] = useState("");
@@ -36,10 +42,8 @@ const MaterialsTable: React.FC = () => {
   const [selectedRow, setSelectedRow] = useState<DataType>();
   const searchInput = useRef<InputRef>(null);
 
-  
   const { materials } = useAppSelector((state: RootState) => state?.material);
-  const  {selectedWarehouse} = useAppSelector((state: RootState) => state?.warehouse);
-  console.log("🚀 ~ file: MaterialsTable.tsx:42 ~ selectedWarehouse:", selectedWarehouse)
+  const { selectedWarehouse } = useAppSelector((state: RootState) => state?.warehouse);
   const data: DataType[] = useMemo(() => materials, [materials]);
 
   useEffect(() => {
@@ -61,14 +65,30 @@ const MaterialsTable: React.FC = () => {
     }
   };
 
-  const handleRefresh = ()=>{
-    dispatch(materialsStartLoading(selectedWarehouse.id))
-  }
+  const handleRefresh = () => {
+    dispatch(materialsStartLoading(selectedWarehouse.id));
+  };
 
-  // const onCreate = (values: any): void => {
-  //   dispatch(startAddMaterial(values.name));
-  //   setCreateNewModal(false);
-  // };
+  const onCreate = (values: any): void => {
+    console.log("🚀 ~ file: MaterialsTable.tsx:70 ~ onCreate ~ values:", values)
+    let operation: IOperation = {
+      date: currentDate,
+      type: "Añadir",
+      amount: values.unitsTotal,
+    };
+    dispatch(
+      startAddMaterial(
+        selectedWarehouse.id,
+        operation,
+        values.materialName,
+        values.category,
+        values.unitMeasure,
+        values.costPerUnit,
+        values.minimumExistence,
+      )
+    );
+    setCreateNewModal(false);
+  };
 
   // const onEdit = (values: any): void => {
   //   dispatch(startUpdateMaterial(selectedRow?._id!, values.name));
@@ -182,14 +202,14 @@ const MaterialsTable: React.FC = () => {
     {
       title: "Código",
       dataIndex: "code",
-      key: "name",
+      key: "code",
       width: "20%",
       ...getColumnSearchProps("code"),
     },
     {
       title: "Categoría",
       dataIndex: "category",
-      key: "name",
+      key: "category",
       width: "15%",
       ...getColumnSearchProps("category"),
     },
@@ -202,10 +222,20 @@ const MaterialsTable: React.FC = () => {
     },
     {
       title: "Existencias",
-      dataIndex: "costPerUnit",
+      dataIndex: "unitsTotal",
       key: "unitsTotal",
       width: "10%",
+      sorter:{
+        compare: (a, b) => a.unitsTotal - b.unitsTotal,
+      },
       ...getColumnSearchProps("unitsTotal"),
+    },
+    {
+      title: "Unidad de Medida",
+      dataIndex: "unitMeasure",
+      key: "unitMeasure",
+      width: "10%",
+      ...getColumnSearchProps("unitMeasure"),
     },
     {
       title: "Fecha de Entrada",
@@ -219,6 +249,9 @@ const MaterialsTable: React.FC = () => {
       dataIndex: "costPerUnit",
       key: "totalValue",
       width: "10%",
+      sorter:{
+        compare: (a, b) => a.costPerUnit - b.costPerUnit,
+      },
       ...getColumnSearchProps("costPerUnit"),
     },
     {
@@ -228,7 +261,6 @@ const MaterialsTable: React.FC = () => {
       width: "10%",
       ...getColumnSearchProps("minimumExistence"),
     },
-    
   ];
 
   return (
@@ -248,24 +280,21 @@ const MaterialsTable: React.FC = () => {
           <DeleteOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
         </button>
         <button className="cursor-pointer">
-          <ReloadOutlined
-            onClick={handleRefresh}
-            className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300"
-          />
+          <ReloadOutlined onClick={handleRefresh} className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
         </button>
         <button className="cursor-pointer">
-            <OrderedListOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
+          <OrderedListOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
         </button>
       </div>
 
-      {/* <CreateMaterialForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
-      <EditMaterialForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} /> */}
+      <AddMaterialForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
+      {/* <EditMaterialForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} /> */}
 
       <Table
         size="middle"
         columns={columns}
         dataSource={data}
-        pagination={{ position: ["bottomCenter"], pageSize: 15 }}
+        pagination={{ position: ["bottomCenter"], pageSize: 10 }}
         rowSelection={{
           type: "radio",
           ...rowSelection,

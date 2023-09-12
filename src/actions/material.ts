@@ -2,6 +2,28 @@ import Swal from "sweetalert2";
 import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
 import axios, { AxiosError } from "axios";
+import { IOperation } from "@/models/operation";
+
+export const startAddMaterial = (warehouse: string ,operation: IOperation, materialName: string, category: string, unitMeasure: string, costPerUnit: number, minimumExistence: number): any => {
+  const token = localStorage.getItem("accessToken");
+  return async (dispatch: any) => {
+    await axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/material`, { operation, warehouse, category, materialName, unitMeasure, costPerUnit, minimumExistence }, { headers: { accessToken: token } })
+      .then(() => {
+        let code = `${category}${materialName}${costPerUnit}`
+        dispatch(addMaterial(code, materialName, category, costPerUnit, minimumExistence, unitMeasure));
+        dispatch(materialsStartLoading(warehouse))
+        Toast.fire({
+          icon: "success",
+          title: "Material Añadido",
+        });
+      })
+      .catch((error: AxiosError) => {
+        let { message }: any = error.response?.data;
+        Swal.fire("Error", message, "error");
+      });
+  };
+};
 
 export const materialsStartLoading = (id: string) => {
   const token = localStorage.getItem("accessToken");
@@ -9,7 +31,7 @@ export const materialsStartLoading = (id: string) => {
     await axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/material/${id}`, { headers: { accessToken: token } })
       .then((resp) => {
-        console.log("🚀 ~ file: material.ts:12 ~ .then ~ resp:", resp)
+        console.log("🚀 ~ file: material.ts:12 ~ .then ~ resp:", resp);
         let { listOfMaterials } = resp.data;
         dispatch(materialsLoaded(listOfMaterials));
       })
@@ -23,4 +45,23 @@ export const materialsStartLoading = (id: string) => {
 export const materialsLoaded = (materials: any) => ({
   type: types.materialsLoaded,
   payload: materials,
+});
+
+const addMaterial = (
+  code: string,
+  materialName: string,
+  category: string,
+  costPerUnit: number,
+  minimumExistence: number,
+  unitMeasure?: string
+) => ({
+  type: types.addWarehouse,
+  payload: {
+    code,
+    materialName,
+    category,
+    costPerUnit,
+    minimumExistence,
+    unitMeasure,
+  },
 });
