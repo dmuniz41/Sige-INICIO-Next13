@@ -2,7 +2,7 @@
 
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { DeleteOutlined, EditOutlined, EyeOutlined, OrderedListOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, OrderedListOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Input, Space, Table } from "antd";
 import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
@@ -16,6 +16,7 @@ import { AddMaterialForm } from "./AddMaterialForm";
 import { IOperation } from "@/models/operation";
 import moment from "moment";
 import Swal from "sweetalert2";
+import { EditMaterialForm } from "./EditMaterialForm";
 interface DataType {
   _id: string;
   code: string;
@@ -74,7 +75,7 @@ const MaterialsTable: React.FC = () => {
     console.log("🚀 ~ file: MaterialsTable.tsx:70 ~ onCreate ~ values:", values)
     let operation: IOperation = {
       date: currentDate,
-      type: "Añadir",
+      tipo: "Añadir",
       amount: values.unitsTotal,
     };
     dispatch(

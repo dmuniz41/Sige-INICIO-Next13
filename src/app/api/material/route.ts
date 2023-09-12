@@ -44,7 +44,7 @@ export async function POST(request: Request) {
           UpdatedMaterial,
         },
         {
-          status: 409,
+          status: 200,
         }
       );
     }
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
           UpdatedMaterial,
         },
         {
-          status: 409,
+          status: 200,
         }
       );
       // * Si no existe un material con ese código crea una nueva entrada en el almacén *
@@ -90,7 +90,7 @@ export async function POST(request: Request) {
       return NextResponse.json({
         ok: true,
         message: "Material creado",
-        id: newMaterial._id.toString(),
+        // id: newMaterial._id.toString(),
         newMaterial,
       });
     }

@@ -1,7 +1,8 @@
 import Swal from "sweetalert2";
+import axios, { AxiosError } from "axios";
+
 import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
-import axios, { AxiosError } from "axios";
 import { IOperation } from "@/models/operation";
 
 export const startAddMaterial = (warehouse: string ,operation: IOperation, materialName: string, category: string, unitMeasure: string, costPerUnit: number, minimumExistence: number): any => {
@@ -31,7 +32,6 @@ export const materialsStartLoading = (id: string) => {
     await axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/material/${id}`, { headers: { accessToken: token } })
       .then((resp) => {
-        console.log("🚀 ~ file: material.ts:12 ~ .then ~ resp:", resp);
         let { listOfMaterials } = resp.data;
         dispatch(materialsLoaded(listOfMaterials));
       })
@@ -41,8 +41,6 @@ export const materialsStartLoading = (id: string) => {
       });
   };
 };
-
-
 
 export const startDeleteMaterial = (code: string, warehouse: string): any => {
   const token = localStorage.getItem("accessToken");
