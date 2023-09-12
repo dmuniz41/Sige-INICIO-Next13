@@ -42,10 +42,27 @@ export const materialsStartLoading = (id: string) => {
   };
 };
 
-export const materialsLoaded = (materials: any) => ({
-  type: types.materialsLoaded,
-  payload: materials,
-});
+
+
+export const startDeleteMaterial = (code: string, warehouse: string): any => {
+  const token = localStorage.getItem("accessToken");
+  return async (dispatch: any) => {
+    await axios
+      .patch(`${process.env.NEXT_PUBLIC_API_URL}/material`, { code }, { headers: { accessToken: token } })
+      .then(() => {
+        dispatch(deleteMaterial(code));
+        dispatch(materialsStartLoading(warehouse))
+        Toast.fire({
+          icon: "success",
+          title: "Material Eliminado",
+        });
+      })
+      .catch((error: AxiosError) => {
+        let { message }: any = error.response?.data;
+        Swal.fire("Error", message, "error");
+      });
+  };
+};
 
 const addMaterial = (
   code: string,
@@ -63,5 +80,17 @@ const addMaterial = (
     costPerUnit,
     minimumExistence,
     unitMeasure,
+  },
+});
+
+export const materialsLoaded = (materials: any) => ({
+  type: types.materialsLoaded,
+  payload: materials,
+});
+
+const deleteMaterial = (code: string) => ({
+  type: types.deleteMaterial,
+  payload: {
+    code,
   },
 });

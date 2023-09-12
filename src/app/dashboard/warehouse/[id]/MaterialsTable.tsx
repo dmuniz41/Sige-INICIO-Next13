@@ -11,7 +11,7 @@ import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interf
 import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
-import { materialsStartLoading, startAddMaterial } from "@/actions/material";
+import { materialsStartLoading, startAddMaterial, startDeleteMaterial } from "@/actions/material";
 import { AddMaterialForm } from "./AddMaterialForm";
 import { IOperation } from "@/models/operation";
 import moment from "moment";
@@ -102,17 +102,16 @@ const MaterialsTable: React.FC = () => {
     setSearchedColumn(dataIndex);
   };
 
-  // const handleDelete = () => {
-  //   if (selectedRow) {
-  //     dispatch(startDeleteMaterial(selectedRow?.name));
-  //   } else {
-  //     Toast.fire({
-  //       icon: "error",
-  //       title: "Seleccione un almacén a eliminar",
-  //     });
-  //   }
-  //   console.log("Delete material");
-  // };
+  const handleDelete = () => {
+    if (selectedRow) {
+      dispatch(startDeleteMaterial(selectedRow?.code, selectedWarehouse?.id));
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "Seleccione un material a eliminar",
+      });
+    }
+  };
 
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
@@ -276,7 +275,7 @@ const MaterialsTable: React.FC = () => {
         <button className="cursor-pointer" id="edit_material_btn" onClick={handleEdit}>
           <EditOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
         </button>
-        <button className="cursor-pointer" id="delete_material_btn">
+        <button className="cursor-pointer" onClick={handleDelete} id="delete_material_btn">
           <DeleteOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
         </button>
         <button className="cursor-pointer">
