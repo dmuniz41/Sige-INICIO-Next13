@@ -2,8 +2,10 @@
 
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { DeleteOutlined, EditOutlined, MinusOutlined, OrderedListOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import moment from "moment";
+import Swal from "sweetalert2";
 import { Button, Input, Space, Table } from "antd";
+import { DeleteOutlined, EditOutlined, MinusOutlined, OrderedListOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
@@ -12,12 +14,10 @@ import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
 import { materialsStartLoading, startAddMaterial, startDeleteMaterial } from "@/actions/material";
+import { NewMaterialForm } from "./NewMaterialForm";
 import { AddMaterialForm } from "./AddMaterialForm";
 import { IOperation } from "@/models/operation";
-import moment from "moment";
-import Swal from "sweetalert2";
-import { EditMaterialForm } from "./EditMaterialForm";
-import { selectedWarehouse } from '../../../../actions/warehouse';
+import { MinusMaterialForm } from "./MinusMaterialForm";
 interface DataType {
   _id: string;
   code: string;
@@ -41,7 +41,9 @@ const MaterialsTable: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [createNewModal, setCreateNewModal] = useState(false);
-  const [editModal, setEditModal] = useState(false);
+  // const [editModal, setEditModal] = useState(false);
+  const [addModal, setAddModal] = useState(false);
+  const [minusModal, setMinusModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState<DataType>();
   const searchInput = useRef<InputRef>(null);
 
@@ -56,24 +58,29 @@ const MaterialsTable: React.FC = () => {
   const handleNew = (): void => {
     setCreateNewModal(true);
   };
-
-  const handleEdit = (): void => {
-    if (selectedRow) {
-      setEditModal(true);
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un material a editar",
-      });
-    }
+  const handleAdd = (): void => {
+    setAddModal(true);
   };
+  const handleMinus = (): void => {
+    setMinusModal(true);
+  };
+
+  // const handleEdit = (): void => {
+  //   if (selectedRow) {
+  //     setEditModal(true);
+  //   } else {
+  //     Toast.fire({
+  //       icon: "error",
+  //       title: "Seleccione un material a editar",
+  //     });
+  //   }
+  // };
 
   const handleRefresh = () => {
     dispatch(materialsStartLoading(selectedWarehouse.id));
   };
 
   const onCreate = (values: any): void => {
-    console.log("🚀 ~ file: MaterialsTable.tsx:70 ~ onCreate ~ values:", values)
     let operation: IOperation = {
       date: currentDate,
       tipo: "Añadir",
@@ -93,11 +100,39 @@ const MaterialsTable: React.FC = () => {
     setCreateNewModal(false);
   };
 
-  // const onEdit = (values: any): void => {
-  //   dispatch(startUpdateMaterial(selectedRow?._id!, values.name));
-  //   setSelectedRow(undefined);
-  //   setEditModal(false);
-  // };
+  const onAdd = (values: any): void => {
+    let operation: IOperation = {
+      date: currentDate,
+      tipo: "Añadir",
+      amount: values.unitsTotal,
+    };
+    dispatch(startAddMaterial(selectedWarehouse.id,
+      operation,
+      values.materialName,
+      values.category,
+      values.unitMeasure,
+      values.costPerUnit,
+      values.minimumExistence,));
+    setSelectedRow(undefined);
+    setAddModal(false);
+  };
+
+  const onMinus = (values: any): void => {
+    let operation: IOperation = {
+      date: currentDate,
+      tipo: "Sustraer",
+      amount: values.unitsTotal,
+    };
+    dispatch(startAddMaterial(selectedWarehouse.id,
+      operation,
+      values.materialName,
+      values.category,
+      values.unitMeasure,
+      values.costPerUnit,
+      values.minimumExistence,));
+    setSelectedRow(undefined);
+    setMinusModal(false);
+  };
 
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
@@ -289,22 +324,22 @@ const MaterialsTable: React.FC = () => {
           Nuevo
         </button>
         <button
-          onClick={handleNew}
+          onClick={handleAdd}
           className="bg-secondary-500 w-[6rem] h-[2.5rem] flex items-center p-1 font-black text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-secondary-600 ease-in-out duration-300"
         >
           <PlusOutlined />
           Añadir
         </button>
         <button
-          onClick={handleNew}
+          onClick={handleMinus}
           className="bg-danger-500 w-[6rem] h-[2.5rem] flex items-center p-1 font-black text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-danger-600 ease-in-out duration-300"
         >
           <MinusOutlined  />
           Sustraer
         </button>
-        <button className="cursor-pointer" id="edit_material_btn" onClick={handleEdit}>
+        {/* <button className="cursor-pointer" id="edit_material_btn" onClick={handleEdit}>
           <EditOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
-        </button>
+        </button> */}
         <button className="cursor-pointer" onClick={handleDelete} id="delete_material_btn">
           <DeleteOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
         </button>
@@ -316,8 +351,9 @@ const MaterialsTable: React.FC = () => {
         </button>
       </div>
 
-      <AddMaterialForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
-      {/* <EditMaterialForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} /> */}
+      <NewMaterialForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
+      <AddMaterialForm open={addModal} onCancel={() => setAddModal(false)} onCreate={onAdd} defaultValues={selectedRow} />
+      <MinusMaterialForm open={minusModal} onCancel={() => setMinusModal(false)} onCreate={onMinus} defaultValues={selectedRow} />
 
       <Table
         size="middle"

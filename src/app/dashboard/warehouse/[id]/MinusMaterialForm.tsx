@@ -21,14 +21,14 @@ interface CollectionCreateFormProps {
   defaultValues?: Values;
 }
 
-export const AddMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
+export const MinusMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
   const [form] = Form.useForm();
   return (
     <Modal
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Añadir Material</span>
+          <span className="font-black text-lg">Sustraer Material</span>
         </div>
       }
       centered
@@ -79,22 +79,22 @@ export const AddMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
           },
         ]}
       >
-        <Form.Item name="category" label="Categoría" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item name="category" label="Categoría">
           <Select allowClear style={{ width: "100%" }} disabled />
         </Form.Item>
-        <Form.Item name="materialName" label="Nombre del material" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item name="materialName" label="Nombre del material" >
           <Input disabled />
         </Form.Item>
-        <Form.Item name="costPerUnit" label="Costo por unidad de medida" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item name="costPerUnit" label="Costo por unidad de medida">
           <InputNumber className="w-full" disabled />
         </Form.Item>
-        <Form.Item name="unitMeasure" label="Unidad de medida" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item name="unitMeasure" label="Unidad de medida">
           <Select allowClear style={{ width: "100%" }} disabled />
         </Form.Item>
-        <Form.Item name="unitsTotal" label="Cantidad a añadir" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item name="unitsTotal" label="Cantidad a sustraer">
           <InputNumber className="w-full" />
         </Form.Item>
-        <Form.Item name="minimumExistence" label="Existencias mínimas" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item name="minimumExistence" label="Existencias mínimas">
           <InputNumber className="w-full" disabled />
         </Form.Item>
       </Form>

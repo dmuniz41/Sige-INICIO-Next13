@@ -5,19 +5,38 @@ import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
 import { IOperation } from "@/models/operation";
 
-export const startAddMaterial = (warehouse: string ,operation: IOperation, materialName: string, category: string, unitMeasure: string, costPerUnit: number, minimumExistence: number): any => {
+export const startAddMaterial = (
+  warehouse: string,
+  operation: IOperation,
+  materialName: string,
+  category: string,
+  unitMeasure: string,
+  costPerUnit: number,
+  minimumExistence: number
+): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/material`, { operation, warehouse, category, materialName, unitMeasure, costPerUnit, minimumExistence }, { headers: { accessToken: token } })
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/material`,
+        { operation, warehouse, category, materialName, unitMeasure, costPerUnit, minimumExistence },
+        { headers: { accessToken: token } }
+      )
       .then(() => {
-        let code = `${category}${materialName}${costPerUnit}`
+        let code = `${category}${materialName}${costPerUnit}`;
         dispatch(addMaterial(code, materialName, category, costPerUnit, minimumExistence, unitMeasure));
-        dispatch(materialsStartLoading(warehouse))
-        Toast.fire({
-          icon: "success",
-          title: "Material Añadido",
-        });
+        dispatch(materialsStartLoading(warehouse));
+        if (operation.tipo === "Sustraer") {
+          Toast.fire({
+            icon: "success",
+            title: "Material Sustraído",
+          });
+        } else {
+          Toast.fire({
+            icon: "success",
+            title: "Material Añadido",
+          });
+        }
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
@@ -49,7 +68,7 @@ export const startDeleteMaterial = (code: string, warehouse: string): any => {
       .patch(`${process.env.NEXT_PUBLIC_API_URL}/material`, { code }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(deleteMaterial(code));
-        dispatch(materialsStartLoading(warehouse))
+        dispatch(materialsStartLoading(warehouse));
         Toast.fire({
           icon: "success",
           title: "Material Eliminado",
@@ -62,14 +81,7 @@ export const startDeleteMaterial = (code: string, warehouse: string): any => {
   };
 };
 
-const addMaterial = (
-  code: string,
-  materialName: string,
-  category: string,
-  costPerUnit: number,
-  minimumExistence: number,
-  unitMeasure?: string
-) => ({
+const addMaterial = (code: string, materialName: string, category: string, costPerUnit: number, minimumExistence: number, unitMeasure?: string) => ({
   type: types.addWarehouse,
   payload: {
     code,
