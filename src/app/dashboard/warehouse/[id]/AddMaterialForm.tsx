@@ -48,7 +48,7 @@ export const AddMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
       }}
       onCancel={onCancel}
       okType="default"
-      okText="Editar"
+      okText="Añadir"
       cancelText="Cancelar"
     >
       <Form

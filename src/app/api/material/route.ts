@@ -7,7 +7,7 @@ import Operation from "@/models/operation";
 import { verifyJWT } from "@/libs/jwt";
 
 export async function POST(request: Request) {
-  const { warehouse ,operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1 } = await request.json();
+  const { warehouse, operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1 } = await request.json();
   const accessToken = request.headers.get("accessToken");
 
   let date = moment();
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: true,
-          msg: "Material añadido",
+          message: "Material añadido",
           UpdatedMaterial,
         },
         {
@@ -52,6 +52,17 @@ export async function POST(request: Request) {
 
     if (BDMaterial && operation.tipo === "Sustraer") {
       let newTotal = BDMaterial.unitsTotal - operation?.amount;
+      if (newTotal < 0) {
+        return NextResponse.json(
+          {
+            ok: false,
+            message: "No hay existencias suficientes para extraer esa cantidad de material",
+          },
+          {
+            status: 400,
+          }
+        );
+      }
       let UpdatedMaterial = await Material.findOneAndUpdate(
         { materialName, category, costPerUnit },
         { $push: { operations: operation }, materialName, category, unitMeasure, costPerUnit, minimumExistence, unitsTotal: newTotal },
@@ -60,7 +71,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: true,
-          msg: "Material sustraído",
+          message: "Material sustraído",
           UpdatedMaterial,
         },
         {
