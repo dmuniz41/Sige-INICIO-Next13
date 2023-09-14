@@ -295,6 +295,16 @@ const MaterialsTable: React.FC = () => {
       ...getColumnSearchProps("unitsTotal"),
     },
     {
+      title: "Coste Unitario",
+      dataIndex: "costPerUnit",
+      key: "totalValue",
+      width: "10%",
+      sorter: {
+        compare: (a, b) => a.costPerUnit - b.costPerUnit,
+      },
+      ...getColumnSearchProps("costPerUnit"),
+    },
+    {
       title: "Unidad de Medida",
       dataIndex: "unitMeasure",
       key: "unitMeasure",
@@ -307,16 +317,6 @@ const MaterialsTable: React.FC = () => {
       key: "totalValue",
       width: "20%",
       ...getColumnSearchProps("enterDate"),
-    },
-    {
-      title: "Coste Unitario",
-      dataIndex: "costPerUnit",
-      key: "totalValue",
-      width: "10%",
-      sorter: {
-        compare: (a, b) => a.costPerUnit - b.costPerUnit,
-      },
-      ...getColumnSearchProps("costPerUnit"),
     },
     {
       title: "Existencias Mínimas",

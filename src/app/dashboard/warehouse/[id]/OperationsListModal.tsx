@@ -1,21 +1,21 @@
 "use client";
 
-import { IOperation } from "@/models/operation";
-import { Form, List, InputNumber, Modal, Select, SelectProps } from "antd";
+import { Modal, Tag } from "antd";
 import Highlighter from "react-highlight-words";
-import React, {useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { Button, Input, Space, Table } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 
+import { IOperation } from "@/models/operation";
 interface Values {
-  operations: [IOperation]
+  operations: [IOperation];
 }
 
-interface DataType{
-  _id: string;
+interface DataType {
+  // _id: string;
   tipo: string;
   date: string;
   amount: number;
@@ -31,7 +31,7 @@ interface CollectionCreateFormProps {
 }
 
 export const OperationsList: React.FC<CollectionCreateFormProps> = ({ open, onCancel, defaultValues }) => {
-  const data = defaultValues?.operations 
+  const data = defaultValues?.operations;
   return (
     <Modal
       className="flex flex-col"
@@ -45,28 +45,26 @@ export const OperationsList: React.FC<CollectionCreateFormProps> = ({ open, onCa
       style={{ textAlign: "left" }}
       destroyOnClose
       onCancel={onCancel}
-      width={'80rem'}
+      width={"35rem"}
       footer={null}
     >
-      <OperationsTable operations={data}/>
+      <OperationsTable operations={data} />
     </Modal>
   );
 };
 
 interface Props {
-  operations: [IOperation] | undefined
+  operations: [IOperation] | undefined;
 }
 
 const OperationsTable: React.FC<Props> = (props) => {
-
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
 
   const searchInput = useRef<InputRef>(null);
-  const operations = props.operations
+  const operations = props.operations;
 
   const data: DataType[] = useMemo(() => operations, [operations]);
-
 
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
@@ -146,38 +144,43 @@ const OperationsTable: React.FC<Props> = (props) => {
       ),
   });
 
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText("");
+  };
+
   const columns: ColumnsType<DataType> = [
     {
       title: "Tipo",
       dataIndex: "tipo",
       key: "tipo",
-      width: "20%",
+      width: "10%",
       ...getColumnSearchProps("tipo"),
+      render: (tipo: string) => (
+        <Tag color={tipo === "Añadir" ? "#34b042" : "#ff0000"} key={tipo}>
+          {tipo.toUpperCase()}
+        </Tag>
+      ),
     },
     {
       title: "Fecha",
       dataIndex: "date",
       key: "date",
-      width: "15%",
+      width: "80%",
       ...getColumnSearchProps("date"),
     },
     {
       title: "Cantidad",
       dataIndex: "amount",
       key: "amount",
-      width: "15%",
+      width: "10%",
       ...getColumnSearchProps("amount"),
-    }
+    },
   ];
 
   return (
     <>
-      <Table
-        size="middle"
-        columns={columns}
-        dataSource={data}
-        pagination={{ position: ["bottomCenter"], pageSize: 14 }}
-      />
+      <Table size="small" columns={columns} dataSource={data} pagination={{ position: ["bottomCenter"], pageSize: 14 }} />
     </>
   );
 };
