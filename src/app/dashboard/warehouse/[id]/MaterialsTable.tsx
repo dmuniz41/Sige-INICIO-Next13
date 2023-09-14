@@ -18,6 +18,7 @@ import { NewMaterialForm } from "./NewMaterialForm";
 import { AddMaterialForm } from "./AddMaterialForm";
 import { IOperation } from "@/models/operation";
 import { MinusMaterialForm } from "./MinusMaterialForm";
+import { OperationsList } from "./OperationsListModal";
 interface DataType {
   _id: string;
   code: string;
@@ -29,6 +30,7 @@ interface DataType {
   unitsTotal: number;
   minimumExistence: number;
   unitMeasure: string;
+  operations: [IOperation]
 }
 
 type DataIndex = keyof DataType;
@@ -44,11 +46,12 @@ const MaterialsTable: React.FC = () => {
   // const [editModal, setEditModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
   const [minusModal, setMinusModal] = useState(false);
+  const [showOperationsModal, setShowOperationModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState<DataType>();
   const searchInput = useRef<InputRef>(null);
 
   const { materials } = useAppSelector((state: RootState) => state?.material);
-  const { selectedWarehouse }: {selectedWarehouse: {id: string}} = useAppSelector((state: RootState) => state?.warehouse);
+  const { selectedWarehouse }: { selectedWarehouse: { id: string } } = useAppSelector((state: RootState) => state?.warehouse);
   const data: DataType[] = useMemo(() => materials, [materials]);
 
   useEffect(() => {
@@ -63,6 +66,9 @@ const MaterialsTable: React.FC = () => {
   };
   const handleMinus = (): void => {
     setMinusModal(true);
+  };
+  const handleShowOperations = (): void => {
+    setShowOperationModal(true);
   };
 
   // const handleEdit = (): void => {
@@ -94,7 +100,7 @@ const MaterialsTable: React.FC = () => {
         values.category,
         values.unitMeasure,
         values.costPerUnit,
-        values.minimumExistence,
+        values.minimumExistence
       )
     );
     setCreateNewModal(false);
@@ -106,13 +112,17 @@ const MaterialsTable: React.FC = () => {
       tipo: "Añadir",
       amount: values.unitsTotal,
     };
-    dispatch(startAddMaterial(selectedWarehouse.id,
-      operation,
-      values.materialName,
-      values.category,
-      values.unitMeasure,
-      values.costPerUnit,
-      values.minimumExistence,));
+    dispatch(
+      startAddMaterial(
+        selectedWarehouse.id,
+        operation,
+        values.materialName,
+        values.category,
+        values.unitMeasure,
+        values.costPerUnit,
+        values.minimumExistence
+      )
+    );
     setSelectedRow(undefined);
     setAddModal(false);
   };
@@ -123,13 +133,17 @@ const MaterialsTable: React.FC = () => {
       tipo: "Sustraer",
       amount: values.unitsTotal,
     };
-    dispatch(startAddMaterial(selectedWarehouse.id,
-      operation,
-      values.materialName,
-      values.category,
-      values.unitMeasure,
-      values.costPerUnit,
-      values.minimumExistence,));
+    dispatch(
+      startAddMaterial(
+        selectedWarehouse.id,
+        operation,
+        values.materialName,
+        values.category,
+        values.unitMeasure,
+        values.costPerUnit,
+        values.minimumExistence
+      )
+    );
     setSelectedRow(undefined);
     setMinusModal(false);
   };
@@ -143,19 +157,19 @@ const MaterialsTable: React.FC = () => {
   const handleDelete = () => {
     if (selectedRow) {
       Swal.fire({
-        title: 'Eliminar Material',
+        title: "Eliminar Material",
         text: "El material seleccionado se borrará de forma permanente",
-        icon: 'warning',
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Eliminar'
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Eliminar",
       }).then((result) => {
         if (result.isConfirmed) {
           dispatch(startDeleteMaterial(selectedRow?.code, selectedWarehouse?.id));
         }
-      })
+      });
     } else {
       Toast.fire({
         icon: "error",
@@ -266,7 +280,7 @@ const MaterialsTable: React.FC = () => {
     {
       title: "Nombre",
       dataIndex: "materialName",
-      key: "totalValue",
+      key: "materialName",
       width: "15%",
       ...getColumnSearchProps("materialName"),
     },
@@ -275,7 +289,7 @@ const MaterialsTable: React.FC = () => {
       dataIndex: "unitsTotal",
       key: "unitsTotal",
       width: "10%",
-      sorter:{
+      sorter: {
         compare: (a, b) => a.unitsTotal - b.unitsTotal,
       },
       ...getColumnSearchProps("unitsTotal"),
@@ -299,7 +313,7 @@ const MaterialsTable: React.FC = () => {
       dataIndex: "costPerUnit",
       key: "totalValue",
       width: "10%",
-      sorter:{
+      sorter: {
         compare: (a, b) => a.costPerUnit - b.costPerUnit,
       },
       ...getColumnSearchProps("costPerUnit"),
@@ -334,7 +348,7 @@ const MaterialsTable: React.FC = () => {
           onClick={handleMinus}
           className="bg-danger-500 w-[6rem] h-[2.5rem] flex items-center p-1 font-black text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-danger-600 ease-in-out duration-300"
         >
-          <MinusOutlined  />
+          <MinusOutlined />
           Sustraer
         </button>
         {/* <button className="cursor-pointer" id="edit_material_btn" onClick={handleEdit}>
@@ -346,7 +360,7 @@ const MaterialsTable: React.FC = () => {
         <button className="cursor-pointer">
           <ReloadOutlined onClick={handleRefresh} className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
         </button>
-        <button className="cursor-pointer">
+        <button className="cursor-pointer" onClick={handleShowOperations}>
           <OrderedListOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
         </button>
       </div>
@@ -354,6 +368,7 @@ const MaterialsTable: React.FC = () => {
       <NewMaterialForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
       <AddMaterialForm open={addModal} onCancel={() => setAddModal(false)} onCreate={onAdd} defaultValues={selectedRow} />
       <MinusMaterialForm open={minusModal} onCancel={() => setMinusModal(false)} onCreate={onMinus} defaultValues={selectedRow} />
+      <OperationsList open={showOperationsModal} onCancel={() => setShowOperationModal(false)} onCreate={onMinus} defaultValues={selectedRow} />
 
       <Table
         size="middle"
