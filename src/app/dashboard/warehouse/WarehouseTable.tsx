@@ -77,8 +77,8 @@ const WarehousesTable: React.FC = () => {
   const handleDelete = () => {
     if (selectedRow) {
       Swal.fire({
-        title: 'Eliminar Material',
-        text: "El material seleccionado se borrará de forma permanente",
+        title: 'Eliminar Almacén',
+        text: "El Almacén seleccionado se borrará de forma permanente",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',

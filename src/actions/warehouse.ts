@@ -22,13 +22,13 @@ export const startAddWarehouse = (name: string): any => {
       });
   };
 };
-export const startUpdateWarehouse = (_id: string ,name: string): any => {
+export const startUpdateWarehouse = (_id: string ,name?: string, totalValue?: number): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/warehouse`, { _id, name },{ headers: { accessToken: token } })
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/warehouse`, { _id, name, totalValue },{ headers: { accessToken: token } })
       .then(() => {
-        dispatch(updateWarehouse(name));
+        dispatch(updateWarehouse(name!, totalValue!));
         dispatch(warehousesStartLoading())
         Toast.fire({
           icon: "success",
@@ -91,10 +91,11 @@ const addWarehouse = (name: string, ) => ({
     name,
   },
 });
-const updateWarehouse = ( name: string) => ({
+const updateWarehouse = ( name: string, totalValue: number) => ({
   type: types.updateWarehouse,
   payload: {
     name,
+    totalValue
   },
 });
 const deleteWarehouse = ( name: string) => ({

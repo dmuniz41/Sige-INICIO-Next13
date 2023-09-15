@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import Material, { IMaterial } from "@/models/material";
 import Operation from "@/models/operation";
 import { verifyJWT } from "@/libs/jwt";
+import Warehouse from "@/models/warehouse";
 
 export async function POST(request: Request) {
   const { warehouse, operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1 } = await request.json();
@@ -32,11 +33,27 @@ export async function POST(request: Request) {
 
     if (BDMaterial && operation.tipo === "Añadir") {
       let newTotal = BDMaterial.unitsTotal + operation?.amount;
+      let newTotalValue = BDMaterial.materialTotalValue! + operation?.amount * BDMaterial.costPerUnit;
       let UpdatedMaterial = await Material.findOneAndUpdate(
         { materialName, category, costPerUnit },
-        { $push: { operations: operation }, materialName, category, unitMeasure, costPerUnit, minimumExistence, unitsTotal: newTotal },
+        {
+          $push: { operations: operation },
+          materialName,
+          category,
+          unitMeasure,
+          costPerUnit,
+          minimumExistence,
+          unitsTotal: newTotal,
+          materialTotalValue: newTotalValue,
+        },
         { new: true }
       );
+
+      //*Actualiza el valor total del almacén
+      const DBWarehouse = await Warehouse.findById(warehouse)
+      let newWarehouseValue = DBWarehouse.totalValue + operation?.amount * costPerUnit
+      await Warehouse.findByIdAndUpdate(warehouse, {totalValue: newWarehouseValue})
+
       return NextResponse.json(
         {
           ok: true,
@@ -52,6 +69,7 @@ export async function POST(request: Request) {
 
     if (BDMaterial && operation.tipo === "Sustraer") {
       let newTotal = BDMaterial.unitsTotal - operation?.amount;
+      let newTotalValue = BDMaterial.materialTotalValue! - operation?.amount * BDMaterial.costPerUnit;
       if (newTotal < 0) {
         return NextResponse.json(
           {
@@ -65,9 +83,25 @@ export async function POST(request: Request) {
       }
       let UpdatedMaterial = await Material.findOneAndUpdate(
         { materialName, category, costPerUnit },
-        { $push: { operations: operation }, materialName, category, unitMeasure, costPerUnit, minimumExistence, unitsTotal: newTotal },
+        {
+          $push: { operations: operation },
+          materialName,
+          category,
+          unitMeasure,
+          costPerUnit,
+          minimumExistence,
+          unitsTotal: newTotal,
+          materialTotalValue: newTotalValue,
+        },
         { new: true }
       );
+
+      //*Actualiza el valor total del almacén
+
+      const DBWarehouse = await Warehouse.findById(warehouse)
+      let newWarehouseValue = DBWarehouse.totalValue - operation?.amount * costPerUnit
+      await Warehouse.findByIdAndUpdate(warehouse, {totalValue: newWarehouseValue})
+
       return NextResponse.json(
         {
           ok: true,
@@ -92,16 +126,22 @@ export async function POST(request: Request) {
         warehouse,
         enterDate: currentDate,
         unitsTotal: operation?.amount,
+        materialTotalValue: costPerUnit * operation?.amount,
         key: category + materialName + costPerUnit,
       });
 
       newMaterial.operations.push(newOperation);
 
+      //*Actualiza el valor total del almacén
+
+      const DBWarehouse = await Warehouse.findById(warehouse)
+      let newWarehouseValue = DBWarehouse.totalValue + operation?.amount * costPerUnit
+      await Warehouse.findByIdAndUpdate(warehouse, {totalValue: newWarehouseValue})
+
       await newMaterial.save();
       return NextResponse.json({
         ok: true,
         message: "Material creado",
-        // id: newMaterial._id.toString(),
         newMaterial,
       });
     }

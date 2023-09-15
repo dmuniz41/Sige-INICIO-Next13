@@ -30,7 +30,7 @@ interface DataType {
   unitsTotal: number;
   minimumExistence: number;
   unitMeasure: string;
-  operations: [IOperation]
+  operations: [IOperation];
 }
 
 type DataIndex = keyof DataType;
@@ -285,6 +285,16 @@ const MaterialsTable: React.FC = () => {
       ...getColumnSearchProps("materialName"),
     },
     {
+      title: "Coste Unitario",
+      dataIndex: "costPerUnit",
+      key: "costPerUnit",
+      width: "10%",
+      sorter: {
+        compare: (a, b) => a.costPerUnit - b.costPerUnit,
+      },
+      ...getColumnSearchProps("costPerUnit"),
+    },
+    {
       title: "Existencias",
       dataIndex: "unitsTotal",
       key: "unitsTotal",
@@ -295,15 +305,13 @@ const MaterialsTable: React.FC = () => {
       ...getColumnSearchProps("unitsTotal"),
     },
     {
-      title: "Coste Unitario",
-      dataIndex: "costPerUnit",
-      key: "totalValue",
+      title: "Existencias Mínimas",
+      dataIndex: "minimumExistence",
+      key: "minimumExistence",
       width: "10%",
-      sorter: {
-        compare: (a, b) => a.costPerUnit - b.costPerUnit,
-      },
-      ...getColumnSearchProps("costPerUnit"),
+      ...getColumnSearchProps("minimumExistence"),
     },
+
     {
       title: "Unidad de Medida",
       dataIndex: "unitMeasure",
@@ -314,16 +322,9 @@ const MaterialsTable: React.FC = () => {
     {
       title: "Fecha de Entrada",
       dataIndex: "enterDate",
-      key: "totalValue",
+      key: "enterDate",
       width: "20%",
       ...getColumnSearchProps("enterDate"),
-    },
-    {
-      title: "Existencias Mínimas",
-      dataIndex: "minimumExistence",
-      key: "totalValue",
-      width: "10%",
-      ...getColumnSearchProps("minimumExistence"),
     },
   ];
 
@@ -371,7 +372,7 @@ const MaterialsTable: React.FC = () => {
       <OperationsList open={showOperationsModal} onCancel={() => setShowOperationModal(false)} onCreate={onMinus} defaultValues={selectedRow} />
 
       <Table
-        size="middle"
+        size="small"
         columns={columns}
         dataSource={data}
         pagination={{ position: ["bottomCenter"], pageSize: 10 }}

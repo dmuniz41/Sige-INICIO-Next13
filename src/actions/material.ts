@@ -26,6 +26,7 @@ export const startAddMaterial = (
         let code = `${category}${materialName}${costPerUnit}`;
         dispatch(addMaterial(code, materialName, category, costPerUnit, minimumExistence, unitMeasure));
         dispatch(materialsStartLoading(warehouse));
+
         if (operation.tipo === "Sustraer") {
           Toast.fire({
             icon: "success",
