@@ -280,7 +280,7 @@ const UserTable: React.FC = () => {
 
   return (
     <>
-      <div className="flex h-14 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-2">
+      <div className="flex h-14 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <button
           onClick={handleNew}
           className="bg-success-500 w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-success-600 ease-in-out duration-300"
@@ -288,16 +288,20 @@ const UserTable: React.FC = () => {
           <PlusOutlined />
           Nuevo
         </button>
+        <div className="flex gap-2">
+
         <button className="cursor-pointer" id="edit_user_btn" onClick={handleEdit}>
           <EditOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
         </button>
         <button className="cursor-pointer" id="delete_user_btn" onClick={handleDelete}>
           <DeleteOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
         </button>
+        <button className="cursor-pointer"  onClick={() => dispatch(usersStartLoading())}>
         <ReloadOutlined
-          onClick={() => dispatch(usersStartLoading())}
           className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300"
-        />
+          />
+        </button>
+        </div>
       </div>
 
       <CreateUserForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />

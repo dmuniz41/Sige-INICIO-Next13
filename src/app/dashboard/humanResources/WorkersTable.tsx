@@ -19,7 +19,7 @@ import Swal from "sweetalert2";
 // TODO: Hacer que al editar un trabajador y volver a presionar editar en el formulario aparezcan los datos actualizados
 
 interface DataType {
-  _id: string,
+  _id: string;
   key: string;
   name: string;
   CI: number;
@@ -60,7 +60,6 @@ const WorkersTable: React.FC = () => {
         title: "Seleccione un trabajador a editar",
       });
     }
-    
   };
 
   const onCreate = (values: any): void => {
@@ -69,7 +68,7 @@ const WorkersTable: React.FC = () => {
   };
 
   const onEdit = (values: any): void => {
-    dispatch(startUpdateWorker(selectedRow?._id!,values.name, values.CI, values.address, values.role, values.phoneNumber, values.bankAccount));
+    dispatch(startUpdateWorker(selectedRow?._id!, values.name, values.CI, values.address, values.role, values.phoneNumber, values.bankAccount));
     setSelectedRow(undefined);
     setEditModal(false);
   };
@@ -83,19 +82,19 @@ const WorkersTable: React.FC = () => {
   const handleDelete = () => {
     if (selectedRow) {
       Swal.fire({
-        title: 'Eliminar Trabajador',
+        title: "Eliminar Trabajador",
         text: "El trabajador seleccionado se borrará de forma permanente",
-        icon: 'warning',
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Eliminar'
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Eliminar",
       }).then((result) => {
         if (result.isConfirmed) {
           dispatch(startDeleteWorker(selectedRow?.CI));
         }
-      })
+      });
     } else {
       Toast.fire({
         icon: "error",
@@ -270,7 +269,7 @@ const WorkersTable: React.FC = () => {
 
   return (
     <>
-      <div className="flex h-14 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-2">
+      <div className="flex h-14 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <button
           onClick={handleNew}
           className="bg-success-500 w-[6rem] h-[2.5rem] flex items-center p-1 font-black text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-success-600 ease-in-out duration-300"
@@ -278,16 +277,17 @@ const WorkersTable: React.FC = () => {
           <PlusOutlined />
           Nuevo
         </button>
-        <button className="cursor-pointer" id="edit_worker_btn" onClick={handleEdit}>
-          <EditOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
-        </button>
-        <button className="cursor-pointer" id="delete_worker_btn" onClick={handleDelete}>
-          <DeleteOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
-        </button>
-        <ReloadOutlined
-          onClick={() => dispatch(workersStartLoading())}
-          className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300"
-        />
+        <div className="flex gap-2">
+          <button className="cursor-pointer" id="edit_worker_btn" onClick={handleEdit}>
+            <EditOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
+          </button>
+          <button className="cursor-pointer" id="delete_worker_btn" onClick={handleDelete}>
+            <DeleteOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
+          </button>
+          <button className="cursor-pointer" onClick={() => dispatch(workersStartLoading())}>
+            <ReloadOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
+          </button>
+        </div>
       </div>
 
       <CreateWorkerForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
