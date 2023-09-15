@@ -2,6 +2,7 @@ import { types } from "../types/types";
 
 const initialState = {
   materials: [],
+  lowExistenceMaterials: []
 };
 
 export const materialReducer = (state = initialState, action:any) => {
@@ -22,6 +23,11 @@ export const materialReducer = (state = initialState, action:any) => {
       return {
         ...state,
         materials: [...action.payload],
+      };
+    case types.lowExistencesMaterials:
+      return {
+        ...state,
+        lowExistenceMaterials: [...action.payload],
       };
 
     default:

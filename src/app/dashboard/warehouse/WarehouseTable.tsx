@@ -237,7 +237,7 @@ const WarehousesTable: React.FC = () => {
         size="middle"
         columns={columns}
         dataSource={data}
-        pagination={{ position: ["bottomCenter"], pageSize: 15 }}
+        pagination={{ position: ["bottomCenter"], pageSize: 10 }}
         rowSelection={{
           type: "radio",
           ...rowSelection,
