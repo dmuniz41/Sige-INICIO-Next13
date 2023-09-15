@@ -45,7 +45,7 @@ export const OperationsList: React.FC<CollectionCreateFormProps> = ({ open, onCa
       style={{ textAlign: "left" }}
       destroyOnClose
       onCancel={onCancel}
-      width={"35rem"}
+      width={"60rem"}
       footer={null}
     >
       <OperationsTable operations={data} />

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { AppstoreOutlined, FolderOpenOutlined, LockOutlined, SettingOutlined, ShopOutlined, UserOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, FolderOpenOutlined, LockOutlined, SettingOutlined, ShopOutlined, TeamOutlined, UserOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
@@ -17,19 +17,9 @@ const items: MenuProps["items"] = [
         key: "users",
       },
     ],
-    icon: <LockOutlined />,
+    icon: <LockOutlined style={{ fontSize: "20px" }} />,
   },
-  {
-    label: "Nomencladores",
-    key: "nomenclator",
-    children: [
-      {
-        label: <Link href="/dashboard/nomenclators">Nomencladores</Link>,
-        key: "nomenclator1",
-      },
-    ],
-    icon: <SettingOutlined />,
-  },
+
   {
     label: "Recursos Humanos",
     key: "humanResources",
@@ -39,7 +29,7 @@ const items: MenuProps["items"] = [
         key: "worker",
       },
     ],
-    icon: <UserOutlined />,
+    icon: <TeamOutlined style={{ fontSize: "20px" }} />,
   },
   {
     label: "Oficina",
@@ -50,22 +40,22 @@ const items: MenuProps["items"] = [
         key: "officeExpenses",
       },
     ],
-    icon: <ShopOutlined />,
+    icon: <ShopOutlined style={{ fontSize: "20px" }} />,
   },
   {
     label: "Almacén",
     key: "warehouse",
     children: [
       {
-        label: <Link href="/dashboard/warehouse">Almacén</Link>,
+        label: <Link href="/dashboard/warehouse">Materiales</Link>,
         key: "warehouse1",
       },
       {
-        label: <Link href="/dashboard/ticketsWarehouse">Almacen de Vales</Link>,
+        label: <Link href="/dashboard/ticketsWarehouse">Almacén de Vales</Link>,
         key: "ticketsWarehouse",
       },
     ],
-    icon: <AppstoreOutlined />,
+    icon: <AppstoreOutlined style={{ fontSize: "20px" }} />,
   },
   {
     label: "Proyecto",
@@ -80,7 +70,12 @@ const items: MenuProps["items"] = [
         key: "projectExpenses",
       },
     ],
-    icon: <FolderOpenOutlined />,
+    icon: <FolderOpenOutlined style={{ fontSize: "20px" }} />,
+  },
+  {
+    label: <Link href="/dashboard/nomenclators">Nomencladores</Link>,
+    key: "nomenclator",
+    icon: <SettingOutlined style={{ fontSize: "20px" }} />,
   },
 ];
 
@@ -100,7 +95,7 @@ export const Sidebar: React.FC = () => {
       mode="inline"
       onClick={onClick}
       selectedKeys={[current]}
-      style={{ width: "240px", backgroundColor: "#f4f6f9", fontWeight: "bold", fontSize: "14px" }}
+      style={{ width: "240px", backgroundColor: "#f4f6f9", fontWeight: "bold", fontSize: "16px", paddingTop: "45px" }}
       items={items}
     />
   );

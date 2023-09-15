@@ -207,35 +207,39 @@ const WarehousesTable: React.FC = () => {
 
   return (
     <>
-      <div className="flex h-14 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-2">
-        <div
-          onClick={handleNew}
-          className="bg-success-500 w-[6rem] h-[2.5rem] flex items-center p-1 font-black text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-success-600 ease-in-out duration-300"
-        >
-          <PlusOutlined />
-          Nuevo
-        </div>
-        <div onClick={handleView}>
-          <Link
-            href={`/dashboard/warehouse/${selectedRow?._id}`}
-            className="bg-secondary-500 w-[6rem] h-[2.5rem] flex items-center p-1 font-black text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-secondary-600 ease-in-out duration-300"
+      <div className="flex h-14 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
+        <div className="flex gap-2">
+          <div
+            onClick={handleNew}
+            className="bg-success-500 w-[6rem] h-[2.5rem] flex items-center p-1 font-black text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-success-600 ease-in-out duration-300"
           >
-            <EyeOutlined className="w-[2rem] h-[2rem] text-xl rounded-full ease-in-out duration-300" />
-            Ver
-          </Link>
+            <PlusOutlined />
+            Nuevo
+          </div>
+          <div onClick={handleView}>
+            <Link
+              href={`/dashboard/warehouse/${selectedRow?._id}`}
+              className="bg-secondary-500 w-[6rem] h-[2.5rem] flex items-center p-1 font-black text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-secondary-600 ease-in-out duration-300"
+            >
+              <EyeOutlined className="w-[2rem] h-[2rem] text-xl rounded-full ease-in-out duration-300" />
+              Ver
+            </Link>
+          </div>
         </div>
-        <button className="cursor-pointer" id="edit_warehouse_btn" onClick={handleEdit}>
-          <EditOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
-        </button>
-        <button className="cursor-pointer" id="delete_warehouse_btn" onClick={handleDelete}>
-          <DeleteOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
-        </button>
-        <button className="cursor-pointer">
-          <ReloadOutlined
-            onClick={() => dispatch(warehousesStartLoading())}
-            className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300"
-          />
-        </button>
+        <div className="flex gap-2">
+          <button className="cursor-pointer" id="edit_warehouse_btn" onClick={handleEdit}>
+            <EditOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
+          </button>
+          <button className="cursor-pointer" id="delete_warehouse_btn" onClick={handleDelete}>
+            <DeleteOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
+          </button>
+          <button className="cursor-pointer">
+            <ReloadOutlined
+              onClick={() => dispatch(warehousesStartLoading())}
+              className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300"
+            />
+          </button>
+        </div>
       </div>
 
       <CreateWarehouseForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
