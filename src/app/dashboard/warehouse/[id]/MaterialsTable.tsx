@@ -5,7 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import moment from "moment";
 import Swal from "sweetalert2";
 import { Button, Input, Space, Table } from "antd";
-import { DeleteOutlined, EditOutlined, MinusOutlined, OrderedListOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined, MinusOutlined, OrderedListOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
@@ -19,6 +19,7 @@ import { AddMaterialForm } from "./AddMaterialForm";
 import { IOperation } from "@/models/operation";
 import { MinusMaterialForm } from "./MinusMaterialForm";
 import { OperationsList } from "./OperationsListModal";
+import { usePathname } from "next/navigation";
 interface DataType {
   _id: string;
   code: string;
@@ -51,11 +52,13 @@ const MaterialsTable: React.FC = () => {
   const searchInput = useRef<InputRef>(null);
 
   const { materials } = useAppSelector((state: RootState) => state?.material);
-  const { selectedWarehouse }: { selectedWarehouse: { id: string } } = useAppSelector((state: RootState) => state?.warehouse);
   const data: DataType[] = useMemo(() => materials, [materials]);
 
+  const url = usePathname().split("/");
+  const selectedWarehouse: string = url[3];
+
   useEffect(() => {
-    dispatch(materialsStartLoading(selectedWarehouse.id));
+    dispatch(materialsStartLoading(selectedWarehouse));
   }, [dispatch, selectedWarehouse]);
 
   const handleNew = (): void => {
@@ -83,7 +86,7 @@ const MaterialsTable: React.FC = () => {
   // };
 
   const handleRefresh = () => {
-    dispatch(materialsStartLoading(selectedWarehouse.id));
+    dispatch(materialsStartLoading(selectedWarehouse));
   };
 
   const onCreate = (values: any): void => {
@@ -94,7 +97,7 @@ const MaterialsTable: React.FC = () => {
     };
     dispatch(
       startAddMaterial(
-        selectedWarehouse.id,
+        selectedWarehouse,
         operation,
         values.materialName,
         values.category,
@@ -114,7 +117,7 @@ const MaterialsTable: React.FC = () => {
     };
     dispatch(
       startAddMaterial(
-        selectedWarehouse.id,
+        selectedWarehouse,
         operation,
         values.materialName,
         values.category,
@@ -135,7 +138,7 @@ const MaterialsTable: React.FC = () => {
     };
     dispatch(
       startAddMaterial(
-        selectedWarehouse.id,
+        selectedWarehouse,
         operation,
         values.materialName,
         values.category,
@@ -167,7 +170,7 @@ const MaterialsTable: React.FC = () => {
         confirmButtonText: "Eliminar",
       }).then((result) => {
         if (result.isConfirmed) {
-          dispatch(startDeleteMaterial(selectedRow?.code, selectedWarehouse?.id));
+          dispatch(startDeleteMaterial(selectedRow?.code, selectedWarehouse));
         }
       });
     } else {

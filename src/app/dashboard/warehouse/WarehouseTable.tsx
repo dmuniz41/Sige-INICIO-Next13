@@ -74,22 +74,26 @@ const WarehousesTable: React.FC = () => {
     setSearchedColumn(dataIndex);
   };
 
+  const handleView = async () => {
+    await dispatch(materialsStartLoading(selectedRow?._id!));
+  };
+
   const handleDelete = () => {
     if (selectedRow) {
       Swal.fire({
-        title: 'Eliminar Almacén',
+        title: "Eliminar Almacén",
         text: "El Almacén seleccionado se borrará de forma permanente",
-        icon: 'warning',
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Eliminar'
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Eliminar",
       }).then((result) => {
         if (result.isConfirmed) {
           dispatch(startDeleteWarehouse(selectedRow?.name));
         }
-      })
+      });
     } else {
       Toast.fire({
         icon: "error",
@@ -107,7 +111,7 @@ const WarehousesTable: React.FC = () => {
   const rowSelection: TableRowSelection<DataType> = {
     onChange: async (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
       setSelectedRow(selectedRows[0]);
-      dispatch(selectedWarehouse(selectedRows[0]._id))
+      dispatch(selectedWarehouse(selectedRows[0]._id));
       console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows);
     },
   };
@@ -211,6 +215,15 @@ const WarehousesTable: React.FC = () => {
           <PlusOutlined />
           Nuevo
         </div>
+        <div onClick={handleView}>
+          <Link
+            href={`/dashboard/warehouse/${selectedRow?._id}`}
+            className="bg-secondary-500 w-[6rem] h-[2.5rem] flex items-center p-1 font-black text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-secondary-600 ease-in-out duration-300"
+          >
+            <EyeOutlined className="w-[2rem] h-[2rem] text-xl rounded-full ease-in-out duration-300" />
+            Ver
+          </Link>
+        </div>
         <button className="cursor-pointer" id="edit_warehouse_btn" onClick={handleEdit}>
           <EditOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
         </button>
@@ -222,11 +235,6 @@ const WarehousesTable: React.FC = () => {
             onClick={() => dispatch(warehousesStartLoading())}
             className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300"
           />
-        </button>
-        <button className="cursor-pointer">
-          <Link href={`/dashboard/warehouse/${selectedRow?._id}`}>
-            <EyeOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" onClick={()=>{dispatch(materialsStartLoading(selectedRow?._id!))}}/>
-          </Link>
         </button>
       </div>
 
