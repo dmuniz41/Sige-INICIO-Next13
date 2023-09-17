@@ -1,13 +1,21 @@
 import React from "react";
+import WarehousesTable from "./WarehouseTable";
+import LowExistenceMaterials from "./LowExistenceMaterials";
 
 export default function page() {
   return (
-    <div id="userScreen-wrapper" className="flex w-full min-h-[90%] pt-[3rem] pl-[300px] pr-[3rem] overflow-hidden">
+    <div id="warehouseScreen-wrapper" className="flex w-full min-h-[90%] pt-[3rem] pl-[250px] pr-[1rem] overflow-hidden">
       <div
-        id="userTable_wrapper"
+        id="warehouseTable_wrapper"
         className="w-[80%] items-start justify-start flex-col gap-2 h-full p-4 animate-fade animate-once animate-duration-150 grow overflow-auto"
       >
-        <h1>Warehouse Page</h1>
+        <WarehousesTable />
+      </div>
+      <div
+        id="warehouseTable_wrapper"
+        className="w-[80%] items-start justify-start flex-col gap-2 h-full p-4 animate-fade animate-once animate-duration-150 grow overflow-auto"
+      >
+        <LowExistenceMaterials />
       </div>
     </div>
   );

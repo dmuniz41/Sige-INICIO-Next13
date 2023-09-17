@@ -8,11 +8,12 @@ import { verifyJWT } from "@/libs/jwt";
 export async function POST(request: Request) {
   const { user, userName, lastName, privileges, password, area } = await request.json();
   const accessToken = request.headers.get("accessToken");
+  try {
   if (!accessToken || !verifyJWT(accessToken)) {
     return NextResponse.json(
       {
         ok: false,
-        message: "No hay token en la peticion",
+        message: "Su sesión ha expirado, por favor autentiquese nuevamente",
       },
       {
         status: 401,
@@ -32,7 +33,6 @@ export async function POST(request: Request) {
     );
   }
 
-  try {
     await connectDB();
     const BDuser = await User.findOne({ user });
 
@@ -89,7 +89,7 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "No hay token en la peticion",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
         },
         {
           status: 401,
@@ -126,7 +126,7 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "No hay token en la peticion",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
         },
         {
           status: 401,
@@ -148,12 +148,12 @@ export async function PUT(request: Request) {
     }
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    await User.findOneAndUpdate({ _id }, { user, userName, lastName, privileges, password: hashedPassword, area }, { new: true });
+    const updatedUser = await User.findOneAndUpdate({ _id }, { user, userName, lastName, privileges, password: hashedPassword, area }, { new: true });
 
     return NextResponse.json({
       ok: true,
       message: "Usuario actualizado",
-      userToUpdate,
+      updatedUser,
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -179,7 +179,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "No hay token en la peticion",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
         },
         {
           status: 401,

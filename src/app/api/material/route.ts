@@ -4,14 +4,28 @@ import { NextResponse } from "next/server";
 
 import Material, { IMaterial } from "@/models/material";
 import Operation from "@/models/operation";
+import { verifyJWT } from "@/libs/jwt";
+import Warehouse from "@/models/warehouse";
 
 export async function POST(request: Request) {
-  const { operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1 } = await request.json();
+  const { warehouse, operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1 } = await request.json();
+  const accessToken = request.headers.get("accessToken");
 
   let date = moment();
   let currentDate = date.format("MMMM Do YYYY, h:mm:ss a");
 
   try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
     await connectDB();
     let BDMaterial = (await Material.findOne({ materialName, category, costPerUnit })) as IMaterial;
 
@@ -19,19 +33,35 @@ export async function POST(request: Request) {
 
     if (BDMaterial && operation.tipo === "Añadir") {
       let newTotal = BDMaterial.unitsTotal + operation?.amount;
+      let newTotalValue = BDMaterial.materialTotalValue! + operation?.amount * BDMaterial.costPerUnit;
       let UpdatedMaterial = await Material.findOneAndUpdate(
         { materialName, category, costPerUnit },
-        { $push: { operations: operation }, materialName, category, unitMeasure, costPerUnit, minimumExistence, unitsTotal: newTotal },
+        {
+          $push: { operations: operation },
+          materialName,
+          category,
+          unitMeasure,
+          costPerUnit,
+          minimumExistence,
+          unitsTotal: newTotal,
+          materialTotalValue: newTotalValue,
+        },
         { new: true }
       );
+
+      //*Actualiza el valor total del almacén
+      const DBWarehouse = await Warehouse.findById(warehouse)
+      let newWarehouseValue = DBWarehouse.totalValue + operation?.amount * costPerUnit
+      await Warehouse.findByIdAndUpdate(warehouse, {totalValue: newWarehouseValue})
+
       return NextResponse.json(
         {
           ok: true,
-          msg: "Material añadido",
+          message: "Material añadido",
           UpdatedMaterial,
         },
         {
-          status: 409,
+          status: 200,
         }
       );
     }
@@ -39,19 +69,47 @@ export async function POST(request: Request) {
 
     if (BDMaterial && operation.tipo === "Sustraer") {
       let newTotal = BDMaterial.unitsTotal - operation?.amount;
+      let newTotalValue = BDMaterial.materialTotalValue! - operation?.amount * BDMaterial.costPerUnit;
+      if (newTotal < 0) {
+        return NextResponse.json(
+          {
+            ok: false,
+            message: "No hay existencias suficientes para extraer esa cantidad de material",
+          },
+          {
+            status: 400,
+          }
+        );
+      }
       let UpdatedMaterial = await Material.findOneAndUpdate(
         { materialName, category, costPerUnit },
-        { $push: { operations: operation }, materialName, category, unitMeasure, costPerUnit, minimumExistence, unitsTotal: newTotal },
+        {
+          $push: { operations: operation },
+          materialName,
+          category,
+          unitMeasure,
+          costPerUnit,
+          minimumExistence,
+          unitsTotal: newTotal,
+          materialTotalValue: newTotalValue,
+        },
         { new: true }
       );
+
+      //*Actualiza el valor total del almacén
+
+      const DBWarehouse = await Warehouse.findById(warehouse)
+      let newWarehouseValue = DBWarehouse.totalValue - operation?.amount * costPerUnit
+      await Warehouse.findByIdAndUpdate(warehouse, {totalValue: newWarehouseValue})
+
       return NextResponse.json(
         {
           ok: true,
-          msg: "Material sustraído",
+          message: "Material sustraído",
           UpdatedMaterial,
         },
         {
-          status: 409,
+          status: 200,
         }
       );
       // * Si no existe un material con ese código crea una nueva entrada en el almacén *
@@ -65,18 +123,25 @@ export async function POST(request: Request) {
         unitMeasure,
         costPerUnit,
         minimumExistence,
+        warehouse,
         enterDate: currentDate,
         unitsTotal: operation?.amount,
-        key: materialName,
+        materialTotalValue: costPerUnit * operation?.amount,
+        key: category + materialName + costPerUnit,
       });
 
       newMaterial.operations.push(newOperation);
+
+      //*Actualiza el valor total del almacén
+
+      const DBWarehouse = await Warehouse.findById(warehouse)
+      let newWarehouseValue = DBWarehouse.totalValue + operation?.amount * costPerUnit
+      await Warehouse.findByIdAndUpdate(warehouse, {totalValue: newWarehouseValue})
 
       await newMaterial.save();
       return NextResponse.json({
         ok: true,
         message: "Material creado",
-        id: newMaterial._id.toString(),
         newMaterial,
       });
     }
@@ -95,8 +160,20 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  const accessToken = request.headers.get("accessToken");
   try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
     await connectDB();
     const listOfMaterials = await Material.find();
     return NextResponse.json({
@@ -120,8 +197,20 @@ export async function GET() {
 
 export async function PUT(request: Request) {
   const { minimumExistence = 1, code } = await request.json();
+  const accessToken = request.headers.get("accessToken");
 
   try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
     await connectDB();
     const materialToUpdate = await Material.findOne({ code });
 
@@ -156,8 +245,20 @@ export async function PUT(request: Request) {
 
 export async function PATCH(request: Request) {
   const { code } = await request.json();
+  const accessToken = request.headers.get("accessToken");
 
   try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
     await connectDB();
     const materialToDelete = await Material.findOne({ code });
 

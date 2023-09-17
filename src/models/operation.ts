@@ -1,14 +1,14 @@
-import { Schema, Model ,model, models, Types } from "mongoose";
+import { Schema, Model ,model, models} from "mongoose";
 
 export interface IOperation {
   date: string;
-  type: string;
+  tipo: string;
   amount: number;
 }
 
 const OperationSchema = new Schema<IOperation, Model<IOperation>>({
   date: { type: String },
-  type: { type: String },
+  tipo: { type: String },
   amount: { type: Number },
 });
 
