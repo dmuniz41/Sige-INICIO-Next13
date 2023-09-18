@@ -115,12 +115,7 @@ const LowExistenceMaterials: React.FC = () => {
     },
     render: (text) =>
       searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ""}
-        />
+        <Highlighter highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }} searchWords={[searchText]} autoEscape textToHighlight={text ? text.toString() : ""} />
       ) : (
         text
       ),
@@ -157,7 +152,23 @@ const LowExistenceMaterials: React.FC = () => {
     <>
       <div className="flex h-14 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-2 justify-center">
         <span className="items-center flex gap-2 font-black text-xl">
-          Materiales con pocas existencias <WarningTwoTone className="text-2xl pb-2" twoToneColor={'#ff0000'}/>
+          Materiales con pocas existencias
+          {/* <WarningTwoTone className="text-2xl pb-2" twoToneColor={'#ff0000'}/> */}
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            strokeWidth="2"
+            stroke="#ff0000"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path>
+            <path d="M12 8v4"></path>
+            <path d="M12 16h.01"></path>
+          </svg>
         </span>
       </div>
       <Table size="middle" columns={columns} dataSource={data} pagination={{ position: ["bottomCenter"], pageSize: 10 }} className="shadow-md" />

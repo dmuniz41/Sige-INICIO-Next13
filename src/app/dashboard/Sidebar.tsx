@@ -17,7 +17,14 @@ const items: MenuProps["items"] = [
         key: "users",
       },
     ],
-    icon: <LockOutlined style={{ fontSize: "20px" }} />,
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+        <path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6z"></path>
+        <path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"></path>
+        <path d="M8 11v-4a4 4 0 1 1 8 0v4"></path>
+      </svg>
+    ),
   },
 
   {
@@ -29,7 +36,15 @@ const items: MenuProps["items"] = [
         key: "worker",
       },
     ],
-    icon: <TeamOutlined style={{ fontSize: "20px" }} />,
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+        <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"></path>
+        <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        <path d="M21 21v-2a4 4 0 0 0 -3 -3.85"></path>
+      </svg>
+    ),
   },
   {
     label: "Oficina",
@@ -40,7 +55,19 @@ const items: MenuProps["items"] = [
         key: "officeExpenses",
       },
     ],
-    icon: <ShopOutlined style={{ fontSize: "20px" }} />,
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+        <path d="M3 21l18 0"></path>
+        <path d="M9 8l1 0"></path>
+        <path d="M9 12l1 0"></path>
+        <path d="M9 16l1 0"></path>
+        <path d="M14 8l1 0"></path>
+        <path d="M14 12l1 0"></path>
+        <path d="M14 16l1 0"></path>
+        <path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"></path>
+      </svg>
+    ),
   },
   {
     label: "Almacén",
@@ -55,10 +82,17 @@ const items: MenuProps["items"] = [
         key: "ticketsWarehouse",
       },
     ],
-    icon: <AppstoreOutlined style={{ fontSize: "20px" }} />,
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+        <path d="M3 21v-13l9 -4l9 4v13"></path>
+        <path d="M13 13h4v8h-10v-6h6"></path>
+        <path d="M13 21v-9a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v3"></path>
+      </svg>
+    ),
   },
   {
-    label: "Proyecto",
+    label: "Proyectos",
     key: "project",
     children: [
       {
@@ -70,12 +104,24 @@ const items: MenuProps["items"] = [
         key: "projectExpenses",
       },
     ],
-    icon: <FolderOpenOutlined style={{ fontSize: "20px" }} />,
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+        <path d="M9 4h3l2 2h5a2 2 0 0 1 2 2v7a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2"></path>
+        <path d="M17 17v2a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2h2"></path>
+      </svg>
+    ),
   },
   {
     label: <Link href="/dashboard/nomenclators">Nomencladores</Link>,
     key: "nomenclator",
-    icon: <SettingOutlined style={{ fontSize: "20px" }} />,
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+        <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path>
+        <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
+      </svg>
+    ),
   },
 ];
 

@@ -5,15 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import moment from "moment";
 import Swal from "sweetalert2";
 import { Button, Input, Space, Table } from "antd";
-import {
-  DeleteOutlined,
-  MinusOutlined,
-  OrderedListOutlined,
-  PlusOutlined,
-  ReloadOutlined,
-  SearchOutlined,
-  UnorderedListOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, MinusOutlined, OrderedListOutlined, PlusOutlined, ReloadOutlined, SearchOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
@@ -73,13 +65,34 @@ const MaterialsTable: React.FC = () => {
     setCreateNewModal(true);
   };
   const handleAdd = (): void => {
-    setAddModal(true);
+    if (selectedRow) {
+      setAddModal(true);
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "Seleccione un material para añadir",
+      });
+    }
   };
   const handleMinus = (): void => {
-    setMinusModal(true);
+    if (selectedRow) {
+      setMinusModal(true);
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "Seleccione un material para sustraer",
+      });
+    }
   };
   const handleShowOperations = (): void => {
-    setShowOperationModal(true);
+    if (selectedRow) {
+      setShowOperationModal(true);
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "Seleccione el material que desea ver sus operaciones",
+      });
+    }
   };
 
   // const handleEdit = (): void => {
@@ -103,17 +116,7 @@ const MaterialsTable: React.FC = () => {
       tipo: "Añadir",
       amount: values.unitsTotal,
     };
-    dispatch(
-      startAddMaterial(
-        selectedWarehouse,
-        operation,
-        values.materialName,
-        values.category,
-        values.unitMeasure,
-        values.costPerUnit,
-        values.minimumExistence
-      )
-    );
+    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence));
     setCreateNewModal(false);
   };
 
@@ -123,17 +126,7 @@ const MaterialsTable: React.FC = () => {
       tipo: "Añadir",
       amount: values.unitsTotal,
     };
-    dispatch(
-      startAddMaterial(
-        selectedWarehouse,
-        operation,
-        values.materialName,
-        values.category,
-        values.unitMeasure,
-        values.costPerUnit,
-        values.minimumExistence
-      )
-    );
+    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence));
     setSelectedRow(undefined);
     setAddModal(false);
   };
@@ -144,17 +137,7 @@ const MaterialsTable: React.FC = () => {
       tipo: "Sustraer",
       amount: values.unitsTotal,
     };
-    dispatch(
-      startAddMaterial(
-        selectedWarehouse,
-        operation,
-        values.materialName,
-        values.category,
-        values.unitMeasure,
-        values.costPerUnit,
-        values.minimumExistence
-      )
-    );
+    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence));
     setSelectedRow(undefined);
     setMinusModal(false);
   };
@@ -262,12 +245,7 @@ const MaterialsTable: React.FC = () => {
     },
     render: (text) =>
       searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ""}
-        />
+        <Highlighter highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }} searchWords={[searchText]} autoEscape textToHighlight={text ? text.toString() : ""} />
       ) : (
         text
       ),
@@ -345,34 +323,72 @@ const MaterialsTable: React.FC = () => {
         <div className="flex gap-2">
           <button
             onClick={handleAdd}
-            className="bg-success-500 w-[6rem] h-[2.5rem] flex items-center p-1 font-black text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-success-600 ease-in-out duration-300"
+            className="bg-success-500 w-[6rem] h-[2.5rem] flex items-center p-2 text-base font-bold text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-success-600 ease-in-out duration-300"
           >
-            <PlusOutlined />
+            <svg width="25" height="25" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M12 5l0 14"></path>
+              <path d="M5 12l14 0"></path>
+            </svg>
             Añadir
           </button>
           <button
             onClick={handleMinus}
-            className="bg-danger-500 w-[6rem] h-[2.5rem] flex items-center p-1 font-black text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-danger-600 ease-in-out duration-300"
+            className="bg-danger-500 w-[6rem] h-[2.5rem] flex items-center p-2 text-base font-bold text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-danger-600 ease-in-out duration-300"
           >
-            <MinusOutlined />
+            <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M5 12l14 0"></path>
+            </svg>
             Sustraer
           </button>
         </div>
-          <div className="flex gap-2">
-          <button onClick={handleNew}>
-            <PlusOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
+        <div className="flex">
+          <button
+            className="cursor-pointer flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300"
+            id="edit_user_btn"
+            onClick={handleNew}
+          >
+            <svg width="25" height="25" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M12 5l0 14"></path>
+              <path d="M5 12l14 0"></path>
+            </svg>
           </button>
           {/* <button className="cursor-pointer" id="edit_material_btn" onClick={handleEdit}>
           <EditOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
         </button> */}
-          <button className="cursor-pointer" onClick={handleDelete} id="delete_material_btn">
-            <DeleteOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
+          <button
+            className="cursor-pointer flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300"
+            id="delete_user_btn"
+            onClick={handleDelete}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M4 7l16 0"></path>
+              <path d="M10 11l0 6"></path>
+              <path d="M14 11l0 6"></path>
+              <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+              <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+            </svg>
           </button>
-          <button className="cursor-pointer">
-            <ReloadOutlined onClick={handleRefresh} className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
+          <button className="cursor-pointer flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" onClick={handleRefresh}>
+            <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
+              <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path>
+            </svg>
           </button>
-          <button className="cursor-pointer" onClick={handleShowOperations}>
-            <UnorderedListOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
+          <button className="cursor-pointer flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" onClick={handleShowOperations}>
+            <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M13 5h8"></path>
+              <path d="M13 9h5"></path>
+              <path d="M13 15h8"></path>
+              <path d="M13 19h5"></path>
+              <path d="M3 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"></path>
+              <path d="M3 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"></path>
+            </svg>
           </button>
         </div>
       </div>
