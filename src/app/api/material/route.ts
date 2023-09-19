@@ -161,11 +161,8 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
-  const cookieStore = cookies()
-  console.log("🚀 ~ file: route.ts:166 ~ GET ~ cookieStore:", cookieStore.get('sb-tkhvuvlxxkfgozoowfgl-auth-token')?.value)
-  // const accessToken = request.headers.get("accessToken");
-  const accessToken = cookieStore.get('next-auth.session-token')?.value
+export async function GET(request: Request) {  const cookieStore = cookies()
+  const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(

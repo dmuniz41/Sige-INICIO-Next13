@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { cookies } from 'next/headers'
+import { cookies } from "next/headers";
 
 import Nomenclator from "@/models/nomenclator";
 import { INomenclator } from "@/models/nomenclator";
@@ -8,7 +8,6 @@ import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
 
 export async function POST(request: Request) {
-
   const { category, code } = await request.json();
   const accessToken = request.headers.get("accessToken");
   try {
@@ -24,7 +23,7 @@ export async function POST(request: Request) {
       );
     }
     await connectDB();
-    let DBNomenclator = (await Nomenclator.findOne({ category, code }));
+    let DBNomenclator = await Nomenclator.findOne({ category, code });
 
     if (DBNomenclator) {
       return NextResponse.json(
@@ -104,11 +103,23 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const { code, description, name } = await request.json();
+  const { id, code, category } = await request.json();
+  const accessToken = request.headers.get("accessToken");
 
   try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
     await connectDB();
-    const nomenclatorToUpdate = await Nomenclator.findOne({ code });
+    const nomenclatorToUpdate = await Nomenclator.findById(id);
 
     if (!nomenclatorToUpdate) {
       return NextResponse.json({
@@ -117,12 +128,12 @@ export async function PUT(request: Request) {
       });
     }
 
-    await Nomenclator.findOneAndUpdate({ code }, { code, name, description }, { new: true });
+    const updatedNomenclator = await Nomenclator.findByIdAndUpdate(id, { code, category }, { new: true });
 
     return NextResponse.json({
       ok: true,
       message: "Nomenclador actualizado",
-      nomenclatorToUpdate,
+      updatedNomenclator,
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -155,7 +166,7 @@ export async function PATCH(request: Request) {
       );
     }
     await connectDB();
-    const nomenclatorToDelete = await Nomenclator.findById( id );
+    const nomenclatorToDelete = await Nomenclator.findById(id);
 
     if (!nomenclatorToDelete) {
       return NextResponse.json({
@@ -164,7 +175,7 @@ export async function PATCH(request: Request) {
       });
     }
 
-    const deletedNomenclator = await Nomenclator.findByIdAndDelete( id );
+    const deletedNomenclator = await Nomenclator.findByIdAndDelete(id);
 
     return NextResponse.json({
       ok: true,

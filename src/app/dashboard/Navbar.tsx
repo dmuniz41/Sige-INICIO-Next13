@@ -7,6 +7,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { signOut, useSession } from "next-auth/react";
 
 import logo from "../../assets/inicio.svg";
+import { cookies } from "next/headers";
 export const Navbar = () => {
   const pathname = usePathname();
   let mainPath = pathname.split("/");
