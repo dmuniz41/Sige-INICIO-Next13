@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cookies } from 'next/headers'
 
 import Nomenclator from "@/models/nomenclator";
 import { INomenclator } from "@/models/nomenclator";
@@ -7,7 +8,8 @@ import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
 
 export async function POST(request: Request) {
-  const { name, tipo } = await request.json();
+
+  const { category, code } = await request.json();
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -22,8 +24,7 @@ export async function POST(request: Request) {
       );
     }
     await connectDB();
-    let DBNomenclator = (await Nomenclator.findOne({ name, tipo })) as INomenclator;
-    console.log("🚀 ~ file: route.ts:26 ~ POST ~ DBNomenclator:", DBNomenclator);
+    let DBNomenclator = (await Nomenclator.findOne({ category, code }));
 
     if (DBNomenclator) {
       return NextResponse.json(
@@ -41,8 +42,8 @@ export async function POST(request: Request) {
 
     const newNomenclator = new Nomenclator({
       key: newKey,
-      name,
-      tipo,
+      category,
+      code,
     });
 
     await newNomenclator.save();
@@ -67,8 +68,20 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  const accessToken = request.headers.get("accessToken");
   try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
     await connectDB();
     const listOfNomenclators = await Nomenclator.find();
     return NextResponse.json({
@@ -127,11 +140,22 @@ export async function PUT(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const { code } = await request.json();
-
+  const { id } = await request.json();
+  const accessToken = request.headers.get("accessToken");
   try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
     await connectDB();
-    const nomenclatorToDelete = await Nomenclator.findOne({ code });
+    const nomenclatorToDelete = await Nomenclator.findById( id );
 
     if (!nomenclatorToDelete) {
       return NextResponse.json({
@@ -140,7 +164,7 @@ export async function PATCH(request: Request) {
       });
     }
 
-    const deletedNomenclator = await Nomenclator.findOneAndDelete({ code });
+    const deletedNomenclator = await Nomenclator.findByIdAndDelete( id );
 
     return NextResponse.json({
       ok: true,

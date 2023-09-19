@@ -6,6 +6,7 @@ import Material, { IMaterial } from "@/models/material";
 import Operation from "@/models/operation";
 import { verifyJWT } from "@/libs/jwt";
 import Warehouse from "@/models/warehouse";
+import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
   const { warehouse, operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1 } = await request.json();
@@ -161,7 +162,10 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
-  const accessToken = request.headers.get("accessToken");
+  const cookieStore = cookies()
+  console.log("🚀 ~ file: route.ts:166 ~ GET ~ cookieStore:", cookieStore.get('sb-tkhvuvlxxkfgozoowfgl-auth-token')?.value)
+  // const accessToken = request.headers.get("accessToken");
+  const accessToken = cookieStore.get('next-auth.session-token')?.value
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(

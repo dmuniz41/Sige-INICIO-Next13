@@ -1,9 +1,9 @@
 import { Schema, model, models, Model } from "mongoose";
 
 export interface INomenclator {
-  key  : string;
-  tipo : string;
-  name : string;
+  key      : string;
+  category : string;
+  code     : string;
 }
 
 const NomenclatorSchema = new Schema<INomenclator, Model<INomenclator>>({
@@ -11,11 +11,11 @@ const NomenclatorSchema = new Schema<INomenclator, Model<INomenclator>>({
     type: String,
     unique: true
   },
-  tipo: {
+  category: {
     type: String,
     required: [true, "El tipo es requerido"],
   },
-  name: {
+  code: {
     type: String,
     required: [true, "El nombre es requerido"],
   },

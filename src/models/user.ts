@@ -1,6 +1,16 @@
-import { Schema, model, models } from "mongoose";
+import { Model, Schema, Types, model, models } from "mongoose";
 
-const UserSchema = new Schema({
+export interface IUser {
+  key: string,
+  user: string,
+  userName: string,
+  lastName: string,
+  privileges: string[],
+  password: string,
+  area: string[]
+}
+
+const UserSchema = new Schema<IUser, Model<IUser>>({
   key: {
     type: String
   },
