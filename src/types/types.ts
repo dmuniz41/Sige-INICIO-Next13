@@ -28,4 +28,12 @@ export const types = {
   materialsLoaded:         "[Material] Materials loaded",
   selectedMaterial:        "[Material] Material selected",
   lowExistencesMaterials:  "[Material] Low existences materials loaded",
+
+  addNomenclator:          "[Nomenclator] Add Nomenclator",
+  startAddNomenclator:     "[Nomenclator] Start add Nomenclator",
+  updateNomenclator:       "[Nomenclator] Update Nomenclator",
+  deleteNomenclator:       "[Nomenclator] Delete Nomenclator",
+  nomenclatorsLoaded:      "[Nomenclator] Nomenclators loaded",
+  selectedNomenclator:     "[Nomenclator] Nomenclator selected",
+
 };

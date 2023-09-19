@@ -50,9 +50,9 @@ export async function POST(request: Request) {
       );
 
       //*Actualiza el valor total del almacén
-      const DBWarehouse = await Warehouse.findById(warehouse)
-      let newWarehouseValue = DBWarehouse.totalValue + operation?.amount * costPerUnit
-      await Warehouse.findByIdAndUpdate(warehouse, {totalValue: newWarehouseValue})
+      const DBWarehouse = await Warehouse.findById(warehouse);
+      let newWarehouseValue = DBWarehouse.totalValue + operation?.amount * costPerUnit;
+      await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
 
       return NextResponse.json(
         {
@@ -98,9 +98,9 @@ export async function POST(request: Request) {
 
       //*Actualiza el valor total del almacén
 
-      const DBWarehouse = await Warehouse.findById(warehouse)
-      let newWarehouseValue = DBWarehouse.totalValue - operation?.amount * costPerUnit
-      await Warehouse.findByIdAndUpdate(warehouse, {totalValue: newWarehouseValue})
+      const DBWarehouse = await Warehouse.findById(warehouse);
+      let newWarehouseValue = DBWarehouse.totalValue - operation?.amount * costPerUnit;
+      await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
 
       return NextResponse.json(
         {
@@ -134,9 +134,9 @@ export async function POST(request: Request) {
 
       //*Actualiza el valor total del almacén
 
-      const DBWarehouse = await Warehouse.findById(warehouse)
-      let newWarehouseValue = DBWarehouse.totalValue + operation?.amount * costPerUnit
-      await Warehouse.findByIdAndUpdate(warehouse, {totalValue: newWarehouseValue})
+      const DBWarehouse = await Warehouse.findById(warehouse);
+      let newWarehouseValue = DBWarehouse.totalValue + operation?.amount * costPerUnit;
+      await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
 
       await newMaterial.save();
       return NextResponse.json({

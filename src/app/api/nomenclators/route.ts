@@ -1,20 +1,35 @@
 import { NextResponse } from "next/server";
 
-import Nomenclator from "@/models/nomenclators";
+import Nomenclator from "@/models/nomenclator";
+import { INomenclator } from "@/models/nomenclator";
 import { connectDB } from "@/libs/mongodb";
+import { generateRandomString } from "@/helpers/randomStrings";
+import { verifyJWT } from "@/libs/jwt";
 
 export async function POST(request: Request) {
-  const { code, description, name } = await request.json();
-
+  const { name, tipo } = await request.json();
+  const accessToken = request.headers.get("accessToken");
   try {
-    await connectDB();
-    const BDnomenclator = await Nomenclator.findOne({ code });
-
-    if (BDnomenclator) {
+    if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(
         {
           ok: false,
-          msg: "Ya existe un nomenclador con ese código",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
+    await connectDB();
+    let DBNomenclator = (await Nomenclator.findOne({ name, tipo })) as INomenclator;
+    console.log("🚀 ~ file: route.ts:26 ~ POST ~ DBNomenclator:", DBNomenclator);
+
+    if (DBNomenclator) {
+      return NextResponse.json(
+        {
+          ok: false,
+          msg: "Ya existe un nomenclador con ese ese nombre y tipo",
         },
         {
           status: 409,
@@ -22,11 +37,12 @@ export async function POST(request: Request) {
       );
     }
 
+    let newKey = generateRandomString(26);
+
     const newNomenclator = new Nomenclator({
-      key: code,
-      code,
+      key: newKey,
       name,
-      description,
+      tipo,
     });
 
     await newNomenclator.save();
