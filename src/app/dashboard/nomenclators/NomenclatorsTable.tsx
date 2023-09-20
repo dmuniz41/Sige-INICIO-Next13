@@ -11,12 +11,11 @@ import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interf
 import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
-import { startAddWarehouse, startDeleteWarehouse, startUpdateWarehouse, warehousesStartLoading, selectedWarehouse } from "@/actions/warehouse";
-import Link from "next/link";
-import { materialsStartLoading } from "@/actions/material";
+import { selectedWarehouse } from "@/actions/warehouse";
 import Swal from "sweetalert2";
 import { nomenclatorsStartLoading, startAddNomenclator, startDeleteNomenclator, startUpdateNomenclator } from "@/actions/nomenclator";
 import { CreateNomenclatorForm } from "./CreateNomenclatorForm";
+import { EditNomenclatorForm } from "./EditNomenclatorForm";
 
 interface DataType {
   _id: string;
@@ -253,7 +252,7 @@ const NomenclatorsTable: React.FC = () => {
       </div>
 
       <CreateNomenclatorForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
-      {/* <EditWarehouseForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />  */}
+      <EditNomenclatorForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />
 
       <Table
         size="middle"
