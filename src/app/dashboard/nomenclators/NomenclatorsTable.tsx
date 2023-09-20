@@ -12,21 +12,22 @@ import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
 import { startAddWarehouse, startDeleteWarehouse, startUpdateWarehouse, warehousesStartLoading, selectedWarehouse } from "@/actions/warehouse";
-import { CreateWarehouseForm } from "./CreateWarehouseForm";
-import { EditWarehouseForm } from "./EditWarehouseForm";
 import Link from "next/link";
 import { materialsStartLoading } from "@/actions/material";
 import Swal from "sweetalert2";
+import { nomenclatorsStartLoading, startAddNomenclator, startDeleteNomenclator, startUpdateNomenclator } from "@/actions/nomenclator";
+import { CreateNomenclatorForm } from "./CreateNomenclatorForm";
+
 interface DataType {
   _id: string;
   key: string;
-  name: string;
-  totalValue: number;
+  code: string;
+  category: number;
 }
 
 type DataIndex = keyof DataType;
 
-const WarehousesTable: React.FC = () => {
+const NomenclatorsTable: React.FC = () => {
   const dispatch = useAppDispatch();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -36,11 +37,11 @@ const WarehousesTable: React.FC = () => {
   const searchInput = useRef<InputRef>(null);
 
   useEffect(() => {
-    dispatch(warehousesStartLoading());
+    dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
-  const { warehouses } = useAppSelector((state: RootState) => state?.warehouse);
-  const data: DataType[] = useMemo(() => warehouses, [warehouses]);
+  const { nomenclators } = useAppSelector((state: RootState) => state?.nomenclator);
+  const data: DataType[] = useMemo(() => nomenclators, [nomenclators]);
 
   const handleNew = (): void => {
     setCreateNewModal(true);
@@ -52,18 +53,18 @@ const WarehousesTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione un almacén a editar",
+        title: "Seleccione un nomenclador a editar",
       });
     }
   };
 
   const onCreate = (values: any): void => {
-    dispatch(startAddWarehouse(values.name));
+    dispatch(startAddNomenclator(values.category, values.code));
     setCreateNewModal(false);
   };
 
   const onEdit = (values: any): void => {
-    dispatch(startUpdateWarehouse(selectedRow?._id!, values.name));
+    dispatch(startUpdateNomenclator(selectedRow?._id!, values.code, values.category));
     setSelectedRow(undefined);
     setEditModal(false);
   };
@@ -74,22 +75,11 @@ const WarehousesTable: React.FC = () => {
     setSearchedColumn(dataIndex);
   };
 
-  const handleView = async () => {
-    if (selectedRow) {
-      await dispatch(materialsStartLoading(selectedRow?._id!));
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un almacén a visualizar",
-      });
-    }
-  };
-
   const handleDelete = () => {
     if (selectedRow) {
       Swal.fire({
-        title: "Eliminar Almacén",
-        text: "El Almacén seleccionado se borrará de forma permanente",
+        title: "Eliminar Nomenclador",
+        text: "El Nomenclador seleccionado se borrará de forma permanente",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -98,13 +88,13 @@ const WarehousesTable: React.FC = () => {
         confirmButtonText: "Eliminar",
       }).then((result) => {
         if (result.isConfirmed) {
-          dispatch(startDeleteWarehouse(selectedRow?.name));
+          dispatch(startDeleteNomenclator(selectedRow?._id));
         }
       });
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione un almacén a eliminar",
+        title: "Seleccione un nomenclador a eliminar",
       });
     }
   };
@@ -191,18 +181,18 @@ const WarehousesTable: React.FC = () => {
 
   const columns: ColumnsType<DataType> = [
     {
-      title: "Nombre",
-      dataIndex: "name",
-      key: "name",
-      width: "75%",
-      ...getColumnSearchProps("name"),
+      title: "Categoría",
+      dataIndex: "category",
+      key: "category",
+      width: "50%",
+      ...getColumnSearchProps("category"),
     },
     {
-      title: "Valor Total",
-      dataIndex: "totalValue",
-      key: "totalValue",
-      width: "25%",
-      ...getColumnSearchProps("totalValue"),
+      title: "Código",
+      dataIndex: "code",
+      key: "code",
+      width: "50%",
+      ...getColumnSearchProps("code"),
     },
   ];
 
@@ -221,19 +211,6 @@ const WarehousesTable: React.FC = () => {
             </svg>
             Nuevo
           </button>
-          <div onClick={handleView}>
-            <Link
-              href={`/dashboard/warehouse/${selectedRow === undefined ? " " : selectedRow?._id}`}
-              className="bg-secondary-500 w-[6rem] h-[2.5rem] flex items-center p-1 font-black text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-secondary-600 ease-in-out duration-300"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
-                <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path>
-              </svg>
-              Ver
-            </Link>
-          </div>
         </div>
         <div className="flex">
           <button
@@ -264,7 +241,7 @@ const WarehousesTable: React.FC = () => {
           </button>
           <button
             className="cursor-pointer flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300"
-            onClick={() => dispatch(warehousesStartLoading())}
+            onClick={() => dispatch(nomenclatorsStartLoading())}
           >
             <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -275,8 +252,8 @@ const WarehousesTable: React.FC = () => {
         </div>
       </div>
 
-      <CreateWarehouseForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
-      <EditWarehouseForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />
+      <CreateNomenclatorForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
+      {/* <EditWarehouseForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />  */}
 
       <Table
         size="middle"
@@ -293,4 +270,4 @@ const WarehousesTable: React.FC = () => {
   );
 };
 
-export default WarehousesTable;
+export default NomenclatorsTable;

@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 
 import Nomenclator from "@/models/nomenclator";
 import { connectDB } from "@/libs/mongodb";
@@ -28,7 +27,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          msg: "Ya existe un nomenclador con ese ese nombre y tipo",
+          message: "Ya existe un nomenclador en esa categoría con ese código",
         },
         {
           status: 409,
@@ -40,8 +39,8 @@ export async function POST(request: Request) {
 
     const newNomenclator = new Nomenclator({
       key: newKey,
-      category,
       code,
+      category,
     });
 
     await newNomenclator.save();

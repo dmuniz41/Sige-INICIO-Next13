@@ -22,11 +22,11 @@ export const startAddNomenclator = (category: string, code: string): any => {
       });
   };
 };
-export const startUpdateWarehouse = (code: string, category: string): any => {
+export const startUpdateNomenclator = (id: string,code: string, category: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators`, { code, category }, { headers: { accessToken: token } })
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators`, { id, code, category }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(updateNomenclator(code, category));
         dispatch(nomenclatorsStartLoading());
@@ -45,7 +45,7 @@ export const startDeleteNomenclator = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .patch(`${process.env.NEXT_PUBLIC_API_URL}/nomenclator`, { id }, { headers: { accessToken: token } })
+      .patch(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators`, { id }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(deleteNomenclator(id));
         dispatch(nomenclatorsStartLoading());
