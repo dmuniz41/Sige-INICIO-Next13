@@ -6,11 +6,12 @@ import { signIn, useSession } from "next-auth/react";
 
 import logo from "../../../assets/inicio.svg";
 import { Toast } from "@/helpers/customAlert";
+import { useAppDispatch } from "@/hooks/hooks";
+import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 
 export default function Login() {
   const [error, setError] = useState("");
-  const Session = useSession();
-  console.log("🚀 ~ file: page.tsx:8 ~ page ~ Session:", Session);
+  const dispatch = useAppDispatch();
 
   const router = useRouter();
 
@@ -25,7 +26,6 @@ export default function Login() {
       callbackUrl: "/dashboard",
     });
       
-
     if (res?.error) {
       console.log(error);
       Toast.fire({
@@ -36,6 +36,7 @@ export default function Login() {
       return setError(res.error as string);
     }
     if (res?.ok) {
+      dispatch(nomenclatorsStartLoading())
       return router.push("/dashboard");
     }
   };
