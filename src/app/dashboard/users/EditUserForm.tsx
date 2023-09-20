@@ -1,5 +1,7 @@
 "use client";
 
+import { INomenclator } from "@/models/nomenclator";
+import { RootState, useAppSelector } from "@/store/store";
 import { Form, Input, Modal, Select, SelectProps } from "antd";
 
 interface Values {
@@ -16,46 +18,49 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
   defaultValues?: Values;
 }
-const options: SelectProps["options"] = [
-  {
-    label: "ADMINISTRADOR",
-    value: "ADMIN",
-  },
-  {
-    label: "COMERCIAL",
-    value: "COMMERCIAL",
-  },
-  {
-    label: "RECURSOS HUMANOS",
-    value: "HR",
-  },
-  {
-    label: "PROYECTOS",
-    value: "PROJECT",
-  },
-  {
-    label: "ALMACEN",
-    value: "WAREHOUSE",
-  },
-  {
-    label: "OFICINA",
-    value: "OFFICE",
-  },
-];
 
-const areas: SelectProps["options"] = [
-  {
-    label: "INICIO",
-    value: "INICIO",
-  },
-  {
-    label: "HP",
-    value: "HP",
-  },
-];
 
 export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
-
+  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
+  const userArea: string[] | undefined = [];
+  nomenclators.map((nomenclator: INomenclator) => {
+    if (nomenclator.category === "Area de usuario") {
+      userArea.push(nomenclator.code);
+    }
+  });
+  const options: SelectProps["options"] = [
+    {
+      label: "ADMINISTRADOR",
+      value: "ADMIN",
+    },
+    {
+      label: "COMERCIAL",
+      value: "COMMERCIAL",
+    },
+    {
+      label: "RECURSOS HUMANOS",
+      value: "HR",
+    },
+    {
+      label: "PROYECTOS",
+      value: "PROJECT",
+    },
+    {
+      label: "ALMACEN",
+      value: "WAREHOUSE",
+    },
+    {
+      label: "OFICINA",
+      value: "OFFICE",
+    },
+  ];
+  
+  const areas: SelectProps["options"] = userArea.map((area) => {
+    return {
+      label: `${area}`,
+      value: `${area}`,
+    };
+  });
 
   const [form] = Form.useForm();
   return (

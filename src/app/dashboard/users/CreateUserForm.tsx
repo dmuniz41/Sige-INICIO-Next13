@@ -1,5 +1,8 @@
 "use client";
 
+import { useAppDispatch } from "@/hooks/hooks";
+import { INomenclator } from "@/models/nomenclator";
+import { RootState, useAppSelector } from "@/store/store";
 import { Form, Input, Modal, Select, SelectProps } from "antd";
 interface Values {
   user: string;
@@ -15,53 +18,58 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-const privileges: SelectProps["options"] = [
-  {
-    label: "ADMINISTRADOR",
-    value: "ADMIN",
-  },
-  {
-    label: "COMERCIAL",
-    value: "COMMERCIAL",
-  },
-  {
-    label: "RECURSOS HUMANOS",
-    value: "HR",
-  },
-  {
-    label: "PROYECTOS",
-    value: "PROJECT",
-  },
-  {
-    label: "ALMACEN",
-    value: "WAREHOUSE",
-  },
-  {
-    label: "OFICINA",
-    value: "OFFICE",
-  },
-];
-
-const areas: SelectProps["options"] = [
-  {
-    label: "INICIO",
-    value: "INICIO",
-  },
-  {
-    label: "HP",
-    value: "HP",
-  },
-
-];
-
 export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
-  
+  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
+  const userArea: string[] | undefined = [];
+  nomenclators.map((nomenclator: INomenclator) => {
+    if (nomenclator.category === "Area de usuario") {
+      userArea.push(nomenclator.code);
+    }
+  });
+  const privileges: SelectProps["options"] = [
+    {
+      label: "ADMINISTRADOR",
+      value: "ADMIN",
+    },
+    {
+      label: "COMERCIAL",
+      value: "COMMERCIAL",
+    },
+    {
+      label: "RECURSOS HUMANOS",
+      value: "HR",
+    },
+    {
+      label: "PROYECTOS",
+      value: "PROJECT",
+    },
+    {
+      label: "ALMACEN",
+      value: "WAREHOUSE",
+    },
+    {
+      label: "OFICINA",
+      value: "OFFICE",
+    },
+  ];
+
+  const areas: SelectProps["options"] = userArea.map((area) => {
+    return {
+      label: `${area}`,
+      value: `${area}`,
+    };
+  });
+
   const [form] = Form.useForm();
   return (
     <Modal
       className="flex flex-col"
-      title={<div className="flex w-full justify-center"><span className="font-black text-lg">Nuevo Usuario</span></div>}
-      style={{textAlign: "left"}}
+      title={
+        <div className="flex w-full justify-center">
+          <span className="font-black text-lg">Nuevo Usuario</span>
+        </div>
+      }
+      style={{ textAlign: "left" }}
       centered
       open={open}
       destroyOnClose
@@ -117,7 +125,7 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={privileges} />
         </Form.Item>
         <Form.Item name="area" label="Área" rules={[{ required: true, message: "Campo requerido" }]}>
-        <Select mode="multiple" allowClear style={{ width: "100%" }} options={areas} />
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={areas} />
         </Form.Item>
       </Form>
     </Modal>
