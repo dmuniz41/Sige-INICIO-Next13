@@ -6,6 +6,7 @@ import Material, { IMaterial } from "@/models/material";
 import Operation from "@/models/operation";
 import { verifyJWT } from "@/libs/jwt";
 import Warehouse from "@/models/warehouse";
+import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
   const { warehouse, operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1 } = await request.json();
@@ -50,9 +51,9 @@ export async function POST(request: Request) {
       );
 
       //*Actualiza el valor total del almacén
-      const DBWarehouse = await Warehouse.findById(warehouse)
-      let newWarehouseValue = DBWarehouse.totalValue + operation?.amount * costPerUnit
-      await Warehouse.findByIdAndUpdate(warehouse, {totalValue: newWarehouseValue})
+      const DBWarehouse = await Warehouse.findById(warehouse);
+      let newWarehouseValue = DBWarehouse.totalValue + operation?.amount * costPerUnit;
+      await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
 
       return NextResponse.json(
         {
@@ -98,9 +99,9 @@ export async function POST(request: Request) {
 
       //*Actualiza el valor total del almacén
 
-      const DBWarehouse = await Warehouse.findById(warehouse)
-      let newWarehouseValue = DBWarehouse.totalValue - operation?.amount * costPerUnit
-      await Warehouse.findByIdAndUpdate(warehouse, {totalValue: newWarehouseValue})
+      const DBWarehouse = await Warehouse.findById(warehouse);
+      let newWarehouseValue = DBWarehouse.totalValue - operation?.amount * costPerUnit;
+      await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
 
       return NextResponse.json(
         {
@@ -134,9 +135,9 @@ export async function POST(request: Request) {
 
       //*Actualiza el valor total del almacén
 
-      const DBWarehouse = await Warehouse.findById(warehouse)
-      let newWarehouseValue = DBWarehouse.totalValue + operation?.amount * costPerUnit
-      await Warehouse.findByIdAndUpdate(warehouse, {totalValue: newWarehouseValue})
+      const DBWarehouse = await Warehouse.findById(warehouse);
+      let newWarehouseValue = DBWarehouse.totalValue + operation?.amount * costPerUnit;
+      await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
 
       await newMaterial.save();
       return NextResponse.json({
@@ -160,7 +161,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET(request: Request) {  const cookieStore = cookies()
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {

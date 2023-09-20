@@ -1,5 +1,7 @@
 "use client";
 
+import { INomenclator } from "@/models/nomenclator";
+import { RootState, useAppSelector } from "@/store/store";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
 interface Values {
@@ -17,34 +19,22 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-const options: SelectProps["options"] = [
-  {
-    label: "ADMINISTRADOR",
-    value: "ADMINISTRADOR",
-  },
-  {
-    label: "COMMERCIAL",
-    value: "COMMERCIAL",
-  },
-  {
-    label: "CHOFER",
-    value: "CHOFER",
-  },
-  {
-    label: "MONTADOR",
-    value: "MONTADOR",
-  },
-  {
-    label: "IMPRESION",
-    value: "IMPRESION",
-  },
-  {
-    label: "ROUTER",
-    value: "ROUTER",
-  },
-];
 
 export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
+  const workerRole: string[] | undefined = [];
+  nomenclators.map((nomenclator: INomenclator) => {
+    if (nomenclator.category === "Cargo de trabajador") {
+      workerRole.push(nomenclator.code);
+    }
+  });
+  const options: SelectProps["options"] = workerRole.map((role) => {
+    return {
+      label: `${role}`,
+      value: `${role}`,
+    };
+  });
+
   const [form] = Form.useForm();
   return (
     <Modal

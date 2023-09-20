@@ -15,6 +15,7 @@ import { startAddWorker, startDeleteWorker, startUpdateWorker, workersStartLoadi
 import { CreateWorkerForm } from "./CreateWorkerForm";
 import { EditWorkerForm } from "./EditWorkerForm";
 import Swal from "sweetalert2";
+import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 
 // TODO: Hacer que al editar un trabajador y volver a presionar editar en el formulario aparezcan los datos actualizados
 
@@ -42,6 +43,7 @@ const WorkersTable: React.FC = () => {
 
   useEffect(() => {
     dispatch(workersStartLoading());
+    dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
   const { workers } = useAppSelector((state: RootState) => state?.worker);
@@ -206,35 +208,7 @@ const WorkersTable: React.FC = () => {
       render: (_, { role }) => (
         <>
           {role.map((r) => {
-            let color = "#3abaf4";
-            switch (r) {
-              case "ADMINISTRADOR":
-                color = "#ff6600";
-                break;
-              case "COMMERCIAL":
-                color = "#34395e";
-                break;
-              case "MONTADOR":
-                color = "#34b042";
-                break;
-              case "IMPRESIÓN":
-                color = "#ffa426";
-                break;
-              case "ROUTER":
-                color = "#0d4799";
-                break;
-              case "CHOFER":
-                color = "#fc544b";
-                break;
-
-              default:
-                break;
-            }
-            return (
-              <Tag color={color} key={r}>
-                {r}
-              </Tag>
-            );
+            return <Tag key={r}>{r}</Tag>;
           })}
         </>
       ),

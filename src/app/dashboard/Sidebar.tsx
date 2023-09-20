@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { AppstoreOutlined, FolderOpenOutlined, LockOutlined, SettingOutlined, ShopOutlined, TeamOutlined, UserOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import type { MenuProps } from "antd";
 
 const items: MenuProps["items"] = [
@@ -126,9 +124,6 @@ const items: MenuProps["items"] = [
 ];
 
 export const Sidebar: React.FC = () => {
-  const { data: sessionData } = useSession();
-  const username = sessionData?.user.role;
-
   const [current, setCurrent] = useState("users");
 
   const onClick: MenuProps["onClick"] = (e) => {

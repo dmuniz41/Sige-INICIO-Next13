@@ -20,6 +20,7 @@ import { IOperation } from "@/models/operation";
 import { MinusMaterialForm } from "./MinusMaterialForm";
 import { OperationsList } from "./OperationsListModal";
 import { usePathname } from "next/navigation";
+import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 interface DataType {
   _id: string;
   code: string;
@@ -59,6 +60,7 @@ const MaterialsTable: React.FC = () => {
 
   useEffect(() => {
     dispatch(materialsStartLoading(selectedWarehouse));
+    dispatch(nomenclatorsStartLoading());
   }, [dispatch, selectedWarehouse]);
 
   const handleNew = (): void => {

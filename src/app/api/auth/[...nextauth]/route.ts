@@ -1,5 +1,6 @@
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { cookies } from "next/headers";
 
 const handler = NextAuth({
   providers: [
@@ -46,6 +47,7 @@ const handler = NextAuth({
         token.user = user;
         token.role = user.role
       }
+      cookies().set('accessToken', `${token?.user?.accessToken}`)
       return token;
     },
   },
