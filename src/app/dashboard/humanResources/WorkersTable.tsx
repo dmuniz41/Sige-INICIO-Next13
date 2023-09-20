@@ -15,6 +15,7 @@ import { startAddWorker, startDeleteWorker, startUpdateWorker, workersStartLoadi
 import { CreateWorkerForm } from "./CreateWorkerForm";
 import { EditWorkerForm } from "./EditWorkerForm";
 import Swal from "sweetalert2";
+import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 
 // TODO: Hacer que al editar un trabajador y volver a presionar editar en el formulario aparezcan los datos actualizados
 
@@ -42,6 +43,7 @@ const WorkersTable: React.FC = () => {
 
   useEffect(() => {
     dispatch(workersStartLoading());
+    dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
   const { workers } = useAppSelector((state: RootState) => state?.worker);

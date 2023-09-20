@@ -15,6 +15,7 @@ import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
 import { EditUserForm } from "./EditUserForm";
 import Swal from "sweetalert2";
+import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 
 interface DataType {
   _id: string;
@@ -39,6 +40,7 @@ const UserTable: React.FC = () => {
 
   useEffect(() => {
     dispatch(usersStartLoading());
+    dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
   const { users } = useAppSelector((state: RootState) => state?.user);
