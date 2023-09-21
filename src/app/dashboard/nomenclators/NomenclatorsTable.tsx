@@ -270,6 +270,7 @@ const NomenclatorsTable: React.FC = () => {
           ...rowSelection,
         }}
         className="shadow-md"
+        sortDirections={["ascend"]}
       />
     </>
   );

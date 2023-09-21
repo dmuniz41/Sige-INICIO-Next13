@@ -38,7 +38,7 @@ interface DataType {
 type DataIndex = keyof DataType;
 
 let date = moment();
-let currentDate = date.format("MMMM Do YYYY, h:mm:ss a");
+let currentDate = date.format("L");
 
 const MaterialsTable: React.FC = () => {
   const dispatch = useAppDispatch();

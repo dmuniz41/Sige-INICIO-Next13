@@ -10,6 +10,7 @@ import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 
 import { IOperation } from "@/models/operation";
+import moment from "moment";
 interface Values {
   operations: [IOperation];
 }
@@ -168,6 +169,9 @@ const OperationsTable: React.FC<Props> = (props) => {
       key: "date",
       width: "80%",
       ...getColumnSearchProps("date"),
+      // sorter: {
+      //   compare: (a, b) => moment(a.date).unix() - moment(b.date).unix()
+      // },
     },
     {
       title: "Cantidad",

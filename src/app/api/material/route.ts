@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   const accessToken = request.headers.get("accessToken");
 
   let date = moment();
-  let currentDate = date.format("MMMM Do YYYY, h:mm:ss a");
+  let currentDate = date.format("L");
 
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
