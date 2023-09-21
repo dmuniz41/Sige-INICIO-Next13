@@ -7,6 +7,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { signOut, useSession } from "next-auth/react";
 
 import logo from "../../assets/inicio.svg";
+import { Tooltip } from "antd";
 export const Navbar = () => {
   const pathname = usePathname();
   let mainPath = pathname.split("/");
@@ -59,19 +60,21 @@ export const Navbar = () => {
               <span className="text-xl">{`${username}`}</span>
             </li>
           </ul>
-          <div
-            className="flex cursor-pointer left-3 text-xl bg-primary-500 text-white-100 hover:bg-primary-400 items-center rounded-full p-2 ease-in-out duration-300"
-            onClick={() => {
-              signOut();
-            }}
-          >
-            <svg width="26" height="26" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-              <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"></path>
-              <path d="M9 12h12l-3 -3"></path>
-              <path d="M18 15l3 -3"></path>
-            </svg>
-          </div>
+          <Tooltip placement="topLeft" title={'Salir'} arrow={{pointAtCenter: true}}>
+            <button
+              className="flex cursor-pointer left-3 text-xl bg-primary-500 text-white-100 hover:bg-primary-400 items-center rounded-full p-2 ease-in-out duration-300"
+              onClick={() => {
+                signOut();
+              }}
+            >
+              <svg width="26" height="26" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"></path>
+                <path d="M9 12h12l-3 -3"></path>
+                <path d="M18 15l3 -3"></path>
+              </svg>
+            </button>
+          </Tooltip>
         </div>
       </div>
       <div className=" items-center p-8 flex relative top-[3rem] ml-[16.5rem] h-[4rem] rounded-md w-[73%] bg-white-100 shadow-md">
