@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
       );
     }
     await connectDB();
-    const listOfMaterials = await Material.find({ warehouse });
+    const listOfMaterials = (await Material.find({ warehouse })).reverse();
     return NextResponse.json({
       ok: true,
       listOfMaterials,

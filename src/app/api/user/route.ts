@@ -97,7 +97,7 @@ export async function GET(request: Request) {
       );
     }
     await connectDB();
-    const listOfUsers = await User.find();
+    const listOfUsers = (await User.find()).reverse();
     return NextResponse.json({
       ok: true,
       listOfUsers,

@@ -10,7 +10,6 @@ import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 
 import { IOperation } from "@/models/operation";
-import moment from "moment";
 interface Values {
   operations: [IOperation];
 }

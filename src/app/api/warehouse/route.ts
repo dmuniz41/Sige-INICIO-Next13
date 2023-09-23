@@ -77,7 +77,7 @@ export async function GET(request: Request) {
       );
     }
     await connectDB();
-    const listOfWarehouses = await Warehouse.find();
+    const listOfWarehouses = (await Warehouse.find()).reverse();
     return NextResponse.json({
       ok: true,
       listOfWarehouses,

@@ -80,7 +80,7 @@ export async function GET(request: Request) {
       );
     }
     await connectDB();
-    const listOfNomenclators = await Nomenclator.find();
+    const listOfNomenclators = (await Nomenclator.find()).reverse();
     return NextResponse.json({
       ok: true,
       listOfNomenclators,

@@ -56,7 +56,7 @@ export async function POST(request: Request) {
 export async function GET() {
   try {
     await connectDB();
-    const listOfWorkers = await Worker.find();
+    const listOfWorkers = (await Worker.find()).reverse();
     return NextResponse.json({
       ok: true,
       listOfWorkers,

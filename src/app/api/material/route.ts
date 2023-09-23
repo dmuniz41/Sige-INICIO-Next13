@@ -176,7 +176,7 @@ export async function GET(request: Request) {  const cookieStore = cookies()
       );
     }
     await connectDB();
-    const listOfMaterials = await Material.find();
+    const listOfMaterials = (await Material.find()).reverse();
     return NextResponse.json({
       ok: true,
       listOfMaterials,
