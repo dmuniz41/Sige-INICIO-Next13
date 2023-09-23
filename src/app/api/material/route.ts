@@ -245,7 +245,7 @@ export async function PUT(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const { code } = await request.json();
+  const { code, warehouse } = await request.json();
   const accessToken = request.headers.get("accessToken");
 
   try {
@@ -270,7 +270,13 @@ export async function PATCH(request: Request) {
       });
     }
 
+    //* Actualiza el valor total del almacén si se elimina un material
+
     const deletedMaterial = await Material.findOneAndDelete({ code });
+    const DBWarehouse = await Warehouse.findById(warehouse);
+    let newWarehouseValue = DBWarehouse.totalValue - deletedMaterial.materialTotalValue
+    await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
+
 
     return NextResponse.json({
       ok: true,

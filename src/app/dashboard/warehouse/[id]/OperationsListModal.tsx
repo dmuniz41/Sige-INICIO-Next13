@@ -16,7 +16,6 @@ interface Values {
 }
 
 interface DataType {
-  // _id: string;
   tipo: string;
   date: string;
   amount: number;
@@ -169,9 +168,8 @@ const OperationsTable: React.FC<Props> = (props) => {
       key: "date",
       width: "80%",
       ...getColumnSearchProps("date"),
-      // sorter: {
-      //   compare: (a, b) => moment(a.date).unix() - moment(b.date).unix()
-      // },
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => new Date(a.date) - new Date(b.date),
     },
     {
       title: "Cantidad",
