@@ -156,7 +156,7 @@ const OperationsTable: React.FC<Props> = (props) => {
       width: "10%",
       ...getColumnSearchProps("tipo"),
       render: (tipo: string) => (
-        <Tag color={tipo === "Añadir" ? "#34b042" : "#ff0000"} key={tipo}>
+        <Tag className="font-black" color={tipo === "Añadir" ? "#34b042" : "#ff0000"} key={tipo}>
           {tipo.toUpperCase()}
         </Tag>
       ),

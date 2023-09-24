@@ -1,6 +1,7 @@
 import { Model, Schema, Types, model, models } from "mongoose";
 
-interface IWarehouse {
+export interface IWarehouse {
+  _id: string;
   key: string;
   name: string;
   totalValue?: number;

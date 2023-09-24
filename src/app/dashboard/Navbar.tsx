@@ -8,15 +8,25 @@ import { signOut, useSession } from "next-auth/react";
 
 import logo from "../../assets/inicio.svg";
 import { Tooltip } from "antd";
+import { RootState, useAppSelector } from "@/store/store";
+import { IWarehouse } from "@/models/warehouse";
+
 export const Navbar = () => {
   const pathname = usePathname();
   let mainPath = pathname.split("/");
+  let warehouseId = mainPath[3]
   let secondaryPath = mainPath[2];
+  let currentWarehouseName = ''
   const { data: sessionData } = useSession();
   const username = sessionData?.user?.user;
 
-  if (mainPath.includes("dashboard")) mainPath[1] = "Menú Principal";
-
+  const { warehouses }:{warehouses: IWarehouse[]} = useAppSelector((state: RootState) => state?.warehouse);
+  warehouses.map((warehouse)=>{
+    if(warehouse._id === warehouseId){
+      currentWarehouseName = `/ ${warehouse.name}`
+    }
+  })
+  
   switch (secondaryPath) {
     case "users":
       secondaryPath = "Usuarios";
@@ -31,7 +41,7 @@ export const Navbar = () => {
       secondaryPath = "Gastos de Oficina";
       break;
     case "warehouse":
-      secondaryPath = "Almacenes";
+      secondaryPath = `Almacen ${currentWarehouseName}`;
       break;
     case "ticketsWarehouse":
       secondaryPath = "Almacén de Vales";
@@ -47,12 +57,16 @@ export const Navbar = () => {
       break;
   }
 
+
+
+  if (mainPath.includes("dashboard")) mainPath[1] = "Menú Principal";
+
   return (
     <>
       <div className="flex justify-between items-center h-[5rem] bg-primary-500 w-full absolute">
-        <div className="min-w-[240px] h-full flex items-center justify-center bg-background_light">
+        <a className="min-w-[240px] h-full flex items-center justify-center bg-background_light" href="/dashboard">
           <Image src={logo} width={100} height={10} alt="inicio-logo" className="h-full w-full p-2 mt-8 bg-background_light" />
-        </div>
+        </a>
         <div className="flex items-center justify-end bg-primary-500 w-full h-full p-[1rem] bg-transparent">
           <ul className="list-none flex items-center text-white-100 ">
             <li className="flex items-center gap-[0.5rem] font-bold text-white-100 text-base mr-3">
