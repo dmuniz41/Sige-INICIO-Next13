@@ -13,7 +13,7 @@ import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interf
 import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
-import { materialsStartLoading, startAddMaterial, startDeleteMaterial } from "@/actions/material";
+import { editMinimumExistences, materialsStartLoading, startAddMaterial, startDeleteMaterial } from "@/actions/material";
 import { NewMaterialForm } from "./NewMaterialForm";
 import { AddMaterialForm } from "./AddMaterialForm";
 import { IOperation } from "@/models/operation";
@@ -21,6 +21,7 @@ import { MinusMaterialForm } from "./MinusMaterialForm";
 import { OperationsList } from "./OperationsListModal";
 import { usePathname } from "next/navigation";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
+import { EditMinimumExistencesForm } from "./EditMinimumExistencesForm";
 interface DataType {
   _id: string;
   code: string;
@@ -45,7 +46,7 @@ const MaterialsTable: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [createNewModal, setCreateNewModal] = useState(false);
-  // const [editModal, setEditModal] = useState(false);
+  const [editMinimumExistencesModal, setEditMinimumExistencesModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
   const [minusModal, setMinusModal] = useState(false);
   const [showOperationsModal, setShowOperationModal] = useState(false);
@@ -97,16 +98,16 @@ const MaterialsTable: React.FC = () => {
     }
   };
 
-  // const handleEdit = (): void => {
-  //   if (selectedRow) {
-  //     setEditModal(true);
-  //   } else {
-  //     Toast.fire({
-  //       icon: "error",
-  //       title: "Seleccione un material a editar",
-  //     });
-  //   }
-  // };
+  const handleEditMinimumExistences = (): void => {
+    if (selectedRow) {
+      setEditMinimumExistencesModal(true);
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "Seleccione un material a editar",
+      });
+    }
+  };
 
   const handleRefresh = () => {
     dispatch(materialsStartLoading(selectedWarehouse));
@@ -140,6 +141,12 @@ const MaterialsTable: React.FC = () => {
     };
     dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence));
     setMinusModal(false);
+  };
+  const onEditMinimumExistences = (values: any): void => {
+    dispatch(editMinimumExistences(values.code, values.minimumExistence, selectedWarehouse));
+    console.log("🚀 ~ file: MaterialsTable.tsx:147 ~ onEditMinimumExistences ~ values.code, values.minimumExistence:", values.code, values.minimumExistence)
+    // setSelectedRow(undefined);
+    setEditMinimumExistencesModal(false);
   };
 
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
@@ -357,9 +364,17 @@ const MaterialsTable: React.FC = () => {
               </svg>
             </button>
           </Tooltip>
-          {/* <button className="cursor-pointer" id="edit_material_btn" onClick={handleEdit}>
-          <EditOutlined className="w-[2rem] h-[2rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" />
-        </button> */}
+          <Tooltip placement="top" title={"Editar existencias mínimas"} arrow={{ pointAtCenter: true }}>
+          <button className="cursor-pointer flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" id="edit_material_btn" onClick={handleEditMinimumExistences}>
+          <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
+                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
+                <path d="M16 5l3 3"></path>
+              </svg>
+          </button>
+          </Tooltip>
+          
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
               className="cursor-pointer flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300"
@@ -404,6 +419,7 @@ const MaterialsTable: React.FC = () => {
       <NewMaterialForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
       <AddMaterialForm open={addModal} onCancel={() => setAddModal(false)} onCreate={onAdd} defaultValues={selectedRow} />
       <MinusMaterialForm open={minusModal} onCancel={() => setMinusModal(false)} onCreate={onMinus} defaultValues={selectedRow} />
+      <EditMinimumExistencesForm open={editMinimumExistencesModal} onCancel={() => setEditMinimumExistencesModal(false)} onCreate={onEditMinimumExistences} defaultValues={selectedRow} />
       <OperationsList open={showOperationsModal} onCancel={() => setShowOperationModal(false)} onCreate={onMinus} defaultValues={selectedRow} />
 
       <Table

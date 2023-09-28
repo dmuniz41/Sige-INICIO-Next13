@@ -175,7 +175,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {  const cookieStore = cookies()
+export async function GET(request: Request) {
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {

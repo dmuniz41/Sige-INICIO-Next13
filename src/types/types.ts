@@ -28,6 +28,7 @@ export const types = {
   materialsLoaded:         "[Material] Materials loaded",
   selectedMaterial:        "[Material] Material selected",
   lowExistencesMaterials:  "[Material] Low existences materials loaded",
+  editMinimumExistences:   "[Material] Edit material minimum existence",
 
   addNomenclator:          "[Nomenclator] Add Nomenclator",
   startAddNomenclator:     "[Nomenclator] Start add Nomenclator",

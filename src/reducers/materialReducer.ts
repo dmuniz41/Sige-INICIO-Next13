@@ -15,7 +15,7 @@ export const materialReducer = (state = initialState, action:any) => {
       return {
         ...state,
       };
-    case types.updateMaterial:
+    case types.editMinimumExistences:
       return {
         ...state,
       };
