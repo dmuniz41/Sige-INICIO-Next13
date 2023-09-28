@@ -129,7 +129,6 @@ const MaterialsTable: React.FC = () => {
       amount: values.unitsTotal,
     };
     dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence));
-    setSelectedRow(undefined);
     setAddModal(false);
   };
 
@@ -140,7 +139,6 @@ const MaterialsTable: React.FC = () => {
       amount: values.unitsTotal,
     };
     dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence));
-    setSelectedRow(undefined);
     setMinusModal(false);
   };
 

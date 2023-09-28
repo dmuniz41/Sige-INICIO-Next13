@@ -4,34 +4,35 @@ import bcrypt from "bcryptjs";
 import User from "@/models/user";
 import { connectDB } from "@/libs/mongodb";
 import { verifyJWT } from "@/libs/jwt";
+import { headers } from "next/headers";
 
 export async function POST(request: Request) {
   const { user, userName, lastName, privileges, password, area } = await request.json();
   const accessToken = request.headers.get("accessToken");
   try {
-  if (!accessToken || !verifyJWT(accessToken)) {
-    return NextResponse.json(
-      {
-        ok: false,
-        message: "Su sesión ha expirado, por favor autentiquese nuevamente",
-      },
-      {
-        status: 401,
-      }
-    );
-  }
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
 
-  if (!password || password.length < 6) {
-    return NextResponse.json(
-      {
-        ok: false,
-        message: "La contraseña debe tener mas de 7 caracteres",
-      },
-      {
-        status: 400,
-      }
-    );
-  }
+    if (!password || password.length < 6) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "La contraseña debe tener mas de 7 caracteres",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
 
     await connectDB();
     const BDuser = await User.findOne({ user });
@@ -62,17 +63,24 @@ export async function POST(request: Request) {
 
     await newUser.save();
 
-    return NextResponse.json({
-      ok: true,
-      message: "Usuario creado",
-      newUser,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        newUser,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
         {
           ok: false,
-          message: 'Error al crear el usuario',
+          message: "Error al crear el usuario",
         },
         {
           status: 400,
@@ -98,16 +106,24 @@ export async function GET(request: Request) {
     }
     await connectDB();
     const listOfUsers = (await User.find()).reverse();
-    return NextResponse.json({
-      ok: true,
-      listOfUsers,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        listOfUsers,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
         {
           ok: false,
-          message: 'Error al listar los usuarios',
+          message: "Error al listar los usuarios",
         },
         {
           status: 400,
@@ -118,7 +134,7 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const { _id ,user, userName, lastName, privileges, password, area } = await request.json();
+  const { _id, user, userName, lastName, privileges, password, area } = await request.json();
   const accessToken = request.headers.get("accessToken");
 
   try {
@@ -137,30 +153,38 @@ export async function PUT(request: Request) {
     const userToUpdate = await User.findOne({ _id });
 
     if (!userToUpdate) {
-      return NextResponse.json({
-        ok: false,
-        message: "El usuario a actualizar no existe",
-      },
-      {
-        status: 409
-      }
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "El usuario a actualizar no existe",
+        },
+        {
+          status: 409,
+        }
       );
     }
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const updatedUser = await User.findOneAndUpdate({ _id }, { user, userName, lastName, privileges, password: hashedPassword, area }, { new: true });
 
-    return NextResponse.json({
-      ok: true,
-      message: "Usuario actualizado",
-      updatedUser,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        updatedUser,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
         {
           ok: false,
-          message: 'Error al actualizar el usuario (Revise que los datos introducidos son correctos)',
+          message: "Error al actualizar el usuario (Revise que los datos introducidos son correctos)",
         },
         {
           status: 400,
@@ -198,17 +222,24 @@ export async function PATCH(request: Request) {
 
     const deletedUser = await User.findOneAndDelete({ user });
 
-    return NextResponse.json({
-      ok: true,
-      message: "Usuario eliminado",
-      deletedUser,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        deletedUser,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
         {
           ok: false,
-          message: 'Error al eliminar el usuario',
+          message: "Error al eliminar el usuario",
         },
         {
           status: 400,

@@ -33,11 +33,18 @@ export async function POST(request: Request) {
 
     await newWorker.save();
 
-    return NextResponse.json({
-      ok: true,
-      message: "Trabajador creado",
-      newWorker,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        newWorker,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
@@ -57,10 +64,18 @@ export async function GET() {
   try {
     await connectDB();
     const listOfWorkers = (await Worker.find()).reverse();
-    return NextResponse.json({
-      ok: true,
-      listOfWorkers,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        listOfWorkers,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
@@ -99,11 +114,18 @@ export async function PUT(request: Request) {
 
     const updatedWorker =  await Worker.findByIdAndUpdate( _id , { name, CI, role, address, phoneNumber, bankAccount }, { new: true });
 
-    return NextResponse.json({
-      ok: true,
-      message: "Trabajador actualizado",
-      updatedWorker,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        updatedWorker,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
@@ -135,11 +157,18 @@ export async function PATCH(request: Request) {
 
     const deletedWorker = await Worker.findOneAndDelete({ CI });
 
-    return NextResponse.json({
-      ok: true,
-      message: "Trabajador eliminado",
-      deletedWorker,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        deletedWorker,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(

@@ -10,7 +10,7 @@ export const startAddUser = (user: string, userName: string, lastName: string, p
       .post(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user, userName, lastName, privileges, password, area }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(addUser(user, userName, lastName, privileges, password, area));
-        dispatch(usersStartLoading())
+        dispatch(usersStartLoading());
         Toast.fire({
           icon: "success",
           title: "Usuario Creado",
@@ -27,10 +27,10 @@ export const startUpdateUser = (_id: string, user: string, userName: string, las
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/user`, { _id ,user, userName, lastName, privileges, password, area }, { headers: { accessToken: token } })
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/user`, { _id, user, userName, lastName, privileges, password, area }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(updateUser(user, userName, lastName, privileges, password, area));
-        dispatch(usersStartLoading())
+        dispatch(usersStartLoading());
         Toast.fire({
           icon: "success",
           title: "Usuario Actualizado",
@@ -50,7 +50,7 @@ export const startDeleteUser = (user: string): any => {
       .patch(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(deleteUser(user));
-        dispatch(usersStartLoading())
+        dispatch(usersStartLoading());
         Toast.fire({
           icon: "success",
           title: "Usuario Eliminado",

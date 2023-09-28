@@ -22,10 +22,18 @@ export async function GET(request: NextRequest) {
     }
     await connectDB();
     const listOfMaterials = (await Material.find({ warehouse })).reverse();
-    return NextResponse.json({
-      ok: true,
-      listOfMaterials,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        listOfMaterials,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(

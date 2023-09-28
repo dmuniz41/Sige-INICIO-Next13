@@ -42,11 +42,18 @@ export async function POST(request: Request) {
 
     await newWarehouse.save();
 
-    return NextResponse.json({
-      ok: true,
-      message: "Almacén creado",
-      newWarehouse,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        newWarehouse,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
@@ -78,10 +85,18 @@ export async function GET(request: Request) {
     }
     await connectDB();
     const listOfWarehouses = (await Warehouse.find()).reverse();
-    return NextResponse.json({
-      ok: true,
-      listOfWarehouses,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        listOfWarehouses,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
@@ -129,11 +144,18 @@ export async function PUT(request: Request) {
 
     const updatedWarehouse = await Warehouse.findByIdAndUpdate({ _id }, { name}, { new: true });
 
-    return NextResponse.json({
-      ok: true,
-      message: "Almacén actualizado",
-      updatedWarehouse,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        updatedWarehouse,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
@@ -177,11 +199,18 @@ export async function PATCH(request: Request) {
 
     const deletedWarehouse = await Warehouse.findOneAndDelete({ name });
 
-    return NextResponse.json({
-      ok: true,
-      message: "Almacén eliminado",
-      deletedWarehouse,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        deletedWarehouse,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
