@@ -2,6 +2,7 @@ import { signJwtAccessToken } from "@/libs/jwt";
 import { connectDB } from "@/libs/mongodb";
 import User from "@/models/user";
 import bcrypt from "bcryptjs";
+import { NextResponse } from "next/server";
 
 interface RequestBody {
   user: string;
@@ -22,7 +23,17 @@ export async function POST(request: Request) {
         accessToken,
       };
 
-      return new Response(JSON.stringify(result));
+      return new NextResponse(
+        JSON.stringify(
+          result,
+        ),
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+          },
+        }
+      );
     }
   } catch (error) {
     console.log(error);

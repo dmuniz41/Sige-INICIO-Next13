@@ -45,11 +45,18 @@ export async function POST(request: Request) {
 
     await newNomenclator.save();
 
-    return NextResponse.json({
-      ok: true,
-      message: "Nomenclador creado",
-      newNomenclator,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        newNomenclator,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
@@ -81,10 +88,18 @@ export async function GET(request: Request) {
     }
     await connectDB();
     const listOfNomenclators = (await Nomenclator.find()).reverse();
-    return NextResponse.json({
-      ok: true,
-      listOfNomenclators,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        listOfNomenclators,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
@@ -128,11 +143,18 @@ export async function PUT(request: Request) {
 
     const updatedNomenclator = await Nomenclator.findByIdAndUpdate(id, { code, category }, { new: true });
 
-    return NextResponse.json({
-      ok: true,
-      message: "Nomenclador actualizado",
-      updatedNomenclator,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        updatedNomenclator,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
@@ -175,11 +197,18 @@ export async function PATCH(request: Request) {
 
     const deletedNomenclator = await Nomenclator.findByIdAndDelete(id);
 
-    return NextResponse.json({
-      ok: true,
-      message: "Nomenclador eliminado",
-      deletedNomenclator,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        deletedNomenclator,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(

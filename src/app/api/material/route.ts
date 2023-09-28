@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     if (BDMaterial && operation.tipo === "Añadir") {
       let newTotal = BDMaterial.unitsTotal + operation?.amount;
       let newTotalValue = BDMaterial.materialTotalValue! + operation?.amount * BDMaterial.costPerUnit;
-      let UpdatedMaterial = await Material.findOneAndUpdate(
+      let updatedMaterial = await Material.findOneAndUpdate(
         { materialName, category, costPerUnit },
         {
           $push: { operations: operation },
@@ -55,15 +55,18 @@ export async function POST(request: Request) {
       let newWarehouseValue = DBWarehouse.totalValue + operation?.amount * costPerUnit;
       await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
 
-      return NextResponse.json(
-        {
+      return new NextResponse(
+        JSON.stringify({
           ok: true,
-          message: "Material añadido",
-          UpdatedMaterial,
-        },
+          updatedMaterial,
+        }),
         {
-          status: 200,
-        }
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+          },
+          status: 200
+        },
       );
     }
     // * Si ya existe un material con ese código sustrae la cantidad que se está entrando al total  agrega la nueva operacion a la lista de operaciones del material ya existente*
@@ -82,7 +85,7 @@ export async function POST(request: Request) {
           }
         );
       }
-      let UpdatedMaterial = await Material.findOneAndUpdate(
+      let updatedMaterial = await Material.findOneAndUpdate(
         { materialName, category, costPerUnit },
         {
           $push: { operations: operation },
@@ -103,15 +106,18 @@ export async function POST(request: Request) {
       let newWarehouseValue = DBWarehouse.totalValue - operation?.amount * costPerUnit;
       await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
 
-      return NextResponse.json(
-        {
+      return new NextResponse(
+        JSON.stringify({
           ok: true,
-          message: "Material sustraído",
-          UpdatedMaterial,
-        },
+          updatedMaterial,
+        }),
         {
-          status: 200,
-        }
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+          },
+          status: 200
+        },
       );
       // * Si no existe un material con ese código crea una nueva entrada en el almacén *
     } else {
@@ -140,11 +146,19 @@ export async function POST(request: Request) {
       await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
 
       await newMaterial.save();
-      return NextResponse.json({
-        ok: true,
-        message: "Material creado",
-        newMaterial,
-      });
+      return new NextResponse(
+        JSON.stringify({
+          ok: true,
+          newMaterial,
+        }),
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+          },
+          status: 200
+        },
+      );
     }
   } catch (error) {
     if (error instanceof Error) {
@@ -177,10 +191,19 @@ export async function GET(request: Request) {  const cookieStore = cookies()
     }
     await connectDB();
     const listOfMaterials = (await Material.find()).reverse();
-    return NextResponse.json({
-      ok: true,
-      listOfMaterials,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        listOfMaterials,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+        status: 200
+      },
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
@@ -224,11 +247,19 @@ export async function PUT(request: Request) {
 
     const updatedMaterial = await Material.findOneAndUpdate({ code }, { minimumExistence }, { new: true });
 
-    return NextResponse.json({
-      ok: true,
-      message: "Material actualizado",
-      updatedMaterial,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        updatedMaterial,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+        status: 200
+      },
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
@@ -278,11 +309,19 @@ export async function PATCH(request: Request) {
     await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
 
 
-    return NextResponse.json({
-      ok: true,
-      message: "Material eliminado",
-      deletedMaterial,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        deletedMaterial,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+        status: 200
+      },
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
