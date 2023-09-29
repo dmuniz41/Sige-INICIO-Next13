@@ -22,6 +22,13 @@ import { OperationsList } from "./OperationsListModal";
 import { usePathname } from "next/navigation";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { EditMinimumExistencesForm } from "./EditMinimumExistencesForm";
+import { useSession } from "next-auth/react";
+import { PlusSvg } from "../../../global/PlusSvg";
+import { MinusSvg } from "../../../global/MinusSvg";
+import { EditSvg } from "../../../global/EditSvg";
+import { DeleteSvg } from "../../../global/DeleteSvg";
+import { RefreshSvg } from "../../../global/RefreshSvg";
+import { ListSvg } from "../../../global/ListSvg";
 interface DataType {
   _id: string;
   code: string;
@@ -52,9 +59,20 @@ const MaterialsTable: React.FC = () => {
   const [showOperationsModal, setShowOperationModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState<DataType>();
   const searchInput = useRef<InputRef>(null);
+  const { data: sessionData } = useSession();
+
+  const canList = sessionData?.user.role.includes("Listar Materiales");
+  const canCreate = sessionData?.user.role.includes("Nuevo Material");
+  const canEditMinimumExistences = sessionData?.user.role.includes("Editar Existencias Mínimas");
+  const canDelete = sessionData?.user.role.includes("Eliminar Material");
+  const canAdd = sessionData?.user.role.includes("Añadir Material");
+  const canMinus = sessionData?.user.role.includes("Sustraer Material");
 
   const { materials } = useAppSelector((state: RootState) => state?.material);
-  const data: DataType[] = useMemo(() => materials, [materials]);
+  let data: DataType[] = useMemo(() => materials, [materials]);
+  if (!canList) {
+    data = [];
+  }
 
   const url = usePathname().split("/");
   const selectedWarehouse: string = url[3];
@@ -113,42 +131,6 @@ const MaterialsTable: React.FC = () => {
     dispatch(materialsStartLoading(selectedWarehouse));
   };
 
-  const onCreate = (values: any): void => {
-    let operation: IOperation = {
-      date: currentDate,
-      tipo: "Añadir",
-      amount: values.unitsTotal,
-    };
-    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence));
-    setCreateNewModal(false);
-  };
-
-  const onAdd = (values: any): void => {
-    let operation: IOperation = {
-      date: currentDate,
-      tipo: "Añadir",
-      amount: values.unitsTotal,
-    };
-    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence));
-    setAddModal(false);
-  };
-
-  const onMinus = (values: any): void => {
-    let operation: IOperation = {
-      date: currentDate,
-      tipo: "Sustraer",
-      amount: values.unitsTotal,
-    };
-    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence));
-    setMinusModal(false);
-  };
-  const onEditMinimumExistences = (values: any): void => {
-    dispatch(editMinimumExistences(values.code, values.minimumExistence, selectedWarehouse));
-    console.log("🚀 ~ file: MaterialsTable.tsx:147 ~ onEditMinimumExistences ~ values.code, values.minimumExistence:", values.code, values.minimumExistence)
-    // setSelectedRow(undefined);
-    setEditMinimumExistencesModal(false);
-  };
-
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -182,6 +164,42 @@ const MaterialsTable: React.FC = () => {
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText("");
+  };
+
+  const onCreate = (values: any): void => {
+    let operation: IOperation = {
+      date: currentDate,
+      tipo: "Añadir",
+      amount: values.unitsTotal,
+    };
+    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence));
+    setCreateNewModal(false);
+  };
+
+  const onAdd = (values: any): void => {
+    let operation: IOperation = {
+      date: currentDate,
+      tipo: "Añadir",
+      amount: values.unitsTotal,
+    };
+    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence));
+    setAddModal(false);
+  };
+
+  const onMinus = (values: any): void => {
+    let operation: IOperation = {
+      date: currentDate,
+      tipo: "Sustraer",
+      amount: values.unitsTotal,
+    };
+    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence));
+    setMinusModal(false);
+  };
+  const onEditMinimumExistences = (values: any): void => {
+    dispatch(editMinimumExistences(values.code, values.minimumExistence, selectedWarehouse));
+    console.log("🚀 ~ file: MaterialsTable.tsx:147 ~ onEditMinimumExistences ~ values.code, values.minimumExistence:", values.code, values.minimumExistence);
+    // setSelectedRow(undefined);
+    setEditMinimumExistencesModal(false);
   };
 
   const rowSelection: TableRowSelection<DataType> = {
@@ -329,88 +347,81 @@ const MaterialsTable: React.FC = () => {
       <div className="flex h-14 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <div className="flex gap-2">
           <button
+            disabled={!canAdd}
             onClick={handleAdd}
-            className="bg-success-500 w-[6rem] h-[2.5rem] flex items-center p-2 text-base font-bold text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-success-600 ease-in-out duration-300"
+            className={`${
+              canCreate ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"
+            } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
           >
-            <svg width="25" height="25" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-              <path d="M12 5l0 14"></path>
-              <path d="M5 12l14 0"></path>
-            </svg>
+            <PlusSvg />
             Añadir
           </button>
           <button
+            disabled={!canMinus}
             onClick={handleMinus}
-            className="bg-danger-500 w-[6rem] h-[2.5rem] flex items-center p-2 text-base font-bold text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-danger-600 ease-in-out duration-300"
+            className={`${
+              canCreate ? "bg-danger-500 cursor-pointer hover:bg-danger-600 ease-in-out duration-300" : "bg-danger-200"
+            } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-              <path d="M5 12l14 0"></path>
-            </svg>
+            <MinusSvg />
             Sustraer
           </button>
         </div>
         <div className="flex">
           <Tooltip placement="top" title={"Nuevo Material"} arrow={{ pointAtCenter: true }}>
             <button
-              className="cursor-pointer flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300"
-              id="edit_user_btn"
+              disabled={!canCreate}
+              className={`${
+                canCreate ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleNew}
             >
-              <svg width="25" height="25" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 5l0 14"></path>
-                <path d="M5 12l14 0"></path>
-              </svg>
+              <PlusSvg />
             </button>
           </Tooltip>
           <Tooltip placement="top" title={"Editar existencias mínimas"} arrow={{ pointAtCenter: true }}>
-          <button className="cursor-pointer flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" id="edit_material_btn" onClick={handleEditMinimumExistences}>
-          <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
-                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
-                <path d="M16 5l3 3"></path>
-              </svg>
-          </button>
+            <button
+              disabled={!canEditMinimumExistences}
+              className={`${
+                canEditMinimumExistences ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+              onClick={handleEditMinimumExistences}
+            >
+              <EditSvg />
+            </button>
           </Tooltip>
-          
+
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
-              className="cursor-pointer flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300"
-              id="delete_user_btn"
+              disabled={!canDelete}
+              className={`${
+                canDelete ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleDelete}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M4 7l16 0"></path>
-                <path d="M10 11l0 6"></path>
-                <path d="M14 11l0 6"></path>
-                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
-                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
-              </svg>
+              <DeleteSvg />
             </button>
           </Tooltip>
           <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
-            <button className="cursor-pointer flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" onClick={handleRefresh}>
-              <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
-                <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path>
-              </svg>
+            <button
+              disabled={!canList}
+              className={`${
+                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+              onClick={handleRefresh}
+            >
+              <RefreshSvg />
             </button>
           </Tooltip>
           <Tooltip placement="top" title={"Historial de Operaciones"} arrow={{ pointAtCenter: true }}>
-            <button className="cursor-pointer flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300" onClick={handleShowOperations}>
-              <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M13 5h8"></path>
-                <path d="M13 9h5"></path>
-                <path d="M13 15h8"></path>
-                <path d="M13 19h5"></path>
-                <path d="M3 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"></path>
-                <path d="M3 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"></path>
-              </svg>
+            <button
+              disabled={!canList}
+              className={`${
+                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+              onClick={handleShowOperations}
+            >
+              <ListSvg />
             </button>
           </Tooltip>
         </div>

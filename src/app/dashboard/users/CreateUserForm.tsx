@@ -1,6 +1,5 @@
 "use client";
 
-import { useAppDispatch } from "@/hooks/hooks";
 import { INomenclator } from "@/models/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
 import { Form, Input, Modal, Select, SelectProps } from "antd";
@@ -51,6 +50,94 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
       label: "OFICINA",
       value: "OFFICE",
     },
+    {
+      label: "Crear Nomenclador",
+      value: "Crear Nomenclador",
+    },
+    {
+      label: "Editar Nomenclador",
+      value: "Editar Nomenclador",
+    },
+    {
+      label: "Eliminar Nomenclador",
+      value: "Eliminar Nomenclador",
+    },
+    {
+      label: "Listar Nomencladores",
+      value: "Listar Nomencladores",
+    },
+    {
+      label: "Crear Trabajador",
+      value: "Crear Trabajador",
+    },
+    {
+      label: "Editar Trabajador",
+      value: "Editar Trabajador",
+    },
+    {
+      label: "Eliminar Trabajador",
+      value: "Eliminar Trabajador",
+    },
+    {
+      label: "Listar Trabajadores",
+      value: "Listar Trabajadores",
+    },
+    {
+      label: "Crear Usuario",
+      value: "Crear Usuario",
+    },
+    {
+      label: "Editar Usuario",
+      value: "Editar Usuario",
+    },
+    {
+      label: "Eliminar Usuario",
+      value: "Eliminar Usuario",
+    },
+    {
+      label: "Listar Usuarios",
+      value: "Listar Usuarios",
+    },
+    {
+      label: "Crear Almacén",
+      value: "Crear Almacén",
+    },
+    {
+      label: "Editar Almacén",
+      value: "Editar Almacén",
+    },
+    {
+      label: "Eliminar Almacén",
+      value: "Eliminar Almacén",
+    },
+    {
+      label: "Listar Almacenes",
+      value: "Listar Almacenes",
+    },
+    {
+      label: "Listar Materiales",
+      value: "Listar Materiales",
+    },
+    {
+      label: "Añadir Material",
+      value: "Añadir Material",
+    },
+    {
+      label: "Sustraer Material",
+      value: "Sustraer Material",
+    },
+    {
+      label: "Nuevo Material",
+      value: "Nuevo Material",
+    },
+    {
+      label: "Editar Existencias Mínimas",
+      value: "Editar Existencias Mínimas",
+    },
+    {
+      label: "Eliminar Material",
+      value: "Eliminar Material",
+    },
   ];
 
   const areas: SelectProps["options"] = userArea.map((area) => {
@@ -73,23 +160,52 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
       centered
       open={open}
       destroyOnClose
-      onOk={() => {
-        form
-          .validateFields()
-          .then((values) => {
-            onCreate(values);
-            form.resetFields();
-          })
-          .catch((error) => {
-            console.log("Validate Failed:", error);
-          });
-      }}
       onCancel={onCancel}
       okType="default"
       okText="Crear"
       cancelText="Cancelar"
+      footer={[
+        <div key="footer" className="flex gap-2 w-full justify-end">
+          <button
+            key="2"
+            className="bg-danger-500 cursor-pointer hover:bg-danger-600 ease-in-out duration-300 w-[5rem] h-[2rem] flex items-center p-1 text-sm font-bold text-white-100  justify-center gap-2 rounded-md"
+            onClick={onCancel}
+          >
+            Cancelar
+          </button>
+          <button
+            key="1"
+            className="bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300 w-[5rem] h-[2rem] flex items-center p-1 text-sm font-bold text-white-100  justify-center gap-2 rounded-md "
+            onClick={() => {
+              form
+                .validateFields()
+                .then((values) => {
+                  onCreate(values);
+                  console.log("🚀 ~ file: CreateNomenclatorForm.tsx:51 ~ .then ~ values:", values);
+                  form.resetFields();
+                })
+                .catch((error) => {
+                  console.log("Validate Failed:", error);
+                });
+            }}
+          >
+            Crear
+          </button>
+        </div>,
+      ]}
     >
-      <Form form={form} layout="vertical" name="createUserForm" size="middle">
+      <Form 
+        form={form} 
+        layout="vertical" 
+        name="createUserForm" 
+        size="middle" 
+        fields={[
+          {
+            name:"privileges",
+            value: [""]
+          }
+        ]}
+      >
         <Form.Item name="user" label="Usuario" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
@@ -121,7 +237,7 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
         >
           <Input type="password" />
         </Form.Item>
-        <Form.Item name="privileges" label="Privilegios" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item className="hidden" name="privileges" label="Privilegios" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={privileges} />
         </Form.Item>
         <Form.Item name="area" label="Área" rules={[{ required: true, message: "Campo requerido" }]}>

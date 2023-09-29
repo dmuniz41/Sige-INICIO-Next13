@@ -134,7 +134,7 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const { _id, user, userName, lastName, privileges, password, area } = await request.json();
+  const { _id, user, userName, lastName, privileges, area } = await request.json();
   const accessToken = request.headers.get("accessToken");
 
   try {
@@ -163,9 +163,9 @@ export async function PUT(request: Request) {
         }
       );
     }
-    const hashedPassword = await bcrypt.hash(password, 12);
+    // const hashedPassword = await bcrypt.hash(password, 12);
 
-    const updatedUser = await User.findOneAndUpdate({ _id }, { user, userName, lastName, privileges, password: hashedPassword, area }, { new: true });
+    const updatedUser = await User.findOneAndUpdate({ _id }, { user, userName, lastName, privileges, area }, { new: true });
 
     return new NextResponse(
       JSON.stringify({

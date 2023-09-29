@@ -23,11 +23,6 @@ export const userReducer = (state = initialState, action:any) => {
         ...state,
         users: [...action.payload],
       };
-    case types.selectedUser:
-      return {
-        ...state,
-        selectedUser: action.payload,
-      };
 
     default:
       return state;
