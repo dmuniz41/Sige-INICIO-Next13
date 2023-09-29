@@ -114,6 +114,30 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
       label: "Listar Almacenes",
       value: "listWarehouses",
     },
+    {
+      label: "Listar Materiales",
+      value: "listMaterials",
+    },
+    {
+      label: "Añadir Material",
+      value: "addMaterial",
+    },
+    {
+      label: "Sustraer Material",
+      value: "minusMaterial",
+    },
+    {
+      label: "Nuevo Material",
+      value: "newMaterial",
+    },
+    {
+      label: "Editar Existencias Mínimas",
+      value: "editMinimumExistences",
+    },
+    {
+      label: "Eliminar Material",
+      value: "deleteMaterial",
+    },
   ];
 
   const areas: SelectProps["options"] = userArea.map((area) => {

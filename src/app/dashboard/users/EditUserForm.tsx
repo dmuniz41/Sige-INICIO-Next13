@@ -19,7 +19,6 @@ interface CollectionCreateFormProps {
   defaultValues?: Values;
 }
 
-
 export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
   const userArea: string[] | undefined = [];
@@ -117,8 +116,32 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCrea
       label: "Listar Almacenes",
       value: "listWarehouses",
     },
+    {
+      label: "Listar Materiales",
+      value: "listMaterials",
+    },
+    {
+      label: "Añadir Material",
+      value: "addMaterial",
+    },
+    {
+      label: "Sustraer Material",
+      value: "minusMaterial",
+    },
+    {
+      label: "Nuevo Material",
+      value: "newMaterial",
+    },
+    {
+      label: "Editar Existencias Mínimas",
+      value: "editMinimumExistences",
+    },
+    {
+      label: "Eliminar Material",
+      value: "deleteMaterial",
+    },
   ];
-  
+
   const areas: SelectProps["options"] = userArea.map((area) => {
     return {
       label: `${area}`,
@@ -130,7 +153,11 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCrea
   return (
     <Modal
       className="flex flex-col"
-      title={<div className="flex w-full justify-center"><span className="font-black text-lg">Editar Usuario</span></div>}
+      title={
+        <div className="flex w-full justify-center">
+          <span className="font-black text-lg">Editar Usuario</span>
+        </div>
+      }
       centered
       open={open}
       style={{ textAlign: "left" }}
