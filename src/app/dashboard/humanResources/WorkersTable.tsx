@@ -16,6 +16,11 @@ import { CreateWorkerForm } from "./CreateWorkerForm";
 import { EditWorkerForm } from "./EditWorkerForm";
 import Swal from "sweetalert2";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
+import { useSession } from "next-auth/react";
+import { PlusSvg } from "../../global/PlusSvg";
+import { EditSvg } from "../../global/EditSvg";
+import { DeleteSvg } from "../../global/DeleteSvg";
+import { RefreshSvg } from "../../global/RefreshSvg";
 
 // TODO: Hacer que al editar un trabajador y volver a presionar editar en el formulario aparezcan los datos actualizados
 
@@ -41,13 +46,23 @@ const WorkersTable: React.FC = () => {
   const [selectedRow, setSelectedRow] = useState<DataType>();
   const searchInput = useRef<InputRef>(null);
 
+  const { data: sessionData } = useSession();
+
+  const canList = sessionData?.user.role.includes("createWorker");
+  const canCreate = sessionData?.user.role.includes("editWorker");
+  const canEdit = sessionData?.user.role.includes("deleteWorker");
+  const canDelete = sessionData?.user.role.includes("listWorkers");
+
   useEffect(() => {
     dispatch(workersStartLoading());
     dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
   const { workers } = useAppSelector((state: RootState) => state?.worker);
-  const data: DataType[] = useMemo(() => workers, [workers]);
+  let data: DataType[] = useMemo(() => workers, [workers]);
+  if (!canList) {
+    data = [];
+  }
 
   const handleNew = (): void => {
     setCreateNewModal(true);
@@ -240,57 +255,47 @@ const WorkersTable: React.FC = () => {
     <>
       <div className="flex h-14 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <button
+          disabled={!canCreate}
           onClick={handleNew}
-          className="bg-success-500 w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100 cursor-pointer justify-center gap-2 rounded-md hover:bg-success-600 ease-in-out duration-300"
+          className={`${
+            canCreate ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"
+          } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
         >
-          <svg width="25" height="25" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-            <path d="M12 5l0 14"></path>
-            <path d="M5 12l14 0"></path>
-          </svg>
+          <PlusSvg />
           Nuevo
         </button>
         <div className="flex">
           <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
             <button
-              className="cursor-pointer flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300"
-              id="edit_user_btn"
+              disabled={!canEdit}
+              className={`${
+                canEdit ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleEdit}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
-                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
-                <path d="M16 5l3 3"></path>
-              </svg>
+              <EditSvg />
             </button>
           </Tooltip>
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
-              className="cursor-pointer flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300"
-              id="delete_user_btn"
+              disabled={!canDelete}
+              className={`${
+                canDelete ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleDelete}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M4 7l16 0"></path>
-                <path d="M10 11l0 6"></path>
-                <path d="M14 11l0 6"></path>
-                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
-                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
-              </svg>
+              <DeleteSvg />
             </button>
           </Tooltip>
           <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
             <button
-              className="cursor-pointer flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full hover:bg-white-600 ease-in-out duration-300"
+              disabled={!canList}
+              className={`${
+                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={() => dispatch(workersStartLoading())}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
-                <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path>
-              </svg>
+              <RefreshSvg />
             </button>
           </Tooltip>
         </div>

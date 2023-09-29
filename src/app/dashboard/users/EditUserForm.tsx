@@ -66,8 +66,24 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCrea
       value: "deleteNomenclator",
     },
     {
-      label: "Ver Nomencladores",
+      label: "Listar Nomencladores",
       value: "listNomenclators",
+    },
+    {
+      label: "Crear Trabajador",
+      value: "createWorker",
+    },
+    {
+      label: "Editar Trabajador",
+      value: "editWorker",
+    },
+    {
+      label: "Eliminar Trabajador",
+      value: "deleteWorker",
+    },
+    {
+      label: "Listar Trabajadores",
+      value: "listWorkers",
     },
   ];
   
