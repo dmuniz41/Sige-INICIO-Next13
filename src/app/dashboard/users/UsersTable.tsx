@@ -214,32 +214,9 @@ const UserTable: React.FC = () => {
       render: (_, { privileges }) => (
         <>
           {privileges.map((privilege) => {
-            let color = "#3abaf4";
-            switch (privilege) {
-              case "ADMIN":
-                color = "#ff6600";
-                break;
-              case "COMMERCIAL":
-                color = "#34395e";
-                break;
-              case "HR":
-                color = "#ffa426";
-                break;
-              case "PROJECT":
-                color = "#0d4799";
-                break;
-              case "WAREHOUSE":
-                color = "#fc544b";
-                break;
-              case "OFFICE":
-                color = "#662900";
-                break;
-
-              default:
-                break;
-            }
+            
             return (
-              <Tag color={color} key={privilege}>
+              <Tag key={privilege}>
                 {privilege}
               </Tag>
             );
@@ -256,18 +233,6 @@ const UserTable: React.FC = () => {
       render: (_, { area }) => (
         <>
           {area.map((a) => {
-            let color = "#3abaf4";
-            switch (a) {
-              case "INICIO":
-                color = "#ff6600";
-                break;
-              case "HP":
-                color = "#34395e";
-                break;
-
-              default:
-                break;
-            }
             return <Tag key={a}>{a}</Tag>;
           })}
         </>

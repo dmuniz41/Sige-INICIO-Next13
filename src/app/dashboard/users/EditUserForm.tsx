@@ -28,7 +28,7 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCrea
       userArea.push(nomenclator.code);
     }
   });
-  const options: SelectProps["options"] = [
+  const privileges: SelectProps["options"] = [
     {
       label: "ADMINISTRADOR",
       value: "ADMIN",
@@ -52,6 +52,22 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCrea
     {
       label: "OFICINA",
       value: "OFFICE",
+    },
+    {
+      label: "Crear Nomenclador",
+      value: "createNomenclator",
+    },
+    {
+      label: "Editar Nomenclador",
+      value: "editNomenclator",
+    },
+    {
+      label: "Eliminar Nomenclador",
+      value: "deleteNomenclator",
+    },
+    {
+      label: "Ver Nomencladores",
+      value: "listNomenclators",
     },
   ];
   
@@ -147,7 +163,7 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCrea
           <Input type="password" />
         </Form.Item>
         <Form.Item name="privileges" label="Privilegios" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Select mode="multiple" allowClear style={{ width: "100%" }} options={options} />
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={privileges} />
         </Form.Item>
         <Form.Item name="area" label="Área" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={areas} />

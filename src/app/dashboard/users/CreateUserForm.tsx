@@ -1,6 +1,5 @@
 "use client";
 
-import { useAppDispatch } from "@/hooks/hooks";
 import { INomenclator } from "@/models/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
 import { Form, Input, Modal, Select, SelectProps } from "antd";
@@ -50,6 +49,22 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
     {
       label: "OFICINA",
       value: "OFFICE",
+    },
+    {
+      label: "Crear Nomenclador",
+      value: "createNomenclator",
+    },
+    {
+      label: "Editar Nomenclador",
+      value: "editNomenclator",
+    },
+    {
+      label: "Eliminar Nomenclador",
+      value: "deleteNomenclator",
+    },
+    {
+      label: "Listar Nomencladores",
+      value: "listNomenclators",
     },
   ];
 
