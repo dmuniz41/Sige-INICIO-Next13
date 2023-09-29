@@ -19,6 +19,8 @@ import { EditNomenclatorForm } from "./EditNomenclatorForm";
 import { useSession } from "next-auth/react";
 import { EditSvg } from "@/app/global/EditSvg";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
+import { PlusSvg } from '@/app/global/PlusSvg';
+import { RefreshSvg } from '@/app/global/RefreshSvg';
 
 interface DataType {
   _id: string;
@@ -50,8 +52,8 @@ const NomenclatorsTable: React.FC = () => {
 
   const { nomenclators } = useAppSelector((state: RootState) => state?.nomenclator);
   let data: DataType[] = useMemo(() => nomenclators, [nomenclators]);
-  if(!canList){
-    data = []
+  if (!canList) {
+    data = [];
   }
 
   const handleNew = (): void => {
@@ -218,11 +220,7 @@ const NomenclatorsTable: React.FC = () => {
               canCreate ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"
             } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
           >
-            <svg width="25" height="25" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-              <path d="M12 5l0 14"></path>
-              <path d="M5 12l14 0"></path>
-            </svg>
+            <PlusSvg />
             Nuevo
           </button>
         </div>
@@ -230,7 +228,9 @@ const NomenclatorsTable: React.FC = () => {
           <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canEdit}
-              className={`${canEdit ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"} flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+              className={`${
+                canEdit ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleEdit}
             >
               <EditSvg />
@@ -239,7 +239,9 @@ const NomenclatorsTable: React.FC = () => {
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canDelete}
-              className={`${canDelete ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"} flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+              className={`${
+                canDelete ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleDelete}
             >
               <DeleteSvg />
@@ -247,15 +249,13 @@ const NomenclatorsTable: React.FC = () => {
           </Tooltip>
           <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
             <button
-            disabled={!canList}
-              className={`${canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"} flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+              disabled={!canList}
+              className={`${
+                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={() => dispatch(nomenclatorsStartLoading())}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
-                <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path>
-              </svg>
+              <RefreshSvg />
             </button>
           </Tooltip>
         </div>
