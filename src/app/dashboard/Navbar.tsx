@@ -41,7 +41,7 @@ export const Navbar = () => {
       secondaryPath = "Gastos de Oficina";
       break;
     case "warehouse":
-      secondaryPath = `Almacen ${currentWarehouseName}`;
+      secondaryPath = `Almacén ${currentWarehouseName}`;
       break;
     case "ticketsWarehouse":
       secondaryPath = "Almacén de Vales";

@@ -194,7 +194,18 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
         </div>,
       ]}
     >
-      <Form form={form} layout="vertical" name="createUserForm" size="middle">
+      <Form 
+        form={form} 
+        layout="vertical" 
+        name="createUserForm" 
+        size="middle" 
+        fields={[
+          {
+            name:"privileges",
+            value: [""]
+          }
+        ]}
+      >
         <Form.Item name="user" label="Usuario" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
@@ -226,7 +237,7 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
         >
           <Input type="password" />
         </Form.Item>
-        <Form.Item name="privileges" label="Privilegios" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item className="hidden" name="privileges" label="Privilegios" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={privileges} />
         </Form.Item>
         <Form.Item name="area" label="Área" rules={[{ required: true, message: "Campo requerido" }]}>

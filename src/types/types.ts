@@ -5,7 +5,6 @@ export const types = {
   updateUser:              "[User] Update User",
   deleteUser:              "[User] Delete User",
   usersLoaded:             "[User] Users Loaded",
-  selectedUser:            "[User] User Selected",
       
   addWorker:               "[Worker] Add worker",
   startAddWorker:          "[Worker] Start add worker",

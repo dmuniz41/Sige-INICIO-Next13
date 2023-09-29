@@ -20,7 +20,9 @@ import { useSession } from "next-auth/react";
 import { EditSvg } from "../../global/EditSvg";
 import { DeleteSvg } from "../../global/DeleteSvg";
 import { RefreshSvg } from "../../global/RefreshSvg";
-import { PlusSvg } from '../../global/PlusSvg';
+import { PlusSvg } from "../../global/PlusSvg";
+import { ShieldSvg } from "@/app/global/ShieldSvg";
+import { PrivilegesForm } from "./PrivilegesForm";
 
 interface DataType {
   _id: string;
@@ -40,6 +42,7 @@ const UserTable: React.FC = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const [privilegesModal, setPrivilegesModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState<DataType>();
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
@@ -48,7 +51,6 @@ const UserTable: React.FC = () => {
   const canCreate = sessionData?.user.role.includes("Crear Usuario");
   const canEdit = sessionData?.user.role.includes("Editar Usuario");
   const canDelete = sessionData?.user.role.includes("Eliminar Usuario");
-
 
   useEffect(() => {
     dispatch(usersStartLoading());
@@ -76,6 +78,17 @@ const UserTable: React.FC = () => {
     }
   };
 
+  const handleEditPrivileges = (): void => {
+    if (selectedRow) {
+      setPrivilegesModal(true);
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "Seleccione un usuario para cambiar sus permisos",
+      });
+    }
+  };
+
   const onCreate = (values: any): void => {
     dispatch(startAddUser(values.user, values.userName, values.lastName, values.privileges, values.password, values.area));
     setCreateNewModal(false);
@@ -84,9 +97,16 @@ const UserTable: React.FC = () => {
 
   const onEdit = (values: any): void => {
     console.log(values);
-    dispatch(startUpdateUser(selectedRow?._id!, values.user, values.userName, values.lastName, values.privileges, values.password, values.area));
+    dispatch(startUpdateUser(selectedRow?._id!, values.user, values.userName, values.lastName, values.privileges, values.area));
     setSelectedRow(undefined);
     setEditModal(false);
+  };
+  const onEditPrivileges = (values: any): void => {
+    console.log(values);
+    const privileges = values.humanResourcesPrivileges.concat(values.materialPrivileges, values.nomenclatorPrivileges, values.securityPrivileges, values.warehousePrivileges);
+    dispatch(startUpdateUser(selectedRow?._id!, values.user, values.userName, values.lastName, privileges, values.area));
+    setSelectedRow(undefined);
+    setPrivilegesModal(false);
   };
 
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
@@ -275,6 +295,17 @@ const UserTable: React.FC = () => {
               <EditSvg />
             </button>
           </Tooltip>
+          <Tooltip placement="top" title={"Cambiar Permisos"} arrow={{ pointAtCenter: true }}>
+            <button
+              disabled={!canEdit}
+              className={`${
+                canEdit ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+              onClick={handleEditPrivileges}
+            >
+              <ShieldSvg />
+            </button>
+          </Tooltip>
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canDelete}
@@ -302,6 +333,7 @@ const UserTable: React.FC = () => {
 
       <CreateUserForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
       <EditUserForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />
+      <PrivilegesForm open={privilegesModal} onCancel={() => setPrivilegesModal(false)} onCreate={onEditPrivileges} defaultValues={selectedRow} />
 
       <Table
         size="middle"

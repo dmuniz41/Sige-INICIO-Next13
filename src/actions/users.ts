@@ -23,13 +23,13 @@ export const startAddUser = (user: string, userName: string, lastName: string, p
   };
 };
 
-export const startUpdateUser = (_id: string, user: string, userName: string, lastName: string, privileges: string[], password: string, area: string[]): any => {
+export const startUpdateUser = (_id: string, user: string, userName: string, lastName: string, privileges: string[],  area: string[]): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/user`, { _id, user, userName, lastName, privileges, password, area }, { headers: { accessToken: token } })
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/user`, { _id, user, userName, lastName, privileges, area }, { headers: { accessToken: token } })
       .then(() => {
-        dispatch(updateUser(user, userName, lastName, privileges, password, area));
+        dispatch(updateUser(user, userName, lastName, privileges, area));
         dispatch(usersStartLoading());
         Toast.fire({
           icon: "success",
@@ -97,14 +97,13 @@ const addUser = (user: string, userName: string, lastName: string, privileges: s
   },
 });
 
-const updateUser = (user: string, userName: string, lastName: string, privileges: string[], password: string, area: string[]) => ({
+const updateUser = (user: string, userName: string, lastName: string, privileges: string[],  area: string[]) => ({
   type: types.updateUser,
   payload: {
     user,
     userName,
     lastName,
     privileges,
-    password,
     area,
   },
 });
@@ -115,3 +114,4 @@ const deleteUser = (user: string) => ({
     user,
   },
 });
+
