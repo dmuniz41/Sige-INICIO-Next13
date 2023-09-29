@@ -77,7 +77,7 @@ export const EditNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open,
                 });
             }}
           >
-            Editar
+            Crear
           </button>
         </div>,
       ]}
