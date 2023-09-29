@@ -20,6 +20,7 @@ import { useSession } from "next-auth/react";
 import { EditSvg } from "../../global/EditSvg";
 import { DeleteSvg } from "../../global/DeleteSvg";
 import { RefreshSvg } from "../../global/RefreshSvg";
+import { PlusSvg } from '../../global/PlusSvg';
 
 interface DataType {
   _id: string;
@@ -43,10 +44,10 @@ const UserTable: React.FC = () => {
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
 
-  const canList = sessionData?.user.role.includes("createUser");
-  const canCreate = sessionData?.user.role.includes("editUser");
-  const canEdit = sessionData?.user.role.includes("deleteUser");
-  const canDelete = sessionData?.user.role.includes("listUsers");
+  const canList = sessionData?.user.role.includes("listUsers");
+  const canCreate = sessionData?.user.role.includes("createUser");
+  const canEdit = sessionData?.user.role.includes("editUser");
+  const canDelete = sessionData?.user.role.includes("deleteUser");
 
   useEffect(() => {
     dispatch(usersStartLoading());
@@ -258,11 +259,7 @@ const UserTable: React.FC = () => {
             canCreate ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"
           } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
         >
-          <svg width="25" height="25" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-            <path d="M12 5l0 14"></path>
-            <path d="M5 12l14 0"></path>
-          </svg>
+          <PlusSvg />
           Nuevo
         </button>
         <div className="flex">

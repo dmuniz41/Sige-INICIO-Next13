@@ -101,6 +101,22 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCrea
       label: "Listar Usuarios",
       value: "listUsers",
     },
+    {
+      label: "Crear Almacén",
+      value: "createWarehouse",
+    },
+    {
+      label: "Editar Almacén",
+      value: "editWarehouse",
+    },
+    {
+      label: "Eliminar Almacén",
+      value: "deleteWarehouse",
+    },
+    {
+      label: "Listar Almacenes",
+      value: "listWarehouses",
+    },
   ];
   
   const areas: SelectProps["options"] = userArea.map((area) => {
