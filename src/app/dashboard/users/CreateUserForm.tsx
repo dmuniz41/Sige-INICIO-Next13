@@ -52,91 +52,91 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
     },
     {
       label: "Crear Nomenclador",
-      value: "createNomenclator",
+      value: "Crear Nomenclador",
     },
     {
       label: "Editar Nomenclador",
-      value: "editNomenclator",
+      value: "Editar Nomenclador",
     },
     {
       label: "Eliminar Nomenclador",
-      value: "deleteNomenclator",
+      value: "Eliminar Nomenclador",
     },
     {
       label: "Listar Nomencladores",
-      value: "listNomenclators",
+      value: "Listar Nomencladores",
     },
     {
       label: "Crear Trabajador",
-      value: "createWorker",
+      value: "Crear Trabajador",
     },
     {
       label: "Editar Trabajador",
-      value: "editWorker",
+      value: "Editar Trabajador",
     },
     {
       label: "Eliminar Trabajador",
-      value: "deleteWorker",
+      value: "Eliminar Trabajador",
     },
     {
       label: "Listar Trabajadores",
-      value: "listWorkers",
+      value: "Listar Trabajadores",
     },
     {
       label: "Crear Usuario",
-      value: "createUser",
+      value: "Crear Usuario",
     },
     {
       label: "Editar Usuario",
-      value: "editUser",
+      value: "Editar Usuario",
     },
     {
       label: "Eliminar Usuario",
-      value: "deleteUser",
+      value: "Eliminar Usuario",
     },
     {
       label: "Listar Usuarios",
-      value: "listUsers",
+      value: "Listar Usuarios",
     },
     {
       label: "Crear Almacén",
-      value: "createWarehouse",
+      value: "Crear Almacén",
     },
     {
       label: "Editar Almacén",
-      value: "editWarehouse",
+      value: "Editar Almacén",
     },
     {
       label: "Eliminar Almacén",
-      value: "deleteWarehouse",
+      value: "Eliminar Almacén",
     },
     {
       label: "Listar Almacenes",
-      value: "listWarehouses",
+      value: "Listar Almacenes",
     },
     {
       label: "Listar Materiales",
-      value: "listMaterials",
+      value: "Listar Materiales",
     },
     {
       label: "Añadir Material",
-      value: "addMaterial",
+      value: "Añadir Material",
     },
     {
       label: "Sustraer Material",
-      value: "minusMaterial",
+      value: "Sustraer Material",
     },
     {
       label: "Nuevo Material",
-      value: "newMaterial",
+      value: "Nuevo Material",
     },
     {
       label: "Editar Existencias Mínimas",
-      value: "editMinimumExistences",
+      value: "Editar Existencias Mínimas",
     },
     {
       label: "Eliminar Material",
-      value: "deleteMaterial",
+      value: "Eliminar Material",
     },
   ];
 

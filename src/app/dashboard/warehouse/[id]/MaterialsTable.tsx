@@ -61,12 +61,12 @@ const MaterialsTable: React.FC = () => {
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
 
-  const canList = sessionData?.user.role.includes("listMaterials");
-  const canCreate = sessionData?.user.role.includes("newMaterial");
-  const canEditMinimumExistences = sessionData?.user.role.includes("editMinimumExistences");
-  const canDelete = sessionData?.user.role.includes("deleteMaterial");
-  const canAdd = sessionData?.user.role.includes("addMaterial");
-  const canMinus = sessionData?.user.role.includes("minusMaterial");
+  const canList = sessionData?.user.role.includes("Listar Materiales");
+  const canCreate = sessionData?.user.role.includes("Nuevo Material");
+  const canEditMinimumExistences = sessionData?.user.role.includes("Editar Existencias Mínimas");
+  const canDelete = sessionData?.user.role.includes("Eliminar Material");
+  const canAdd = sessionData?.user.role.includes("Añadir Material");
+  const canMinus = sessionData?.user.role.includes("Sustraer Material");
 
   const { materials } = useAppSelector((state: RootState) => state?.material);
   let data: DataType[] = useMemo(() => materials, [materials]);

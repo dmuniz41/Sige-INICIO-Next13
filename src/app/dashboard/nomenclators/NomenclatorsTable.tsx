@@ -41,10 +41,10 @@ const NomenclatorsTable: React.FC = () => {
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
 
-  const canList = sessionData?.user.role.includes("listNomenclators");
-  const canCreate = sessionData?.user.role.includes("createNomenclator");
-  const canEdit = sessionData?.user.role.includes("editNomenclator");
-  const canDelete = sessionData?.user.role.includes("deleteNomenclator");
+  const canList = sessionData?.user.role.includes("Listar Nomencladores");
+  const canCreate = sessionData?.user.role.includes("Crear Nomenclador");
+  const canEdit = sessionData?.user.role.includes("Editar Nomenclador");
+  const canDelete = sessionData?.user.role.includes("Eliminar Nomenclador");
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());

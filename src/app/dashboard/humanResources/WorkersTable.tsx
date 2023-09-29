@@ -48,10 +48,10 @@ const WorkersTable: React.FC = () => {
 
   const { data: sessionData } = useSession();
 
-  const canList = sessionData?.user.role.includes("listWorkers");
-  const canCreate = sessionData?.user.role.includes("createWorker");
-  const canEdit = sessionData?.user.role.includes("editWorker");
-  const canDelete = sessionData?.user.role.includes("deleteWorker");
+  const canList = sessionData?.user.role.includes("Listar Trabajadores");
+  const canCreate = sessionData?.user.role.includes("Crear Trabajador");
+  const canEdit = sessionData?.user.role.includes("Editar Trabajador");
+  const canDelete = sessionData?.user.role.includes("Eliminar Trabajador");
 
   useEffect(() => {
     dispatch(workersStartLoading());

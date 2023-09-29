@@ -44,10 +44,11 @@ const UserTable: React.FC = () => {
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
 
-  const canList = sessionData?.user.role.includes("listUsers");
-  const canCreate = sessionData?.user.role.includes("createUser");
-  const canEdit = sessionData?.user.role.includes("editUser");
-  const canDelete = sessionData?.user.role.includes("deleteUser");
+  const canList = sessionData?.user.role.includes("Listar Usuarios");
+  const canCreate = sessionData?.user.role.includes("Crear Usuario");
+  const canEdit = sessionData?.user.role.includes("Editar Usuario");
+  const canDelete = sessionData?.user.role.includes("Eliminar Usuario");
+
 
   useEffect(() => {
     dispatch(usersStartLoading());
