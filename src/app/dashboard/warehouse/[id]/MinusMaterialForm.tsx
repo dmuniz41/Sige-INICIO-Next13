@@ -35,21 +35,39 @@ export const MinusMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, o
       open={open}
       style={{ textAlign: "left" }}
       destroyOnClose
-      onOk={() => {
-        form
-          .validateFields()
-          .then((values) => {
-            onCreate(values);
-            form.resetFields();
-          })
-          .catch((error) => {
-            console.log("Validate Failed:", error);
-          });
-      }}
       onCancel={onCancel}
       okType="default"
       okText="Sustraer"
       cancelText="Cancelar"
+      footer={[
+        <div key="footer" className="flex gap-2 w-full justify-end">
+          <button
+            key="2"
+            className="bg-danger-500 cursor-pointer hover:bg-danger-600 ease-in-out duration-300 w-[5rem] h-[2rem] flex items-center p-1 text-sm font-bold text-white-100  justify-center gap-2 rounded-md"
+            onClick={onCancel}
+          >
+            Cancelar
+          </button>
+          <button
+            key="1"
+            className="bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300 w-[5rem] h-[2rem] flex items-center p-1 text-sm font-bold text-white-100  justify-center gap-2 rounded-md "
+            onClick={() => {
+              form
+                .validateFields()
+                .then((values) => {
+                  onCreate(values);
+                  console.log("🚀 ~ file: CreateNomenclatorForm.tsx:51 ~ .then ~ values:", values);
+                  form.resetFields();
+                })
+                .catch((error) => {
+                  console.log("Validate Failed:", error);
+                });
+            }}
+          >
+            Sustraer
+          </button>
+        </div>,
+      ]}
     >
       <Form
         form={form}
@@ -82,7 +100,7 @@ export const MinusMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, o
         <Form.Item name="category" label="Categoría">
           <Select allowClear style={{ width: "100%" }} disabled />
         </Form.Item>
-        <Form.Item name="materialName" label="Nombre del material" >
+        <Form.Item name="materialName" label="Nombre del material">
           <Input disabled />
         </Form.Item>
         <Form.Item name="costPerUnit" label="Costo por unidad de medida">
