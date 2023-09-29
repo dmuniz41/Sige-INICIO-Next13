@@ -82,6 +82,22 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
       label: "Listar Trabajadores",
       value: "listWorkers",
     },
+    {
+      label: "Crear Usuario",
+      value: "createUser",
+    },
+    {
+      label: "Editar Usuario",
+      value: "editUser",
+    },
+    {
+      label: "Eliminar Usuario",
+      value: "deleteUser",
+    },
+    {
+      label: "Listar Usuarios",
+      value: "listUsers",
+    },
   ];
 
   const areas: SelectProps["options"] = userArea.map((area) => {
