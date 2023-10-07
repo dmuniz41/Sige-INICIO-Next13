@@ -5,7 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import moment from "moment";
 import Swal from "sweetalert2";
 import { Button, Input, Space, Table, Tooltip } from "antd";
-import { DeleteOutlined, MinusOutlined, OrderedListOutlined, PlusOutlined, ReloadOutlined, SearchOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
@@ -29,6 +29,7 @@ import { EditSvg } from "../../../global/EditSvg";
 import { DeleteSvg } from "../../../global/DeleteSvg";
 import { RefreshSvg } from "../../../global/RefreshSvg";
 import { ListSvg } from "../../../global/ListSvg";
+import { PDFSvg } from "@/app/global/PDFSvg";
 interface DataType {
   _id: string;
   code: string;
@@ -361,7 +362,7 @@ const MaterialsTable: React.FC = () => {
             onClick={handleMinus}
             className={`${
               canCreate ? "bg-danger-500 cursor-pointer hover:bg-danger-600 ease-in-out duration-300" : "bg-danger-200"
-            } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
+            } w-[6rem] h-[2.5rem] flex items-center p-1 pr-2 text-base font-bold text-white-100 justify-center gap-2 rounded-md `}
           >
             <MinusSvg />
             Sustraer
@@ -422,6 +423,17 @@ const MaterialsTable: React.FC = () => {
               onClick={handleShowOperations}
             >
               <ListSvg />
+            </button>
+          </Tooltip>
+          <Tooltip placement="top" title={"Generar Reporte"} arrow={{ pointAtCenter: true }}>
+            <button
+              disabled={!canList}
+              className={`${
+                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+              onClick={handleShowOperations}
+            >
+              <PDFSvg />
             </button>
           </Tooltip>
         </div>
