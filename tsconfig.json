@@ -39,6 +39,6 @@
     ".next/types/**/*.ts",
     "src/helpers/toCamelCase.js",
     "src/app/reports/WarehouseReport.ts",
-    "src/app/reports/WarehouseReport.js"
+    "src/helpers/PDFReport.js"
   ]
 }

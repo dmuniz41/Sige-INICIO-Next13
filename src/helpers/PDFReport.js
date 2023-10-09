@@ -1,32 +1,28 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { Fragment, useEffect, useState } from "react";
-import { Page, Text, Document, StyleSheet, View } from "@react-pdf/renderer";
-import logo from "../../assets/inicioLogoPNG.jpg";
+import { Page, Text, Document, StyleSheet, View, Svg } from "@react-pdf/renderer";
 
 const BORDER_COLOR = "#000";
 const BORDER_STYLE = "solid";
 
 const styles = StyleSheet.create({
   body: {
-    paddingTop: 35,
-    paddingBottom: 65,
+    paddingTop: 25,
+    paddingBottom: 10,
     paddingHorizontal: 35,
   },
-  title: {
-    fontSize: 24,
-    textAlign: "center",
-  },
-  text: {
-    margin: 12,
-    fontSize: 14,
-    textAlign: "justify",
-    fontFamily: "Times-Roman",
-  },
   header: {
-    fontSize: 12,
     marginBottom: 20,
     textAlign: "center",
-    color: "grey",
+  },
+  subheader: {
+    fontSize: 14,
+    fontWeight: "black",
+    color: "black",
+    marginBottom: 5
+  },
+  date: {
+    fontSize: 12,
+    color: "gray",
   },
   pageNumber: {
     position: "absolute",
@@ -37,8 +33,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "grey",
   },
-
   headerBg: {
+    fontWeight: "black",
     backgroundColor: "#aaa",
   },
   table: {
@@ -119,53 +115,17 @@ const CustomTablePDF = (props) => {
   );
 };
 
-const fields = [
-  {
-    title: " Agent Name",
-    custom: true,
-    component: (item) => `${item.agent_name}`,
-    width: "30",
-  },
-  {
-    title: " Policy No",
-    custom: true,
-    component: (item) => `${item.policy_no}`,
-    width: "35",
-  },
-  {
-    title: "Amount",
-    custom: true,
-    className: "font-bold",
-    component: (item) => `${item.contribution}`,
-    width: "35",
-  },
-];
-
-const data = [
-  {
-    contribution: 2,
-    agent_name: "asd",
-    policy_no: 123,
-  },
-  {
-    contribution: 2,
-    agent_name: "asd",
-    policy_no: 123,
-  },
-  {
-    contribution: 2,
-    agent_name: "asd",
-    policy_no: 123,
-  },
-];
-
-export default function WarehouseReport() {
+export default function PDFReport(props) {
+  const date = new Date().toLocaleDateString("es-DO", { year: "numeric", month: "short", day: "numeric" });
+  const { fields = [], data = [] } = props;
   return (
     <Document>
-      <Page style={styles.body}>
-        <Text style={styles.header}>Reporte de Almacén</Text>
+      <Page wrap orientation="landscape" size={"LETTER"} style={styles.body}>
+        <Text  style={styles.header}>  
+          <Text style={styles.subheader}>Reporte de Almacén  </Text>
+          <Text style={styles.date}>{date}</Text>
+        </Text>
         <CustomTablePDF fields={fields} data={data} />
-        <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => `${pageNumber}/${totalPages}`} fixed />
       </Page>
     </Document>
   );
