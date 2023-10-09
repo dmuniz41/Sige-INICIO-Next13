@@ -5,7 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import moment from "moment";
 import Swal from "sweetalert2";
 import { Button, Input, Space, Table, Tooltip } from "antd";
-import { DeleteOutlined, MinusOutlined, OrderedListOutlined, PlusOutlined, ReloadOutlined, SearchOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
@@ -29,6 +29,9 @@ import { EditSvg } from "../../../global/EditSvg";
 import { DeleteSvg } from "../../../global/DeleteSvg";
 import { RefreshSvg } from "../../../global/RefreshSvg";
 import { ListSvg } from "../../../global/ListSvg";
+import { PDFSvg } from "@/app/global/PDFSvg";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import PDFReport from "@/helpers/PDFReport";
 interface DataType {
   _id: string;
   code: string;
@@ -67,6 +70,45 @@ const MaterialsTable: React.FC = () => {
   const canDelete = sessionData?.user.role.includes("Eliminar Material");
   const canAdd = sessionData?.user.role.includes("Añadir Material");
   const canMinus = sessionData?.user.role.includes("Sustraer Material");
+
+  const fields = [
+    {
+      title: " Código",
+      custom: true,
+      component: (item: any) => `${item.code}`,
+      width: "30",
+    },
+    {
+      title: " Categoría",
+      custom: true,
+      component: (item: any) => `${item.category}`,
+      width: "20",
+    },
+    {
+      title: " Nombre",
+      custom: true,
+      component: (item: any) => `${item.materialName}`,
+      width: "20",
+    },
+    {
+      title: " Coste Unitario",
+      custom: true,
+      component: (item: any) => `${item.costPerUnit}`,
+      width: "10",
+    },
+    {
+      title: " Existencias",
+      custom: true,
+      component: (item: any) => `${item.unitsTotal}`,
+      width: "10",
+    },
+    {
+      title: " Unidad de Medida",
+      custom: true,
+      component: (item: any) => `${item.unitMeasure}`,
+      width: "10",
+    }
+  ]
 
   const { materials } = useAppSelector((state: RootState) => state?.material);
   let data: DataType[] = useMemo(() => materials, [materials]);
@@ -361,7 +403,7 @@ const MaterialsTable: React.FC = () => {
             onClick={handleMinus}
             className={`${
               canCreate ? "bg-danger-500 cursor-pointer hover:bg-danger-600 ease-in-out duration-300" : "bg-danger-200"
-            } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
+            } w-[6rem] h-[2.5rem] flex items-center p-1 pr-2 text-base font-bold text-white-100 justify-center gap-2 rounded-md `}
           >
             <MinusSvg />
             Sustraer
@@ -423,6 +465,26 @@ const MaterialsTable: React.FC = () => {
             >
               <ListSvg />
             </button>
+          </Tooltip>
+          <Tooltip placement="top" title={"Generar Reporte"} arrow={{ pointAtCenter: true }}>
+            <PDFDownloadLink document={<PDFReport fields={fields} data={data}/>} fileName="Reporte de almacén">
+              {({ blob, url, loading, error }) =>
+                loading ? (
+                  <button disabled className={`opacity-20 pt-2 pl-2" flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}>
+                    <PDFSvg />
+                  </button>
+                ) : (
+                  <button
+                    disabled={!canList}
+                    className={`${
+                      canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                    } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+                  >
+                    <PDFSvg />
+                  </button>
+                )
+              }
+            </PDFDownloadLink>
           </Tooltip>
         </div>
       </div>

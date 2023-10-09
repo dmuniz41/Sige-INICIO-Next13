@@ -79,7 +79,6 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
                 .validateFields()
                 .then((values) => {
                   onCreate(values);
-                  console.log("🚀 ~ file: CreateNomenclatorForm.tsx:51 ~ .then ~ values:", values);
                   form.resetFields();
                 })
                 .catch((error) => {
