@@ -117,12 +117,12 @@ const CustomTablePDF = (props) => {
 
 export default function PDFReport(props) {
   const date = new Date().toLocaleDateString("es-DO", { year: "numeric", month: "short", day: "numeric" });
-  const { fields = [], data = [] } = props;
+  const { fields = [], data = [], title = "" } = props;
   return (
     <Document>
       <Page wrap orientation="landscape" size={"LETTER"} style={styles.body}>
         <Text  style={styles.header}>  
-          <Text style={styles.subheader}>Reporte de Almacén  </Text>
+          <Text style={styles.subheader}>{title}</Text>
           <Text style={styles.date}>{date}</Text>
         </Text>
         <CustomTablePDF fields={fields} data={data} />

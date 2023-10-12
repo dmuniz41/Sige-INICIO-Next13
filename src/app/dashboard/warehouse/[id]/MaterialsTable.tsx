@@ -467,7 +467,7 @@ const MaterialsTable: React.FC = () => {
             </button>
           </Tooltip>
           <Tooltip placement="top" title={"Generar Reporte"} arrow={{ pointAtCenter: true }}>
-            <PDFDownloadLink document={<PDFReport fields={fields} data={data}/>} fileName="Reporte de almacén">
+            <PDFDownloadLink document={<PDFReport fields={fields} data={data} title={'Reporte de almacén '}/>} fileName="Reporte de almacén">
               {({ blob, url, loading, error }) =>
                 loading ? (
                   <button disabled className={`opacity-20 pt-2 pl-2" flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}>
