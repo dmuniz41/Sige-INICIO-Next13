@@ -101,6 +101,10 @@ const items: MenuProps["items"] = [
         label: <Link href="/dashboard/projectExpenses">Gastos de proyectos</Link>,
         key: "projectExpenses",
       },
+      {
+        label: <Link href="/dashboard/costSheets">Fichas de costo</Link>,
+        key: "costSheets",
+      },
     ],
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
