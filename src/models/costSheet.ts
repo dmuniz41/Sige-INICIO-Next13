@@ -1,7 +1,6 @@
 import { Model, Schema, Types, model, models } from "mongoose";
 
 export interface ICostSheet {
-  name: string;
   key: string;
   taskName: string;
   workersAmount: number;
@@ -95,10 +94,6 @@ export interface ICostSheet {
 }
 
 const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
-  name: {
-    type: String,
-    unique: true,
-  },
   key: {
     type: String,
     unique: true,
