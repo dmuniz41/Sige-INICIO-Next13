@@ -6,10 +6,9 @@ import Material, { IMaterial } from "@/models/material";
 import Operation from "@/models/operation";
 import { verifyJWT } from "@/libs/jwt";
 import Warehouse from "@/models/warehouse";
-import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
-  const { warehouse, operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1 } = await request.json();
+  const { warehouse, operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1, provider = '' } = await request.json();
   const accessToken = request.headers.get("accessToken");
 
   let date = moment();
@@ -44,6 +43,7 @@ export async function POST(request: Request) {
           unitMeasure,
           costPerUnit,
           minimumExistence,
+          provider,
           unitsTotal: newTotal,
           materialTotalValue: newTotalValue,
         },
@@ -94,6 +94,7 @@ export async function POST(request: Request) {
           unitMeasure,
           costPerUnit,
           minimumExistence,
+          provider,
           unitsTotal: newTotal,
           materialTotalValue: newTotalValue,
         },
@@ -130,6 +131,7 @@ export async function POST(request: Request) {
         unitMeasure,
         costPerUnit,
         minimumExistence,
+        provider,
         warehouse,
         enterDate: currentDate,
         unitsTotal: operation?.amount,

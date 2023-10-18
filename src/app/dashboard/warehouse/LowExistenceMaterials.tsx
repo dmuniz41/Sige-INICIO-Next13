@@ -182,7 +182,7 @@ const LowExistenceMaterials: React.FC = () => {
             <path d="M12 16h.01"></path>
           </svg>
         </span>
-        <Tooltip placement="top" title={"Generar Reporte"} arrow={{ pointAtCenter: true }}>
+        {/* <Tooltip placement="top" title={"Generar Reporte"} arrow={{ pointAtCenter: true }}>
           <PDFDownloadLink document={<PDFReport fields={fields} data={data} title={'Materiales con bajas existencias '}/>} fileName="Materiales con bajas existencias">
             {({ blob, url, loading, error }) =>
               loading ? (
@@ -201,7 +201,7 @@ const LowExistenceMaterials: React.FC = () => {
               )
             }
           </PDFDownloadLink>
-        </Tooltip>
+        </Tooltip> */}
       </div>
       <Table size="middle" columns={columns} dataSource={data} pagination={{ position: ["bottomCenter"], pageSize: 10 }} className="shadow-md" />
     </>

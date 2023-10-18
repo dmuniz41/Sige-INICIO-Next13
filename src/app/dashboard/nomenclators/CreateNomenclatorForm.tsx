@@ -28,6 +28,10 @@ const category: SelectProps["options"] = [
     label: "Unidad de medida",
     value: "Unidad de medida",
   },
+  {
+    label: "Proveedor",
+    value: "Proveedor",
+  },
 ];
 export const CreateNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
   const [form] = Form.useForm();

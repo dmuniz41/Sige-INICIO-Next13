@@ -1,3 +1,4 @@
+'use client'
 import React from "react";
 import WarehousesTable from "./WarehouseTable";
 import LowExistenceMaterials from "./LowExistenceMaterials";
