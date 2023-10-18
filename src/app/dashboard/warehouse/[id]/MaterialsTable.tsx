@@ -89,7 +89,7 @@ const MaterialsTable: React.FC = () => {
       title: " Nombre",
       custom: true,
       component: (item: any) => `${item.materialName}`,
-      width: "20",
+      width: "10",
     },
     {
       title: " Coste Unitario",
@@ -101,6 +101,12 @@ const MaterialsTable: React.FC = () => {
       title: " Existencias",
       custom: true,
       component: (item: any) => `${item.unitsTotal}`,
+      width: "10",
+    },
+    {
+      title: " Proveedor",
+      custom: true,
+      component: (item: any) => `${item.provider}`,
       width: "10",
     },
     {
