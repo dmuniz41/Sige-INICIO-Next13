@@ -9,6 +9,7 @@ interface Values {
   costPerUnit: number;
   unitsTotal: number;
   minimumExistence: number;
+  provider: string;
   unitMeasure?: string;
 }
 interface CollectionCreateFormProps {
@@ -21,13 +22,14 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
   const materialCategory: string[] | undefined = [];
   const unitMeasures: string[] | undefined = [];
+  const providers: string[] | undefined = [];
   nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Categoría de material") {
-      materialCategory.push(nomenclator.code);
-    } else {
-      if (nomenclator.category === "Unidad de medida") {
-        unitMeasures.push(nomenclator.code);
-      }
+    if (nomenclator.category === "Categoría de material") materialCategory.push(nomenclator.code);
+    if (nomenclator.category === "Unidad de medida") {
+      unitMeasures.push(nomenclator.code);
+    }
+    if (nomenclator.category === "Proveedor") {
+      providers.push(nomenclator.code);
     }
   });
 
@@ -42,6 +44,13 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
     return {
       label: `${unitMeasure}`,
       value: `${unitMeasure}`,
+    };
+  });
+
+  const provider: SelectProps["options"] = providers.map((provider) => {
+    return {
+      label: `${provider}`,
+      value: `${provider}`,
     };
   });
 
@@ -109,6 +118,9 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
         </Form.Item>
         <Form.Item name="minimumExistence" label="Existencias mínimas" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber className="w-full" />
+        </Form.Item>
+        <Form.Item name="provider" label="Proveedor" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Select allowClear style={{ width: "100%" }} options={provider} />
         </Form.Item>
       </Form>
     </Modal>

@@ -13,6 +13,7 @@ export interface IMaterial {
   warehouse: string
   unitMeasure?: string;
   materialTotalValue?: number,
+  provider: string,
   operations?: Types.DocumentArray<IOperation>;
 }
 
@@ -52,6 +53,9 @@ const MaterialSchema = new Schema<IMaterial, Model<IMaterial>>({
   },
   materialTotalValue: {
     type: Number,
+  },
+  provider: {
+    type: String
   },
   warehouse: {
     type: String,
