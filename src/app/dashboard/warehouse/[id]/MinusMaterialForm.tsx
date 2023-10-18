@@ -12,6 +12,7 @@ interface Values {
   costPerUnit: number;
   unitsTotal: number;
   minimumExistence: number;
+  provider: string;
   unitMeasure: string;
 }
 interface CollectionCreateFormProps {
@@ -56,7 +57,6 @@ export const MinusMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, o
                 .validateFields()
                 .then((values) => {
                   onCreate(values);
-                  console.log("🚀 ~ file: CreateNomenclatorForm.tsx:51 ~ .then ~ values:", values);
                   form.resetFields();
                 })
                 .catch((error) => {
@@ -95,6 +95,10 @@ export const MinusMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, o
             name: "minimumExistence",
             value: defaultValues?.minimumExistence,
           },
+          {
+            name: "provider",
+            value: defaultValues?.provider,
+          },
         ]}
       >
         <Form.Item name="category" label="Categoría">
@@ -114,6 +118,9 @@ export const MinusMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, o
         </Form.Item>
         <Form.Item name="minimumExistence" label="Existencias mínimas">
           <InputNumber className="w-full" disabled />
+        </Form.Item>
+        <Form.Item name="provider" label="Proveedor">
+          <Select allowClear style={{ width: "100%" }} disabled />
         </Form.Item>
       </Form>
     </Modal>

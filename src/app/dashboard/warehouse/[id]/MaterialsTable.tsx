@@ -42,6 +42,7 @@ interface DataType {
   costPerUnit: number;
   unitsTotal: number;
   minimumExistence: number;
+  provider: string;
   unitMeasure: string;
   operations: [IOperation];
 }
@@ -214,7 +215,7 @@ const MaterialsTable: React.FC = () => {
       tipo: "Añadir",
       amount: values.unitsTotal,
     };
-    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence));
+    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence, values.provider));
     setCreateNewModal(false);
   };
 
@@ -224,7 +225,7 @@ const MaterialsTable: React.FC = () => {
       tipo: "Añadir",
       amount: values.unitsTotal,
     };
-    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence));
+    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence, values.provider));
     setAddModal(false);
   };
 
@@ -234,7 +235,7 @@ const MaterialsTable: React.FC = () => {
       tipo: "Sustraer",
       amount: values.unitsTotal,
     };
-    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence));
+    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence, values.provider));
     setMinusModal(false);
   };
   const onEditMinimumExistences = (values: any): void => {
@@ -323,7 +324,7 @@ const MaterialsTable: React.FC = () => {
       title: "Código",
       dataIndex: "code",
       key: "code",
-      width: "20%",
+      width: "15%",
       ...getColumnSearchProps("code"),
     },
     {
@@ -374,6 +375,13 @@ const MaterialsTable: React.FC = () => {
       key: "unitMeasure",
       width: "10%",
       ...getColumnSearchProps("unitMeasure"),
+    },
+    {
+      title: "Proveedor",
+      dataIndex: "provider",
+      key: "provider",
+      width: "10%",
+      ...getColumnSearchProps("provider"),
     },
     {
       title: "Fecha de Entrada",
