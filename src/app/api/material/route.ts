@@ -8,7 +8,7 @@ import { verifyJWT } from "@/libs/jwt";
 import Warehouse from "@/models/warehouse";
 
 export async function POST(request: Request) {
-  const { warehouse, operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1, provider = '' } = await request.json();
+  const { warehouse, operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1, provider = "" } = await request.json();
   const accessToken = request.headers.get("accessToken");
 
   let date = moment();
@@ -65,8 +65,8 @@ export async function POST(request: Request) {
             "Access-Control-Allow-Origin": "*",
             "Content-Type": "application/json",
           },
-          status: 200
-        },
+          status: 200,
+        }
       );
     }
     // * Si ya existe un material con ese código sustrae la cantidad que se está entrando al total  agrega la nueva operacion a la lista de operaciones del material ya existente*
@@ -117,15 +117,20 @@ export async function POST(request: Request) {
             "Access-Control-Allow-Origin": "*",
             "Content-Type": "application/json",
           },
-          status: 200
-        },
+          status: 200,
+        }
       );
       // * Si no existe un material con ese código crea una nueva entrada en el almacén *
     } else {
       let newOperation = new Operation(operation);
+      let listOfMaterials = await Material.find();
+      let materialCount = 0
+      if(listOfMaterials.length != 0) {
+        materialCount = listOfMaterials.at(-1).code
+      }
 
       const newMaterial = new Material({
-        code: category + materialName + costPerUnit,
+        code: ++ materialCount,
         materialName,
         category,
         unitMeasure,
@@ -158,8 +163,8 @@ export async function POST(request: Request) {
             "Access-Control-Allow-Origin": "*",
             "Content-Type": "application/json",
           },
-          status: 200
-        },
+          status: 200,
+        }
       );
     }
   } catch (error) {
@@ -203,8 +208,8 @@ export async function GET(request: Request) {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
         },
-        status: 200
-      },
+        status: 200,
+      }
     );
   } catch (error) {
     if (error instanceof Error) {
@@ -259,8 +264,8 @@ export async function PUT(request: Request) {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
         },
-        status: 200
-      },
+        status: 200,
+      }
     );
   } catch (error) {
     if (error instanceof Error) {
@@ -307,9 +312,8 @@ export async function PATCH(request: Request) {
 
     const deletedMaterial = await Material.findOneAndDelete({ code });
     const DBWarehouse = await Warehouse.findById(warehouse);
-    let newWarehouseValue = DBWarehouse.totalValue - deletedMaterial.materialTotalValue
+    let newWarehouseValue = DBWarehouse.totalValue - deletedMaterial.materialTotalValue;
     await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
-
 
     return new NextResponse(
       JSON.stringify({
@@ -321,8 +325,8 @@ export async function PATCH(request: Request) {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
         },
-        status: 200
-      },
+        status: 200,
+      }
     );
   } catch (error) {
     if (error instanceof Error) {
