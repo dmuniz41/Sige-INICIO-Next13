@@ -74,28 +74,22 @@ const MaterialsTable: React.FC = () => {
 
   const fields = [
     {
-      title: " Código",
-      custom: true,
-      component: (item: any) => `${item.code}`,
-      width: "30",
-    },
-    {
       title: " Categoría",
       custom: true,
       component: (item: any) => `${item.category}`,
-      width: "20",
+      width: "30",
     },
     {
       title: " Nombre",
       custom: true,
       component: (item: any) => `${item.materialName}`,
-      width: "10",
+      width: "20",
     },
     {
       title: " Coste Unitario",
       custom: true,
       component: (item: any) => `${item.costPerUnit}`,
-      width: "10",
+      width: "20",
     },
     {
       title: " Existencias",
@@ -330,7 +324,7 @@ const MaterialsTable: React.FC = () => {
       title: "Código",
       dataIndex: "code",
       key: "code",
-      width: "15%",
+      width: "8%",
       ...getColumnSearchProps("code"),
     },
     {
@@ -393,7 +387,7 @@ const MaterialsTable: React.FC = () => {
       title: "Fecha de Entrada",
       dataIndex: "enterDate",
       key: "enterDate",
-      width: "20%",
+      width: "10%",
       ...getColumnSearchProps("enterDate"),
     },
   ];
