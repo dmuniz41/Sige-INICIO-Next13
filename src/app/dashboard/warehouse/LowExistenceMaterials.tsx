@@ -13,9 +13,9 @@ import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { lowExistenceMaterialsStartLoading, warehousesStartLoading } from "@/actions/warehouse";
 import { IOperation } from "@/models/operation";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import PDFReport from "@/helpers/PDFReport";
-import { PDFSvg } from "@/app/global/PDFSvg";
+// import { PDFDownloadLink } from "@react-pdf/renderer";
+// import PDFReport from "@/helpers/PDFReport";
+// import { PDFSvg } from "@/app/global/PDFSvg";
 
 const fields = [
   {
@@ -145,11 +145,18 @@ const LowExistenceMaterials: React.FC = () => {
 
   const columns: ColumnsType<DataType> = [
     {
-      title: "Código",
-      dataIndex: "code",
-      key: "code",
-      width: "20%",
-      ...getColumnSearchProps("code"),
+      title: "Categoría",
+      dataIndex: "category",
+      key: "category",
+      width: "15%",
+      ...getColumnSearchProps("category"),
+    },
+    {
+      title: "Nombre",
+      dataIndex: "materialName",
+      key: "materialName",
+      width: "15%",
+      ...getColumnSearchProps("materialName"),
     },
     {
       title: "En almacén",

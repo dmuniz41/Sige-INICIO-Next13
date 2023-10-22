@@ -2,7 +2,7 @@ import { Model, Schema, Types, model, models } from "mongoose";
 import { IOperation } from "./operation";
 
 export interface IMaterial {
-  code: string;
+  code: number;
   key: string;
   materialName: string;
   enterDate: string;
@@ -19,7 +19,7 @@ export interface IMaterial {
 
 const MaterialSchema = new Schema<IMaterial, Model<IMaterial>>({
   code: {
-    type: String,
+    type: Number,
     unique: true,
   },
   key: {
