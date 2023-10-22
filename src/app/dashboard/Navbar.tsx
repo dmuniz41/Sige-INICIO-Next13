@@ -52,6 +52,9 @@ export const Navbar = () => {
     case "projectExpenses":
       secondaryPath = "Gastos de Proyectos";
       break;
+    case "costSheets":
+      secondaryPath = "Fichas de Costo";
+      break;
 
     default:
       break;
