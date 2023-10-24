@@ -51,6 +51,7 @@ export async function POST(request: Request) {
     }
 
     //* Calcula el valor de cada subitem en cada seccion de la ficha de costo
+
     rawMaterials.map((material) => {
       material.value = material.amount * material.price;
     });
@@ -74,28 +75,24 @@ export async function POST(request: Request) {
     });
 
     //* Calcula el valor de cada subtotal en cada seccion de la ficha de costo
-    const initialRawMaterialsValue: number = 0;
-    const rawMaterialsSubtotal: number = rawMaterials.reduce((total, currentValue) => total + currentValue.value, initialRawMaterialsValue);
 
-    const initialTasksListValue: number = 0;
-    const tasksListSubtotal: number = tasksList.reduce((total, currentValue) => total + currentValue.value, initialTasksListValue);
+    const rawMaterialsSubtotal: number = rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
+    const tasksListSubtotal: number = tasksList.reduce((total, currentValue) => total + currentValue.value, 0);
+    const equipmentDepreciationSubtotal: number = equipmentDepreciation.reduce((total, currentValue) => total + currentValue.value, 0);
+    const equipmentMaintenanceSubtotal: number = equipmentMaintenance.reduce((total, currentValue) => total + currentValue.value, 0);
+    const administrativeExpensesSubtotal: number = administrativeExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+    const transportationExpensesSubtotal: number = transportationExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+    const contractedPersonalExpensesSubtotal: number = contractedPersonalExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
 
-    const initialEquipmentDepreciationValue: number = 0;
-    const equipmentDepreciationSubtotal: number = equipmentDepreciation.reduce((total, currentValue) => total + currentValue.value, initialEquipmentDepreciationValue);
-
-    const initialEquipmentMaintenanceValue: number = 0;
-    const equipmentMaintenanceSubtotal: number = equipmentMaintenance.reduce((total, currentValue) => total + currentValue.value, initialEquipmentMaintenanceValue);
-
-    const initialAdministrativeExpensesValue: number = 0 
-    const administrativeExpensesSubtotal: number = administrativeExpenses.reduce((total, currentValue) => total + currentValue.value, initialAdministrativeExpensesValue);
-
-    const initialTransportationExpensesValue : number = 0
-    const transportationExpensesSubtotal: number = transportationExpenses.reduce((total, currentValue) => total + currentValue.value, initialTransportationExpensesValue);
-
-    const initialContractedPersonalExpensesValue: number = 0
-    const contractedPersonalExpensesSubtotal: number = contractedPersonalExpenses.reduce((total, currentValue) => total + currentValue.value, initialContractedPersonalExpensesValue);
-    
-    const expensesTotalValue: number = 0;
+    const expensesTotalValue: number =
+      rawMaterialsSubtotal +
+      tasksListSubtotal +
+      equipmentDepreciationSubtotal +
+      equipmentMaintenanceSubtotal +
+      administrativeExpensesSubtotal +
+      transportationExpensesSubtotal +
+      contractedPersonalExpensesSubtotal;
+      
     const salePriceMN: number = 0;
     const salePriceUSD: number = 0;
 
