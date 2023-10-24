@@ -2,6 +2,7 @@ import { Model, Schema, Types, model, models } from "mongoose";
 
 export interface ICostSheet {
   key: string;
+  payMethod: 'CASH' | 'CONTRACT'
   taskName: string;
   workersAmount: number;
   // * Listado de materias primas a utilizar en la actividad
@@ -97,6 +98,10 @@ const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
   key: {
     type: String,
     unique: true,
+  },
+  payMethod: {
+    type: String,
+    required: [true, "La forma de cobro es requerida"]
   },
   taskName: {
     type: String,
