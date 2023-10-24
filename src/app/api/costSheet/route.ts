@@ -3,11 +3,12 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
-import CostSheet from "@/models/costSheet";
+import CostSheet, { ICostSheet } from "@/models/costSheet";
 
 export async function POST(request: Request) {
   const {
-    taskName,
+    taskName = "",
+    payMethod = "CONTRACT",
     workersAmount = 1,
     rawMaterials = [],
     tasksList = [],
@@ -19,8 +20,7 @@ export async function POST(request: Request) {
     artisticTalent = 0,
     ONATTaxes = 0,
     commercialMargin = 0,
-  } = await request.json();
-    console.log("🚀 ~ file: route.ts:23 ~ POST ~ taskName:", taskName)
+  }: ICostSheet = await request.json();
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -50,22 +50,61 @@ export async function POST(request: Request) {
       );
     }
 
-    let rawMaterialsSubtotal: number = 0;
-    let tasksListSubtotal: number = 0;
-    let equipmentDepreciationSubtotal: number = 0;
-    let equipmentMaintenanceSubtotal: number = 0;
-    let administrativeExpensesSubtotal: number = 0;
-    let transportationExpensesSubtotal: number = 0;
-    let contractedPersonalExpensesSubtotal: number = 0;
-    let expensesTotalValue: number = 0;
-    let salePriceMN: number = 0;
-    let salePriceUSD: number = 0;
+    //* Calcula el valor de cada subitem en cada seccion de la ficha de costo
+    rawMaterials.map((material) => {
+      material.value = material.amount * material.price;
+    });
+    tasksList.map((task) => {
+      task.value = task.amount * task.price;
+    });
+    equipmentDepreciation.map((equipmentDepreciation) => {
+      equipmentDepreciation.value = equipmentDepreciation.amount * equipmentDepreciation.price;
+    });
+    equipmentMaintenance.map((equipmentMaintenance) => {
+      equipmentMaintenance.value = equipmentMaintenance.amount * equipmentMaintenance.price;
+    });
+    administrativeExpenses.map((administrativeExpenses) => {
+      administrativeExpenses.value = administrativeExpenses.amount * administrativeExpenses.price;
+    });
+    transportationExpenses.map((transportationExpenses) => {
+      transportationExpenses.value = transportationExpenses.amount * transportationExpenses.price;
+    });
+    contractedPersonalExpenses.map((contractedPersonalExpenses) => {
+      contractedPersonalExpenses.value = contractedPersonalExpenses.amount * contractedPersonalExpenses.price;
+    });
 
-    let newKey = generateRandomString(26);
+    //* Calcula el valor de cada subtotal en cada seccion de la ficha de costo
+    const initialRawMaterialsValue: number = 0;
+    const rawMaterialsSubtotal: number = rawMaterials.reduce((total, currentValue) => total + currentValue.value, initialRawMaterialsValue);
+
+    const initialTasksListValue: number = 0;
+    const tasksListSubtotal: number = tasksList.reduce((total, currentValue) => total + currentValue.value, initialTasksListValue);
+
+    const initialEquipmentDepreciationValue: number = 0;
+    const equipmentDepreciationSubtotal: number = equipmentDepreciation.reduce((total, currentValue) => total + currentValue.value, initialEquipmentDepreciationValue);
+
+    const initialEquipmentMaintenanceValue: number = 0;
+    const equipmentMaintenanceSubtotal: number = equipmentMaintenance.reduce((total, currentValue) => total + currentValue.value, initialEquipmentMaintenanceValue);
+
+    const initialAdministrativeExpensesValue: number = 0 
+    const administrativeExpensesSubtotal: number = administrativeExpenses.reduce((total, currentValue) => total + currentValue.value, initialAdministrativeExpensesValue);
+
+    const initialTransportationExpensesValue : number = 0
+    const transportationExpensesSubtotal: number = transportationExpenses.reduce((total, currentValue) => total + currentValue.value, initialTransportationExpensesValue);
+
+    const initialContractedPersonalExpensesValue: number = 0
+    const contractedPersonalExpensesSubtotal: number = contractedPersonalExpenses.reduce((total, currentValue) => total + currentValue.value, initialContractedPersonalExpensesValue);
+    
+    const expensesTotalValue: number = 0;
+    const salePriceMN: number = 0;
+    const salePriceUSD: number = 0;
+
+    const newKey = generateRandomString(26);
 
     const newCostSheet = new CostSheet({
       key: newKey,
       taskName,
+      payMethod,
       workersAmount,
       rawMaterials,
       rawMaterialsSubtotal,

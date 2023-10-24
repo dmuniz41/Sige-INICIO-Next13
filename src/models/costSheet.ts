@@ -1,86 +1,37 @@
 import { Model, Schema, Types, model, models } from "mongoose";
 
+export interface ICostSheetSubitem {
+  description: string;
+  unitMeasure?: string;
+  amount: number;
+  price: number;
+  value: number;
+}
 export interface ICostSheet {
   key: string;
-  payMethod: 'CASH' | 'CONTRACT'
+  payMethod: "CASH" | "CONTRACT";
   taskName: string;
   workersAmount: number;
   // * Listado de materias primas a utilizar en la actividad
-  rawMaterials: [
-    {
-      description: string;
-      unitMeasure?: string;
-      amount: number;
-      price: number;
-      value: number;
-    }
-  ];
+  rawMaterials: ICostSheetSubitem[];
   rawMaterialsSubtotal: Number;
   // * Listado de actividades a ejecutar para completar la actividad
-  tasksList: [
-    {
-      description: string;
-      unitMeasure?: string;
-      amount: number;
-      price: number;
-      value: number;
-    }
-  ];
+  tasksList: ICostSheetSubitem[];
   tasksListSubtotal: Number;
   // * Listado de gastos por depreciación de equipos a utilizar en la actividad
-  equipmentDepreciation: [
-    {
-      description: string;
-      unitMeasure?: string;
-      amount: number;
-      price: number;
-      value: number;
-    }
-  ];
+  equipmentDepreciation: ICostSheetSubitem[];
   equipmentDepreciationSubtotal: Number;
   // * Listado de gastos por matenimiento de equipos a utilizar en la actividad
-  equipmentMaintenance: [
-    {
-      description: string;
-      unitMeasure?: string;
-      amount: number;
-      price: number;
-      value: number;
-    }
-  ];
+  equipmentMaintenance: ICostSheetSubitem[];
   equipmentMaintenanceSubtotal: Number;
   // * Listado de gastos administrativos en la actividad
-  administrativeExpenses: [
-    {
-      description: string;
-      unitMeasure?: string;
-      amount: number;
-      price: number;
-      value: number;
-    }
-  ];
+  administrativeExpenses: ICostSheetSubitem[];
   administrativeExpensesSubtotal: Number;
   // * Listado de gastos por transportacion en la actividad
-  transportationExpenses: [
-    {
-      description: string;
-      unitMeasure?: string;
-      amount: number;
-      price: number;
-      value: number;
-    }
-  ];
+  transportationExpenses: ICostSheetSubitem[];
   transportationExpensesSubtotal: Number;
   // * Listado de gastos por personal contratado en la actividad
-  contractedPersonalExpenses: [
-    {
-      description: string;
-      unitMeasure?: string;
-      amount: number;
-      price: number;
-      value: number;
-    }
-  ];
+  contractedPersonalExpenses: ICostSheetSubitem[];
   contractedPersonalExpensesSubtotal: Number;
   expensesTotalValue: Number;
   artisticTalent: Number;
@@ -101,10 +52,11 @@ const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
   },
   payMethod: {
     type: String,
-    required: [true, "La forma de cobro es requerida"]
+    required: [true, "La forma de cobro es requerida"],
   },
   taskName: {
     type: String,
+    unique: true,
     required: [true, "El nombre de la tarea ejecutar es requerida"],
   },
   workersAmount: {
