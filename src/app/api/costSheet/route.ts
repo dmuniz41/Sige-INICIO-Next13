@@ -9,17 +9,19 @@ export async function POST(request: Request) {
   const {
     taskName = "",
     payMethod = "CONTRACT",
+    USDValue = 250,
     workersAmount = 1,
     rawMaterials = [],
-    tasksList = [],
-    equipmentDepreciation = [],
-    equipmentMaintenance = [],
+    directSalaries = [],
+    otherDirectExpenses = [],
+    productionRelatedExpenses = [],
     administrativeExpenses = [],
     transportationExpenses = [],
-    contractedPersonalExpenses = [],
+    financialExpenses = [],
+    taxExpenses = [],
     artisticTalent = 0,
-    ONATTaxes = 0,
-    commercialMargin = 0,
+    representationCost = 0,
+    rawMaterialsByClient = 0,
   }: ICostSheet = await request.json();
 
   const accessToken = request.headers.get("accessToken");
@@ -55,14 +57,14 @@ export async function POST(request: Request) {
     rawMaterials.map((material) => {
       material.value = material.amount * material.price;
     });
-    tasksList.map((task) => {
+    directSalaries.map((task) => {
       task.value = task.amount * task.price;
     });
-    equipmentDepreciation.map((equipmentDepreciation) => {
-      equipmentDepreciation.value = equipmentDepreciation.amount * equipmentDepreciation.price;
+    otherDirectExpenses.map((otherDirectExpenses) => {
+      otherDirectExpenses.value = otherDirectExpenses.amount * otherDirectExpenses.price;
     });
-    equipmentMaintenance.map((equipmentMaintenance) => {
-      equipmentMaintenance.value = equipmentMaintenance.amount * equipmentMaintenance.price;
+    productionRelatedExpenses.map((productionRelatedExpenses) => {
+      productionRelatedExpenses.value = productionRelatedExpenses.amount * productionRelatedExpenses.price;
     });
     administrativeExpenses.map((administrativeExpenses) => {
       administrativeExpenses.value = administrativeExpenses.amount * administrativeExpenses.price;
@@ -70,31 +72,35 @@ export async function POST(request: Request) {
     transportationExpenses.map((transportationExpenses) => {
       transportationExpenses.value = transportationExpenses.amount * transportationExpenses.price;
     });
-    contractedPersonalExpenses.map((contractedPersonalExpenses) => {
-      contractedPersonalExpenses.value = contractedPersonalExpenses.amount * contractedPersonalExpenses.price;
+    financialExpenses.map((financialExpenses) => {
+      financialExpenses.value = financialExpenses.amount * financialExpenses.price;
+    });
+    taxExpenses.map((taxExpenses) => {
+      taxExpenses.value = taxExpenses.amount * taxExpenses.price;
     });
 
     //* Calcula el valor de cada subtotal en cada seccion de la ficha de costo
 
     const rawMaterialsSubtotal: number = rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
-    const tasksListSubtotal: number = tasksList.reduce((total, currentValue) => total + currentValue.value, 0);
-    const equipmentDepreciationSubtotal: number = equipmentDepreciation.reduce((total, currentValue) => total + currentValue.value, 0);
-    const equipmentMaintenanceSubtotal: number = equipmentMaintenance.reduce((total, currentValue) => total + currentValue.value, 0);
+    const directSalariesSubtotal: number = directSalaries.reduce((total, currentValue) => total + currentValue.value, 0);
+    const otherDirectExpensesSubtotal: number = otherDirectExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+    const productionRelatedExpensesSubtotal: number = productionRelatedExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
     const administrativeExpensesSubtotal: number = administrativeExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
     const transportationExpensesSubtotal: number = transportationExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const contractedPersonalExpensesSubtotal: number = contractedPersonalExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+    const financialExpensesSubtotal: number = financialExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+    const taxExpensesSubtotal: number = taxExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
 
-    const expensesTotalValue: number =
-      rawMaterialsSubtotal +
-      tasksListSubtotal +
-      equipmentDepreciationSubtotal +
-      equipmentMaintenanceSubtotal +
-      administrativeExpensesSubtotal +
-      transportationExpensesSubtotal +
-      contractedPersonalExpensesSubtotal;
-      
-    const salePriceMN: number = 0;
-    const salePriceUSD: number = 0;
+    const costsTotalValue: number = rawMaterialsSubtotal + directSalariesSubtotal + otherDirectExpensesSubtotal + productionRelatedExpensesSubtotal;
+    const expensesTotalValue: number = administrativeExpensesSubtotal + transportationExpensesSubtotal + financialExpensesSubtotal + taxExpensesSubtotal;
+    const expensesAndCostsTotalValue: number = costsTotalValue + expensesTotalValue;
+
+    const artisticTalentValue: number = expensesAndCostsTotalValue * (artisticTalent / 100);
+    const representationCostValue: number = expensesAndCostsTotalValue * (representationCost / 100);
+
+    const creatorPrice: number = expensesAndCostsTotalValue + artisticTalentValue + representationCostValue;
+
+    const salePriceUSD: number = creatorPrice + rawMaterialsByClient;
+    const salePriceMN: number = salePriceUSD * USDValue;
 
     const newKey = generateRandomString(26);
 
@@ -105,24 +111,30 @@ export async function POST(request: Request) {
       workersAmount,
       rawMaterials,
       rawMaterialsSubtotal,
-      tasksList,
-      tasksListSubtotal,
-      equipmentDepreciation,
-      equipmentDepreciationSubtotal,
-      equipmentMaintenance,
-      equipmentMaintenanceSubtotal,
+      directSalaries,
+      directSalariesSubtotal,
+      otherDirectExpenses,
+      otherDirectExpensesSubtotal,
+      productionRelatedExpenses,
+      productionRelatedExpensesSubtotal,
       administrativeExpenses,
       administrativeExpensesSubtotal,
       transportationExpenses,
       transportationExpensesSubtotal,
-      contractedPersonalExpenses,
-      contractedPersonalExpensesSubtotal,
+      financialExpenses,
+      financialExpensesSubtotal,
+      taxExpenses,
+      taxExpensesSubtotal,
       expensesTotalValue,
-      artisticTalent,
-      ONATTaxes,
-      commercialMargin,
+      costsTotalValue,
+      expensesAndCostsTotalValue,
+      artisticTalentValue,
+      representationCostValue,
+      creatorPrice,
+      rawMaterialsByClient,
       salePriceMN,
       salePriceUSD,
+      salePrice: salePriceMN
     });
 
     await newCostSheet.save();
