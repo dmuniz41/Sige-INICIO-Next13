@@ -36,7 +36,7 @@ export default function Login() {
       return setError(res.error as string);
     }
     if (res?.ok) {
-      dispatch(nomenclatorsStartLoading())
+      await dispatch(nomenclatorsStartLoading())
       return router.push("/dashboard");
     }
   };
