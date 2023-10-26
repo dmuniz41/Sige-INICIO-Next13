@@ -42,7 +42,7 @@ const WarehousesTable: React.FC = () => {
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
 
-  const canList = sessionData?.user.role.includes("Listar Almacenes");
+  const canList = sessionData?.user.role.includes("Listar Almacén");
   const canCreate = sessionData?.user.role.includes("Crear Almacén");
   const canEdit = sessionData?.user.role.includes("Editar Almacén");
   const canDelete = sessionData?.user.role.includes("Eliminar Almacén");
