@@ -264,56 +264,56 @@ export async function GET(request: Request) {
 //   }
 // }
 
-// export async function PATCH(request: Request) {
-//   const { id } = await request.json();
-//   const accessToken = request.headers.get("accessToken");
-//   try {
-//     if (!accessToken || !verifyJWT(accessToken)) {
-//       return NextResponse.json(
-//         {
-//           ok: false,
-//           message: "Su sesión ha expirado, por favor autentiquese nuevamente",
-//         },
-//         {
-//           status: 401,
-//         }
-//       );
-//     }
-//     await connectDB();
-//     const nomenclatorToDelete = await Nomenclator.findById(id);
+export async function PATCH(request: Request) {
+  const { id } = await request.json();
+  const accessToken = request.headers.get("accessToken");
+  try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
+    await connectDB();
+    const costSheetToDelete = await CostSheet.findById(id);
 
-//     if (!nomenclatorToDelete) {
-//       return NextResponse.json({
-//         ok: true,
-//         message: "El nomenclador a borrar no existe",
-//       });
-//     }
+    if (!costSheetToDelete) {
+      return NextResponse.json({
+        ok: true,
+        message: "La ficha de costo a borrar no existe",
+      });
+    }
 
-//     const deletedNomenclator = await Nomenclator.findByIdAndDelete(id);
+    const deletedCostSheet = await CostSheet.findByIdAndDelete(id);
 
-//     return new NextResponse(
-//       JSON.stringify({
-//         ok: true,
-//         deletedNomenclator,
-//       }),
-//       {
-//         headers: {
-//           "Access-Control-Allow-Origin": "*",
-//           "Content-Type": "application/json",
-//         },
-//       }
-//     );
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       return NextResponse.json(
-//         {
-//           ok: false,
-//           message: error.message,
-//         },
-//         {
-//           status: 400,
-//         }
-//       );
-//     }
-//   }
-// }
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        deletedCostSheet,
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: error.message,
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+  }
+}
