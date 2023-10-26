@@ -8,7 +8,6 @@ export async function GET(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const urlParams = pathname.split("/");
   const costSheetId = urlParams[3];
-  console.log("🚀 ~ file: route.ts:11 ~ GET ~ costSheetTaskName:", costSheetId)
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(
