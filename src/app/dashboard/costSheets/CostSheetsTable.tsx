@@ -14,12 +14,13 @@ import { Toast } from "@/helpers/customAlert";
 import { selectedWarehouse } from "@/actions/warehouse";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
-import { EditSvg } from "@/app/global/EditSvg";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { PlusSvg } from '@/app/global/PlusSvg';
 import { RefreshSvg } from '@/app/global/RefreshSvg';
 import { ICostSheet } from "@/models/costSheet";
 import { costSheetsStartLoading, startDeleteCostSheet } from "@/actions/costSheet";
+import { useRouter } from "next/navigation";
+import { SeeSvg } from "@/app/global/SeeSvg";
 
 
 type DataIndex = keyof ICostSheet;
@@ -30,11 +31,12 @@ const CostSheetsTable: React.FC = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRow, setSelectedRow] = useState<ICostSheet>();
   const searchInput = useRef<InputRef>(null);
+  const router = useRouter();
   const { data: sessionData } = useSession();
 
   const canList = sessionData?.user.role.includes("Listar Ficha de Costo");
   const canCreate = sessionData?.user.role.includes("Crear Ficha de Costo");
-  const canEdit = sessionData?.user.role.includes("Editar Ficha de Costo");
+  // const canEdit = sessionData?.user.role.includes("Editar Ficha de Costo");
   const canDelete = sessionData?.user.role.includes("Eliminar Ficha de Costo");
 
   useEffect(() => {
@@ -47,31 +49,16 @@ const CostSheetsTable: React.FC = () => {
     data = [];
   }
 
-  // const handleNew = (): void => {
-  //   setCreateNewModal(true);
-  // };
-
-  // const handleEdit = (): void => {
-  //   if (selectedRow) {
-  //     setEditModal(true);
-  //   } else {
-  //     Toast.fire({
-  //       icon: "error",
-  //       title: "Seleccione un nomenclador a editar",
-  //     });
-  //   }
-  // };
-
-  // const onCreate = (values: any): void => {
-  //   dispatch(startAddNomenclator(values.category, values.code));
-  //   setCreateNewModal(false);
-  // };
-
-  // const onEdit = (values: any): void => {
-  //   dispatch(startUpdateNomenclator(selectedRow?._id!, values.code, values.category));
-  //   setSelectedRow(undefined);
-  //   setEditModal(false);
-  // };
+  const handleView = (): void => {
+    if (selectedRow) {
+      router.push(`/dashboard/costSheets/${selectedRow._id}`)
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "Seleccione una ficha de costo para ver",
+      });
+    }
+  };
 
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
@@ -199,7 +186,7 @@ const CostSheetsTable: React.FC = () => {
         <div className="flex gap-2">
           <button
             disabled={!canCreate}
-            // onClick={handleNew}
+            onClick={ ()=> router.push('/dashboard/costSheets/createCostSheet')}
             className={`${
               canCreate ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"
             } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
@@ -207,19 +194,29 @@ const CostSheetsTable: React.FC = () => {
             <PlusSvg />
             Nuevo
           </button>
+            <button
+              disabled={!canList}
+              onClick={handleView}
+              className={`${
+                canList ? "bg-secondary-500 cursor-pointer hover:bg-secondary-600 ease-in-out duration-300" : "bg-secondary-200"
+              } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
+            >
+              <SeeSvg />
+              Ver
+            </button>
         </div>
         <div className="flex">
-          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canEdit}
               className={`${
                 canEdit ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              // onClick={handleEdit}
+              onClick={handleEdit}
             >
               <EditSvg />
             </button>
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canDelete}

@@ -2,7 +2,7 @@
 import React, { FormEvent, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 import logo from "../../../assets/inicio.svg";
 import { Toast } from "@/helpers/customAlert";
