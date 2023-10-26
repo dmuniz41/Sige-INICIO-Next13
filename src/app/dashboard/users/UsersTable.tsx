@@ -103,7 +103,7 @@ const UserTable: React.FC = () => {
   };
   const onEditPrivileges = (values: any): void => {
     console.log(values);
-    const privileges = values.humanResourcesPrivileges.concat(values.materialPrivileges, values.nomenclatorPrivileges, values.securityPrivileges, values.warehousePrivileges);
+    const privileges = values.humanResourcesPrivileges.concat(values.materialPrivileges, values.nomenclatorPrivileges, values.securityPrivileges, values.warehousePrivileges, values.costSheetPrivileges);
     dispatch(startUpdateUser(selectedRow?._id!, values.user, values.userName, values.lastName, privileges, values.area));
     setSelectedRow(undefined);
     setPrivilegesModal(false);
