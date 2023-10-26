@@ -1,4 +1,4 @@
-import { Model, Schema, Types, model, models } from "mongoose";
+import { Model, Schema, model, models } from "mongoose";
 
 export interface ICostSheetSubitem {
   description: string;
@@ -8,6 +8,7 @@ export interface ICostSheetSubitem {
   value: number;
 }
 export interface ICostSheet {
+  _id: string;
   key: string;
   payMethod: "CASH" | "CONTRACT";
   USDValue: number;

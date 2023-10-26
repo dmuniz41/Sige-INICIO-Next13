@@ -98,8 +98,8 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
       value: "Eliminar Almacén",
     },
     {
-      label: "Listar Almacenes",
-      value: "Listar Almacenes",
+      label: "Listar Almacén",
+      value: "Listar Almacén",
     },
   ]
   const materialPrivileges: SelectProps["options"]= [ 
@@ -127,6 +127,25 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
     {
       label: "Eliminar Material",
       value: "Eliminar Material",
+    },
+  ]
+  const costSheetPrivileges: SelectProps["options"]= [ 
+    
+    {
+      label: "Listar Ficha de Costo",
+      value: "Listar Ficha de Costo",
+    },
+    {
+      label: "Crear Ficha de Costo",
+      value: "Crear Ficha de Costo",
+    },
+    {
+      label: "Editar Ficha de Costo",
+      value: "Editar Ficha de Costo",
+    },
+    {
+      label: "Eliminar Ficha de Costo",
+      value: "Eliminar Ficha de Costo",
     },
   ]
   const privileges: SelectProps["options"] = [
@@ -249,11 +268,15 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
           },
           {
             name: "warehousePrivileges",
-            value: defaultValues?.privileges.filter((privilege)=>privilege.includes("Almacen")),
+            value: defaultValues?.privileges.filter((privilege)=>privilege.includes("Almacén")),
           },
           {
             name: "materialPrivileges",
             value: defaultValues?.privileges.filter((privilege)=>privilege.includes("Material")),
+          },
+          {
+            name: "costSheetPrivileges",
+            value: defaultValues?.privileges.filter((privilege)=>privilege.includes("Ficha de Costo")),
           },
           {
             name: "area",
@@ -290,6 +313,9 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
         </Form.Item>
         <Form.Item name="materialPrivileges" label="Materiales" >
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={materialPrivileges} />
+        </Form.Item>
+        <Form.Item name="costSheetPrivileges" label="Fichas de Costo" >
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={costSheetPrivileges} />
         </Form.Item>
       </Form>
     </Modal>
