@@ -205,7 +205,7 @@ const addCostSheet = (
   representationCost: number,
   rawMaterialsByClient: number
 ) => ({
-  type: types.addNomenclator,
+  type: types.addCostSheet,
   payload: {
     taskName,
     payMethod,
