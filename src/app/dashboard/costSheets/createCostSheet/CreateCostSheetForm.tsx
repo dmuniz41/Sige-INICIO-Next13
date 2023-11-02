@@ -1,26 +1,41 @@
 "use client";
 
-import { Form, Input, InputNumber } from "antd";
+import { Form, Input, InputNumber, Select, SelectProps } from "antd";
 import React from "react";
 import { CSFormSection } from "./CSFormSection";
-
-const onFinish = (values: any) => {
-  console.log("Success:", values);
-};
+import { useAppDispatch } from "@/hooks/hooks";
+import { startAddCostSheet } from "@/actions/costSheet";
+import { useRouter } from "next/navigation";
+import { ICostSheet } from "@/models/costSheet";
 
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
 };
 
+const payMethod: SelectProps["options"] = [
+  {
+    label: `Efectivo`,
+    value: `CASH`,
+  },
+  {
+    label: `Contrato`,
+    value: `CONTRACT`,
+  },
+];
+
 export const CreateCostSheetForm = () => {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const [form] = Form.useForm();
+
   return (
     <Form
+      form={form}
       name="createCostSheetForm"
       labelCol={{ span: 0 }}
       wrapperCol={{ span: 0 }}
       className="w-full flex flex-col gap-0"
       initialValues={{ remember: true }}
-      onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
       requiredMark={"optional"}
@@ -49,6 +64,17 @@ export const CreateCostSheetForm = () => {
             <InputNumber className="w-[5rem] " />
           </Form.Item>
         </div>
+        <div className="flex w-full gap-2 justify-start">
+          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Elaborado por</span>} name="cratedBy" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Input className="w-[15rem]" />
+          </Form.Item>
+          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Aprobado por</span>} name="approvedBy" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Input className="w-[15rem]" />
+          </Form.Item>
+          <Form.Item className="mb-3 " name="payMethod" label={<span className="font-bold text-md">Método de pago</span>} rules={[{ required: true, message: "Campo requerido" }]}>
+            <Select allowClear style={{ width: "10rem" }} options={payMethod} />
+          </Form.Item>
+        </div>
       </section>
 
       <CSFormSection label="Materias primas fundamentales " name="rawMaterials" />
@@ -65,6 +91,38 @@ export const CreateCostSheetForm = () => {
         <button
           type="submit"
           className="bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300 w-[5rem] h-[2rem] flex items-center p-1 text-sm font-bold text-white-100  justify-center gap-2 rounded-md "
+          onClick={() => {
+            form
+              .validateFields()
+              .then((values: ICostSheet) => {
+                dispatch(
+                  startAddCostSheet(
+                    values.taskName,
+                    values.payMethod,
+                    values.createdBy,
+                    values.approvedBy,
+                    250,
+                    values.workersAmount,
+                    values.rawMaterials,
+                    values.directSalaries,
+                    values.otherDirectExpenses,
+                    values.productionRelatedExpenses,
+                    values.administrativeExpenses,
+                    values.transportationExpenses,
+                    values.financialExpenses,
+                    values.taxExpenses,
+                    values.artisticTalent,
+                    values.representationCost,
+                    values.rawMaterialsByClient
+                  )
+                );
+                router.push("/dashboard/costSheets");
+                form.resetFields();
+              })
+              .catch((error) => {
+                console.log("Validate Failed:", error);
+              });
+          }}
         >
           Crear
         </button>
