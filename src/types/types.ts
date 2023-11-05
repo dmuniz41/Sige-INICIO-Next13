@@ -36,11 +36,11 @@ export const types = {
   nomenclatorsLoaded:      "[Nomenclator] Nomenclators loaded",
   selectedNomenclator:     "[Nomenclator] Nomenclator selected",
 
-  addCostSheet:          "[CostSheet] Add CostSheet",
-  startAddCostSheet:     "[CostSheet] Start add CostSheet",
-  updateCostSheet:       "[CostSheet] Update CostSheet",
-  deleteCostSheet:       "[CostSheet] Delete CostSheet",
-  costSheetsLoaded:      "[CostSheet] CostSheets loaded",
-  selectedCostSheet:     "[CostSheet] CostSheet selected",
+  addCostSheet:            "[CostSheet] Add CostSheet",
+  startAddCostSheet:       "[CostSheet] Start add CostSheet",
+  updateCostSheet:         "[CostSheet] Update CostSheet",
+  deleteCostSheet:         "[CostSheet] Delete CostSheet",
+  costSheetsLoaded:        "[CostSheet] CostSheets loaded",
+  selectedCostSheet:       "[CostSheet] Load Selected Cost Sheet",
 
 };

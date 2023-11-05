@@ -18,7 +18,7 @@ import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { PlusSvg } from '@/app/global/PlusSvg';
 import { RefreshSvg } from '@/app/global/RefreshSvg';
 import { ICostSheet } from "@/models/costSheet";
-import { costSheetsStartLoading, startDeleteCostSheet } from "@/actions/costSheet";
+import { costSheetsStartLoading, loadSelectedCostSheet, startDeleteCostSheet } from "@/actions/costSheet";
 import { useRouter } from "next/navigation";
 import { SeeSvg } from "@/app/global/SeeSvg";
 
@@ -51,6 +51,7 @@ const CostSheetsTable: React.FC = () => {
 
   const handleView = (): void => {
     if (selectedRow) {
+      dispatch(loadSelectedCostSheet(selectedRow._id))
       router.push(`/dashboard/costSheets/${selectedRow._id}`)
     } else {
       Toast.fire({
