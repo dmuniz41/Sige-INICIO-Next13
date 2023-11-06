@@ -116,8 +116,8 @@ export const CreateCostSheetForm = () => {
                     values.rawMaterialsByClient
                   )
                 );
-                router.push("/dashboard/costSheets");
                 form.resetFields();
+                router.push("/dashboard/costSheets");
               })
               .catch((error) => {
                 console.log("Validate Failed:", error);

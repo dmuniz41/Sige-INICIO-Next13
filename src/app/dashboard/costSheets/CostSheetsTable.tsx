@@ -11,7 +11,6 @@ import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interf
 import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
-import { selectedWarehouse } from "@/actions/warehouse";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
@@ -99,7 +98,7 @@ const CostSheetsTable: React.FC = () => {
   const rowSelection: TableRowSelection<ICostSheet> = {
     onChange: async (selectedRowKeys: React.Key[], selectedRows: ICostSheet[]) => {
       setSelectedRow(selectedRows[0]);
-      dispatch(selectedWarehouse(selectedRows[0]._id));
+      dispatch(loadSelectedCostSheet(selectedRows[0]._id));
       console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows);
     },
   };
