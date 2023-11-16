@@ -29,12 +29,12 @@ export const CostSheetView = () => {
   let taxExpenses: ICostSheetSubitem[] = useMemo(() => selectedCostSheet.taxExpenses, [selectedCostSheet]);
 
   return (
-    <section className="flex flex-col w-full h-full overflow-hidden">
-      <h2 className="font-bold text-xl mr-auto">
-        Ficha de Costo: <span className="font-normal">{selectedCostSheet.taskName}</span>
-      </h2>
-      <section className="w-full flex flex-row">
-        <div className="w-[50%] flex flex-col">
+    <section className="flex gap-1 flex-col w-full h-full overflow-hidden rounded-md shadow-md p-2">
+      <section className="w-full flex flex-row p-2 ">
+        <h2 className="font-bold text-xl mr-auto w-[30%] flex">
+          Ficha de Costo: <span className="ml-2 font-normal">{selectedCostSheet.taskName}</span>
+        </h2>
+        <div className="w-[30%] flex flex-col">
           <label className="font-bold">
             Creador: <span className="font-normal">INICIO</span>
           </label>
@@ -46,9 +46,9 @@ export const CostSheetView = () => {
           </label>
         </div>
         <label className="font-bold mr-2">Descripción:</label>
-        <p className="w-[50%]">{`Aqui va la descripcion del producto`}</p>
+        <p className="w-[40%]">{`Aqui va la descripcion del producto`}</p>
       </section>
-      <section className="flex flex-col w-full">
+      <section className="flex flex-col w-full ">
         <CSViewTable label="Gasto Material" data={rawMaterials} />
         <CSViewTable label="Salarios Directos" data={directSalaries} />
         <CSViewTable label="Otros Gastos Directos" data={otherDirectExpenses} />
