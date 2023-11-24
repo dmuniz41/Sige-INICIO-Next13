@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import { Button, Input, Space, Table, Tooltip } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { InputRef } from "antd";
-import type { ColumnType, ColumnsType } from "antd/es/table";
+import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
 
 import { useAppDispatch } from "@/hooks/hooks";
@@ -62,6 +62,7 @@ const MaterialsTable: React.FC = () => {
   const [minusModal, setMinusModal] = useState(false);
   const [showOperationsModal, setShowOperationModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState<DataType>();
+  const [filteredData, setFilteredData] = useState<DataType[]>();
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
 
@@ -108,13 +109,21 @@ const MaterialsTable: React.FC = () => {
       custom: true,
       component: (item: any) => `${item.unitMeasure}`,
       width: "10",
-    }
-  ]
+    },
+  ];
 
   const { materials } = useAppSelector((state: RootState) => state?.material);
   let data: DataType[] = useMemo(() => materials, [materials]);
   if (!canList) {
     data = [];
+  }
+
+  let PDFReportData: DataType[] = [];
+
+  if (filteredData) {
+    PDFReportData = filteredData;
+  } else {
+    PDFReportData = data;
   }
 
   const url = usePathname().split("/");
@@ -238,11 +247,17 @@ const MaterialsTable: React.FC = () => {
     dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence, values.provider));
     setMinusModal(false);
   };
+
   const onEditMinimumExistences = (values: any): void => {
     dispatch(editMinimumExistences(values.code, values.minimumExistence, selectedWarehouse));
     console.log("🚀 ~ file: MaterialsTable.tsx:147 ~ onEditMinimumExistences ~ values.code, values.minimumExistence:", values.code, values.minimumExistence);
     // setSelectedRow(undefined);
     setEditMinimumExistencesModal(false);
+  };
+
+  const onChange: TableProps<DataType>["onChange"] = (pagination, filters, sorter, extra) => {
+    setFilteredData(extra.currentDataSource);
+    console.log(filteredData);
   };
 
   const rowSelection: TableRowSelection<DataType> = {
@@ -477,7 +492,7 @@ const MaterialsTable: React.FC = () => {
             </button>
           </Tooltip>
           <Tooltip placement="top" title={"Generar Reporte"} arrow={{ pointAtCenter: true }}>
-            <PDFDownloadLink document={<PDFReport fields={fields} data={data} title={'Reporte de almacén '}/>} fileName="Reporte de almacén">
+            <PDFDownloadLink document={<PDFReport fields={fields} data={PDFReportData} title={"Reporte de almacén "} />} fileName="Reporte de almacén">
               {({ blob, url, loading, error }) =>
                 loading ? (
                   <button disabled className={`opacity-20 pt-2 pl-2" flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}>
@@ -510,6 +525,7 @@ const MaterialsTable: React.FC = () => {
         columns={columns}
         dataSource={data}
         pagination={{ position: ["bottomCenter"], pageSize: 10 }}
+        onChange={onChange}
         rowSelection={{
           type: "radio",
           ...rowSelection,
