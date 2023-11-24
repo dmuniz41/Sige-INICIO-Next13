@@ -7,8 +7,10 @@ import { ICostSheetSubitem } from "@/models/costSheet";
 export const startAddCostSheet = (
   taskName: string = "",
   payMethod: string = "CONTRACT",
+  createdBy: string = "",
+  approvedBy: string = "",
   USDValue: number = 250,
-  workersAmount: number = 1,
+  workersAmount: number = 0,
   rawMaterials: ICostSheetSubitem[] = [],
   directSalaries: ICostSheetSubitem[] = [],
   otherDirectExpenses: ICostSheetSubitem[] = [],
@@ -29,6 +31,8 @@ export const startAddCostSheet = (
         {
           taskName,
           payMethod,
+          createdBy,
+          approvedBy,
           USDValue,
           workersAmount,
           rawMaterials,
@@ -50,6 +54,8 @@ export const startAddCostSheet = (
           addCostSheet(
             taskName,
             payMethod,
+            createdBy,
+            approvedBy,
             USDValue,
             workersAmount,
             rawMaterials,
@@ -80,8 +86,10 @@ export const startAddCostSheet = (
 export const startUpdateCostSheet = (
   taskName: string = "",
   payMethod: string = "CONTRACT",
+  createdBy: string = "",
+  approvedBy: string = "",
   USDValue: number = 250,
-  workersAmount: number = 1,
+  workersAmount: number = 0,
   rawMaterials: ICostSheetSubitem[] = [],
   directSalaries: ICostSheetSubitem[] = [],
   otherDirectExpenses: ICostSheetSubitem[] = [],
@@ -123,6 +131,8 @@ export const startUpdateCostSheet = (
           updateCostSheet(
             taskName,
             payMethod,
+            createdBy,
+            approvedBy,
             USDValue,
             workersAmount,
             rawMaterials,
@@ -184,6 +194,21 @@ export const costSheetsStartLoading = () => {
       });
   };
 };
+export const loadSelectedCostSheet = (id: string) => {
+  const token = localStorage.getItem("accessToken");
+  return async (dispatch: any) => {
+    await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/costSheet/${id}`, { headers: { accessToken: token } })
+      .then((resp) => {
+        let { BDCostSheet } = resp.data;
+        dispatch(selectedCostSheet(BDCostSheet));
+      })
+      .catch((error: AxiosError) => {
+        let { message }: any = error.response?.data;
+        Swal.fire("Error", message, "error");
+      });
+  };
+};
 export const costSheetsLoaded = (costSheets: any) => ({
   type: types.costSheetsLoaded,
   payload: costSheets,
@@ -191,6 +216,8 @@ export const costSheetsLoaded = (costSheets: any) => ({
 const addCostSheet = (
   taskName: string,
   payMethod: string,
+  createdBy: string,
+  approvedBy: string,
   USDValue: number,
   workersAmount: number,
   rawMaterials: ICostSheetSubitem[],
@@ -209,6 +236,8 @@ const addCostSheet = (
   payload: {
     taskName,
     payMethod,
+    createdBy,
+    approvedBy,
     USDValue,
     workersAmount,
     rawMaterials,
@@ -227,6 +256,8 @@ const addCostSheet = (
 const updateCostSheet = (
   taskName: string,
   payMethod: string,
+  createdBy: string,
+  approvedBy: string,
   USDValue: number,
   workersAmount: number,
   rawMaterials: ICostSheetSubitem[],
@@ -245,6 +276,8 @@ const updateCostSheet = (
   payload: {
     taskName,
     payMethod,
+    createdBy,
+    approvedBy,
     USDValue,
     workersAmount,
     rawMaterials,
@@ -265,4 +298,8 @@ const deleteCostSheet = (id: string) => ({
   payload: {
     id,
   },
+});
+const selectedCostSheet = (costSheet: any) => ({
+  type: types.selectedCostSheet,
+  payload: costSheet,
 });

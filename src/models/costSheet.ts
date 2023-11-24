@@ -13,6 +13,8 @@ export interface ICostSheet {
   payMethod: "CASH" | "CONTRACT";
   USDValue: number;
   taskName: string;
+  createdBy: string;
+  approvedBy: string;
   
   workersAmount: number;
 
@@ -90,6 +92,12 @@ const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
     type: String,
     unique: true,
     required: [true, "El nombre de la tarea ejecutar es requerida"],
+  },
+  createdBy: {
+    type: String,
+  },
+  approvedBy: {
+    type: String,
   },
   workersAmount: {
     type: Number,

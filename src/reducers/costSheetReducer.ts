@@ -2,6 +2,7 @@ import { types } from "../types/types";
 
 const initialState = {
   costSheets: [],
+  selectedCostSheet: {}
 };
 
 export const costSheetReducer = (state = initialState, action:any) => {
@@ -22,6 +23,11 @@ export const costSheetReducer = (state = initialState, action:any) => {
       return {
         ...state,
         costSheets: [...action.payload],
+      };
+    case types.selectedCostSheet:
+      return {
+        ...state,
+        selectedCostSheet: action.payload,
       };
 
     default:
