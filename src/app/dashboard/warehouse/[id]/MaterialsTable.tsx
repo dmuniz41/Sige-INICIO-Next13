@@ -332,6 +332,7 @@ const MaterialsTable: React.FC = () => {
       dataIndex: "category",
       key: "category",
       width: "15%",
+      sorter: (a: any, b: any) => a.category.localeCompare(b.category),
       ...getColumnSearchProps("category"),
     },
     {
@@ -381,6 +382,7 @@ const MaterialsTable: React.FC = () => {
       dataIndex: "provider",
       key: "provider",
       width: "10%",
+      sorter: (a: any, b: any) => a.provider.localeCompare(b.provider),
       ...getColumnSearchProps("provider"),
     },
     {
