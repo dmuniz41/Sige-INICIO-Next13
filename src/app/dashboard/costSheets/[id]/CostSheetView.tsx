@@ -29,7 +29,7 @@ export const CostSheetView = () => {
   let taxExpenses: ICostSheetSubitem[] = useMemo(() => selectedCostSheet.taxExpenses, [selectedCostSheet]);
 
   return (
-    <section className="flex gap-1 flex-col w-full h-full overflow-hidden rounded-md shadow-md p-2">
+    <article className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-2">
       <section className="w-full flex flex-row p-2 ">
         <h2 className="font-bold text-xl mr-auto w-[30%] flex">
           Ficha de Costo: <span className="ml-2 font-normal">{selectedCostSheet.taskName}</span>
@@ -49,15 +49,26 @@ export const CostSheetView = () => {
         <p className="w-[40%]">{`Aqui va la descripcion del producto`}</p>
       </section>
       <section className="flex flex-col w-full ">
-        <CSViewTable label="Gasto Material" data={rawMaterials} />
-        <CSViewTable label="Salarios Directos" data={directSalaries} />
-        <CSViewTable label="Otros Gastos Directos" data={otherDirectExpenses} />
-        <CSViewTable label="Gastos Asociados a la Producción" data={productionRelatedExpenses} />
-        <CSViewTable label="Gastos Generales y de Administración" data={administrativeExpenses} />
-        <CSViewTable label="Gastos de Distribución y Ventas" data={transportationExpenses} />
-        <CSViewTable label="Gastos Financieros" data={financialExpenses} />
-        <CSViewTable label="Gastos Tributarios" data={taxExpenses} />
+        <CSViewTable subtotal={selectedCostSheet.rawMaterialsSubtotal} label="Gasto Material" data={rawMaterials} />
+        <CSViewTable subtotal={selectedCostSheet.directSalariesSubtotal} label="Salarios Directos" data={directSalaries} />
+        <CSViewTable subtotal={selectedCostSheet.otherDirectExpensesSubtotal} label="Otros Gastos Directos" data={otherDirectExpenses} />
+        <CSViewTable subtotal={selectedCostSheet.productionRelatedExpensesSubtotal} label="Gastos Asociados a la Producción" data={productionRelatedExpenses} />
+        <CSViewTable subtotal={selectedCostSheet.administrativeExpensesSubtotal} label="Gastos Generales y de Administración" data={administrativeExpenses} />
+        <CSViewTable subtotal={selectedCostSheet.transportationExpensesSubtotal} label="Gastos de Distribución y Ventas" data={transportationExpenses} />
+        <CSViewTable subtotal={selectedCostSheet.financialExpensesSubtotal} label="Gastos Financieros" data={financialExpenses} />
+        <CSViewTable subtotal={selectedCostSheet.taxExpensesSubtotal} label="Gastos Tributarios" data={taxExpenses} />
       </section>
-    </section>
+      <section className="w-[30%] flex flex-col p-2">
+          <label className="font-bold">
+            Importe Total de Costos: <span className="font-normal">{selectedCostSheet.costsTotalValue}</span>
+          </label>
+          <label className="font-bold">
+            Importe Total de Gastos: <span className="font-normal">{selectedCostSheet.expensesTotalValue}</span>
+          </label>
+          <label className="font-bold">
+            Importe Total de Costos y Gastos: <span className="font-normal">{selectedCostSheet.expensesAndCostsTotalValue}</span>
+          </label>
+        </section>  
+    </article>
   );
 };
