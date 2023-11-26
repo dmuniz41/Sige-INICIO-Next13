@@ -58,7 +58,8 @@ export const CostSheetView = () => {
         <CSViewTable subtotal={selectedCostSheet.financialExpensesSubtotal} label="Gastos Financieros" data={financialExpenses} />
         <CSViewTable subtotal={selectedCostSheet.taxExpensesSubtotal} label="Gastos Tributarios" data={taxExpenses} />
       </section>
-      <section className="w-[30%] flex flex-col p-2">
+      <section className="w-full flex flex-row gap-5 p-2">
+        <div className="flex flex-col w-[40%]">
           <label className="font-bold">
             Importe Total de Costos: <span className="font-normal">{selectedCostSheet.costsTotalValue}</span>
           </label>
@@ -68,7 +69,30 @@ export const CostSheetView = () => {
           <label className="font-bold">
             Importe Total de Costos y Gastos: <span className="font-normal">{selectedCostSheet.expensesAndCostsTotalValue}</span>
           </label>
-        </section>  
+        </div>
+        <div className="flex flex-col w-[40%]">
+          <label className="font-bold">
+            Talento Artístico: <span className="font-normal">{selectedCostSheet.artisticTalentValue}</span>
+          </label>
+          <label className="font-bold">
+            Utilidad: <span className="font-normal">{selectedCostSheet.representationCostValue}</span>
+          </label>
+          <label className="font-bold">
+            Precio del Creador: <span className="font-normal">{selectedCostSheet.creatorPrice}</span>
+          </label>
+        </div>
+        <div className="flex flex-col w-[40%]">
+          <label className="font-bold">
+          Materias Primas y Materiales Aportados por el Cliente: <span className="font-normal">{selectedCostSheet.rawMaterialsByClient}</span>
+          </label>
+          <label className="font-bold">
+            Precio de Venta (MN): <span className="font-normal">{selectedCostSheet.salePriceMN}</span>
+          </label>
+          <label className="font-bold">
+            Precio de Venta (USD): <span className="font-normal">{selectedCostSheet.salePriceUSD}</span>
+          </label>
+        </div>
+      </section>
     </article>
   );
 };
