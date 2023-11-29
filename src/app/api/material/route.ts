@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     await connectDB();
     let BDMaterial = (await Material.findOne({ materialName, category, costPerUnit })) as IMaterial;
 
-    // * Si ya existe un material con ese código suma la cantidad que se está entrando al total y agrega la nueva operacion a la lista de operaciones del material ya existente*
+    // * Si ya existe un material con ese código suma la cantidad que se está entrando al total y agrega la nueva operacion a la lista de operaciones del material ya existente
 
     if (BDMaterial && operation.tipo === "Añadir") {
       let newTotal = BDMaterial.unitsTotal + operation?.amount;
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
         { new: true }
       );
 
-      //*Actualiza el valor total del almacén
+      //* Actualiza el valor total del almacén
       const DBWarehouse = await Warehouse.findById(warehouse);
       let newWarehouseValue = DBWarehouse.totalValue + operation?.amount * costPerUnit;
       await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
         }
       );
     }
-    // * Si ya existe un material con ese código sustrae la cantidad que se está entrando al total  agrega la nueva operacion a la lista de operaciones del material ya existente*
+    // * Si ya existe un material con ese código sustrae la cantidad que se está entrando al total  agrega la nueva operacion a la lista de operaciones del material ya existente
 
     if (BDMaterial && operation.tipo === "Sustraer") {
       let newTotal = BDMaterial.unitsTotal - operation?.amount;
@@ -84,6 +84,25 @@ export async function POST(request: Request) {
             status: 400,
           }
         );
+      } else {
+        // * Si las existencias después de extraer el material es cero elimina el material
+        if (newTotal === 0) {
+          let code = BDMaterial.code;
+          let deletedMaterial = await Material.findOneAndDelete({ code });
+          let DBWarehouse = await Warehouse.findById(warehouse);
+          let newWarehouseValue = DBWarehouse.totalValue - deletedMaterial.materialTotalValue;
+          await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
+
+          return NextResponse.json(
+            {
+              ok: true,
+              message: "Material eliminado",
+            },
+            {
+              status: 200,
+            }
+          );
+        }
       }
       let updatedMaterial = await Material.findOneAndUpdate(
         { materialName, category, costPerUnit },
@@ -101,7 +120,7 @@ export async function POST(request: Request) {
         { new: true }
       );
 
-      //*Actualiza el valor total del almacén
+      //* Actualiza el valor total del almacén
 
       const DBWarehouse = await Warehouse.findById(warehouse);
       let newWarehouseValue = DBWarehouse.totalValue - operation?.amount * costPerUnit;
@@ -120,17 +139,17 @@ export async function POST(request: Request) {
           status: 200,
         }
       );
-      // * Si no existe un material con ese código crea una nueva entrada en el almacén *
+      // * Si no existe un material con ese código crea una nueva entrada en el almacén
     } else {
       let newOperation = new Operation(operation);
       let listOfMaterials = await Material.find();
-      let materialCount = 0
-      if(listOfMaterials.length != 0) {
-        materialCount = listOfMaterials.at(-1).code
+      let materialCount = 0;
+      if (listOfMaterials.length != 0) {
+        materialCount = listOfMaterials.at(-1).code;
       }
 
       const newMaterial = new Material({
-        code: ++ materialCount,
+        code: ++materialCount,
         materialName,
         category,
         unitMeasure,
@@ -146,7 +165,7 @@ export async function POST(request: Request) {
 
       newMaterial.operations.push(newOperation);
 
-      //*Actualiza el valor total del almacén
+      //* Actualiza el valor total del almacén
 
       const DBWarehouse = await Warehouse.findById(warehouse);
       let newWarehouseValue = DBWarehouse.totalValue + operation?.amount * costPerUnit;
