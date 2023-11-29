@@ -83,7 +83,7 @@ export const CostSheetView = () => {
         </div>
         <div className="flex flex-col w-[40%]">
           <label className="font-bold">
-          Materias Primas y Materiales Aportados por el Cliente: <span className="font-normal">{selectedCostSheet.rawMaterialsByClient}</span>
+            Materias Primas y Materiales Aportados por el Cliente: <span className="font-normal">{selectedCostSheet.rawMaterialsByClient}</span>
           </label>
           <label className="font-bold">
             Precio de Venta (MN): <span className="font-normal">{selectedCostSheet.salePriceMN}</span>
