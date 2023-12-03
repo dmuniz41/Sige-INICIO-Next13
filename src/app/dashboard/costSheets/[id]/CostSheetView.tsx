@@ -46,7 +46,7 @@ export const CostSheetView = () => {
           </label>
         </div>
         <label className="font-bold mr-2">Descripción:</label>
-        <p className="w-[40%]">{`Aqui va la descripcion del producto`}</p>
+        <p className="w-[40%]">{selectedCostSheet.description}</p>
       </section>
       <section className="flex flex-col w-full ">
         <CSViewTable subtotal={selectedCostSheet.rawMaterialsSubtotal} label="Gasto Material" data={rawMaterials} />

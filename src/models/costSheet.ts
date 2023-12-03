@@ -15,6 +15,7 @@ export interface ICostSheet {
   taskName: string;
   createdBy: string;
   approvedBy: string;
+  description: string
   
   workersAmount: number;
 
@@ -91,7 +92,12 @@ const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
   taskName: {
     type: String,
     unique: true,
-    required: [true, "El nombre de la tarea ejecutar es requerida"],
+    required: [true, "El nombre de la tarea a ejecutar es requerida"],
+  },
+  description: {
+    type: String,
+    unique: true,
+    required: [true, "La descripcion de la tarea a ejecutar es requerida"],
   },
   createdBy: {
     type: String,

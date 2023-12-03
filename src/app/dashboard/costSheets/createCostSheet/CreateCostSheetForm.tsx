@@ -27,6 +27,7 @@ export const CreateCostSheetForm = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [form] = Form.useForm();
+  const { TextArea } = Input;
 
   return (
     <Form
@@ -41,51 +42,60 @@ export const CreateCostSheetForm = () => {
       requiredMark={"optional"}
       size="middle"
     >
-      <section className="w-full flex-col gap-2 justify-start">
-        <Form.Item className="mb-3 " label={<span className="font-bold text-md">Tarea a ejecutar</span>} name="taskName" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input className="w-[30rem]" />
-        </Form.Item>
-        <div className="flex w-full gap-2 justify-start">
+      <section className=" flex-col">
+        <div className="flex gap-2 ">
+          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Tarea a ejecutar</span>} name="taskName" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Input className="w-[30rem]" />
+          </Form.Item>
           <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cantidad de empleados</span>} name="workersAmount" rules={[{ required: true, message: "Campo requerido" }]}>
             <InputNumber className="w-[5rem]" />
+          </Form.Item>
+          <Form.Item className="mb-3 " name="payMethod" label={<span className="font-bold text-md">Método de pago</span>} rules={[{ required: true, message: "Campo requerido" }]}>
+            <Select allowClear style={{ width: "10rem" }} options={payMethod} />
+          </Form.Item>
+        </div>
+        <Form.Item className="mb-3 " name="description" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
+          <TextArea rows={3} className="w-[50%]"/>
+        </Form.Item>
+      </section>
+      <section className="flex flex-col w-full">
+        <CSFormSection label="Materias primas fundamentales " name="rawMaterials" />
+        <CSFormSection label="Salarios directos" name="directSalaries" />
+        <CSFormSection label="Otros gastos directos" name="otherDirectExpenses" />
+        <CSFormSection label="Gastos asociados a la producción" name="productionRelatedExpenses" />
+
+        <CSFormSection label="Gastos generales y de administración" name="administrativeExpenses" />
+        <CSFormSection label="Gastos de distribución y ventas" name="transportationExpenses" />
+        <CSFormSection label="Gastos financieros" name="financialExpenses" />
+        <CSFormSection label="Gastos tributarios" name="taxExpenses" />
+      </section>
+
+      <section className="flex gap-2">
+        <div className="flex flex-col gap-2 justify-start">
+          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Utilidad</span>} name="representationCost" rules={[{ required: true, message: "Campo requerido" }]}>
+            <InputNumber className="w-[5rem] " />
           </Form.Item>
           <Form.Item className="mb-3 " label={<span className="font-bold text-md">Talento artístico</span>} name="artisticTalent" rules={[{ required: true, message: "Campo requerido" }]}>
             <InputNumber className="w-[5rem] " />
           </Form.Item>
-          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Utilidad</span>} name="representationCost" rules={[{ required: true, message: "Campo requerido" }]}>
-            <InputNumber className="w-[5rem] " />
-          </Form.Item>
-          <Form.Item
-            className="mb-3 "
-            label={<span className="font-bold text-md">Materias primas aportadas por el cliente</span>}
-            name="rawMaterialsByClient"
-            rules={[{ required: true, message: "Campo requerido" }]}
-          >
-            <InputNumber className="w-[5rem] " />
-          </Form.Item>
         </div>
-        <div className="flex w-full gap-2 justify-start">
+        <div className="flex flex-col gap-1 justify-start">
           <Form.Item className="mb-3 " label={<span className="font-bold text-md">Elaborado por</span>} name="cratedBy" rules={[{ required: true, message: "Campo requerido" }]}>
             <Input className="w-[15rem]" />
           </Form.Item>
           <Form.Item className="mb-3 " label={<span className="font-bold text-md">Aprobado por</span>} name="approvedBy" rules={[{ required: true, message: "Campo requerido" }]}>
             <Input className="w-[15rem]" />
           </Form.Item>
-          <Form.Item className="mb-3 " name="payMethod" label={<span className="font-bold text-md">Método de pago</span>} rules={[{ required: true, message: "Campo requerido" }]}>
-            <Select allowClear style={{ width: "10rem" }} options={payMethod} />
-          </Form.Item>
         </div>
+        <Form.Item
+          className="mb-3 "
+          label={<span className="font-bold text-md">Materias primas aportadas por el cliente</span>}
+          name="rawMaterialsByClient"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
+          <InputNumber className="w-[5rem] " />
+        </Form.Item>
       </section>
-
-      <CSFormSection label="Materias primas fundamentales " name="rawMaterials" />
-      <CSFormSection label="Salarios directos" name="directSalaries" />
-      <CSFormSection label="Otros gastos directos" name="otherDirectExpenses" />
-      <CSFormSection label="Gastos asociados a la producción" name="productionRelatedExpenses" />
-
-      <CSFormSection label="Gastos generales y de administración" name="administrativeExpenses" />
-      <CSFormSection label="Gastos de distribución y ventas" name="transportationExpenses" />
-      <CSFormSection label="Gastos financieros" name="financialExpenses" />
-      <CSFormSection label="Gastos tributarios" name="taxExpenses" />
 
       <Form.Item>
         <button
@@ -101,6 +111,7 @@ export const CreateCostSheetForm = () => {
                     values.payMethod,
                     values.createdBy,
                     values.approvedBy,
+                    values.description,
                     250,
                     values.workersAmount,
                     values.rawMaterials,

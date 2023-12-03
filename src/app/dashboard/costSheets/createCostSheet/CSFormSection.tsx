@@ -30,7 +30,7 @@ export const CSFormSection = (props: any) => {
             {fields.map(({ key, name, ...restField }) => (
               <div key={key} className="w-full">
                 <div className="flex items-center flex-row mb-0 h-9 w-full gap-1">
-                  <Form.Item className="w-[50%]" {...restField} name={[name, "description"]} rules={[{ required: true, message: "Introduzca la descripción" }]}>
+                  <Form.Item className="w-[70%]" {...restField} name={[name, "description"]} rules={[{ required: true, message: "Introduzca la descripción" }]}>
                     <Input placeholder="Descripción" className="w-full" />
                   </Form.Item>
                   <Form.Item {...restField} name={[name, "unitMeasure"]} className="w-[10%]" rules={[{ required: true, message: "Introduzca la unidad de medida" }]}>
@@ -46,7 +46,7 @@ export const CSFormSection = (props: any) => {
                 </div>
               </div>
             ))}
-            <Form.Item className="mb-2 w-[82%]">
+            <Form.Item className="mb-2 w-full">
               <Button className="flex flex-row  justify-center items-center" type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
                 Añadir entrada
               </Button>

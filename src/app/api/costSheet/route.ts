@@ -11,6 +11,7 @@ export async function POST(request: Request) {
     payMethod = "CONTRACT",
     createdBy = "",
     approvedBy = "",
+    description = "",
     USDValue = 250,
     workersAmount = 0,
     rawMaterials = [],
@@ -113,6 +114,7 @@ export async function POST(request: Request) {
       workersAmount,
       createdBy,
       approvedBy,
+      description,
       rawMaterials,
       rawMaterialsSubtotal,
       directSalaries,
@@ -138,7 +140,7 @@ export async function POST(request: Request) {
       rawMaterialsByClient,
       salePriceMN,
       salePriceUSD,
-      salePrice: salePriceMN
+      salePrice: salePriceMN,
     });
 
     await newCostSheet.save();
@@ -217,6 +219,9 @@ export async function PUT(request: Request) {
   const {
     taskName = "",
     payMethod = "CONTRACT",
+    createdBy = "",
+    approvedBy = "",
+    description = "",
     USDValue = 250,
     workersAmount = 1,
     rawMaterials = [],
@@ -246,7 +251,7 @@ export async function PUT(request: Request) {
       );
     }
     await connectDB();
-    const costSheetToUpdate = await CostSheet.findOne({taskName});
+    const costSheetToUpdate = await CostSheet.findOne({ taskName });
 
     if (!costSheetToUpdate) {
       return NextResponse.json({
@@ -305,36 +310,43 @@ export async function PUT(request: Request) {
     const salePriceUSD: number = creatorPrice + rawMaterialsByClient;
     const salePriceMN: number = salePriceUSD * USDValue;
 
-    const updatedCostSheet = await CostSheet.findOneAndUpdate({taskName}, { 
-      payMethod,
-      workersAmount,
-      rawMaterials,
-      rawMaterialsSubtotal,
-      directSalaries,
-      directSalariesSubtotal,
-      otherDirectExpenses,
-      otherDirectExpensesSubtotal,
-      productionRelatedExpenses,
-      productionRelatedExpensesSubtotal,
-      administrativeExpenses,
-      administrativeExpensesSubtotal,
-      transportationExpenses,
-      transportationExpensesSubtotal,
-      financialExpenses,
-      financialExpensesSubtotal,
-      taxExpenses,
-      taxExpensesSubtotal,
-      expensesTotalValue,
-      costsTotalValue,
-      expensesAndCostsTotalValue,
-      artisticTalentValue,
-      representationCostValue,
-      creatorPrice,
-      rawMaterialsByClient,
-      salePriceMN,
-      salePriceUSD,
-      salePrice: salePriceMN
-    }, { new: true });
+    const updatedCostSheet = await CostSheet.findOneAndUpdate(
+      { taskName },
+      {
+        payMethod,
+        createdBy,
+        approvedBy,
+        description,
+        workersAmount,
+        rawMaterials,
+        rawMaterialsSubtotal,
+        directSalaries,
+        directSalariesSubtotal,
+        otherDirectExpenses,
+        otherDirectExpensesSubtotal,
+        productionRelatedExpenses,
+        productionRelatedExpensesSubtotal,
+        administrativeExpenses,
+        administrativeExpensesSubtotal,
+        transportationExpenses,
+        transportationExpensesSubtotal,
+        financialExpenses,
+        financialExpensesSubtotal,
+        taxExpenses,
+        taxExpensesSubtotal,
+        expensesTotalValue,
+        costsTotalValue,
+        expensesAndCostsTotalValue,
+        artisticTalentValue,
+        representationCostValue,
+        creatorPrice,
+        rawMaterialsByClient,
+        salePriceMN,
+        salePriceUSD,
+        salePrice: salePriceMN,
+      },
+      { new: true }
+    );
 
     return new NextResponse(
       JSON.stringify({
