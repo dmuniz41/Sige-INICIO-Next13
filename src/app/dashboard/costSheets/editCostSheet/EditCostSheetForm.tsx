@@ -2,11 +2,12 @@
 
 import { Form, Input, InputNumber, Select, SelectProps } from "antd";
 import React from "react";
-import { CSFormSection } from "./CSFormSection";
 import { useAppDispatch } from "@/hooks/hooks";
-import { startAddCostSheet } from "@/actions/costSheet";
+import { startAddCostSheet, startUpdateCostSheet } from "@/actions/costSheet";
 import { useRouter } from "next/navigation";
 import { ICostSheet } from "@/models/costSheet";
+import { CSFormSection } from "../createCostSheet/CSFormSection";
+import { RootState, useAppSelector } from "@/store/store";
 
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
@@ -23,11 +24,14 @@ const payMethod: SelectProps["options"] = [
   },
 ];
 
-export const CreateCostSheetForm = () => {
+export const EditCostSheetForm = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [form] = Form.useForm();
   const { TextArea } = Input;
+
+  const { selectedCostSheet }: { selectedCostSheet: ICostSheet } = useAppSelector((state: RootState) => state?.costSheet);
+  console.log("🚀 ~ file: EditCostSheetForm.tsx:34 ~ EditCostSheetForm ~ selectedCostSheet:", selectedCostSheet)
 
   return (
     <Form
@@ -41,6 +45,76 @@ export const CreateCostSheetForm = () => {
       autoComplete="off"
       requiredMark={"optional"}
       size="middle"
+      fields={[
+        {
+          name: 'taskName',
+          value: selectedCostSheet.taskName
+        },
+        {
+          name: 'workersAmount',
+          value: selectedCostSheet.workersAmount
+        },
+        {
+          name: 'payMethod',
+          value: selectedCostSheet.payMethod
+        },
+        {
+          name: 'description',
+          value: selectedCostSheet.description
+        },
+        {
+          name: 'rawMaterials',
+          value: selectedCostSheet.rawMaterials
+        },
+        {
+          name: 'directSalaries',
+          value: selectedCostSheet.directSalaries
+        },
+        {
+          name: 'otherDirectExpenses',
+          value: selectedCostSheet.otherDirectExpenses
+        },
+        {
+          name: 'productionRelatedExpenses',
+          value: selectedCostSheet.productionRelatedExpenses
+        },
+        {
+          name: 'administrativeExpenses',
+          value: selectedCostSheet.administrativeExpenses
+        },
+        {
+          name: 'transportationExpenses',
+          value: selectedCostSheet.transportationExpenses
+        },
+        {
+          name: 'financialExpenses',
+          value: selectedCostSheet.financialExpenses
+        },
+        {
+          name: 'taxExpenses',
+          value: selectedCostSheet.taxExpenses
+        },
+        {
+          name: 'representationCost',
+          value: selectedCostSheet.representationCostValue*100
+        },
+        {
+          name: 'artisticTalent',
+          value: selectedCostSheet.artisticTalentValue*100
+        },
+        {
+          name: 'createdBy',
+          value: selectedCostSheet.createdBy
+        },
+        {
+          name: 'approvedBy',
+          value: selectedCostSheet.approvedBy
+        },
+        {
+          name: 'rawMaterialsByClient',
+          value: selectedCostSheet.rawMaterialsByClient
+        },
+      ]}
     >
       <section className=" flex-col">
         <div className="flex gap-2 ">
@@ -63,7 +137,6 @@ export const CreateCostSheetForm = () => {
         <CSFormSection label="Salarios directos" name="directSalaries" />
         <CSFormSection label="Otros gastos directos" name="otherDirectExpenses" />
         <CSFormSection label="Gastos asociados a la producción" name="productionRelatedExpenses" />
-
         <CSFormSection label="Gastos generales y de administración" name="administrativeExpenses" />
         <CSFormSection label="Gastos de distribución y ventas" name="transportationExpenses" />
         <CSFormSection label="Gastos financieros" name="financialExpenses" />
@@ -105,8 +178,10 @@ export const CreateCostSheetForm = () => {
             form
               .validateFields()
               .then((values: ICostSheet) => {
+                console.log(values);
+                
                 dispatch(
-                  startAddCostSheet(
+                  startUpdateCostSheet(
                     values.taskName,
                     values.payMethod,
                     values.createdBy,
@@ -135,7 +210,7 @@ export const CreateCostSheetForm = () => {
               });
           }}
         >
-          Crear
+          Editar
         </button>
       </Form.Item>
     </Form>
