@@ -217,10 +217,7 @@ export const loadSelectedCostSheet = (id: string) => {
       });
   };
 };
-export const costSheetsLoaded = (costSheets: any) => ({
-  type: types.costSheetsLoaded,
-  payload: costSheets,
-});
+
 const addCostSheet = (
   taskName: string,
   payMethod: string,
@@ -263,6 +260,7 @@ const addCostSheet = (
     rawMaterialsByClient,
   },
 });
+
 const updateCostSheet = (
   taskName: string,
   payMethod: string,
@@ -304,6 +302,10 @@ const updateCostSheet = (
     representationCost,
     rawMaterialsByClient,
   },
+});
+export const costSheetsLoaded = (costSheets: any) => ({
+  type: types.costSheetsLoaded,
+  payload: costSheets,
 });
 const deleteCostSheet = (id: string) => ({
   type: types.deleteCostSheet,

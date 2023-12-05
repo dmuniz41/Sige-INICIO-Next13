@@ -20,6 +20,7 @@ import { ICostSheet } from "@/models/costSheet";
 import { costSheetsStartLoading, loadSelectedCostSheet, startDeleteCostSheet } from "@/actions/costSheet";
 import { useRouter } from "next/navigation";
 import { SeeSvg } from "@/app/global/SeeSvg";
+import { EditSvg } from "@/app/global/EditSvg";
 
 
 type DataIndex = keyof ICostSheet;
@@ -35,7 +36,7 @@ const CostSheetsTable: React.FC = () => {
 
   const canList = sessionData?.user.role.includes("Listar Ficha de Costo");
   const canCreate = sessionData?.user.role.includes("Crear Ficha de Costo");
-  // const canEdit = sessionData?.user.role.includes("Editar Ficha de Costo");
+  const canEdit = sessionData?.user.role.includes("Editar Ficha de Costo");
   const canDelete = sessionData?.user.role.includes("Eliminar Ficha de Costo");
 
   useEffect(() => {
@@ -93,6 +94,17 @@ const CostSheetsTable: React.FC = () => {
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText("");
+  };
+
+  const handleEdit = (): void => {
+    if (selectedRow) {
+      router.push(`/dashboard/costSheets/editCostSheet`)
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "Seleccione una ficha de costo a editar",
+      });
+    }
   };
 
   const rowSelection: TableRowSelection<ICostSheet> = {
@@ -206,7 +218,7 @@ const CostSheetsTable: React.FC = () => {
             </button>
         </div>
         <div className="flex">
-          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canEdit}
               className={`${
@@ -216,7 +228,7 @@ const CostSheetsTable: React.FC = () => {
             >
               <EditSvg />
             </button>
-          </Tooltip> */}
+          </Tooltip>
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canDelete}
