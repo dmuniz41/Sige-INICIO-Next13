@@ -1,11 +1,12 @@
 import { INomenclator } from "@/models/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Form, Input, InputNumber, Select, SelectProps } from "antd";
+import { Button, Form, Input, InputNumber, Select, SelectProps, Tooltip } from "antd";
+import { HelpSvg } from '../../../global/HelpSvg';
 
 export const CSFormSection = (props: any) => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-  const { name, label } = props;
+  const { name, label, tooltip } = props;
   const unitMeasures: string[] | undefined = [];
 
   nomenclators.map((nomenclator: INomenclator) => {
@@ -21,9 +22,14 @@ export const CSFormSection = (props: any) => {
 
   return (
     <section className=" flex flex-col w-full mb-0">
+      <div className="flex gap-1 ">
       <label className="text-md font-bold mb-3" htmlFor={`${name}`}>
         {label}
       </label>
+        <Tooltip className="flex pt-[2px] text-white-700" title={tooltip}>
+          <div><HelpSvg /></div>
+        </Tooltip>
+      </div>
       <Form.List name={`${name}`}>
         {(fields, { add, remove }) => (
           <div className="flex flex-col w-full">
@@ -34,10 +40,10 @@ export const CSFormSection = (props: any) => {
                     <Input placeholder="Descripción" className="w-full" />
                   </Form.Item>
                   <Form.Item {...restField} name={[name, "unitMeasure"]} className="w-[10%]" rules={[{ required: true, message: "Introduzca la unidad de medida" }]}>
-                  <Select placeholder = 'Unidad de medida'  allowClear options={unitMeasure} />
+                    <Select placeholder="Unidad de medida" allowClear options={unitMeasure} />
                   </Form.Item>
                   <Form.Item {...restField} name={[name, "amount"]} className="w-[10%]" rules={[{ required: true, message: "Introduzca la cantidad" }]}>
-                    <InputNumber placeholder="Cantidad"  className="w-full"/>
+                    <InputNumber placeholder="Cantidad" className="w-full" />
                   </Form.Item>
                   <Form.Item {...restField} name={[name, "price"]} className="w-[10%]" rules={[{ required: true, message: "Introduzca el precio" }]}>
                     <InputNumber placeholder="Precio" className="w-full" />

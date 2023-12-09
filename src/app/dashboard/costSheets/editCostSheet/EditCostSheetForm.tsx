@@ -3,7 +3,7 @@
 import { Form, Input, InputNumber, Select, SelectProps } from "antd";
 import React from "react";
 import { useAppDispatch } from "@/hooks/hooks";
-import { startAddCostSheet, startUpdateCostSheet } from "@/actions/costSheet";
+import { startUpdateCostSheet } from "@/actions/costSheet";
 import { useRouter } from "next/navigation";
 import { ICostSheet } from "@/models/costSheet";
 import { CSFormSection } from "../createCostSheet/CSFormSection";
@@ -96,11 +96,11 @@ export const EditCostSheetForm = () => {
         },
         {
           name: 'representationCost',
-          value: selectedCostSheet.representationCostValue*100
+          value: selectedCostSheet.representationCost
         },
         {
           name: 'artisticTalent',
-          value: selectedCostSheet.artisticTalentValue*100
+          value: selectedCostSheet.artisticTalent
         },
         {
           name: 'createdBy',
@@ -133,7 +133,7 @@ export const EditCostSheetForm = () => {
         </Form.Item>
       </section>
       <section className="flex flex-col w-full">
-        <CSFormSection label="Materias primas fundamentales " name="rawMaterials" />
+        <CSFormSection label="Gasto Material" name="rawMaterials" />
         <CSFormSection label="Salarios directos" name="directSalaries" />
         <CSFormSection label="Otros gastos directos" name="otherDirectExpenses" />
         <CSFormSection label="Gastos asociados a la producción" name="productionRelatedExpenses" />

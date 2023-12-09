@@ -134,7 +134,9 @@ export async function POST(request: Request) {
       expensesTotalValue,
       costsTotalValue,
       expensesAndCostsTotalValue,
+      artisticTalent,
       artisticTalentValue,
+      representationCost,
       representationCostValue,
       creatorPrice,
       rawMaterialsByClient,
@@ -302,8 +304,8 @@ export async function PUT(request: Request) {
     const expensesTotalValue: number = administrativeExpensesSubtotal + transportationExpensesSubtotal + financialExpensesSubtotal + taxExpensesSubtotal;
     const expensesAndCostsTotalValue: number = costsTotalValue + expensesTotalValue;
 
-    let artisticTalentValue: number = expensesAndCostsTotalValue * (artisticTalent / 100);
-    let representationCostValue: number = expensesAndCostsTotalValue * (representationCost / 100);
+    const artisticTalentValue: number = expensesAndCostsTotalValue * (artisticTalent / 100);
+    const representationCostValue: number = expensesAndCostsTotalValue * (representationCost / 100);
 
     const creatorPrice: number = expensesAndCostsTotalValue + artisticTalentValue + representationCostValue;
 
@@ -338,7 +340,9 @@ export async function PUT(request: Request) {
         costsTotalValue,
         expensesAndCostsTotalValue,
         artisticTalentValue,
+        artisticTalent,
         representationCostValue,
+        representationCost,
         creatorPrice,
         rawMaterialsByClient,
         salePriceMN,

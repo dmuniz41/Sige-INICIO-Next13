@@ -41,9 +41,9 @@ export const CostSheetView = () => {
           <label className="font-bold">
             Cantidad de trabajadores: <span className="font-normal">{selectedCostSheet.workersAmount}</span>
           </label>
-          <label className="font-bold">
+          {/* <label className="font-bold">
             Cliente: <span className="font-normal">{`Aqui va el cliente`}</span>
-          </label>
+          </label> */}
         </div>
         <label className="font-bold mr-2">Descripción:</label>
         <p className="w-[40%]">{selectedCostSheet.description}</p>
@@ -72,10 +72,10 @@ export const CostSheetView = () => {
         </div>
         <div className="flex flex-col w-[40%]">
           <label className="font-bold">
-            Talento Artístico: <span className="font-normal">{selectedCostSheet.artisticTalentValue}</span>
+            Talento Artístico ({selectedCostSheet.artisticTalent}%): <span className="font-normal">{selectedCostSheet.artisticTalentValue}</span>
           </label>
           <label className="font-bold">
-            Utilidad: <span className="font-normal">{selectedCostSheet.representationCostValue}</span>
+            Utilidad ({selectedCostSheet.representationCost}%): <span className="font-normal">{selectedCostSheet.representationCostValue}</span>
           </label>
           <label className="font-bold">
             Precio del Creador: <span className="font-normal">{selectedCostSheet.creatorPrice}</span>

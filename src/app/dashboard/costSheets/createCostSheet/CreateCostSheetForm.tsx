@@ -59,20 +59,41 @@ export const CreateCostSheetForm = () => {
         </Form.Item>
       </section>
       <section className="flex flex-col w-full">
-        <CSFormSection label="Materias primas fundamentales " name="rawMaterials" />
-        <CSFormSection label="Salarios directos" name="directSalaries" />
-        <CSFormSection label="Otros gastos directos" name="otherDirectExpenses" />
-        <CSFormSection label="Gastos asociados a la producción" name="productionRelatedExpenses" />
+        <CSFormSection label="Gasto Material" tooltip="Considera los gastos de recursos materiales comprados y producidos" name="rawMaterials" />
+        <CSFormSection label="Salarios directos" tooltip="(Actividades a ejecutar)" />
+        <CSFormSection
+          label="Otros gastos directos"
+          tooltip="Se incluye pagos por mantenimientos y reparaciones recibidas, depreciación de los activos fijos tangibles y amortización de activos fijos intangibles.(Gasto en Uso de Equipos)"
+          name="otherDirectExpenses"
+        />
+        <CSFormSection
+          label="Gastos asociados a la producción"
+          tooltip="Comprende los importes de los gastos que se incurren en las actividades asociadas a la producción, no identificables con un producto o servicio determinado.Ej: gasto de las actividades de mantenimiento, reparaciones, explotación de equipos, dirección de la producción, control de calidad, depreciación de activos fijos tangibles de producción y servicios auxiliares a estas, incluidos salarios, etc."
+        />
 
-        <CSFormSection label="Gastos generales y de administración" name="administrativeExpenses" />
-        <CSFormSection label="Gastos de distribución y ventas" name="transportationExpenses" />
-        <CSFormSection label="Gastos financieros" name="financialExpenses" />
-        <CSFormSection label="Gastos tributarios" name="taxExpenses" />
+        <CSFormSection label="Gastos generales y de administración" tooltip="Incluidos salarios(Gastos administrativos)" name="administrativeExpenses" />
+        <CSFormSection label="Gastos de distribución y ventas" tooltip="Incluye salarios(Gastos de Transporte)" name="transportationExpenses" />
+        <CSFormSection
+          label="Gastos financieros"
+          tooltip="Comprende los gastos en que se incurre, por las operaciones financieras relacionadas con la producción o servicios para la que se elabora la ficha, reconociendo solamente los conceptos de intereses, comisiones bancarias y primas del seguro."
+          name="financialExpenses"
+        />
+        <CSFormSection
+          label="Gastos tributarios"
+          tooltip="Incluye los importes de contribución a la seguridad social e impuestos sobre utilización de fuerzas de trabajo (no se considera el importe por la contribución al desarrollo local)"
+          name="taxExpenses"
+        />
       </section>
 
       <section className="flex gap-2">
         <div className="flex flex-col gap-2 justify-start">
-          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Utilidad</span>} name="representationCost" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            className="mb-3 "
+            tooltip="Para la actividad de producción de bienes, la tasa máxima de utilidad aprobada no puede exceder el 25%"
+            label={<span className="font-bold text-md">Utilidad</span>}
+            name="representationCost"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <InputNumber className="w-[5rem] " />
           </Form.Item>
           <Form.Item className="mb-3 " label={<span className="font-bold text-md">Talento artístico</span>} name="artisticTalent" rules={[{ required: true, message: "Campo requerido" }]}>
