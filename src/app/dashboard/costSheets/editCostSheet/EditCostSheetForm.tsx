@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import { ICostSheet } from "@/models/costSheet";
 import { CSFormSection } from "../createCostSheet/CSFormSection";
 import { RootState, useAppSelector } from "@/store/store";
-import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
@@ -34,7 +33,6 @@ export const EditCostSheetForm = () => {
   const { selectedCostSheet }: { selectedCostSheet: ICostSheet } = useAppSelector((state: RootState) => state?.costSheet);
   console.log("🚀 ~ file: EditCostSheetForm.tsx:34 ~ EditCostSheetForm ~ selectedCostSheet:", selectedCostSheet);
   
-  dispatch(nomenclatorsStartLoading());
   return (
     <Form
       form={form}

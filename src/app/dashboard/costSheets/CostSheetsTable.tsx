@@ -21,6 +21,7 @@ import { costSheetsStartLoading, loadSelectedCostSheet, startDeleteCostSheet } f
 import { useRouter } from "next/navigation";
 import { SeeSvg } from "@/app/global/SeeSvg";
 import { EditSvg } from "@/app/global/EditSvg";
+import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 
 
 type DataIndex = keyof ICostSheet;
@@ -41,6 +42,7 @@ const CostSheetsTable: React.FC = () => {
 
   useEffect(() => {
     dispatch(costSheetsStartLoading());
+    dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
   const { costSheets } = useAppSelector((state: RootState) => state?.costSheet);

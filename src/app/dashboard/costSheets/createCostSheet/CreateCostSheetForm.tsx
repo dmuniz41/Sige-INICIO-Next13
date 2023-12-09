@@ -7,7 +7,6 @@ import { useAppDispatch } from "@/hooks/hooks";
 import { startAddCostSheet } from "@/actions/costSheet";
 import { useRouter } from "next/navigation";
 import { ICostSheet } from "@/models/costSheet";
-import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
@@ -29,8 +28,6 @@ export const CreateCostSheetForm = () => {
   const router = useRouter();
   const [form] = Form.useForm();
   const { TextArea } = Input;
-  
-  dispatch(nomenclatorsStartLoading())
   return (
     <Form
       form={form}
