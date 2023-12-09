@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { ICostSheet } from "@/models/costSheet";
 import { CSFormSection } from "../createCostSheet/CSFormSection";
 import { RootState, useAppSelector } from "@/store/store";
+import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
@@ -29,10 +30,11 @@ export const EditCostSheetForm = () => {
   const router = useRouter();
   const [form] = Form.useForm();
   const { TextArea } = Input;
-
+  
   const { selectedCostSheet }: { selectedCostSheet: ICostSheet } = useAppSelector((state: RootState) => state?.costSheet);
-  console.log("🚀 ~ file: EditCostSheetForm.tsx:34 ~ EditCostSheetForm ~ selectedCostSheet:", selectedCostSheet)
-
+  console.log("🚀 ~ file: EditCostSheetForm.tsx:34 ~ EditCostSheetForm ~ selectedCostSheet:", selectedCostSheet);
+  
+  dispatch(nomenclatorsStartLoading());
   return (
     <Form
       form={form}
@@ -47,72 +49,72 @@ export const EditCostSheetForm = () => {
       size="middle"
       fields={[
         {
-          name: 'taskName',
-          value: selectedCostSheet.taskName
+          name: "taskName",
+          value: selectedCostSheet.taskName,
         },
         {
-          name: 'workersAmount',
-          value: selectedCostSheet.workersAmount
+          name: "workersAmount",
+          value: selectedCostSheet.workersAmount,
         },
         {
-          name: 'payMethod',
-          value: selectedCostSheet.payMethod
+          name: "payMethod",
+          value: selectedCostSheet.payMethod,
         },
         {
-          name: 'description',
-          value: selectedCostSheet.description
+          name: "description",
+          value: selectedCostSheet.description,
         },
         {
-          name: 'rawMaterials',
-          value: selectedCostSheet.rawMaterials
+          name: "rawMaterials",
+          value: selectedCostSheet.rawMaterials,
         },
         {
-          name: 'directSalaries',
-          value: selectedCostSheet.directSalaries
+          name: "directSalaries",
+          value: selectedCostSheet.directSalaries,
         },
         {
-          name: 'otherDirectExpenses',
-          value: selectedCostSheet.otherDirectExpenses
+          name: "otherDirectExpenses",
+          value: selectedCostSheet.otherDirectExpenses,
         },
         {
-          name: 'productionRelatedExpenses',
-          value: selectedCostSheet.productionRelatedExpenses
+          name: "productionRelatedExpenses",
+          value: selectedCostSheet.productionRelatedExpenses,
         },
         {
-          name: 'administrativeExpenses',
-          value: selectedCostSheet.administrativeExpenses
+          name: "administrativeExpenses",
+          value: selectedCostSheet.administrativeExpenses,
         },
         {
-          name: 'transportationExpenses',
-          value: selectedCostSheet.transportationExpenses
+          name: "transportationExpenses",
+          value: selectedCostSheet.transportationExpenses,
         },
         {
-          name: 'financialExpenses',
-          value: selectedCostSheet.financialExpenses
+          name: "financialExpenses",
+          value: selectedCostSheet.financialExpenses,
         },
         {
-          name: 'taxExpenses',
-          value: selectedCostSheet.taxExpenses
+          name: "taxExpenses",
+          value: selectedCostSheet.taxExpenses,
         },
         {
-          name: 'representationCost',
-          value: selectedCostSheet.representationCost
+          name: "representationCost",
+          value: selectedCostSheet.representationCost,
         },
         {
-          name: 'artisticTalent',
-          value: selectedCostSheet.artisticTalent
+          name: "artisticTalent",
+          value: selectedCostSheet.artisticTalent,
         },
         {
-          name: 'createdBy',
-          value: selectedCostSheet.createdBy
+          name: "createdBy",
+          value: selectedCostSheet.createdBy,
         },
         {
-          name: 'approvedBy',
-          value: selectedCostSheet.approvedBy
+          name: "approvedBy",
+          value: selectedCostSheet.approvedBy,
         },
         {
-          name: 'rawMaterialsByClient',
-          value: selectedCostSheet.rawMaterialsByClient
+          name: "rawMaterialsByClient",
+          value: selectedCostSheet.rawMaterialsByClient,
         },
       ]}
     >
@@ -128,24 +130,46 @@ export const EditCostSheetForm = () => {
             <Select allowClear style={{ width: "10rem" }} options={payMethod} />
           </Form.Item>
         </div>
-        <Form.Item className="mb-3 " name="description" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
-          <TextArea rows={3} className="w-[50%]" />
+        <Form.Item className="mb-3 w-[35%]" name="description" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
+          <TextArea rows={3}/>
         </Form.Item>
       </section>
       <section className="flex flex-col w-full">
-        <CSFormSection label="Gasto Material" name="rawMaterials" />
-        <CSFormSection label="Salarios directos" name="directSalaries" />
-        <CSFormSection label="Otros gastos directos" name="otherDirectExpenses" />
-        <CSFormSection label="Gastos asociados a la producción" name="productionRelatedExpenses" />
-        <CSFormSection label="Gastos generales y de administración" name="administrativeExpenses" />
-        <CSFormSection label="Gastos de distribución y ventas" name="transportationExpenses" />
-        <CSFormSection label="Gastos financieros" name="financialExpenses" />
-        <CSFormSection label="Gastos tributarios" name="taxExpenses" />
+        <CSFormSection label="Gasto Material" tooltip="Considera los gastos de recursos materiales comprados y producidos" name="rawMaterials" />
+        <CSFormSection label="Salarios directos" tooltip="(Actividades a ejecutar)" />
+        <CSFormSection
+          label="Otros gastos directos"
+          tooltip="Se incluye pagos por mantenimientos y reparaciones recibidas, depreciación de los activos fijos tangibles y amortización de activos fijos intangibles.(Gasto en Uso de Equipos)"
+          name="otherDirectExpenses"
+        />
+        <CSFormSection
+          label="Gastos asociados a la producción"
+          tooltip="Comprende los importes de los gastos que se incurren en las actividades asociadas a la producción, no identificables con un producto o servicio determinado.Ej: gasto de las actividades de mantenimiento, reparaciones, explotación de equipos, dirección de la producción, control de calidad, depreciación de activos fijos tangibles de producción y servicios auxiliares a estas, incluidos salarios, etc."
+        />
+
+        <CSFormSection label="Gastos generales y de administración" tooltip="Incluidos salarios(Gastos administrativos)" name="administrativeExpenses" />
+        <CSFormSection label="Gastos de distribución y ventas" tooltip="Incluye salarios(Gastos de Transporte)" name="transportationExpenses" />
+        <CSFormSection
+          label="Gastos financieros"
+          tooltip="Comprende los gastos en que se incurre, por las operaciones financieras relacionadas con la producción o servicios para la que se elabora la ficha, reconociendo solamente los conceptos de intereses, comisiones bancarias y primas del seguro."
+          name="financialExpenses"
+        />
+        <CSFormSection
+          label="Gastos tributarios"
+          tooltip="Incluye los importes de contribución a la seguridad social e impuestos sobre utilización de fuerzas de trabajo (no se considera el importe por la contribución al desarrollo local)"
+          name="taxExpenses"
+        />
       </section>
 
       <section className="flex gap-2">
         <div className="flex flex-col gap-2 justify-start">
-          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Utilidad</span>} name="representationCost" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            className="mb-3 "
+            tooltip="Para la actividad de producción de bienes, la tasa máxima de utilidad aprobada no puede exceder el 25%"
+            label={<span className="font-bold text-md">Utilidad</span>}
+            name="representationCost"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <InputNumber className="w-[5rem] " />
           </Form.Item>
           <Form.Item className="mb-3 " label={<span className="font-bold text-md">Talento artístico</span>} name="artisticTalent" rules={[{ required: true, message: "Campo requerido" }]}>
@@ -179,7 +203,7 @@ export const EditCostSheetForm = () => {
               .validateFields()
               .then((values: ICostSheet) => {
                 console.log(values);
-                
+
                 dispatch(
                   startUpdateCostSheet(
                     values.taskName,

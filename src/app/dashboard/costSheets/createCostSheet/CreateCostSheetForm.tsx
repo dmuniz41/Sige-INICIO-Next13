@@ -7,6 +7,7 @@ import { useAppDispatch } from "@/hooks/hooks";
 import { startAddCostSheet } from "@/actions/costSheet";
 import { useRouter } from "next/navigation";
 import { ICostSheet } from "@/models/costSheet";
+import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
@@ -28,7 +29,8 @@ export const CreateCostSheetForm = () => {
   const router = useRouter();
   const [form] = Form.useForm();
   const { TextArea } = Input;
-
+  
+  dispatch(nomenclatorsStartLoading())
   return (
     <Form
       form={form}
@@ -54,8 +56,8 @@ export const CreateCostSheetForm = () => {
             <Select allowClear style={{ width: "10rem" }} options={payMethod} />
           </Form.Item>
         </div>
-        <Form.Item className="mb-3 " name="description" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
-          <TextArea rows={3} className="w-[50%]" />
+        <Form.Item className="mb-3 w-[35%]" name="description" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
+          <TextArea rows={3}/>
         </Form.Item>
       </section>
       <section className="flex flex-col w-full">

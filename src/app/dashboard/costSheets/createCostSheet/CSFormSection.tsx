@@ -35,18 +35,18 @@ export const CSFormSection = (props: any) => {
           <div className="flex flex-col w-full">
             {fields.map(({ key, name, ...restField }) => (
               <div key={key} className="w-full">
-                <div className="flex items-center flex-row mb-0 h-9 w-full gap-1">
+                <div className="flex items-center flex-row mb-0 h-9  gap-1">
                   <Form.Item className="w-[70%]" {...restField} name={[name, "description"]} rules={[{ required: true, message: "Introduzca la descripción" }]}>
                     <Input placeholder="Descripción" className="w-full" />
                   </Form.Item>
-                  <Form.Item {...restField} name={[name, "unitMeasure"]} className="w-[10%]" rules={[{ required: true, message: "Introduzca la unidad de medida" }]}>
+                  <Form.Item {...restField} name={[name, "unitMeasure"]} className="w-[20%]" rules={[{ required: true, message: "Introduzca la unidad de medida" }]}>
                     <Select placeholder="Unidad de medida" allowClear options={unitMeasure} />
                   </Form.Item>
-                  <Form.Item {...restField} name={[name, "amount"]} className="w-[10%]" rules={[{ required: true, message: "Introduzca la cantidad" }]}>
-                    <InputNumber placeholder="Cantidad" className="w-full" />
+                  <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true, message: "Introduzca la cantidad" }]}>
+                    <InputNumber placeholder="Cantidad"  />
                   </Form.Item>
-                  <Form.Item {...restField} name={[name, "price"]} className="w-[10%]" rules={[{ required: true, message: "Introduzca el precio" }]}>
-                    <InputNumber placeholder="Precio" className="w-full" />
+                  <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true, message: "Introduzca el precio" }]}>
+                    <InputNumber placeholder="Precio" />
                   </Form.Item>
                   <MinusCircleOutlined className="mb-auto" onClick={() => remove(name)} />
                 </div>
