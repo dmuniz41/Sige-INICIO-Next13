@@ -32,6 +32,7 @@ import { ListSvg } from "../../../global/ListSvg";
 import { PDFSvg } from "@/app/global/PDFSvg";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import PDFReport from "@/helpers/PDFReport";
+import { INomenclator } from "@/models/nomenclator";
 interface DataType {
   _id: string;
   code: string;
@@ -64,6 +65,7 @@ const MaterialsTable: React.FC = () => {
   const [selectedRow, setSelectedRow] = useState<DataType>();
   const [filteredData, setFilteredData] = useState<DataType[]>();
   const searchInput = useRef<InputRef>(null);
+  const materialCategory: string[] | undefined = [];
   const { data: sessionData } = useSession();
 
   const canList = sessionData?.user.role.includes("Listar Materiales");
@@ -72,6 +74,13 @@ const MaterialsTable: React.FC = () => {
   const canDelete = sessionData?.user.role.includes("Eliminar Material");
   const canAdd = sessionData?.user.role.includes("Añadir Material");
   const canMinus = sessionData?.user.role.includes("Sustraer Material");
+
+  const url = usePathname().split("/");
+  const selectedWarehouse: string = url[3];
+  useEffect(() => {
+    dispatch(materialsStartLoading(selectedWarehouse));
+    dispatch(nomenclatorsStartLoading());
+  }, [dispatch, selectedWarehouse]);
 
   const fields = [
     {
@@ -118,6 +127,24 @@ const MaterialsTable: React.FC = () => {
     data = [];
   }
 
+  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
+
+  nomenclators.map((nomenclator: INomenclator) => {
+    if (nomenclator.category === "Categoría de material") materialCategory.push(nomenclator.code);
+  });
+
+  const categoryFilter: any[] =[]
+  materialCategory.map((category: string) =>{
+    categoryFilter.push(
+      {
+        text: `${category}`,
+        value: `${category}`
+      }
+      )
+      
+    })
+console.log("🚀 ~ file: MaterialsTable.tsx:137 ~ categoryFilter:", categoryFilter)
+
   let PDFReportData: DataType[] = [];
 
   if (filteredData) {
@@ -125,14 +152,6 @@ const MaterialsTable: React.FC = () => {
   } else {
     PDFReportData = data;
   }
-
-  const url = usePathname().split("/");
-  const selectedWarehouse: string = url[3];
-
-  useEffect(() => {
-    dispatch(materialsStartLoading(selectedWarehouse));
-    dispatch(nomenclatorsStartLoading());
-  }, [dispatch, selectedWarehouse]);
 
   const handleNew = (): void => {
     setCreateNewModal(true);
@@ -224,12 +243,24 @@ const MaterialsTable: React.FC = () => {
       tipo: "Añadir",
       amount: values.unitsTotal,
     };
-    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence, values.provider, values.enterDate.format("MM/DD/YYYY")));
+    dispatch(
+      startAddMaterial(
+        selectedWarehouse,
+        operation,
+        values.materialName,
+        values.category,
+        values.unitMeasure,
+        values.costPerUnit,
+        values.minimumExistence,
+        values.provider,
+        values.enterDate.format("MM/DD/YYYY")
+      )
+    );
     setCreateNewModal(false);
   };
 
   const onAdd = (values: any): void => {
-    console.log("🚀 ~ file: MaterialsTable.tsx:232 ~ onAdd ~ values:", values)
+    console.log("🚀 ~ file: MaterialsTable.tsx:232 ~ onAdd ~ values:", values);
     let operation: IOperation = {
       date: currentDate,
       tipo: "Añadir",
@@ -347,9 +378,14 @@ const MaterialsTable: React.FC = () => {
       title: "Categoría",
       dataIndex: "category",
       key: "category",
+      filters: categoryFilter
+        
+      ,
+      onFilter: (value: any, record) => record.category.startsWith(value),
+      filterSearch: true,
       width: "15%",
       sorter: (a: any, b: any) => a.category.localeCompare(b.category),
-      ...getColumnSearchProps("category"),
+      // ...getColumnSearchProps("category"),
     },
     {
       title: "Nombre",
