@@ -447,7 +447,7 @@ const MaterialsTable: React.FC = () => {
               <PlusSvg />
             </button>
           </Tooltip>
-          <Tooltip placement="top" title={"Editar material"} arrow={{ pointAtCenter: true }}>
+          <Tooltip placement="top" title={"Editar Material"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canEditMinimumExistences}
               className={`${
