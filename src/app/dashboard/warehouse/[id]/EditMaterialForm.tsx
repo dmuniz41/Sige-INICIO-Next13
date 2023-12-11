@@ -21,14 +21,14 @@ interface CollectionCreateFormProps {
   defaultValues?: Values;
 }
 
-export const EditMinimumExistencesForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
+export const EditMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
   const [form] = Form.useForm();
   return (
     <Modal
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Editar Existencias Mínimas</span>
+          <span className="font-black text-lg">Editar Material</span>
         </div>
       }
       centered
@@ -83,13 +83,20 @@ export const EditMinimumExistencesForm: React.FC<CollectionCreateFormProps> = ({
             name: "code",
             value: defaultValues?.code,
           },
+          {
+            name: "materialName",
+            value: defaultValues?.materialName,
+          },
         ]}
       >
         <Form.Item name="code" label="Código">
           <Input disabled />
         </Form.Item>
-        <Form.Item name="minimumExistence" label="Existencias mínimas">
-          <InputNumber className="w-full"/>
+        <Form.Item name="materialName" label="Nombre del material">
+          <Input className="w-full"/>
+        </Form.Item>
+        <Form.Item  className="w-full" name="minimumExistence" label="Existencias mínimas">
+          <InputNumber />
         </Form.Item>
       </Form>
     </Modal>

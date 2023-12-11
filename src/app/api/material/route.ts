@@ -246,7 +246,7 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const { minimumExistence = 1, code } = await request.json();
+  const { minimumExistence = 1, code, materialName="" } = await request.json();
   const accessToken = request.headers.get("accessToken");
 
   try {
@@ -271,7 +271,7 @@ export async function PUT(request: Request) {
       });
     }
 
-    const updatedMaterial = await Material.findOneAndUpdate({ code }, { minimumExistence }, { new: true });
+    const updatedMaterial = await Material.findOneAndUpdate({ code }, {materialName, minimumExistence}, { new: true });
 
     return new NextResponse(
       JSON.stringify({

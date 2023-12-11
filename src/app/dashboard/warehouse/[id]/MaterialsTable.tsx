@@ -13,7 +13,7 @@ import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interf
 import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
-import { editMinimumExistences, materialsStartLoading, startAddMaterial, startDeleteMaterial } from "@/actions/material";
+import { editMaterial, materialsStartLoading, startAddMaterial, startDeleteMaterial } from "@/actions/material";
 import { NewMaterialForm } from "./NewMaterialForm";
 import { AddMaterialForm } from "./AddMaterialForm";
 import { IOperation } from "@/models/operation";
@@ -21,7 +21,7 @@ import { MinusMaterialForm } from "./MinusMaterialForm";
 import { OperationsList } from "./OperationsListModal";
 import { usePathname } from "next/navigation";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
-import { EditMinimumExistencesForm } from "./EditMinimumExistencesForm";
+import { EditMaterialForm } from "./EditMaterialForm";
 import { useSession } from "next-auth/react";
 import { PlusSvg } from "../../../global/PlusSvg";
 import { MinusSvg } from "../../../global/MinusSvg";
@@ -57,7 +57,7 @@ const MaterialsTable: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [createNewModal, setCreateNewModal] = useState(false);
-  const [editMinimumExistencesModal, setEditMinimumExistencesModal] = useState(false);
+  const [editMaterialModal, setEditMaterialModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
   const [minusModal, setMinusModal] = useState(false);
   const [showOperationsModal, setShowOperationModal] = useState(false);
@@ -170,7 +170,7 @@ const MaterialsTable: React.FC = () => {
 
   const handleEditMinimumExistences = (): void => {
     if (selectedRow) {
-      setEditMinimumExistencesModal(true);
+      setEditMaterialModal(true);
     } else {
       Toast.fire({
         icon: "error",
@@ -248,11 +248,11 @@ const MaterialsTable: React.FC = () => {
     setMinusModal(false);
   };
 
-  const onEditMinimumExistences = (values: any): void => {
-    dispatch(editMinimumExistences(values.code, values.minimumExistence, selectedWarehouse));
-    console.log("🚀 ~ file: MaterialsTable.tsx:147 ~ onEditMinimumExistences ~ values.code, values.minimumExistence:", values.code, values.minimumExistence);
+  const onEditMaterial = (values: any): void => {
+    dispatch(editMaterial(values.code, values.minimumExistence, values.materialName, selectedWarehouse));
+    console.log("🚀 ~ file: MaterialsTable.tsx:147 ~ onEditMaterial ~ values.code, values.minimumExistence:", values.code, values.minimumExistence);
     // setSelectedRow(undefined);
-    setEditMinimumExistencesModal(false);
+    setEditMaterialModal(false);
   };
 
   const onChange: TableProps<DataType>["onChange"] = (pagination, filters, sorter, extra) => {
@@ -446,7 +446,7 @@ const MaterialsTable: React.FC = () => {
               <PlusSvg />
             </button>
           </Tooltip>
-          <Tooltip placement="top" title={"Editar existencias mínimas"} arrow={{ pointAtCenter: true }}>
+          <Tooltip placement="top" title={"Editar material"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canEditMinimumExistences}
               className={`${
@@ -517,7 +517,7 @@ const MaterialsTable: React.FC = () => {
       <NewMaterialForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
       <AddMaterialForm open={addModal} onCancel={() => setAddModal(false)} onCreate={onAdd} defaultValues={selectedRow} />
       <MinusMaterialForm open={minusModal} onCancel={() => setMinusModal(false)} onCreate={onMinus} defaultValues={selectedRow} />
-      <EditMinimumExistencesForm open={editMinimumExistencesModal} onCancel={() => setEditMinimumExistencesModal(false)} onCreate={onEditMinimumExistences} defaultValues={selectedRow} />
+      <EditMaterialForm open={editMaterialModal} onCancel={() => setEditMaterialModal(false)} onCreate={onEditMaterial} defaultValues={selectedRow} />
       <OperationsList open={showOperationsModal} onCancel={() => setShowOperationModal(false)} onCreate={onMinus} defaultValues={selectedRow} />
 
       <Table

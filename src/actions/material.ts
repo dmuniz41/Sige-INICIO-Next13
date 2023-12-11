@@ -83,17 +83,17 @@ export const startDeleteMaterial = (code: string, warehouse: string): any => {
   };
 };
 
-export const editMinimumExistences = (code: string, minimumExistence: number, warehouse: string): any => {
+export const editMaterial = (code: string, minimumExistence: number,materialName: string, warehouse: string, ): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/material`, { minimumExistence, code, warehouse }, { headers: { accessToken: token } })
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/material`, { minimumExistence, code, warehouse, materialName }, { headers: { accessToken: token } })
       .then(() => {
-        dispatch(updateMaterial(code,minimumExistence));
+        dispatch(updateMaterial(code, minimumExistence, materialName));
         dispatch(materialsStartLoading(warehouse));
         Toast.fire({
           icon: "success",
-          title: "Existencias mínimas actualizadas",
+          title: "Material actualizado",
         });
       })
       .catch((error: AxiosError) => {
@@ -128,10 +128,11 @@ const deleteMaterial = (code: string) => ({
   },
 });
 
-const updateMaterial = (code: string, minimumExistence: number) => ({
-  type: types.editMinimumExistences,
+const updateMaterial = (code: string, minimumExistence: number, materialName: string) => ({
+  type: types.editMaterial,
   payload: {
     code,
+    materialName,
     minimumExistence,
   },
 });
