@@ -385,7 +385,6 @@ console.log("🚀 ~ file: MaterialsTable.tsx:137 ~ categoryFilter:", categoryFil
       filterSearch: true,
       width: "15%",
       sorter: (a: any, b: any) => a.category.localeCompare(b.category),
-      // ...getColumnSearchProps("category"),
     },
     {
       title: "Nombre",
