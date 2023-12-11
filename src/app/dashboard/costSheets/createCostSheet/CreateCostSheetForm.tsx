@@ -57,9 +57,16 @@ export const CreateCostSheetForm = () => {
           <TextArea rows={3}/>
         </Form.Item>
       </section>
+
       <section className="flex flex-col w-full">
-        <CSFormSection label="Gasto Material" tooltip="Considera los gastos de recursos materiales comprados y producidos" name="rawMaterials" />
-        <CSFormSection label="Salarios directos" tooltip="(Actividades a ejecutar)" />
+        <CSFormSection 
+          label="Gasto Material" 
+          tooltip="Considera los gastos de recursos materiales comprados y producidos" 
+          name="rawMaterials" />
+        <CSFormSection 
+          label="Salarios directos" 
+          tooltip="(Actividades a ejecutar)" 
+          name="directSalaries"/>
         <CSFormSection
           label="Otros gastos directos"
           tooltip="Se incluye pagos por mantenimientos y reparaciones recibidas, depreciación de los activos fijos tangibles y amortización de activos fijos intangibles.(Gasto en Uso de Equipos)"
@@ -68,10 +75,16 @@ export const CreateCostSheetForm = () => {
         <CSFormSection
           label="Gastos asociados a la producción"
           tooltip="Comprende los importes de los gastos que se incurren en las actividades asociadas a la producción, no identificables con un producto o servicio determinado.Ej: gasto de las actividades de mantenimiento, reparaciones, explotación de equipos, dirección de la producción, control de calidad, depreciación de activos fijos tangibles de producción y servicios auxiliares a estas, incluidos salarios, etc."
+          name="productionRelatedExpenses"
         />
-
-        <CSFormSection label="Gastos generales y de administración" tooltip="Incluidos salarios(Gastos administrativos)" name="administrativeExpenses" />
-        <CSFormSection label="Gastos de distribución y ventas" tooltip="Incluye salarios(Gastos de Transporte)" name="transportationExpenses" />
+        <CSFormSection 
+          label="Gastos generales y de administración" 
+          tooltip="Incluidos salarios(Gastos administrativos)" 
+          name="administrativeExpenses" />
+        <CSFormSection 
+          label="Gastos de distribución y ventas" 
+          tooltip="Incluye salarios(Gastos de Transporte)" 
+          name="transportationExpenses" />
         <CSFormSection
           label="Gastos financieros"
           tooltip="Comprende los gastos en que se incurre, por las operaciones financieras relacionadas con la producción o servicios para la que se elabora la ficha, reconociendo solamente los conceptos de intereses, comisiones bancarias y primas del seguro."
