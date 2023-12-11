@@ -40,7 +40,15 @@ export const CSFormSection = (props: any) => {
                     <Input placeholder="Descripción" className="w-full" />
                   </Form.Item>
                   <Form.Item {...restField} name={[name, "unitMeasure"]} className="w-[20%]" rules={[{ required: true, message: "Introduzca la unidad de medida" }]}>
-                    <Select placeholder="Unidad de medida" allowClear options={unitMeasure} />
+                    <Select 
+                      placeholder="Unidad de medida" 
+                      allowClear 
+                      options={unitMeasure} 
+                      showSearch
+                      optionFilterProp="children"
+                      filterOption={(input: any, option: any) => (option?.label ?? "").includes(input)}
+                      filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                      />
                   </Form.Item>
                   <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true, message: "Introduzca la cantidad" }]}>
                     <InputNumber placeholder="Cantidad"  />
