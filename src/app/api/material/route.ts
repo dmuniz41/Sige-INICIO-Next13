@@ -8,11 +8,11 @@ import { verifyJWT } from "@/libs/jwt";
 import Warehouse from "@/models/warehouse";
 
 export async function POST(request: Request) {
-  const { warehouse, operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1, provider = "" } = await request.json();
+  const { warehouse, operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1, provider = "", enterDate="" } = await request.json();
   const accessToken = request.headers.get("accessToken");
 
-  let date = moment();
-  let currentDate = date.format("L");
+  // let date = moment();
+  // let currentDate = date.format("L");
 
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -157,7 +157,7 @@ export async function POST(request: Request) {
         minimumExistence,
         provider,
         warehouse,
-        enterDate: currentDate,
+        enterDate,
         unitsTotal: operation?.amount,
         materialTotalValue: costPerUnit * operation?.amount,
         key: category + materialName + costPerUnit,

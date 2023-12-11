@@ -168,7 +168,7 @@ const MaterialsTable: React.FC = () => {
     }
   };
 
-  const handleEditMinimumExistences = (): void => {
+  const handleEditMaterial = (): void => {
     if (selectedRow) {
       setEditMaterialModal(true);
     } else {
@@ -224,17 +224,18 @@ const MaterialsTable: React.FC = () => {
       tipo: "Añadir",
       amount: values.unitsTotal,
     };
-    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence, values.provider));
+    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence, values.provider, values.enterDate.format("MM/DD/YYYY")));
     setCreateNewModal(false);
   };
 
   const onAdd = (values: any): void => {
+    console.log("🚀 ~ file: MaterialsTable.tsx:232 ~ onAdd ~ values:", values)
     let operation: IOperation = {
       date: currentDate,
       tipo: "Añadir",
       amount: values.unitsTotal,
     };
-    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence, values.provider));
+    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence, values.provider, currentDate));
     setAddModal(false);
   };
 
@@ -244,7 +245,7 @@ const MaterialsTable: React.FC = () => {
       tipo: "Sustraer",
       amount: values.unitsTotal,
     };
-    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence, values.provider));
+    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence, values.provider, currentDate));
     setMinusModal(false);
   };
 
@@ -452,7 +453,7 @@ const MaterialsTable: React.FC = () => {
               className={`${
                 canEditMinimumExistences ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={handleEditMinimumExistences}
+              onClick={handleEditMaterial}
             >
               <EditSvg />
             </button>

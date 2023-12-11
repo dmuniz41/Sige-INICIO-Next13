@@ -13,19 +13,20 @@ export const startAddMaterial = (
   unitMeasure: string,
   costPerUnit: number,
   minimumExistence: number,
-  provider: string
+  provider: string,
+  enterDate: string
 ): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/material`,
-        { operation, warehouse, category, materialName, unitMeasure, costPerUnit, minimumExistence, provider },
+        { operation, warehouse, category, materialName, unitMeasure, costPerUnit, minimumExistence, provider, enterDate },
         { headers: { accessToken: token } }
       )
       .then(() => {
         let code = `${category}${materialName}${costPerUnit}`;
-        dispatch(addMaterial(code, materialName, category, costPerUnit, minimumExistence, unitMeasure, provider));
+        dispatch(addMaterial(code, materialName, category, costPerUnit, minimumExistence, unitMeasure, provider, enterDate));
         dispatch(materialsStartLoading(warehouse));
 
         if (operation.tipo === "Sustraer") {
@@ -103,7 +104,7 @@ export const editMaterial = (code: string, minimumExistence: number,materialName
   };
 };
 
-const addMaterial = (code: string, materialName: string, category: string, costPerUnit: number, minimumExistence: number, unitMeasure?: string, provider?: string) => ({
+const addMaterial = (code: string, materialName: string, category: string, costPerUnit: number, minimumExistence: number, unitMeasure?: string, provider?: string, enterDate?: string) => ({
   type: types.addWarehouse,
   payload: {
     code,
@@ -112,7 +113,8 @@ const addMaterial = (code: string, materialName: string, category: string, costP
     costPerUnit,
     minimumExistence,
     unitMeasure,
-    provider
+    provider,
+    enterDate
   },
 });
 

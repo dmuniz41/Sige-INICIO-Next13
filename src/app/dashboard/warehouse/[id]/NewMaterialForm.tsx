@@ -2,7 +2,7 @@
 
 import { INomenclator } from "@/models/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
-import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
+import { DatePicker, DatePickerProps, Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
 interface Values {
   materialName: string;
   category: string;
@@ -87,6 +87,7 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
               form
                 .validateFields()
                 .then((values) => {
+                  console.log("🚀 ~ file: NewMaterialForm.tsx:90 ~ .then ~ values:", values.enterDate.format('MM/DD/YYYY'))
                   onCreate(values);
                   form.resetFields();
                 })
@@ -121,6 +122,9 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
         </Form.Item>
         <Form.Item name="provider" label="Proveedor" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select allowClear style={{ width: "100%" }} options={provider} />
+        </Form.Item>
+        <Form.Item name="enterDate" label="Fecha de entrada" rules={[{ required: true, message: "Campo requerido" }]}>
+          <DatePicker format={"MM/DD/YYYY"} />
         </Form.Item>
       </Form>
     </Modal>
