@@ -87,7 +87,7 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
               form
                 .validateFields()
                 .then((values) => {
-                  console.log("🚀 ~ file: NewMaterialForm.tsx:90 ~ .then ~ values:", values.enterDate.format('MM/DD/YYYY'))
+                  console.log("🚀 ~ file: NewMaterialForm.tsx:90 ~ .then ~ values:", values.enterDate.format("MM/DD/YYYY"));
                   onCreate(values);
                   form.resetFields();
                 })
@@ -103,7 +103,15 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
     >
       <Form form={form} layout="vertical" name="createUserForm" size="middle">
         <Form.Item name="category" label="Categoría" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Select allowClear style={{ width: "100%" }} options={category} />
+          <Select
+            allowClear
+            style={{ width: "100%" }}
+            options={category}
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input: any, option: any) => (option?.label ?? "").includes(input)}
+            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+          />
         </Form.Item>
         <Form.Item name="materialName" label="Nombre del material" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
@@ -112,7 +120,15 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
           <InputNumber className="w-full" />
         </Form.Item>
         <Form.Item name="unitMeasure" label="Unidad de medida" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Select allowClear style={{ width: "100%" }} options={unitMeasure} />
+          <Select
+            allowClear
+            style={{ width: "100%" }}
+            options={unitMeasure}
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input: any, option: any) => (option?.label ?? "").includes(input)}
+            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+          />
         </Form.Item>
         <Form.Item name="unitsTotal" label="Cantidad a añadir" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber className="w-full" />
@@ -121,7 +137,15 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
           <InputNumber className="w-full" />
         </Form.Item>
         <Form.Item name="provider" label="Proveedor" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Select allowClear style={{ width: "100%" }} options={provider} />
+          <Select
+            allowClear
+            style={{ width: "100%" }}
+            options={provider}
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input: any, option: any) => (option?.label ?? "").includes(input)}
+            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+          />
         </Form.Item>
         <Form.Item name="enterDate" label="Fecha de entrada" rules={[{ required: true, message: "Campo requerido" }]}>
           <DatePicker format={"MM/DD/YYYY"} />
