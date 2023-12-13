@@ -378,10 +378,8 @@ console.log("🚀 ~ file: MaterialsTable.tsx:137 ~ categoryFilter:", categoryFil
       title: "Categoría",
       dataIndex: "category",
       key: "category",
-      filters: categoryFilter
-        
-      ,
-      onFilter: (value: any, record) => record.category.startsWith(value),
+      filters: categoryFilter ,
+      onFilter: (value: any, record: any) => record.category.startsWith(value),
       filterSearch: true,
       width: "15%",
       sorter: (a: any, b: any) => a.category.localeCompare(b.category),

@@ -19,8 +19,8 @@ import { EditNomenclatorForm } from "./EditNomenclatorForm";
 import { useSession } from "next-auth/react";
 import { EditSvg } from "@/app/global/EditSvg";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
-import { PlusSvg } from '@/app/global/PlusSvg';
-import { RefreshSvg } from '@/app/global/RefreshSvg';
+import { PlusSvg } from "@/app/global/PlusSvg";
+import { RefreshSvg } from "@/app/global/RefreshSvg";
 
 interface DataType {
   _id: string;
@@ -197,8 +197,32 @@ const NomenclatorsTable: React.FC = () => {
       title: "Categoría",
       dataIndex: "category",
       key: "category",
+      filters: [
+        {
+          text: "Area de usuario",
+          value: "Area de usuario",
+        },
+        {
+          text: "Cargo de trabajador",
+          value: "Cargo de trabajador",
+        },
+        {
+          text: "Categoría de material",
+          value: "Categoría de material",
+        },
+        {
+          text: "Unidad de medida",
+          value: "Unidad de medida",
+        },
+        {
+          text: "Proveedor",
+          value: "Proveedor",
+        },
+      ],
+      onFilter: (value: any, record: any) => record.category.startsWith(value),
+      filterSearch: true,
       width: "50%",
-      ...getColumnSearchProps("category"),
+      sorter: (a: any, b: any) => a.category.localeCompare(b.category),
     },
     {
       title: "Código",
