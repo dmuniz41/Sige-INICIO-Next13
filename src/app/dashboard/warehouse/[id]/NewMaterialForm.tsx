@@ -109,7 +109,7 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
             options={category}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) => (option?.label ?? "").includes(input)}
+            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
             filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
           />
         </Form.Item>
@@ -126,7 +126,7 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
             options={unitMeasure}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) => (option?.label ?? "").includes(input)}
+            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
             filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
           />
         </Form.Item>
@@ -143,7 +143,7 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
             options={provider}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) => (option?.label ?? "").includes(input)}
+            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
             filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
           />
         </Form.Item>
