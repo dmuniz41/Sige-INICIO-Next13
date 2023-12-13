@@ -289,7 +289,7 @@ const NomenclatorsTable: React.FC = () => {
       <EditNomenclatorForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />
 
       <Table
-        size="middle"
+        size="small"
         columns={columns}
         dataSource={data}
         pagination={{ position: ["bottomCenter"], pageSize: 15 }}
