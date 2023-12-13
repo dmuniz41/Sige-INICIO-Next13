@@ -447,7 +447,7 @@ console.log("🚀 ~ file: MaterialsTable.tsx:137 ~ categoryFilter:", categoryFil
 
   return (
     <>
-      <div className="flex h-14 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
+      <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <div className="flex gap-2">
           <button
             disabled={!canAdd}
@@ -560,7 +560,7 @@ console.log("🚀 ~ file: MaterialsTable.tsx:137 ~ categoryFilter:", categoryFil
         size="small"
         columns={columns}
         dataSource={data}
-        pagination={{ position: ["bottomCenter"], pageSize: 10 }}
+        pagination={{ position: ["bottomCenter"], pageSize: 15 }}
         onChange={onChange}
         rowSelection={{
           type: "radio",
