@@ -4,7 +4,6 @@ import React, { useMemo } from "react";
 export const CSViewTable = (props: any) => {
   const { data, label, subtotal }: { data: ICostSheetSubitem[]; label: string; subtotal: number } = props;
   let row: ICostSheetSubitem[] = useMemo(() => data, [data]);
-  console.log("🚀 ~ file: CSViewTable.tsx:5 ~ CSViewTable ~ data:", data);
   return (
     <article className="flex flex-row w-full mt-1">
       <div className="p-2 w-full">
