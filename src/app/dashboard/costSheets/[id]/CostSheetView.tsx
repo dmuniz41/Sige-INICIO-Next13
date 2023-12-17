@@ -4,7 +4,6 @@ import { RootState, useAppSelector } from "@/store/store";
 import React, { useEffect, useMemo, useState } from "react";
 import { useAppDispatch } from "@/hooks/hooks";
 import { usePathname } from "next/navigation";
-import { Tooltip } from "antd";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 
 import { CSViewTable } from "./CSViewTable";
@@ -55,31 +54,29 @@ export const CostSheetView = () => {
         </div>
         <label className="font-bold mr-2">Descripción:</label>
         <p className="w-[40%]">{selectedCostSheet.description}</p>
-        {/* <Tooltip placement="top" title={"Generar Reporte"} arrow={{ pointAtCenter: true }}> */}
-          <PDFDownloadLink
-            document={<CostSheetPDFReport fields={fields} data={PDFReportData} title={`Ficha de costo ${selectedCostSheet.taskName}`} />}
-            fileName={`Ficha de costo ${selectedCostSheet.taskName}`}
-          >
-            {
-              // ({ blob, url, loading, error }) => (
-                <button className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 rounded-full w-[2.5rem] h-[2.5rem] flex justify-center items-center">
-                  <PDFSvg />
-                </button>
-              // )
+        <PDFDownloadLink
+          document={<CostSheetPDFReport fields={fields} data={PDFReportData} title={`Ficha de costo ${selectedCostSheet.taskName}`} />}
+          fileName={`Ficha de costo ${selectedCostSheet.taskName}`}
+        >
+          {
+            // ({ blob, url, loading, error }) => (
+            <button className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 rounded-full w-[2.5rem] h-[2.5rem] flex justify-center items-center">
+              <PDFSvg />
+            </button>
+            // )
 
-              // : (
-              //   <button
-              //     disabled={!canList}
-              //     className={`${
-              //       canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
-              //     } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              //   >
-              //     <PDFSvg />
-              //   </button>
-              // )
-            }
-          </PDFDownloadLink>
-        {/* </Tooltip> */}
+            // : (
+            //   <button
+            //     disabled={!canList}
+            //     className={`${
+            //       canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+            //     } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+            //   >
+            //     <PDFSvg />
+            //   </button>
+            // )
+          }
+        </PDFDownloadLink>
       </section>
       <section className="flex flex-col w-full ">
         <CSViewTable subtotal={selectedCostSheet.rawMaterialsSubtotal} label="Gasto Material" data={rawMaterials} />
