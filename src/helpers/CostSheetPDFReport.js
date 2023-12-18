@@ -37,7 +37,11 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     width: "100%",
-    height: 40,
+    height: 60,
+  },
+  subtitle: {
+    fontSize: 10,
+    marginLeft: 1,
   },
 });
 
@@ -104,13 +108,38 @@ export default function CostSheetPDFReport(props) {
           <View style={styles.header}>
             <Text style={styles.headerText}>{title.toUpperCase()}</Text>
           </View>
+          {/* Subheader */}
           <View style={styles.subHeader}>
-            <View style={{ display: "flex", flexDirection: "column", height: "100%", width: "40%", borderBottom: "1px", borderStyle: "solid" }}></View>
-            <View style={{ display: "flex", flexDirection: "column", height: "100%", width: "60%", borderBottom: "1px", borderLeft: "1px", borderStyle: "solid" }}></View>
+            {/* Parte izquierda del subheader */}
+            <View style={{ display: "flex", flexDirection: "column", height: "100%", width: "40%", borderBottom: "1px", borderStyle: "solid", justifyContent: "space-evenly" }}>
+              <View style={{ display: "flex", height: "33%", justifyContent: "center", borderBottom: "1px", borderStyle: "solid" }}>
+                <Text style={styles.subtitle}>Creador: INICIO</Text>
+              </View>
+              <View style={{ display: "flex", height: "33%", justifyContent: "center", borderBottom: "1px", borderStyle: "solid" }}>
+                <Text style={styles.subtitle}>Cantidad de empleados: 4 </Text>
+              </View>
+              <View style={{ display: "flex", height: "33%", justifyContent: "center" }}>
+                <Text style={styles.subtitle}>Cliente: </Text>
+              </View>
+            </View>
+            {/* Parte derecha del subheader */}
+            <View style={{ display: "flex", flexDirection: "column", height: "100%", width: "60%", borderBottom: "1px", borderLeft: "1px", borderStyle: "solid" }}>
+              <View style={{ display: "flex", flexDirection: "row", height: "33%" }}>
+                <View style={{ width: "30%", borderBottom: "1px",  justifyContent:'center' }}>
+                  <Text style={styles.subtitle}>Fecha:</Text>
+                </View>
+                <View style={{ width: "70%",borderStyle: "solid", borderLeft: "1px", borderBottom: "1px",  justifyContent:'center' }}>
+                  <Text style={styles.subtitle}>9/11/97</Text>
+                </View>
+              </View>
+              <View style={{ height: "66%", display: "flex" }}>
+                <Text style={styles.subtitle}>Descripcion de la actividad</Text>
+              </View>
+            </View>
           </View>
         </View>
-        {/* <CustomTablePDF fields={fields} data={data} />  */}
       </Page>
     </Document>
   );
 }
+{/* <CustomTablePDF fields={fields} data={data} />  */}
