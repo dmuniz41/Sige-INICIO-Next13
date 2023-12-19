@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   },
   header: {
     textAlign: "center",
-    height: 40,
+    minHeight: 40,
     borderStyle: "solid",
     borderTop: "0px",
     borderLeft: "0px",
@@ -37,11 +37,33 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     width: "100%",
-    height: 60,
+    minHeight: 60,
   },
   subtitle: {
     fontSize: 10,
     marginLeft: 1,
+  },
+
+  subsectionContainer: {
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    borderStyle: "solid",
+    borderBottom: "1px",
+    minHeight: 100,
+  },
+  subsectionHeaderContainer: {
+    display: "flex",
+    flexDirection: "row",
+    borderStyle: "solid",
+    width: "40%",
+  },
+  subsectionTableContainer: {
+    display: "flex",
+    flexDirection: "row",
+    borderStyle: "solid",
+    borderLeft: "1px",
+    width: "60%",
   },
 });
 
@@ -98,6 +120,34 @@ function checkStrEmpty(str) {
 //   );
 // };
 
+const Subsection = (props) => {
+  const { number = 1, name = "" } = props;
+
+  return (
+    <View style={styles.subsectionContainer}>
+      <View style={styles.subsectionHeaderContainer}>
+
+        <View style={{ height: "100%", justifyContent: "center", alignItems: "center", width: "20%", borderStyle: "solid", borderRight: "1px" }}>
+          <Text style={styles.subtitle}>{number}</Text>
+        </View>
+
+
+        <View style={{ display: "flex", flexDirection: "column", width: "80%", height: "100%" }}>
+          <View style={{ display: "flex", alignItems: "center", justifyContent: "center", height: '90%' }}>
+            <Text style={styles.subtitle}>{name}</Text>
+          </View>
+          <View style={{ display: "flex", borderStyle: "solid", borderTop: "1px", justifyContent: "center", alignItems: "center"}}>
+            <Text style={styles.subtitle}>Subtotal</Text>
+          </View>
+        </View>
+      </View>
+
+
+      <View style={styles.subsectionTableContainer}></View>
+    </View>
+  );
+};
+
 export default function CostSheetPDFReport(props) {
   // const date = new Date().toLocaleDateString("es-DO", { year: "numeric", month: "short", day: "numeric" });
   const { fields = [], data = [], title = "" } = props;
@@ -125,10 +175,10 @@ export default function CostSheetPDFReport(props) {
             {/* Parte derecha del subheader */}
             <View style={{ display: "flex", flexDirection: "column", height: "100%", width: "60%", borderBottom: "1px", borderLeft: "1px", borderStyle: "solid" }}>
               <View style={{ display: "flex", flexDirection: "row", height: "33%" }}>
-                <View style={{ width: "30%", borderBottom: "1px",  justifyContent:'center' }}>
+                <View style={{ width: "30%", borderBottom: "1px", justifyContent: "center" }}>
                   <Text style={styles.subtitle}>Fecha:</Text>
                 </View>
-                <View style={{ width: "70%",borderStyle: "solid", borderLeft: "1px", borderBottom: "1px",  justifyContent:'center' }}>
+                <View style={{ width: "70%", borderStyle: "solid", borderLeft: "1px", borderBottom: "1px", justifyContent: "center" }}>
                   <Text style={styles.subtitle}>9/11/97</Text>
                 </View>
               </View>
@@ -137,9 +187,20 @@ export default function CostSheetPDFReport(props) {
               </View>
             </View>
           </View>
+          {/* Subsecciones */}
+          <Subsection number={1} name={"Gasto Material"} />
+          <Subsection number={2} name={"Salarios Directos"} />
+          <Subsection number={3} name={"Otros Gastos Directos"} />
+          <Subsection number={4} name={"Gastos Asociados a la Producción"} />
+          <Subsection number={5} name={"Gastos Generales y de Administración"} />
+          <Subsection number={6} name={"Gastos de Distribución y Ventas"} />
+          <Subsection number={7} name={"Gastos Financieros"} />
+          <Subsection number={8} name={"Gastos Tributarios"} />
         </View>
       </Page>
     </Document>
   );
 }
-{/* <CustomTablePDF fields={fields} data={data} />  */}
+{
+  /* <CustomTablePDF fields={fields} data={data} />  */
+}
