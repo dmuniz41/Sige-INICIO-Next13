@@ -6,14 +6,14 @@ const BORDER_STYLE = "solid";
 
 const styles = StyleSheet.create({
   body: {
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: 15,
+    paddingBottom: 25,
     paddingHorizontal: 35,
   },
   table: {
     display: "flex",
     flexDirection: "column",
-    height: "100%",
+    // height: "100%",
     width: "100%",
     borderStyle: "solid",
     borderWidth: "1px",
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderStyle: "solid",
     borderBottom: "1px",
-    minHeight: 100,
+    minHeight: 30,
   },
   subsectionHeaderContainer: {
     display: "flex",
@@ -124,24 +124,21 @@ const Subsection = (props) => {
   const { number = 1, name = "" } = props;
 
   return (
-    <View style={styles.subsectionContainer}>
+    <View wrap={false} style={styles.subsectionContainer}>
       <View style={styles.subsectionHeaderContainer}>
-
-        <View style={{ height: "100%", justifyContent: "center", alignItems: "center", width: "20%", borderStyle: "solid", borderRight: "1px" }}>
+        <View style={{ justifyContent: "center", alignItems: "center", width: "20%", borderStyle: "solid", borderRight: "1px" }}>
           <Text style={styles.subtitle}>{number}</Text>
         </View>
 
-
-        <View style={{ display: "flex", flexDirection: "column", width: "80%", height: "100%" }}>
-          <View style={{ display: "flex", alignItems: "center", justifyContent: "center", height: '90%' }}>
+        <View style={{ display: "flex", flexDirection: "column", width: "80%", minHeight: 50 }}>
+          <View style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 40 }}>
             <Text style={styles.subtitle}>{name}</Text>
           </View>
-          <View style={{ display: "flex", borderStyle: "solid", borderTop: "1px", justifyContent: "center", alignItems: "center"}}>
+          <View style={{ display: "flex", borderStyle: "solid", borderTop: "1px", justifyContent: "center", alignItems: "center" }}>
             <Text style={styles.subtitle}>Subtotal</Text>
           </View>
         </View>
       </View>
-
 
       <View style={styles.subsectionTableContainer}></View>
     </View>
@@ -154,27 +151,27 @@ export default function CostSheetPDFReport(props) {
   return (
     <Document>
       <Page wrap orientation="portrait" size={"LETTER"} style={styles.body}>
-        <View style={styles.table}>
+        <View  style={styles.table}>
           <View style={styles.header}>
             <Text style={styles.headerText}>{title.toUpperCase()}</Text>
           </View>
           {/* Subheader */}
           <View style={styles.subHeader}>
             {/* Parte izquierda del subheader */}
-            <View style={{ display: "flex", flexDirection: "column", height: "100%", width: "40%", borderBottom: "1px", borderStyle: "solid", justifyContent: "space-evenly" }}>
-              <View style={{ display: "flex", height: "33%", justifyContent: "center", borderBottom: "1px", borderStyle: "solid" }}>
+            <View style={{ display: "flex", flexDirection: "column", width: "40%", borderBottom: "1px", borderStyle: "solid", justifyContent: "space-between" }}>
+              <View style={{ minHeight: 10, justifyContent: "center", borderBottom: "1px", borderStyle: "solid" }}>
                 <Text style={styles.subtitle}>Creador: INICIO</Text>
               </View>
-              <View style={{ display: "flex", height: "33%", justifyContent: "center", borderBottom: "1px", borderStyle: "solid" }}>
+              <View style={{ minHeight: 10, justifyContent: "center", borderBottom: "1px", borderStyle: "solid" }}>
                 <Text style={styles.subtitle}>Cantidad de empleados: 4 </Text>
               </View>
-              <View style={{ display: "flex", height: "33%", justifyContent: "center" }}>
-                <Text style={styles.subtitle}>Cliente: </Text>
+              <View style={{ minHeight: 10, justifyContent: "center" }}>
+                <Text style={styles.subtitle}>Cliente </Text>
               </View>
             </View>
             {/* Parte derecha del subheader */}
-            <View style={{ display: "flex", flexDirection: "column", height: "100%", width: "60%", borderBottom: "1px", borderLeft: "1px", borderStyle: "solid" }}>
-              <View style={{ display: "flex", flexDirection: "row", height: "33%" }}>
+            <View style={{ display: "flex", flexDirection: "column", width: "60%", borderBottom: "1px", borderLeft: "1px", borderStyle: "solid" }}>
+              <View style={{ display: "flex", flexDirection: "row", minHeight: 10 }}>
                 <View style={{ width: "30%", borderBottom: "1px", justifyContent: "center" }}>
                   <Text style={styles.subtitle}>Fecha:</Text>
                 </View>
@@ -182,7 +179,7 @@ export default function CostSheetPDFReport(props) {
                   <Text style={styles.subtitle}>9/11/97</Text>
                 </View>
               </View>
-              <View style={{ height: "66%", display: "flex" }}>
+              <View style={{ minHeight: 50, display: "flex" }}>
                 <Text style={styles.subtitle}>Descripcion de la actividad</Text>
               </View>
             </View>
@@ -195,6 +192,21 @@ export default function CostSheetPDFReport(props) {
           <Subsection number={5} name={"Gastos Generales y de Administración"} />
           <Subsection number={6} name={"Gastos de Distribución y Ventas"} />
           <Subsection number={7} name={"Gastos Financieros"} />
+          <Subsection number={8} name={"Gastos Tributarios"} />
+          <Subsection number={8} name={"Gastos Tributarios"} />
+          <Subsection number={8} name={"Gastos Tributarios"} />
+          <Subsection number={8} name={"Gastos Tributarios"} />
+          <Subsection number={8} name={"Gastos Tributarios"} />
+          <Subsection number={8} name={"Gastos Tributarios"} />
+          <Subsection number={8} name={"Gastos Tributarios"} />
+          <Subsection number={8} name={"Gastos Tributarios"} />
+          <Subsection number={8} name={"Gastos Tributarios"} />
+          <Subsection number={8} name={"Gastos Tributarios"} />
+          <Subsection number={8} name={"Gastos Tributarios"} />
+          <Subsection number={8} name={"Gastos Tributarios"} />
+          <Subsection number={8} name={"Gastos Tributarios"} />
+          <Subsection number={8} name={"Gastos Tributarios"} />
+          <Subsection number={8} name={"Gastos Tributarios"} />
           <Subsection number={8} name={"Gastos Tributarios"} />
         </View>
       </Page>
