@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Page, Text, Document, StyleSheet, View, Svg } from "@react-pdf/renderer";
+import { Page, Text, Document, StyleSheet, View } from "@react-pdf/renderer";
 
 const BORDER_COLOR = "#000";
 const BORDER_STYLE = "solid";
@@ -16,11 +16,11 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   headerText: {
-    fontSize: "12",
+    fontSize: "14pt",
   },
   header: {
     textAlign: "center",
-    minHeight: 40,
+    minHeight: 25,
     borderStyle: "solid",
     borderTop: "1px",
     borderLeft: "1px",
@@ -37,10 +37,10 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     flexDirection: "row",
     width: "100%",
-    minHeight: 60,
+    minHeight: 50,
   },
   subtitle: {
-    fontSize: 10,
+    fontSize: "10pt",
     marginLeft: 1,
   },
 
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     borderBottom: "1px",
     borderLeft: "1px",
     borderRight: "1px",
-    minHeight: 30,
+    minHeight: 70,
   },
   subsectionHeaderContainer: {
     display: "flex",
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     width: "100%",
-    minHeight: 20,
+    minHeight: 10,
     borderStyle: "solid",
     borderLeft: "1px",
     borderRight: "1px",
@@ -143,10 +143,10 @@ const Subsection = (props) => {
           <Text style={styles.subtitle}>{number}</Text>
         </View>
         <View style={{ display: "flex", flexDirection: "column", width: "80%", minHeight: 50 }}>
-          <View style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 40 }}>
+          <View style={{ display: "flex", alignItems: "center", justifyContent: "center", flexGrow: 1 }}>
             <Text style={styles.subtitle}>{name}</Text>
           </View>
-          <View style={{ display: "flex", borderStyle: "solid", borderTop: "1px", justifyContent: "center", alignItems: "center" }}>
+          <View style={{ display: "flex", borderStyle: "solid", borderTop: "1px", justifyContent: "center", alignItems: "center", minHeight: 5 }}>
             <Text style={styles.subtitle}>Subtotal</Text>
           </View>
         </View>
@@ -164,10 +164,10 @@ const SmallSubsection = (props) => {
       <View style={{ width: "8%", borderStyle: "solid", borderRight: "1px", justifyContent: "center", alignItems: "center" }}>
         <Text style={styles.subtitle}>{number}</Text>
       </View>
-      <View style={{ borderStyle: "solid", width: "82%", justifyContent: "flex-end", alignItems: "center", borderRight: "1px", display: "flex", flexDirection: "row", paddingRight:1 }}>
-        <Text style={{ fontSize: "12", fontWeight: "black" }}>{name}</Text>
+      <View style={{ borderStyle: "solid", width: "82%", justifyContent: "flex-end", alignItems: "center", borderRight: "1px", display: "flex", flexDirection: "row", paddingRight: 2 }}>
+        <Text style={{ fontSize: "12pt" }}>{name}</Text>
       </View>
-      <View style={{ width: "10%", borderStyle: "solid", justifyContent: "center", backgroundColor: "gray", display: "flex", flexDirection: "row", alignItems: "center" }}>
+      <View style={{ width: "10%", borderStyle: "solid", justifyContent: "center", backgroundColor: "#B8B8B8", display: "flex", flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.subtitle}>${value}</Text>
       </View>
     </View>
@@ -187,13 +187,13 @@ export default function CostSheetPDFReport(props) {
           <View style={styles.subHeader}>
             {/* Parte izquierda del subheader */}
             <View style={{ display: "flex", flexDirection: "column", width: "40%", borderBottom: "1px", borderStyle: "solid", justifyContent: "space-between" }}>
-              <View style={{ minHeight: 10, justifyContent: "center", borderBottom: "1px", borderStyle: "solid" }}>
+              <View style={{ display: "flex", flexGrow: 1, justifyContent: "center", borderBottom: "1px", borderStyle: "solid" }}>
                 <Text style={styles.subtitle}>Creador: INICIO</Text>
               </View>
-              <View style={{ minHeight: 10, justifyContent: "center", borderBottom: "1px", borderStyle: "solid" }}>
+              <View style={{ display: "flex", flexGrow: 1, justifyContent: "center", borderBottom: "1px", borderStyle: "solid" }}>
                 <Text style={styles.subtitle}>Cantidad de empleados: 4 </Text>
               </View>
-              <View style={{ minHeight: 10, justifyContent: "center" }}>
+              <View style={{ display: "flex", flexGrow: 1, justifyContent: "center" }}>
                 <Text style={styles.subtitle}>Cliente </Text>
               </View>
             </View>
@@ -207,7 +207,7 @@ export default function CostSheetPDFReport(props) {
                   <Text style={styles.subtitle}>9/11/97</Text>
                 </View>
               </View>
-              <View style={{ minHeight: 50, display: "flex" }}>
+              <View style={{ minHeight: 30, display: "flex" }}>
                 <Text style={styles.subtitle}>Descripcion de la actividad</Text>
               </View>
             </View>
@@ -223,6 +223,14 @@ export default function CostSheetPDFReport(props) {
           <Subsection number={8} name={"Gastos Financieros"} />
           <Subsection number={9} name={"Gastos Tributarios"} />
           <SmallSubsection number={10} name={"IMPORTE TOTAL DE GASTOS"} value={100} />
+          <View wrap={false}>
+            <SmallSubsection number={11} name={"IMPORTE TOTAL DE COSTOS Y GASTOS"} value={100} />
+            <SmallSubsection number={12} name={"TALENTO ARTÍSTICO"} value={100} />
+            <SmallSubsection number={13} name={"UTILIDAD"} value={100} />
+            <SmallSubsection number={14} name={"PRECIO DEL CREADOR"} value={100} />
+            <SmallSubsection number={15} name={"MATERIA PRIMAS Y MATERIALES APORTADOS POR EL FCBC"} value={100} />
+            <SmallSubsection number={16} name={"PRECIO DE VENTA MAYORISTA MÁXIMO"} value={100} />
+          </View>
         </View>
       </Page>
     </Document>
