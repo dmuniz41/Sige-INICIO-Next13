@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   headerText: {
-    fontSize: "14pt",
+    fontSize: "12pt",
   },
   header: {
     textAlign: "center",
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     minHeight: 50,
   },
   subtitle: {
-    fontSize: "10pt",
+    fontSize: "8pt",
     marginLeft: 1,
   },
 
@@ -58,19 +58,22 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     borderStyle: "solid",
-    width: "40%",
+    width: 255,
   },
   subsectionTableContainer: {
     display: "flex",
+    flexGrow:1,
+    justifyContent:'flex-start',
     flexDirection: "row",
     borderStyle: "solid",
     borderLeft: "1px",
-    width: "60%",
+    // width: "60%",
   },
 
   smallSubsectionContainer: {
     display: "flex",
     flexDirection: "row",
+    // flexGrow: 1,
     width: "100%",
     minHeight: 10,
     borderStyle: "solid",
@@ -78,63 +81,96 @@ const styles = StyleSheet.create({
     borderRight: "1px",
     borderBottom: "1px",
   },
+
+  //*   Estilos para las tablas dentro de las subsecciones
+
+  headerBg: {
+    // fontWeight: "black",
+    backgroundColor: "#B8B8B8",
+  },
+  subsectionTable: {
+    display: "flex",
+    width: "100%",
+  },
+  tableCellHeader: {
+    // margin: 2,
+    fontSize: "8pt",
+    // fontWeight: "bold",
+    // borderStyle: 'solid',
+    // borderBottom: '1px'
+  },
+  tableCell: {
+    // margin: 2,
+    fontSize: "8pt",
+  },
+  tableRow: {
+    // margin: "auto",
+    flexDirection: "row",
+    // borderBottom:'1px',
+    // borderStyle:'solid'
+
+  },
 });
 
 function checkStrEmpty(str) {
   return !(str && str.length > 1 && str.split(" ").join("").length > 0);
 }
 
-// const CustomTablePDF = (props) => {
-//   const { fields = [], data = [] } = props;
-//   let tableCol = {
-//     borderStyle: BORDER_STYLE,
-//     borderColor: BORDER_COLOR,
-//     borderBottomColor: "#000",
-//     borderWidth: 1,
-//     borderLeftWidth: 0,
-//     borderTopWidth: 0,
-//   };
-//   return (
-//     <View style={styles.table}>
-//       <View style={[styles.tableRow, styles.headerBg]}>
-//         {fields.map((_item, _idx) => (
-//           <View key={_idx} style={[tableCol, { width: _item.width + "%" }]}>
-//             <Text style={[styles.tableCellHeader, { textAlign: "center" }]}>{_item.title}</Text>
-//           </View>
-//         ))}
-//       </View>
+const CustomTablePDF = (props) => {
+  const { fields = [], data = [] } = props;
+  let tableCol = {
+    borderStyle: BORDER_STYLE,
+    borderColor: BORDER_COLOR,
+    borderBottomColor: "#000",
+    justifyContent: 'center',
+    alignItems: 'center',
+    // borderWidth: 1,
+    borderLeft: '1px',
+    borderBottom:'1px',
+    // borderTop: 0,
+    // borderRight: 0,
+  };
+  return (
+    <View style={styles.subsectionTable}>
+      <View style={[styles.tableRow, styles.headerBg]}>
+        {fields.map((_item, _idx) => (
+          <View key={_idx} style={[tableCol, { width: _item.width + "%" }]}>
+            <Text style={[styles.tableCellHeader, { textAlign: "center" }]}>{_item.title}</Text>
+          </View>
+        ))}
+      </View>
 
-//       {data.map(
-//         (item, idx) =>
-//           item && (
-//             <View key={idx} style={styles.tableRow}>
-//               {fields.map((_item, _idx) => {
-//                 let val = item[_item.value] || "";
-//                 let value_alt = (_item.value_alt && item[_item.value_alt]) || "";
+      {data.map(
+        (item, idx) =>
+          item && (
+            <View key={idx} style={styles.tableRow}>
+              {fields.map((_item, _idx) => {
+                let val = item[_item.value] || "";
+                let value_alt = (_item.value_alt && item[_item.value_alt]) || "";
 
-//                 if (_item.custom) {
-//                   return (
-//                     <View key={_idx} style={[tableCol, { width: _item.width + "%" }]}>
-//                       <Text style={[styles.tableCell, item.style ? item.style : {}]}>{_item.component(item)}</Text>
-//                     </View>
-//                   );
-//                 } else {
-//                   return (
-//                     <View key={_idx} style={[styles.tableCol, { width: _item.width + "%" }]}>
-//                       <Text style={[styles.tableCell, item.style ? item.style : {}]}>{checkStrEmpty(val) ? value_alt : val || "-"}</Text>
-//                     </View>
-//                   );
-//                 }
-//               })}
-//             </View>
-//           )
-//       )}
-//     </View>
-//   );
-// };
+                if (_item.custom) {
+                  return (
+                    <View key={_idx} style={[tableCol, { width: _item.width + "%" }]}>
+                      <Text style={[styles.tableCell, item.style ? item.style : {}]}>{_item.component(item)}</Text>
+                    </View>
+                  );
+                } else {
+                  return (
+                    <View key={_idx} style={[styles.tableCol, { width: _item.width + "%" }]}>
+                      <Text style={[styles.tableCell, item.style ? item.style : {}]}>{checkStrEmpty(val) ? value_alt : val || "-"}</Text>
+                    </View>
+                  );
+                }
+              })}
+            </View>
+          )
+      )}
+    </View>
+  );
+};
 
 const Subsection = (props) => {
-  const { number = 1, name = "" } = props;
+  const { number = 1, name = "", data = [], subtotal = 0, fields = [] } = props;
 
   return (
     <View wrap={false} style={styles.subsectionContainer}>
@@ -153,21 +189,23 @@ const Subsection = (props) => {
       </View>
 
       <View style={styles.subsectionTableContainer}></View>
+      <CustomTablePDF fields={fields} data={data} />
     </View>
   );
 };
+
 const SmallSubsection = (props) => {
   const { number = 1, name = "", value = 0 } = props;
 
   return (
     <View wrap={false} style={styles.smallSubsectionContainer}>
-      <View style={{ width: "8%", borderStyle: "solid", borderRight: "1px", justifyContent: "center", alignItems: "center" }}>
+      <View style={{ width: 34.5, borderStyle: "solid", borderRight: "1px", justifyContent: "center", alignItems: "center" }}>
         <Text style={styles.subtitle}>{number}</Text>
       </View>
-      <View style={{ borderStyle: "solid", width: "82%", justifyContent: "flex-end", alignItems: "center", borderRight: "1px", display: "flex", flexDirection: "row", paddingRight: 2 }}>
-        <Text style={{ fontSize: "12pt" }}>{name}</Text>
+      <View style={{ borderStyle: "solid", justifyContent: "flex-end", alignItems: "center", borderRight: "1px", display: "flex", flexGrow: 1,flexDirection: "row", paddingRight: 2 }}>
+        <Text style={{ fontSize: "10pt" }}>{name}</Text>
       </View>
-      <View style={{ width: "10%", borderStyle: "solid", justifyContent: "center", backgroundColor: "#B8B8B8", display: "flex", flexDirection: "row", alignItems: "center" }}>
+      <View style={{ width: 54, borderStyle: "solid", justifyContent: "center", backgroundColor: "#B8B8B8", display: "flex", flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.subtitle}>${value}</Text>
       </View>
     </View>
@@ -175,7 +213,10 @@ const SmallSubsection = (props) => {
 };
 
 export default function CostSheetPDFReport(props) {
-  const { fields = [], data = [], title = "" } = props;
+  const date = new Date().toLocaleDateString("es-DO", { year: "numeric", month: "numeric", day: "numeric" });
+  const { fields = [], data = {}, title = "" } = props;
+  console.log("🚀 ~ file: CostSheetPDFReport.js:179 ~ CostSheetPDFReport ~ fields:", fields);
+  console.log("🚀 ~ file: CostSheetPDFReport.js:179 ~ CostSheetPDFReport ~ data:", data);
   return (
     <Document>
       <Page wrap orientation="portrait" size={"LETTER"} style={styles.body}>
@@ -191,7 +232,7 @@ export default function CostSheetPDFReport(props) {
                 <Text style={styles.subtitle}>Creador: INICIO</Text>
               </View>
               <View style={{ display: "flex", flexGrow: 1, justifyContent: "center", borderBottom: "1px", borderStyle: "solid" }}>
-                <Text style={styles.subtitle}>Cantidad de empleados: 4 </Text>
+                <Text style={styles.subtitle}>Cantidad de empleados: {data.workersAmount} </Text>
               </View>
               <View style={{ display: "flex", flexGrow: 1, justifyContent: "center" }}>
                 <Text style={styles.subtitle}>Cliente </Text>
@@ -204,32 +245,32 @@ export default function CostSheetPDFReport(props) {
                   <Text style={styles.subtitle}>Fecha:</Text>
                 </View>
                 <View style={{ width: "70%", borderStyle: "solid", borderLeft: "1px", borderBottom: "1px", justifyContent: "center" }}>
-                  <Text style={styles.subtitle}>9/11/97</Text>
+                  <Text style={styles.subtitle}>{date}</Text>
                 </View>
               </View>
               <View style={{ minHeight: 30, display: "flex" }}>
-                <Text style={styles.subtitle}>Descripcion de la actividad</Text>
+                <Text style={styles.subtitle}>{data.description}</Text>
               </View>
             </View>
           </View>
           {/* Subsecciones */}
-          <Subsection number={1} name={"Gasto Material"} />
-          <Subsection number={2} name={"Salarios Directos"} />
-          <Subsection number={3} name={"Otros Gastos Directos"} />
-          <Subsection number={4} name={"Gastos Asociados a la Producción"} />
-          <SmallSubsection number={5} name={"IMPORTE TOTAL DE COSTOS"} value={100} />
-          <Subsection number={6} name={"Gastos Generales y de Administración"} />
-          <Subsection number={7} name={"Gastos de Distribución y Ventas"} />
-          <Subsection number={8} name={"Gastos Financieros"} />
-          <Subsection number={9} name={"Gastos Tributarios"} />
-          <SmallSubsection number={10} name={"IMPORTE TOTAL DE GASTOS"} value={100} />
+          <Subsection fields={fields} data={data.rawMaterials} subtotal={data.rawMaterialsSubtotal} number={1} name={"Gasto Material"} />
+          <Subsection fields={fields} data={data.directSalaries} subtotal={data.directSalariesSubtotal} number={2} name={"Salarios Directos"} />
+          <Subsection fields={fields} data={data.otherDirectExpenses} subtotal={data.otherDirectExpensesSubtotal} number={3} name={"Otros Gastos Directos"} />
+          <Subsection fields={fields} data={data.productionRelatedExpenses} subtotal={data.productionRelatedExpensesSubtotal} number={4} name={"Gastos Asociados a la Producción"} />
+          <SmallSubsection number={5} name={"IMPORTE TOTAL DE COSTOS"} value={data.costsTotalValue * 250} />
+          <Subsection fields={fields} data={data.administrativeExpenses} subtotal={data.administrativeExpensesSubtotal} number={6} name={"Gastos Generales y de Administración"} />
+          <Subsection fields={fields} data={data.transportationExpenses} subtotal={data.transportationExpensesSubtotal} number={7} name={"Gastos de Distribución y Ventas"} />
+          <Subsection fields={fields} data={data.financialExpenses} subtotal={data.financialExpensesSubtotal} number={8} name={"Gastos Financieros"} />
+          <Subsection fields={fields} data={data.taxExpenses} subtotal={data.taxExpensesSubtotal} number={9} name={"Gastos Tributarios"} />
+          <SmallSubsection number={10} name={"IMPORTE TOTAL DE GASTOS"} value={data.expensesTotalValue * 250} />
           <View wrap={false}>
-            <SmallSubsection number={11} name={"IMPORTE TOTAL DE COSTOS Y GASTOS"} value={100} />
-            <SmallSubsection number={12} name={"TALENTO ARTÍSTICO"} value={100} />
-            <SmallSubsection number={13} name={"UTILIDAD"} value={100} />
-            <SmallSubsection number={14} name={"PRECIO DEL CREADOR"} value={100} />
-            <SmallSubsection number={15} name={"MATERIA PRIMAS Y MATERIALES APORTADOS POR EL FCBC"} value={100} />
-            <SmallSubsection number={16} name={"PRECIO DE VENTA MAYORISTA MÁXIMO"} value={100} />
+            <SmallSubsection number={11} name={"IMPORTE TOTAL DE COSTOS Y GASTOS"} value={data.expensesAndCostsTotalValue * 250} />
+            <SmallSubsection number={12} name={"TALENTO ARTÍSTICO"} value={data.artisticTalentValue * 250} />
+            <SmallSubsection number={13} name={"UTILIDAD"} value={data.representationCostValue * 250} />
+            <SmallSubsection number={14} name={"PRECIO DEL CREADOR"} value={data.creatorPrice * 250} />
+            <SmallSubsection number={15} name={"MATERIA PRIMAS Y MATERIALES APORTADOS POR EL FCBC"} value={data.rawMaterialsByClient * 250} />
+            <SmallSubsection number={16} name={"PRECIO DE VENTA MAYORISTA MÁXIMO"} value={data.salePriceMN} />
           </View>
         </View>
       </Page>
@@ -237,5 +278,4 @@ export default function CostSheetPDFReport(props) {
   );
 }
 {
-  /* <CustomTablePDF fields={fields} data={data} />  */
 }

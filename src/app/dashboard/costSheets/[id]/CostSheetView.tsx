@@ -18,8 +18,7 @@ export const CostSheetView = () => {
   const selectedCostSheetId: string = url[3];
   const dispatch = useAppDispatch();
 
-  const fields = [{}];
-  const PDFReportData: any = [];
+
 
   useEffect(() => {
     dispatch(loadSelectedCostSheet(selectedCostSheetId));
@@ -34,6 +33,40 @@ export const CostSheetView = () => {
   let transportationExpenses: ICostSheetSubitem[] = useMemo(() => selectedCostSheet.transportationExpenses, [selectedCostSheet]);
   let financialExpenses: ICostSheetSubitem[] = useMemo(() => selectedCostSheet.financialExpenses, [selectedCostSheet]);
   let taxExpenses: ICostSheetSubitem[] = useMemo(() => selectedCostSheet.taxExpenses, [selectedCostSheet]);
+
+  const fields: any = [
+    {
+      title: "Descripción",
+      custom: true,
+      component: (item: any) => `${item.description}`,
+      width: "40",
+    },
+    {
+      title: "U/M",
+      custom: true,
+      component: (item: any) => `${item.unitMeasure}`,
+      width: "20",
+    },
+    {
+      title: "Cant",
+      custom: true,
+      component: (item: any) => `${item.amount}`,
+      width: "10",
+    },
+    {
+      title: "Precio CUP",
+      custom: true,
+      component: (item: any) => `${item.price}`,
+      width: "15",
+    },
+    {
+      title: "Importe CUP",
+      custom: true,
+      component: (item: any) => `${item.value}`,
+      width: "15",
+    },
+  ];
+  const PDFReportData: ICostSheet = selectedCostSheet;
 
   return (
     <article className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-2">
