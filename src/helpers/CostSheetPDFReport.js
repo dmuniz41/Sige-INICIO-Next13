@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
   },
   subsectionTableContainer: {
     display: "flex",
-    flexGrow:1,
-    justifyContent:'flex-start',
+    flexGrow: 1,
+    justifyContent: "flex-start",
     flexDirection: "row",
     borderStyle: "solid",
     borderLeft: "1px",
@@ -108,7 +108,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     // borderBottom:'1px',
     // borderStyle:'solid'
-
   },
 });
 
@@ -122,11 +121,11 @@ const CustomTablePDF = (props) => {
     borderStyle: BORDER_STYLE,
     borderColor: BORDER_COLOR,
     borderBottomColor: "#000",
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     // borderWidth: 1,
-    borderLeft: '1px',
-    borderBottom:'1px',
+    borderLeft: "1px",
+    borderBottom: "1px",
     // borderTop: 0,
     // borderRight: 0,
   };
@@ -202,7 +201,7 @@ const SmallSubsection = (props) => {
       <View style={{ width: 34.5, borderStyle: "solid", borderRight: "1px", justifyContent: "center", alignItems: "center" }}>
         <Text style={styles.subtitle}>{number}</Text>
       </View>
-      <View style={{ borderStyle: "solid", justifyContent: "flex-end", alignItems: "center", borderRight: "1px", display: "flex", flexGrow: 1,flexDirection: "row", paddingRight: 2 }}>
+      <View style={{ borderStyle: "solid", justifyContent: "flex-end", alignItems: "center", borderRight: "1px", display: "flex", flexGrow: 1, flexDirection: "row", paddingRight: 2 }}>
         <Text style={{ fontSize: "10pt" }}>{name}</Text>
       </View>
       <View style={{ width: 54, borderStyle: "solid", justifyContent: "center", backgroundColor: "#B8B8B8", display: "flex", flexDirection: "row", alignItems: "center" }}>
@@ -258,18 +257,18 @@ export default function CostSheetPDFReport(props) {
           <Subsection fields={fields} data={data.directSalaries} subtotal={data.directSalariesSubtotal} number={2} name={"Salarios Directos"} />
           <Subsection fields={fields} data={data.otherDirectExpenses} subtotal={data.otherDirectExpensesSubtotal} number={3} name={"Otros Gastos Directos"} />
           <Subsection fields={fields} data={data.productionRelatedExpenses} subtotal={data.productionRelatedExpensesSubtotal} number={4} name={"Gastos Asociados a la Producción"} />
-          <SmallSubsection number={5} name={"IMPORTE TOTAL DE COSTOS"} value={data.costsTotalValue * 250} />
+          <SmallSubsection number={5} name={"IMPORTE TOTAL DE COSTOS"} value={(data.costsTotalValue * 250).toFixed(2)} />
           <Subsection fields={fields} data={data.administrativeExpenses} subtotal={data.administrativeExpensesSubtotal} number={6} name={"Gastos Generales y de Administración"} />
           <Subsection fields={fields} data={data.transportationExpenses} subtotal={data.transportationExpensesSubtotal} number={7} name={"Gastos de Distribución y Ventas"} />
           <Subsection fields={fields} data={data.financialExpenses} subtotal={data.financialExpensesSubtotal} number={8} name={"Gastos Financieros"} />
           <Subsection fields={fields} data={data.taxExpenses} subtotal={data.taxExpensesSubtotal} number={9} name={"Gastos Tributarios"} />
-          <SmallSubsection number={10} name={"IMPORTE TOTAL DE GASTOS"} value={data.expensesTotalValue * 250} />
+          <SmallSubsection number={10} name={"IMPORTE TOTAL DE GASTOS"} value={(data.expensesTotalValue * 250).toFixed(2)} />
           <View wrap={false}>
-            <SmallSubsection number={11} name={"IMPORTE TOTAL DE COSTOS Y GASTOS"} value={data.expensesAndCostsTotalValue * 250} />
-            <SmallSubsection number={12} name={"TALENTO ARTÍSTICO"} value={data.artisticTalentValue * 250} />
-            <SmallSubsection number={13} name={"UTILIDAD"} value={data.representationCostValue * 250} />
-            <SmallSubsection number={14} name={"PRECIO DEL CREADOR"} value={data.creatorPrice * 250} />
-            <SmallSubsection number={15} name={"MATERIA PRIMAS Y MATERIALES APORTADOS POR EL FCBC"} value={data.rawMaterialsByClient * 250} />
+            <SmallSubsection number={11} name={"IMPORTE TOTAL DE COSTOS Y GASTOS"} value={(data.expensesAndCostsTotalValue * 250).toFixed(2)} />
+            <SmallSubsection number={12} name={"TALENTO ARTÍSTICO"} value={(data.artisticTalentValue * 250).toFixed(2)} />
+            <SmallSubsection number={13} name={"UTILIDAD"} value={(data.representationCostValue * 250).toFixed(2)} />
+            <SmallSubsection number={14} name={"PRECIO DEL CREADOR"} value={(data.creatorPrice * 250).toFixed(2)} />
+            <SmallSubsection number={15} name={"MATERIA PRIMAS Y MATERIALES APORTADOS POR EL FCBC"} value={(data.rawMaterialsByClient * 250).toFixed(2)} />
             <SmallSubsection number={16} name={"PRECIO DE VENTA MAYORISTA MÁXIMO"} value={data.salePriceMN} />
           </View>
         </View>
