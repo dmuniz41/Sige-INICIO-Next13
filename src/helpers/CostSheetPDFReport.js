@@ -190,11 +190,10 @@ const Subsection = (props) => {
         </View>
         {/* Subtotal */}
         <View style={{ display: "flex", flexDirection: "row", borderStyle: "solid", justifyContent: "center", alignItems: "center" }}>
-          <View style={{ width: 147, borderStyle: 'solid', borderRight: '1px' }}>
+          <View style={{ width: 147, borderStyle: "solid", borderRight: "1px" }}>
             <Text style={{ fontSize: "8pt", marginLeft: 1, textAlign: "center" }}>Subtotal</Text>
           </View>
-          <View style={{ borderStyle: "solid", backgroundColor: "#B8B8B8", display: "flex", flex: 1, }}>####
-          </View>
+          <View style={{ borderStyle: "solid", backgroundColor: "#B8B8B8", display: "flex", flex: 1 }}></View>
           <View style={{ borderStyle: "solid", borderLeft: "1px", justifyContent: "flex-end", backgroundColor: "#B8B8B8", display: "flex", width: 54 }}>
             <Text style={{ fontSize: "8pt", marginLeft: 1, textAlign: "center" }}>${subtotal.toFixed(2)}</Text>
           </View>
@@ -273,14 +272,40 @@ export default function CostSheetPDFReport(props) {
           <Subsection fields={fields} data={data.transportationExpenses} subtotal={data.transportationExpensesSubtotal} number={7} name={"Gastos de Distribución y Ventas"} />
           <Subsection fields={fields} data={data.financialExpenses} subtotal={data.financialExpensesSubtotal} number={8} name={"Gastos Financieros"} />
           <Subsection fields={fields} data={data.taxExpenses} subtotal={data.taxExpensesSubtotal} number={9} name={"Gastos Tributarios"} />
-          <SmallSubsection number={10} name={"IMPORTE TOTAL DE GASTOS"} value={(data.expensesTotalValue * 250).toFixed(2)} />
           <View wrap={false}>
+            <SmallSubsection number={10} name={"IMPORTE TOTAL DE GASTOS"} value={(data.expensesTotalValue * 250).toFixed(2)} />
             <SmallSubsection number={11} name={"IMPORTE TOTAL DE COSTOS Y GASTOS"} value={(data.expensesAndCostsTotalValue * 250).toFixed(2)} />
             <SmallSubsection number={12} name={"TALENTO ARTÍSTICO"} value={(data.artisticTalentValue * 250).toFixed(2)} />
             <SmallSubsection number={13} name={"UTILIDAD"} value={(data.representationCostValue * 250).toFixed(2)} />
             <SmallSubsection number={14} name={"PRECIO DEL CREADOR"} value={(data.creatorPrice * 250).toFixed(2)} />
             <SmallSubsection number={15} name={"MATERIA PRIMAS Y MATERIALES APORTADOS POR EL FCBC"} value={(data.rawMaterialsByClient * 250).toFixed(2)} />
             <SmallSubsection number={16} name={"PRECIO DE VENTA MAYORISTA MÁXIMO"} value={(data.salePriceMN * 1).toFixed(2)} />
+          </View>
+          <View wrap={false}>
+            <View style={{ width: "100%", borderStyle: "solid", borderBottom: "1px", borderLeft: "1px", borderRight: "1px", textAlign: "left", display: "flex", flexDirection: "row" }}>
+              <Text style={{ fontSize: "8pt", marginLeft: 1, width: 180, borderRight: "1px", borderStyle: "solid" }}>Elaborado por creador:</Text>
+              <View style={{ flex: 1 }}></View>
+            </View>
+            <View style={{ width: "100%", borderStyle: "solid", borderBottom: "1px", borderLeft: "1px", borderRight: "1px", textAlign: "left" }}>
+              <Text style={{ fontSize: "8pt", marginLeft: 1, width: 180, borderRight: "1px", borderStyle: "solid" }}>Fecha:</Text>
+              <View style={{ flex: 1 }}></View>
+            </View>
+            <View style={{ width: "100%", borderStyle: "solid", borderBottom: "1px", borderLeft: "1px", borderRight: "1px", textAlign: "left" }}>
+              <Text style={{ fontSize: "8pt", marginLeft: 1, width: 180, borderRight: "1px", borderStyle: "solid" }}>Firma:</Text>
+              <View style={{ flex: 1 }}></View>
+            </View>
+            <View style={{ width: "100%", borderStyle: "solid", borderBottom: "1px", borderLeft: "1px", borderRight: "1px", textAlign: "left" }}>
+              <Text style={{ fontSize: "8pt", marginLeft: 1, width: 180, borderRight: "1px", borderStyle: "solid" }}>Aprobado por (Esp. Comercial): </Text>
+              <View style={{ flex: 1 }}></View>
+            </View>
+            <View style={{ width: "100%", borderStyle: "solid", borderBottom: "1px", borderLeft: "1px", borderRight: "1px", textAlign: "left" }}>
+              <Text style={{ fontSize: "8pt", marginLeft: 1, width: 180, borderRight: "1px", borderStyle: "solid" }}>Fecha</Text>
+              <View style={{ flex: 1 }}></View>
+            </View>
+            <View style={{ width: "100%", borderStyle: "solid", borderBottom: "1px", borderLeft: "1px", borderRight: "1px", textAlign: "left" }}>
+              <Text style={{ fontSize: "8pt", marginLeft: 1, width: 180, borderRight: "1px", borderStyle: "solid" }}>Firma</Text>
+              <View style={{ flex: 1 }}></View>
+            </View>
           </View>
         </View>
       </Page>
