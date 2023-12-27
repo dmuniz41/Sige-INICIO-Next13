@@ -98,16 +98,16 @@ const CostSheetsTable: React.FC = () => {
     setSearchText("");
   };
 
-  const handleEdit = (): void => {
-    if (selectedRow) {
-      router.push(`/dashboard/costSheets/editCostSheet`)
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione una ficha de costo a editar",
-      });
-    }
-  };
+  // const handleEdit = (): void => {
+  //   if (selectedRow) {
+  //     router.push(`/dashboard/costSheets/editCostSheet`)
+  //   } else {
+  //     Toast.fire({
+  //       icon: "error",
+  //       title: "Seleccione una ficha de costo a editar",
+  //     });
+  //   }
+  // };
 
   const rowSelection: TableRowSelection<ICostSheet> = {
     onChange: async (selectedRowKeys: React.Key[], selectedRows: ICostSheet[]) => {
@@ -220,7 +220,7 @@ const CostSheetsTable: React.FC = () => {
             </button>
         </div>
         <div className="flex">
-          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canEdit}
               className={`${
@@ -230,7 +230,7 @@ const CostSheetsTable: React.FC = () => {
             >
               <EditSvg />
             </button>
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canDelete}

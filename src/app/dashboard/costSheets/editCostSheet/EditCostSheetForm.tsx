@@ -2,6 +2,7 @@
 
 import { Form, Input, InputNumber, Select, SelectProps } from "antd";
 import React from "react";
+
 import { useAppDispatch } from "@/hooks/hooks";
 import { startUpdateCostSheet } from "@/actions/costSheet";
 import { useRouter } from "next/navigation";
@@ -237,7 +238,7 @@ export const EditCostSheetForm = () => {
                   )
                 );
                 form.resetFields();
-                router.push("/dashboard/costSheets");
+                router.push(`/dashboard/costSheets/${selectedCostSheet._id}`);
               })
               .catch((error) => {
                 console.log("Validate Failed:", error);
