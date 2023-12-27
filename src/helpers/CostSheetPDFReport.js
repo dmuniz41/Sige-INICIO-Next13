@@ -52,13 +52,13 @@ const styles = StyleSheet.create({
     borderBottom: "1px",
     borderLeft: "1px",
     borderRight: "1px",
-    minHeight: 70,
+    // minHeight: 70,
   },
-  subsectionHeaderContainer: {
+  subsectionHeaderAndTableContainer: {
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
     borderStyle: "solid",
-    width: 255,
+    flex: 1,
   },
   subsectionTableContainer: {
     display: "flex",
@@ -173,22 +173,33 @@ const Subsection = (props) => {
 
   return (
     <View wrap={false} style={styles.subsectionContainer}>
-      <View style={styles.subsectionHeaderContainer}>
-        <View style={{ justifyContent: "center", alignItems: "center", width: "20%", borderStyle: "solid", borderRight: "1px" }}>
-          <Text style={styles.subtitle}>{number}</Text>
-        </View>
-        <View style={{ display: "flex", flexDirection: "column", width: "80%", minHeight: 50 }}>
-          <View style={{ display: "flex", alignItems: "center", justifyContent: "center", flexGrow: 1 }}>
+      <View style={{ justifyContent: "center", alignItems: "center", width: 34, borderStyle: "solid", borderRight: "1px" }}>
+        <Text style={styles.subtitle}>{number}</Text>
+      </View>
+      <View style={styles.subsectionHeaderAndTableContainer}>
+        {/* Subsection name and table */}
+        <View style={{ display: "flex", flexDirection: "row" }}>
+          {/* Subsection name */}
+          <View style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 146, borderStyle: "solid", borderBottom: "1px" }}>
             <Text style={styles.subtitle}>{name}</Text>
           </View>
-          <View style={{ display: "flex", borderStyle: "solid", borderTop: "1px", justifyContent: "center", alignItems: "center", minHeight: 5 }}>
-            <Text style={styles.subtitle}>Subtotal</Text>
+          {/* Subsection table */}
+          <View style={{ flex: 1, display: "flex" }}>
+            <CustomTablePDF fields={fields} data={data} />
+          </View>
+        </View>
+        {/* Subtotal */}
+        <View style={{ display: "flex", flexDirection: "row", borderStyle: "solid", justifyContent: "center", alignItems: "center" }}>
+          <View style={{ width: 147, borderStyle: 'solid', borderRight: '1px' }}>
+            <Text style={{ fontSize: "8pt", marginLeft: 1, textAlign: "center" }}>Subtotal</Text>
+          </View>
+          <View style={{ borderStyle: "solid", backgroundColor: "#B8B8B8", display: "flex", flex: 1, }}>####
+          </View>
+          <View style={{ borderStyle: "solid", borderLeft: "1px", justifyContent: "flex-end", backgroundColor: "#B8B8B8", display: "flex", width: 54 }}>
+            <Text style={{ fontSize: "8pt", marginLeft: 1, textAlign: "center" }}>${subtotal.toFixed(2)}</Text>
           </View>
         </View>
       </View>
-
-      <View style={styles.subsectionTableContainer}></View>
-      <CustomTablePDF fields={fields} data={data} />
     </View>
   );
 };
@@ -198,13 +209,13 @@ const SmallSubsection = (props) => {
 
   return (
     <View wrap={false} style={styles.smallSubsectionContainer}>
-      <View style={{ width: 34.5, borderStyle: "solid", borderRight: "1px", justifyContent: "center", alignItems: "center" }}>
+      <View style={{ width: 34, borderStyle: "solid", borderRight: "1px", justifyContent: "center", alignItems: "center" }}>
         <Text style={styles.subtitle}>{number}</Text>
       </View>
-      <View style={{ borderStyle: "solid", justifyContent: "flex-end", alignItems: "center", borderRight: "1px", display: "flex", flexGrow: 1, flexDirection: "row", paddingRight: 2 }}>
+      <View style={{ borderStyle: "solid", justifyContent: "flex-end", alignItems: "center", display: "flex", flexGrow: 1, flexDirection: "row", paddingRight: 2 }}>
         <Text style={{ fontSize: "10pt" }}>{name}</Text>
       </View>
-      <View style={{ width: 54, borderStyle: "solid", justifyContent: "center", backgroundColor: "#B8B8B8", display: "flex", flexDirection: "row", alignItems: "center" }}>
+      <View style={{ width: 54, borderStyle: "solid", borderLeft: "1px", justifyContent: "center", backgroundColor: "#B8B8B8", display: "flex", flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.subtitle}>${value}</Text>
       </View>
     </View>
@@ -226,7 +237,7 @@ export default function CostSheetPDFReport(props) {
           {/* Subheader */}
           <View style={styles.subHeader}>
             {/* Parte izquierda del subheader */}
-            <View style={{ display: "flex", flexDirection: "column", width: "40%", borderBottom: "1px", borderStyle: "solid", justifyContent: "space-between" }}>
+            <View style={{ display: "flex", flexDirection: "column", width: 180, borderBottom: "1px", borderStyle: "solid", justifyContent: "space-between" }}>
               <View style={{ display: "flex", flexGrow: 1, justifyContent: "center", borderBottom: "1px", borderStyle: "solid" }}>
                 <Text style={styles.subtitle}>Creador: INICIO</Text>
               </View>
@@ -238,7 +249,7 @@ export default function CostSheetPDFReport(props) {
               </View>
             </View>
             {/* Parte derecha del subheader */}
-            <View style={{ display: "flex", flexDirection: "column", width: "60%", borderBottom: "1px", borderLeft: "1px", borderStyle: "solid" }}>
+            <View style={{ display: "flex", flexDirection: "column", flex: 1, borderBottom: "1px", borderLeft: "1px", borderStyle: "solid" }}>
               <View style={{ display: "flex", flexDirection: "row", minHeight: 10 }}>
                 <View style={{ width: "30%", borderBottom: "1px", justifyContent: "center" }}>
                   <Text style={styles.subtitle}>Fecha:</Text>
@@ -269,7 +280,7 @@ export default function CostSheetPDFReport(props) {
             <SmallSubsection number={13} name={"UTILIDAD"} value={(data.representationCostValue * 250).toFixed(2)} />
             <SmallSubsection number={14} name={"PRECIO DEL CREADOR"} value={(data.creatorPrice * 250).toFixed(2)} />
             <SmallSubsection number={15} name={"MATERIA PRIMAS Y MATERIALES APORTADOS POR EL FCBC"} value={(data.rawMaterialsByClient * 250).toFixed(2)} />
-            <SmallSubsection number={16} name={"PRECIO DE VENTA MAYORISTA MÁXIMO"} value={data.salePriceMN} />
+            <SmallSubsection number={16} name={"PRECIO DE VENTA MAYORISTA MÁXIMO"} value={(data.salePriceMN * 1).toFixed(2)} />
           </View>
         </View>
       </Page>
