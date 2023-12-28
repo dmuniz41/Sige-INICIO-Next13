@@ -42,9 +42,9 @@ export const CreateCostSheetForm = () => {
       size="middle"
     >
       <section className=" flex-col">
-        <div className="flex gap-2 flex-1">
+      <div className="flex gap-2 pr-[13rem]">
           <Form.Item className="mb-3 flex-1" label={<span className="font-bold text-md">Tarea a ejecutar</span>} name="taskName" rules={[{ required: true, message: "Campo requerido" }]}>
-            <Input className="flex-1" />
+            <Input  />
           </Form.Item>
         </div>
         <div className="flex flex-row gap-4">
