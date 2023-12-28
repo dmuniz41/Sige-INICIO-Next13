@@ -117,9 +117,14 @@ export const EditCostSheetForm = () => {
       ]}
     >
       <section className=" flex-col">
-        <div className="flex gap-2 ">
-          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Tarea a ejecutar</span>} name="taskName" rules={[{ required: true, message: "Campo requerido" }]}>
-            <Input className="w-[30rem]" />
+        <div className="flex gap-2 pr-[13rem]">
+          <Form.Item className="mb-3 flex-1" label={<span className="font-bold text-md">Tarea a ejecutar</span>} name="taskName" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Input  />
+          </Form.Item>
+        </div>
+        <div className="flex flex-row gap-4">
+          <Form.Item className="mb-3 w-[35%]" name="description" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
+            <TextArea rows={3} />
           </Form.Item>
           <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cantidad de empleados</span>} name="workersAmount" rules={[{ required: true, message: "Campo requerido" }]}>
             <InputNumber className="w-[5rem]" />
@@ -128,9 +133,6 @@ export const EditCostSheetForm = () => {
             <Select allowClear style={{ width: "10rem" }} options={payMethod} />
           </Form.Item>
         </div>
-        <Form.Item className="mb-3 w-[35%]" name="description" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
-          <TextArea rows={3} />
-        </Form.Item>
       </section>
       <section className="flex flex-col w-full">
         <CSFormSection label="Gasto Material" tooltip="Considera los gastos de recursos materiales comprados y producidos" name="rawMaterials" />
@@ -159,7 +161,7 @@ export const EditCostSheetForm = () => {
         />
       </section>
 
-      <section className="flex gap-2">
+      <section className="flex gap-5 pt-3">
         <div className="flex flex-col gap-2 justify-start">
           <Form.Item
             className="mb-3 "
