@@ -87,6 +87,7 @@ export const startAddCostSheet = (
   };
 };
 export const startUpdateCostSheet = (
+  _id: string,
   taskName: string = "",
   payMethod: string = "CONTRACT",
   createdBy: string = "",
@@ -112,6 +113,7 @@ export const startUpdateCostSheet = (
       .put(
         `${process.env.NEXT_PUBLIC_API_URL}/costSheet`,
         {
+          _id,
           taskName,
           payMethod,
           createdBy,
@@ -136,6 +138,7 @@ export const startUpdateCostSheet = (
       .then(() => {
         dispatch(
           updateCostSheet(
+            _id,
             taskName,
             payMethod,
             createdBy,
@@ -262,6 +265,7 @@ const addCostSheet = (
 });
 
 const updateCostSheet = (
+  _id: string,
   taskName: string,
   payMethod: string,
   createdBy: string,
@@ -283,6 +287,7 @@ const updateCostSheet = (
 ) => ({
   type: types.updateCostSheet,
   payload: {
+    _id,
     taskName,
     payMethod,
     createdBy,

@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { ICostSheet } from "@/models/costSheet";
 import { CSFormSection } from "../createCostSheet/CSFormSection";
 import { RootState, useAppSelector } from "@/store/store";
+import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
@@ -30,10 +31,10 @@ export const EditCostSheetForm = () => {
   const router = useRouter();
   const [form] = Form.useForm();
   const { TextArea } = Input;
-  
+
+  dispatch(nomenclatorsStartLoading());
   const { selectedCostSheet }: { selectedCostSheet: ICostSheet } = useAppSelector((state: RootState) => state?.costSheet);
-  console.log("🚀 ~ file: EditCostSheetForm.tsx:34 ~ EditCostSheetForm ~ selectedCostSheet:", selectedCostSheet);
-  
+
   return (
     <Form
       form={form}
@@ -130,18 +131,12 @@ export const EditCostSheetForm = () => {
           </Form.Item>
         </div>
         <Form.Item className="mb-3 w-[35%]" name="description" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
-          <TextArea rows={3}/>
+          <TextArea rows={3} />
         </Form.Item>
       </section>
       <section className="flex flex-col w-full">
-        <CSFormSection 
-          label="Gasto Material" 
-          tooltip="Considera los gastos de recursos materiales comprados y producidos" 
-          name="rawMaterials" />
-        <CSFormSection 
-          label="Salarios directos" 
-          tooltip="(Actividades a ejecutar)" 
-          name="directSalaries"/>
+        <CSFormSection label="Gasto Material" tooltip="Considera los gastos de recursos materiales comprados y producidos" name="rawMaterials" />
+        <CSFormSection label="Salarios directos" tooltip="(Actividades a ejecutar)" name="directSalaries" />
         <CSFormSection
           label="Otros gastos directos"
           tooltip="Se incluye pagos por mantenimientos y reparaciones recibidas, depreciación de los activos fijos tangibles y amortización de activos fijos intangibles.(Gasto en Uso de Equipos)"
@@ -152,14 +147,8 @@ export const EditCostSheetForm = () => {
           tooltip="Comprende los importes de los gastos que se incurren en las actividades asociadas a la producción, no identificables con un producto o servicio determinado.Ej: gasto de las actividades de mantenimiento, reparaciones, explotación de equipos, dirección de la producción, control de calidad, depreciación de activos fijos tangibles de producción y servicios auxiliares a estas, incluidos salarios, etc."
           name="productionRelatedExpenses"
         />
-        <CSFormSection 
-          label="Gastos generales y de administración" 
-          tooltip="Incluidos salarios(Gastos administrativos)" 
-          name="administrativeExpenses" />
-        <CSFormSection 
-          label="Gastos de distribución y ventas" 
-          tooltip="Incluye salarios(Gastos de Transporte)" 
-          name="transportationExpenses" />
+        <CSFormSection label="Gastos generales y de administración" tooltip="Incluidos salarios(Gastos administrativos)" name="administrativeExpenses" />
+        <CSFormSection label="Gastos de distribución y ventas" tooltip="Incluye salarios(Gastos de Transporte)" name="transportationExpenses" />
         <CSFormSection
           label="Gastos financieros"
           tooltip="Comprende los gastos en que se incurre, por las operaciones financieras relacionadas con la producción o servicios para la que se elabora la ficha, reconociendo solamente los conceptos de intereses, comisiones bancarias y primas del seguro."
@@ -214,9 +203,9 @@ export const EditCostSheetForm = () => {
               .validateFields()
               .then((values: ICostSheet) => {
                 console.log(values);
-
                 dispatch(
                   startUpdateCostSheet(
+                    selectedCostSheet._id,
                     values.taskName,
                     values.payMethod,
                     values.createdBy,

@@ -219,6 +219,7 @@ export async function GET(request: Request) {
 
 export async function PUT(request: Request) {
   const {
+    _id = '',
     taskName = "",
     payMethod = "CONTRACT",
     createdBy = "",
@@ -253,7 +254,7 @@ export async function PUT(request: Request) {
       );
     }
     await connectDB();
-    const costSheetToUpdate = await CostSheet.findOne({ taskName });
+    const costSheetToUpdate = await CostSheet.findById(_id);
 
     if (!costSheetToUpdate) {
       return NextResponse.json({
@@ -313,8 +314,9 @@ export async function PUT(request: Request) {
     const salePriceMN: number = salePriceUSD * USDValue;
 
     const updatedCostSheet = await CostSheet.findOneAndUpdate(
-      { taskName },
+      { _id },
       {
+        taskName,
         payMethod,
         createdBy,
         approvedBy,

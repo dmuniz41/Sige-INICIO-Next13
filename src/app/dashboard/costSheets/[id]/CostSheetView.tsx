@@ -76,10 +76,10 @@ export const CostSheetView = () => {
 
   return (
     <article className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-2">
-      <section className="w-full flex flex-row p-2 ">
-        <h2 className="font-bold text-xl mr-auto w-[20%] flex">
-          Ficha de Costo: <span className="ml-2 font-normal">{selectedCostSheet.taskName}</span>
+        <h2 className="font-bold mr-auto w-[100%] flex pl-2">
+          Ficha de Costo: <span className="ml-2 font-normal flex-1">{selectedCostSheet.taskName}</span>
         </h2>
+      <section className="w-full flex flex-row p-2 ">
         <div className="w-[15%] flex flex-col">
           <label className="font-bold">
             Creador: <span className="font-normal">INICIO</span>
@@ -134,7 +134,7 @@ export const CostSheetView = () => {
         </div>
         <div className="flex flex-col w-[40%]">
           <label className="font-bold">
-            Talento Artístico({selectedCostSheet.artisticTalent}%): <span className="font-normal">${(selectedCostSheet.artisticTalentValue * 1).toFixed(2)}</span>
+            Talento Artístico ({selectedCostSheet.artisticTalent}%): <span className="font-normal">${(selectedCostSheet.artisticTalentValue * 1).toFixed(2)}</span>
           </label>
           <label className="font-bold">
             Utilidad ({selectedCostSheet.representationCost}%): <span className="font-normal">${(selectedCostSheet.representationCostValue * 1).toFixed(2)}</span>
