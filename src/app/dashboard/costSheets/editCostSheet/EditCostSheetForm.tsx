@@ -32,7 +32,6 @@ export const EditCostSheetForm = () => {
   const [form] = Form.useForm();
   const { TextArea } = Input;
 
-  dispatch(nomenclatorsStartLoading());
   const { selectedCostSheet }: { selectedCostSheet: ICostSheet } = useAppSelector((state: RootState) => state?.costSheet);
 
   return (
