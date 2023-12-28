@@ -148,10 +148,10 @@ export const CostSheetView = () => {
             Materias Primas y Materiales Aportados por el Cliente: <span className="font-normal">${(selectedCostSheet.rawMaterialsByClient * 1).toFixed(2)}</span>
           </label>
           <label className="font-bold">
-            Precio de Venta (MN): <span className="font-normal">${(selectedCostSheet.salePriceMN * 1).toFixed(2)}</span>
+            Precio de Venta (MN): <span className="font-normal">${(selectedCostSheet.salePrice * 1).toFixed(2)}</span>
           </label>
           <label className="font-bold">
-            Precio de Venta (USD): <span className="font-normal">${(selectedCostSheet.salePriceUSD * 1).toFixed(2)}</span>
+            Precio de Venta (MLC): <span className="font-normal">${(selectedCostSheet.salePriceMLC * 1).toFixed(2)}</span>
           </label>
         </div>
       </section>

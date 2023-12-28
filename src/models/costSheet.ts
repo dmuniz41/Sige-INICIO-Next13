@@ -73,7 +73,7 @@ export interface ICostSheet {
   creatorPrice: number;
 
   rawMaterialsByClient: number;
-  salePriceUSD: number;
+  salePriceMLC: number;
   salePriceMN: number;
   salePrice: number
 
@@ -234,7 +234,7 @@ const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
   rawMaterialsByClient: {
     type: Number,
   },
-  salePriceUSD: {
+  salePriceMLC: {
     type: Number,
   },
   salePriceMN: {
