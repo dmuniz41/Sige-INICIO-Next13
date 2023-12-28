@@ -7,24 +7,24 @@ import CostSheet, { ICostSheet } from "@/models/costSheet";
 
 export async function POST(request: Request) {
   const {
-    taskName = "",
-    payMethod = "CONTRACT",
-    createdBy = "",
+    administrativeExpenses = [],
     approvedBy = "",
+    artisticTalent = 0,
+    createdBy = "",
     description = "",
+    directSalaries = [],
+    financialExpenses = [],
+    otherDirectExpenses = [],
+    payMethod = "CONTRACT",
+    productionRelatedExpenses = [],
+    rawMaterials = [],
+    rawMaterialsByClient = 0,
+    representationCost = 0,
+    taskName = "",
+    taxExpenses = [],
+    transportationExpenses = [],
     USDValue = 250,
     workersAmount = 0,
-    rawMaterials = [],
-    directSalaries = [],
-    otherDirectExpenses = [],
-    productionRelatedExpenses = [],
-    administrativeExpenses = [],
-    transportationExpenses = [],
-    financialExpenses = [],
-    taxExpenses = [],
-    artisticTalent = 0,
-    representationCost = 0,
-    rawMaterialsByClient = 0,
   }: ICostSheet = await request.json();
 
   const accessToken = request.headers.get("accessToken");
@@ -84,14 +84,14 @@ export async function POST(request: Request) {
 
     //* Calcula el valor de cada subtotal en cada seccion de la ficha de costo
 
-    const rawMaterialsSubtotal: number = rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
+    const administrativeExpensesSubtotal: number = administrativeExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
     const directSalariesSubtotal: number = directSalaries.reduce((total, currentValue) => total + currentValue.value, 0);
+    const financialExpensesSubtotal: number = financialExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
     const otherDirectExpensesSubtotal: number = otherDirectExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
     const productionRelatedExpensesSubtotal: number = productionRelatedExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const administrativeExpensesSubtotal: number = administrativeExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const transportationExpensesSubtotal: number = transportationExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const financialExpensesSubtotal: number = financialExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+    const rawMaterialsSubtotal: number = rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
     const taxExpensesSubtotal: number = taxExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+    const transportationExpensesSubtotal: number = transportationExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
 
     const costsTotalValue: number = rawMaterialsSubtotal + directSalariesSubtotal + otherDirectExpensesSubtotal + productionRelatedExpensesSubtotal;
     const expensesTotalValue: number = administrativeExpensesSubtotal + transportationExpensesSubtotal + financialExpensesSubtotal + taxExpensesSubtotal;
@@ -102,47 +102,46 @@ export async function POST(request: Request) {
 
     const creatorPrice: number = expensesAndCostsTotalValue + artisticTalentValue + representationCostValue;
 
-    const salePriceUSD: number = creatorPrice + rawMaterialsByClient;
-    const salePriceMN: number = salePriceUSD * USDValue;
-
+    const salePriceMN: number = creatorPrice + rawMaterialsByClient;
+    const salePriceMLC: number = salePriceMN / USDValue;
+    
     const newKey = generateRandomString(26);
 
     const newCostSheet = new CostSheet({
-      key: newKey,
-      taskName,
-      payMethod,
-      workersAmount,
-      createdBy,
-      approvedBy,
-      description,
-      rawMaterials,
-      rawMaterialsSubtotal,
-      directSalaries,
-      directSalariesSubtotal,
-      otherDirectExpenses,
-      otherDirectExpensesSubtotal,
-      productionRelatedExpenses,
-      productionRelatedExpensesSubtotal,
       administrativeExpenses,
       administrativeExpensesSubtotal,
-      transportationExpenses,
-      transportationExpensesSubtotal,
-      financialExpenses,
-      financialExpensesSubtotal,
-      taxExpenses,
-      taxExpensesSubtotal,
-      expensesTotalValue,
-      costsTotalValue,
-      expensesAndCostsTotalValue,
+      approvedBy,
       artisticTalent,
       artisticTalentValue,
+      costsTotalValue,
+      createdBy,
+      creatorPrice,
+      description,
+      directSalaries,
+      directSalariesSubtotal,
+      expensesAndCostsTotalValue,
+      expensesTotalValue,
+      financialExpenses,
+      financialExpensesSubtotal,
+      key: newKey,
+      otherDirectExpenses,
+      otherDirectExpensesSubtotal,
+      payMethod,
+      productionRelatedExpenses,
+      productionRelatedExpensesSubtotal,
+      rawMaterials,
+      rawMaterialsByClient,
+      rawMaterialsSubtotal,
       representationCost,
       representationCostValue,
-      creatorPrice,
-      rawMaterialsByClient,
-      salePriceMN,
-      salePriceUSD,
       salePrice: salePriceMN,
+      salePriceMLC,
+      taskName,
+      taxExpenses,
+      taxExpensesSubtotal,
+      transportationExpenses,
+      transportationExpensesSubtotal,
+      workersAmount,
     });
 
     await newCostSheet.save();
@@ -220,24 +219,24 @@ export async function GET(request: Request) {
 export async function PUT(request: Request) {
   const {
     _id = '',
-    taskName = "",
-    payMethod = "CONTRACT",
-    createdBy = "",
+    administrativeExpenses = [],
     approvedBy = "",
+    artisticTalent = 0,
+    createdBy = "",
     description = "",
+    directSalaries = [],
+    financialExpenses = [],
+    otherDirectExpenses = [],
+    payMethod = "CONTRACT",
+    productionRelatedExpenses = [],
+    rawMaterials = [],
+    rawMaterialsByClient = 0,
+    representationCost = 0,
+    taskName = "",
+    taxExpenses = [],
+    transportationExpenses = [],
     USDValue = 250,
     workersAmount = 1,
-    rawMaterials = [],
-    directSalaries = [],
-    otherDirectExpenses = [],
-    productionRelatedExpenses = [],
-    administrativeExpenses = [],
-    transportationExpenses = [],
-    financialExpenses = [],
-    taxExpenses = [],
-    artisticTalent = 0,
-    representationCost = 0,
-    rawMaterialsByClient = 0,
   }: ICostSheet = await request.json();
   const accessToken = request.headers.get("accessToken");
 
@@ -292,14 +291,14 @@ export async function PUT(request: Request) {
 
     //* Calcula el valor de cada subtotal en cada seccion de la ficha de costo
 
-    const rawMaterialsSubtotal: number = rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
+    const administrativeExpensesSubtotal: number = administrativeExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
     const directSalariesSubtotal: number = directSalaries.reduce((total, currentValue) => total + currentValue.value, 0);
+    const financialExpensesSubtotal: number = financialExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
     const otherDirectExpensesSubtotal: number = otherDirectExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
     const productionRelatedExpensesSubtotal: number = productionRelatedExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const administrativeExpensesSubtotal: number = administrativeExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const transportationExpensesSubtotal: number = transportationExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const financialExpensesSubtotal: number = financialExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+    const rawMaterialsSubtotal: number = rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
     const taxExpensesSubtotal: number = taxExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+    const transportationExpensesSubtotal: number = transportationExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
 
     const costsTotalValue: number = rawMaterialsSubtotal + directSalariesSubtotal + otherDirectExpensesSubtotal + productionRelatedExpensesSubtotal;
     const expensesTotalValue: number = administrativeExpensesSubtotal + transportationExpensesSubtotal + financialExpensesSubtotal + taxExpensesSubtotal;
@@ -310,46 +309,45 @@ export async function PUT(request: Request) {
 
     const creatorPrice: number = expensesAndCostsTotalValue + artisticTalentValue + representationCostValue;
 
-    const salePriceUSD: number = creatorPrice + rawMaterialsByClient;
-    const salePriceMN: number = salePriceUSD * USDValue;
+    const salePriceMN: number = creatorPrice + rawMaterialsByClient;
+    const salePriceMLC: number = salePriceMN / USDValue;
 
     const updatedCostSheet = await CostSheet.findOneAndUpdate(
       { _id },
       {
-        taskName,
-        payMethod,
-        createdBy,
-        approvedBy,
-        description,
-        workersAmount,
-        rawMaterials,
-        rawMaterialsSubtotal,
-        directSalaries,
-        directSalariesSubtotal,
-        otherDirectExpenses,
-        otherDirectExpensesSubtotal,
-        productionRelatedExpenses,
-        productionRelatedExpensesSubtotal,
         administrativeExpenses,
         administrativeExpensesSubtotal,
-        transportationExpenses,
-        transportationExpensesSubtotal,
+        approvedBy,
+        artisticTalent,
+        artisticTalentValue,
+        costsTotalValue,
+        createdBy,
+        creatorPrice,
+        description,
+        directSalaries,
+        directSalariesSubtotal,
+        expensesAndCostsTotalValue,
+        expensesTotalValue,
         financialExpenses,
         financialExpensesSubtotal,
+        otherDirectExpenses,
+        otherDirectExpensesSubtotal,
+        payMethod,
+        productionRelatedExpenses,
+        productionRelatedExpensesSubtotal,
+        rawMaterials,
+        rawMaterialsByClient,
+        rawMaterialsSubtotal,
+        representationCost,
+        representationCostValue,
+        salePrice: salePriceMN,
+        salePriceMLC,
+        taskName,
         taxExpenses,
         taxExpensesSubtotal,
-        expensesTotalValue,
-        costsTotalValue,
-        expensesAndCostsTotalValue,
-        artisticTalentValue,
-        artisticTalent,
-        representationCostValue,
-        representationCost,
-        creatorPrice,
-        rawMaterialsByClient,
-        salePriceMN,
-        salePriceUSD,
-        salePrice: salePriceMN,
+        transportationExpenses,
+        transportationExpensesSubtotal,
+        workersAmount,
       },
       { new: true }
     );

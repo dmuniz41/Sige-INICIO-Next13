@@ -2,7 +2,7 @@ import Swal from "sweetalert2";
 import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
 import axios, { AxiosError } from "axios";
-import { ICostSheetSubitem } from "@/models/costSheet";
+import { ICostSheet, ICostSheetSubitem } from "@/models/costSheet";
 
 export const startAddCostSheet = (
   taskName: string = "",
@@ -51,27 +51,27 @@ export const startAddCostSheet = (
         },
         { headers: { accessToken: token } }
       )
-      .then(() => {
+      .then((CostSheet) => {
         dispatch(
           addCostSheet(
-            taskName,
-            payMethod,
-            createdBy,
-            approvedBy,
-            description,
-            USDValue,
-            workersAmount,
-            rawMaterials,
-            directSalaries,
-            otherDirectExpenses,
-            productionRelatedExpenses,
-            administrativeExpenses,
-            transportationExpenses,
-            financialExpenses,
-            taxExpenses,
-            artisticTalent,
-            representationCost,
-            rawMaterialsByClient
+            CostSheet.data.taskName,
+            CostSheet.data.payMethod,
+            CostSheet.data.createdBy,
+            CostSheet.data.approvedBy,
+            CostSheet.data.description,
+            CostSheet.data.USDValue,
+            CostSheet.data.workersAmount,
+            CostSheet.data.rawMaterials,
+            CostSheet.data.directSalaries,
+            CostSheet.data.otherDirectExpenses,
+            CostSheet.data.productionRelatedExpenses,
+            CostSheet.data.administrativeExpenses,
+            CostSheet.data.transportationExpenses,
+            CostSheet.data.financialExpenses,
+            CostSheet.data.taxExpenses,
+            CostSheet.data.artisticTalent,
+            CostSheet.data.representationCost,
+            CostSheet.data.rawMaterialsByClient
           )
         );
         dispatch(costSheetsStartLoading());
@@ -135,28 +135,28 @@ export const startUpdateCostSheet = (
         },
         { headers: { accessToken: token } }
       )
-      .then(() => {
+      .then((CostSheet) => {
         dispatch(
           updateCostSheet(
-            _id,
-            taskName,
-            payMethod,
-            createdBy,
-            approvedBy,
-            description,
-            USDValue,
-            workersAmount,
-            rawMaterials,
-            directSalaries,
-            otherDirectExpenses,
-            productionRelatedExpenses,
-            administrativeExpenses,
-            transportationExpenses,
-            financialExpenses,
-            taxExpenses,
-            artisticTalent,
-            representationCost,
-            rawMaterialsByClient
+            CostSheet.data._id,
+            CostSheet.data.taskName,
+            CostSheet.data.payMethod,
+            CostSheet.data.createdBy,
+            CostSheet.data.approvedBy,
+            CostSheet.data.description,
+            CostSheet.data.USDValue,
+            CostSheet.data.workersAmount,
+            CostSheet.data.rawMaterials,
+            CostSheet.data.directSalaries,
+            CostSheet.data.otherDirectExpenses,
+            CostSheet.data.productionRelatedExpenses,
+            CostSheet.data.administrativeExpenses,
+            CostSheet.data.transportationExpenses,
+            CostSheet.data.financialExpenses,
+            CostSheet.data.taxExpenses,
+            CostSheet.data.artisticTalent,
+            CostSheet.data.representationCost,
+            CostSheet.data.rawMaterialsByClient
           )
         );
         dispatch(costSheetsStartLoading());
