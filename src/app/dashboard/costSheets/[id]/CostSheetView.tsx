@@ -76,20 +76,10 @@ export const CostSheetView = () => {
 
   return (
     <article className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-2">
+      <div className="flex pr-20">
         <h2 className="font-bold mr-auto w-[100%] flex pl-2">
           Ficha de Costo: <span className="ml-2 font-normal flex-1">{selectedCostSheet.taskName}</span>
         </h2>
-      <section className="w-full flex flex-row p-2 ">
-        <div className="w-[15%] flex flex-col">
-          <label className="font-bold">
-            Creador: <span className="font-normal">INICIO</span>
-          </label>
-          <label className="font-bold">
-            Cantidad de trabajadores: <span className="font-normal">{selectedCostSheet.workersAmount}</span>
-          </label>
-        </div>
-        <label className="font-bold mr-2">Descripción:</label>
-        <p className="flex-1">{selectedCostSheet.description}</p>
         <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
           <button
             // disabled={!canEdit}
@@ -109,6 +99,19 @@ export const CostSheetView = () => {
             </button>
           )}
         </PDFDownloadLink>
+      </div>
+      <section className="w-full flex flex-row p-2 ">
+        <label className="font-bold mr-2 ">Descripción:</label>
+        <p className="w-[50%]">{selectedCostSheet.description}</p>
+        <div className="w-[15%] flex flex-col flex-1 pl-10">
+          <label className="font-bold">
+            Creador: <span className="font-normal">INICIO</span>
+          </label>
+          <label className="font-bold">
+            Cantidad de trabajadores: <span className="font-normal">{selectedCostSheet.workersAmount}</span>
+          </label>
+        </div>
+
       </section>
       <section className="flex flex-col w-full ">
         <CSViewTable subtotal={selectedCostSheet.rawMaterialsSubtotal} label="Gasto Material" data={rawMaterials} />
