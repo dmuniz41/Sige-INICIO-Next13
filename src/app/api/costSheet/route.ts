@@ -4,6 +4,7 @@ import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
 import CostSheet, { ICostSheet } from "@/models/costSheet";
+import Nomenclator from "@/models/nomenclator";
 
 export async function POST(request: Request) {
   const {
@@ -14,6 +15,7 @@ export async function POST(request: Request) {
     description = "",
     directSalaries = [],
     financialExpenses = [],
+    nomenclatorId,
     otherDirectExpenses = [],
     payMethod = "CONTRACT",
     productionRelatedExpenses = [],
@@ -107,6 +109,14 @@ export async function POST(request: Request) {
     
     const newKey = generateRandomString(26);
 
+    const newNomenclator = new Nomenclator({
+      key: newKey,
+      code: nomenclatorId,
+      category: 'Ficha de costo',
+    });
+
+    await newNomenclator.save();
+
     const newCostSheet = new CostSheet({
       administrativeExpenses,
       administrativeExpensesSubtotal,
@@ -124,6 +134,7 @@ export async function POST(request: Request) {
       financialExpenses,
       financialExpensesSubtotal,
       key: newKey,
+      nomenclatorId,
       otherDirectExpenses,
       otherDirectExpensesSubtotal,
       payMethod,

@@ -22,7 +22,7 @@ export const startAddNomenclator = (category: string, code: string): any => {
       });
   };
 };
-export const startUpdateNomenclator = (id: string,code: string, category: string): any => {
+export const startUpdateNomenclator = (id: string, code: string, category: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios

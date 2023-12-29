@@ -8,76 +8,45 @@ export interface ICostSheetSubitem {
   value: number;
 }
 export interface ICostSheet {
+
   _id: string;
-  key: string;
-  payMethod: "CASH" | "CONTRACT";
-  USDValue: number;
-  taskName: string;
-  createdBy: string;
-  approvedBy: string;
-  description: string
-  
-  workersAmount: number;
-
-  //  Considera los gastos de recursos materiales comprados y producidos
-
-  rawMaterials: ICostSheetSubitem[];
-  rawMaterialsSubtotal: number;
-
-  //  Listado de actividades a ejecutar para completar la actividad
-
-  directSalaries: ICostSheetSubitem[];
-  directSalariesSubtotal: number;
-
-  //  Se incluye pagos por mantenimientos y reparaciones recibidas, depreciación de los activos fijos tangibles y amortización de activos fijos intangibles (Gasto en Uso de Equipos).
-
-  otherDirectExpenses: ICostSheetSubitem[];
-  otherDirectExpensesSubtotal: number;
-
-  //  Comprende los importes de los gastos que se incurren en las actividades asociadas a la producción, no identificables con un producto o servicio determinado.Ej: gasto de las actividades de mantenimiento, reparaciones, explotación de equipos, dirección de la producción, control de calidad, depreciación de activos fijos tangibles de producción y servicios auxiliares a estas, incluidos salarios, etc.
-
-  productionRelatedExpenses: ICostSheetSubitem[];
-  productionRelatedExpensesSubtotal: number;
-
-  //  Incluidos salarios(Gastos administrativos)
-
   administrativeExpenses: ICostSheetSubitem[];
   administrativeExpensesSubtotal: number;
-
-  //  Incluye salarios(Gastos de Transporte)
-
-  transportationExpenses: ICostSheetSubitem[];
-  transportationExpensesSubtotal: number;
-
-  //  Comprende los gastos en que se incurre, por las operaciones financieras relacionadas con la producción o servicios para la que se elabora la ficha, reconociendo solamente los conceptos de intereses, comisiones bancarias y primas del seguro.
-
+  approvedBy: string;
+  artisticTalent: number;
+  artisticTalentValue: number;
+  costsTotalValue: number;
+  createdBy: string;
+  creatorPrice: number;
+  description: string;
+  directSalaries: ICostSheetSubitem[];
+  directSalariesSubtotal: number;
+  expensesAndCostsTotalValue: number;
+  expensesTotalValue: number;
   financialExpenses: ICostSheetSubitem[];
   financialExpensesSubtotal: number;
-
-  // Incluye los importes de contribución a la seguridad social e impuestos sobre utilización de fuerzas de trabajo (no se considera el importe por la contribución al desarrollo local)
-
-  taxExpenses: ICostSheetSubitem[];
-  taxExpensesSubtotal: number;
-
-  expensesTotalValue: number;
-  costsTotalValue: number;
-  expensesAndCostsTotalValue: number;
-
-  artisticTalent: number;
-  artisticTalentValue: number
-
-  // Para la actividad de producción de bienes, la tasa máxima de utilidad aprobada no puede exceder el 25%
-
+  key: string;
+  nomenclatorId: string;
+  otherDirectExpenses: ICostSheetSubitem[];
+  otherDirectExpensesSubtotal: number;
+  payMethod: "CASH" | "CONTRACT";
+  productionRelatedExpenses: ICostSheetSubitem[];
+  productionRelatedExpensesSubtotal: number;
+  rawMaterials: ICostSheetSubitem[];
+  rawMaterialsByClient: number;
+  rawMaterialsSubtotal: number;
   representationCost: number;
   representationCostValue: number;
-  creatorPrice: number;
-
-  rawMaterialsByClient: number;
+  salePrice: number;
   salePriceMLC: number;
   salePriceMN: number;
-  salePrice: number
-
-  // ? Añadir cliente
+  taskName: string;
+  taxExpenses: ICostSheetSubitem[];
+  taxExpensesSubtotal: number;
+  transportationExpenses: ICostSheetSubitem[];
+  transportationExpensesSubtotal: number;
+  USDValue: number;
+  workersAmount: number;
 }
 
 const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
@@ -103,6 +72,10 @@ const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
     type: String,
   },
   approvedBy: {
+    type: String,
+  },
+  nomenclatorId: {
+    unique: true,
     type: String,
   },
   workersAmount: {

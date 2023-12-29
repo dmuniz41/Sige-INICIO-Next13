@@ -46,7 +46,7 @@ export const CSFormSection = (props: any) => {
                       options={unitMeasure} 
                       showSearch
                       optionFilterProp="children"
-                      filterOption={(input: any, option: any) => (option?.label ?? "").includes(input)}
+                      filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                       filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
                       />
                   </Form.Item>

@@ -42,9 +42,9 @@ export const CreateCostSheetForm = () => {
       size="middle"
     >
       <section className=" flex-col">
-      <div className="flex gap-2 pr-[13rem]">
+        <div className="flex gap-2 pr-[13rem]">
           <Form.Item className="mb-3 flex-1" label={<span className="font-bold text-md">Tarea a ejecutar</span>} name="taskName" rules={[{ required: true, message: "Campo requerido" }]}>
-            <Input  />
+            <Input />
           </Form.Item>
         </div>
         <div className="flex flex-row gap-4">
@@ -54,8 +54,11 @@ export const CreateCostSheetForm = () => {
           <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cantidad de empleados</span>} name="workersAmount" rules={[{ required: true, message: "Campo requerido" }]}>
             <InputNumber className="w-[5rem]" />
           </Form.Item>
-          <Form.Item className="mb-3 " name="payMethod" label={<span className="font-bold text-md">Método de pago</span>} rules={[{ required: true, message: "Campo requerido" }]}>
+          {/* <Form.Item className="mb-3 " name="payMethod" label={<span className="font-bold text-md">Método de pago</span>} rules={[{ required: true, message: "Campo requerido" }]}>
             <Select allowClear style={{ width: "10rem" }} options={payMethod} />
+          </Form.Item> */}
+          <Form.Item className="mb-3" label={<span className="font-bold text-md">Nomenclador</span>} name="nomenclatorId" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Input />
           </Form.Item>
         </div>
       </section>
@@ -130,24 +133,25 @@ export const CreateCostSheetForm = () => {
               .then((values: ICostSheet) => {
                 dispatch(
                   startAddCostSheet(
-                    values.taskName,
-                    values.payMethod,
-                    values.createdBy,
-                    values.approvedBy,
-                    values.description,
-                    250,
-                    values.workersAmount,
-                    values.rawMaterials,
-                    values.directSalaries,
-                    values.otherDirectExpenses,
-                    values.productionRelatedExpenses,
                     values.administrativeExpenses,
-                    values.transportationExpenses,
-                    values.financialExpenses,
-                    values.taxExpenses,
+                    values.approvedBy,
                     values.artisticTalent,
+                    values.createdBy,
+                    values.description,
+                    values.directSalaries,
+                    values.financialExpenses,
+                    values.nomenclatorId,
+                    values.otherDirectExpenses,
+                    values.payMethod,
+                    values.productionRelatedExpenses,
+                    values.rawMaterials,
+                    values.rawMaterialsByClient,
                     values.representationCost,
-                    values.rawMaterialsByClient
+                    values.taskName,
+                    values.taxExpenses,
+                    values.transportationExpenses,
+                    250,
+                    values.workersAmount
                   )
                 );
                 form.resetFields();
