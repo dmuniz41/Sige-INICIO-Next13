@@ -37,7 +37,7 @@ const CostSheetsTable: React.FC = () => {
 
   const canList = sessionData?.user.role.includes("Listar Ficha de Costo");
   const canCreate = sessionData?.user.role.includes("Crear Ficha de Costo");
-  const canEdit = sessionData?.user.role.includes("Editar Ficha de Costo");
+  // const canEdit = sessionData?.user.role.includes("Editar Ficha de Costo");
   const canDelete = sessionData?.user.role.includes("Eliminar Ficha de Costo");
 
   useEffect(() => {
@@ -97,17 +97,6 @@ const CostSheetsTable: React.FC = () => {
     clearFilters();
     setSearchText("");
   };
-
-  // const handleEdit = (): void => {
-  //   if (selectedRow) {
-  //     router.push(`/dashboard/costSheets/editCostSheet`)
-  //   } else {
-  //     Toast.fire({
-  //       icon: "error",
-  //       title: "Seleccione una ficha de costo a editar",
-  //     });
-  //   }
-  // };
 
   const rowSelection: TableRowSelection<ICostSheet> = {
     onChange: async (selectedRowKeys: React.Key[], selectedRows: ICostSheet[]) => {
@@ -189,8 +178,29 @@ const CostSheetsTable: React.FC = () => {
       title: "Nombre de la Tarea",
       dataIndex: "taskName",
       key: "taskName",
-      width: "100%",
+      width: "50%",
       ...getColumnSearchProps("taskName"),
+    },
+    {
+      title: "Categoría",
+      dataIndex: "category",
+      key: "category",
+      width: "30%",
+      ...getColumnSearchProps("category"),
+    },
+    {
+      title: "Precio",
+      dataIndex: "salePriceMN",
+      key: "salePriceMN",
+      width: "20%",
+      ...getColumnSearchProps("salePriceMN"),
+    },
+    {
+      title: "Precio/UM",
+      dataIndex: "salePriceMN",
+      key: "salePriceMN",
+      width: "20%",
+      ...getColumnSearchProps("salePriceMN"),
     },
   ];
 
@@ -220,17 +230,6 @@ const CostSheetsTable: React.FC = () => {
             </button>
         </div>
         <div className="flex">
-          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canEdit}
-              className={`${
-                canEdit ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={handleEdit}
-            >
-              <EditSvg />
-            </button>
-          </Tooltip> */}
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canDelete}
