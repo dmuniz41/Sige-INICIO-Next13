@@ -112,12 +112,20 @@ export const CostSheetView = () => {
         <section className="w-full flex flex-row p-2 ">
           <label className="font-bold mr-2 ">Descripción:</label>
           <p className="w-[50%]">{selectedCostSheet.description}</p>
-          <div className="w-[15%] flex flex-col flex-1 pl-10">
+          <div className="w-[15%] flex flex-col pl-10">
             <label className="font-bold">
               Creador: <span className="font-normal">INICIO</span>
             </label>
             <label className="font-bold">
               Cantidad de trabajadores: <span className="font-normal">{selectedCostSheet.workersAmount}</span>
+            </label>
+          </div>
+          <div className="flex flex-1 flex-col pl-10">
+          <label className="font-bold">
+              Nomenclador: <span className="font-normal">{selectedCostSheet.nomenclatorId}</span>
+            </label>
+          <label className="font-bold">
+              Categoría: <span className="font-normal">{selectedCostSheet.category}</span>
             </label>
           </div>
         </section>

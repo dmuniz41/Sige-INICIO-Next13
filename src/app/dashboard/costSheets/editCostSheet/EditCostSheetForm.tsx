@@ -51,6 +51,14 @@ export const EditCostSheetForm = () => {
           value: selectedCostSheet.taskName,
         },
         {
+          name: "nomenclatorId",
+          value: selectedCostSheet.nomenclatorId,
+        },
+        {
+          name: "category",
+          value: selectedCostSheet.category,
+        },
+        {
           name: "workersAmount",
           value: selectedCostSheet.workersAmount,
         },
@@ -119,18 +127,26 @@ export const EditCostSheetForm = () => {
       <section className=" flex-col">
         <div className="flex gap-2 pr-[13rem]">
           <Form.Item className="mb-3 flex-1" label={<span className="font-bold text-md">Tarea a ejecutar</span>} name="taskName" rules={[{ required: true, message: "Campo requerido" }]}>
-            <Input  />
+            <Input />
           </Form.Item>
         </div>
         <div className="flex flex-row gap-4">
           <Form.Item className="mb-3 w-[35%]" name="description" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
             <TextArea rows={3} />
           </Form.Item>
+          <div className="flex flex-col">
+            <Form.Item className="mb-3" label={<span className="font-bold text-md">Nomenclador</span>} name="nomenclatorId" rules={[{ required: true, message: "Campo requerido" }]}>
+              <Input disabled />
+            </Form.Item>
+            <Form.Item className="mb-3" label={<span className="font-bold text-md">Categoría</span>} name="category" rules={[{ required: true, message: "Campo requerido" }]}>
+              <Input />
+            </Form.Item>
+          </div>
+          {/* <Form.Item className="mb-3 " name="payMethod" label={<span className="font-bold text-md">Método de pago</span>} rules={[{ required: true, message: "Campo requerido" }]}>
+            <Select allowClear style={{ width: "10rem" }} options={payMethod} />
+          </Form.Item> */}
           <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cantidad de empleados</span>} name="workersAmount" rules={[{ required: true, message: "Campo requerido" }]}>
             <InputNumber className="w-[5rem]" />
-          </Form.Item>
-          <Form.Item className="mb-3 " name="payMethod" label={<span className="font-bold text-md">Método de pago</span>} rules={[{ required: true, message: "Campo requerido" }]}>
-            <Select allowClear style={{ width: "10rem" }} options={payMethod} />
           </Form.Item>
         </div>
       </section>
@@ -206,24 +222,25 @@ export const EditCostSheetForm = () => {
                 dispatch(
                   startUpdateCostSheet(
                     selectedCostSheet._id,
-                    values.taskName,
-                    values.payMethod,
-                    values.createdBy,
-                    values.approvedBy,
-                    values.description,
-                    250,
-                    values.workersAmount,
-                    values.rawMaterials,
-                    values.directSalaries,
-                    values.otherDirectExpenses,
-                    values.productionRelatedExpenses,
                     values.administrativeExpenses,
-                    values.transportationExpenses,
-                    values.financialExpenses,
-                    values.taxExpenses,
+                    values.approvedBy,
                     values.artisticTalent,
+                    values.category,
+                    values.createdBy,
+                    values.description,
+                    values.directSalaries,
+                    values.financialExpenses,
+                    values.otherDirectExpenses,
+                    values.payMethod,
+                    values.productionRelatedExpenses,
+                    values.rawMaterials,
+                    values.rawMaterialsByClient,
                     values.representationCost,
-                    values.rawMaterialsByClient
+                    values.taskName,
+                    values.taxExpenses,
+                    values.transportationExpenses,
+                    250,
+                    values.workersAmount
                   )
                 );
                 form.resetFields();

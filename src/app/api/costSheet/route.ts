@@ -4,16 +4,19 @@ import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
 import CostSheet, { ICostSheet } from "@/models/costSheet";
+import Nomenclator from "@/models/nomenclator";
 
 export async function POST(request: Request) {
   const {
     administrativeExpenses = [],
     approvedBy = "",
     artisticTalent = 0,
+    category = "",
     createdBy = "",
     description = "",
     directSalaries = [],
     financialExpenses = [],
+    nomenclatorId,
     otherDirectExpenses = [],
     payMethod = "CONTRACT",
     productionRelatedExpenses = [],
@@ -107,12 +110,21 @@ export async function POST(request: Request) {
     
     const newKey = generateRandomString(26);
 
+    const newNomenclator = new Nomenclator({
+      key: newKey,
+      code: nomenclatorId,
+      category: 'Ficha de costo',
+    });
+
+    await newNomenclator.save();
+
     const newCostSheet = new CostSheet({
       administrativeExpenses,
       administrativeExpensesSubtotal,
       approvedBy,
       artisticTalent,
       artisticTalentValue,
+      category,
       costsTotalValue,
       createdBy,
       creatorPrice,
@@ -124,6 +136,7 @@ export async function POST(request: Request) {
       financialExpenses,
       financialExpensesSubtotal,
       key: newKey,
+      nomenclatorId,
       otherDirectExpenses,
       otherDirectExpensesSubtotal,
       payMethod,
@@ -222,6 +235,7 @@ export async function PUT(request: Request) {
     administrativeExpenses = [],
     approvedBy = "",
     artisticTalent = 0,
+    category = '',
     createdBy = "",
     description = "",
     directSalaries = [],
@@ -320,6 +334,7 @@ export async function PUT(request: Request) {
         approvedBy,
         artisticTalent,
         artisticTalentValue,
+        category,
         costsTotalValue,
         createdBy,
         creatorPrice,
