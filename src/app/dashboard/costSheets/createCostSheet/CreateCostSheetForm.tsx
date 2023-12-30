@@ -51,14 +51,19 @@ export const CreateCostSheetForm = () => {
           <Form.Item className="mb-3 w-[35%]" name="description" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
             <TextArea rows={3} />
           </Form.Item>
-          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cantidad de empleados</span>} name="workersAmount" rules={[{ required: true, message: "Campo requerido" }]}>
-            <InputNumber className="w-[5rem]" />
-          </Form.Item>
+          <div className="flex flex-col">
+            <Form.Item className="mb-3" label={<span className="font-bold text-md">Nomenclador</span>} name="nomenclatorId" rules={[{ required: true, message: "Campo requerido" }]}>
+              <Input />
+            </Form.Item>
+            <Form.Item className="mb-3" label={<span className="font-bold text-md">Categoría</span>} name="category" rules={[{ required: true, message: "Campo requerido" }]}>
+              <Input />
+            </Form.Item>
+          </div>
           {/* <Form.Item className="mb-3 " name="payMethod" label={<span className="font-bold text-md">Método de pago</span>} rules={[{ required: true, message: "Campo requerido" }]}>
             <Select allowClear style={{ width: "10rem" }} options={payMethod} />
           </Form.Item> */}
-          <Form.Item className="mb-3" label={<span className="font-bold text-md">Nomenclador</span>} name="nomenclatorId" rules={[{ required: true, message: "Campo requerido" }]}>
-            <Input />
+          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cantidad de empleados</span>} name="workersAmount" rules={[{ required: true, message: "Campo requerido" }]}>
+            <InputNumber className="w-[5rem]" />
           </Form.Item>
         </div>
       </section>
@@ -136,6 +141,7 @@ export const CreateCostSheetForm = () => {
                     values.administrativeExpenses,
                     values.approvedBy,
                     values.artisticTalent,
+                    values.category,
                     values.createdBy,
                     values.description,
                     values.directSalaries,

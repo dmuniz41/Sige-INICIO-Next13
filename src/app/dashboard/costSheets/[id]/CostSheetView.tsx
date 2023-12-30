@@ -125,7 +125,7 @@ export const CostSheetView = () => {
               Nomenclador: <span className="font-normal">{selectedCostSheet.nomenclatorId}</span>
             </label>
           <label className="font-bold">
-              Categoría: <span className="font-normal">Categoría</span>
+              Categoría: <span className="font-normal">{selectedCostSheet.category}</span>
             </label>
           </div>
         </section>

@@ -15,6 +15,7 @@ export interface ICostSheet {
   approvedBy: string;
   artisticTalent: number;
   artisticTalentValue: number;
+  category: string;
   costsTotalValue: number;
   createdBy: string;
   creatorPrice: number;
@@ -69,6 +70,9 @@ const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
     required: [true, "La descripcion de la tarea a ejecutar es requerida"],
   },
   createdBy: {
+    type: String,
+  },
+  category: {
     type: String,
   },
   approvedBy: {
