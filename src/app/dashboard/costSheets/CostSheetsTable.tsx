@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { SeeSvg } from "@/app/global/SeeSvg";
 import { EditSvg } from "@/app/global/EditSvg";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
+import { INomenclator } from "@/models/nomenclator";
 
 type DataIndex = keyof ICostSheet;
 
@@ -33,6 +34,9 @@ const CostSheetsTable: React.FC = () => {
   const searchInput = useRef<InputRef>(null);
   const router = useRouter();
   const { data: sessionData } = useSession();
+  const costSheetCategory: string[] | undefined = [];
+  const costSheetNomenclator: string[] | undefined = [];
+  const costSheetValuePerUnitMeasure: string[] | undefined = [];
 
   const canList = sessionData?.user.role.includes("Listar Ficha de Costo");
   const canCreate = sessionData?.user.role.includes("Crear Ficha de Costo");
@@ -49,6 +53,36 @@ const CostSheetsTable: React.FC = () => {
   if (!canList) {
     data = [];
   }
+
+  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
+
+  nomenclators.map((nomenclator: INomenclator) => {
+    if (nomenclator.category === "Categoría de ficha de costo") costSheetCategory.push(nomenclator.code);
+    if (nomenclator.category === "Ficha de costo") costSheetNomenclator.push(nomenclator.code);
+    if (nomenclator.category === "Precio/UM en ficha de costo") costSheetValuePerUnitMeasure.push(nomenclator.code);
+  });
+
+  const costSheetCategoryFilter: any[] = [];
+  costSheetCategory.map((category: string) => {
+    costSheetCategoryFilter.push({
+      text: `${category}`,
+      value: `${category}`,
+    });
+  });
+  const costSheetNomenclatorFilter: any[] = [];
+  costSheetNomenclator.map((nomenclator: string) => {
+    costSheetNomenclatorFilter.push({
+      text: `${nomenclator}`,
+      value: `${nomenclator}`,
+    });
+  });
+  const costSheetValuePerUnitMeasureFilter: any[] = [];
+  costSheetValuePerUnitMeasure.map((valuePerUnitMeasure: string) => {
+    costSheetValuePerUnitMeasureFilter.push({
+      text: `${valuePerUnitMeasure}`,
+      value: `${valuePerUnitMeasure}`,
+    });
+  });
 
   const handleView = (): void => {
     if (selectedRow) {
@@ -185,14 +219,18 @@ const CostSheetsTable: React.FC = () => {
       dataIndex: "nomenclatorId",
       key: "nomenclatorId",
       width: "10%",
-      ...getColumnSearchProps("nomenclatorId"),
+      filters: costSheetNomenclatorFilter ,
+      onFilter: (value: any, record: any) => record.category.startsWith(value),
+      filterSearch: true,
     },
     {
       title: "Categoría",
       dataIndex: "category",
       key: "category",
       width: "20%",
-      ...getColumnSearchProps("category"),
+      filters: costSheetCategoryFilter ,
+      onFilter: (value: any, record: any) => record.category.startsWith(value),
+      filterSearch: true,
     },
     {
       title: "Precio",
@@ -206,7 +244,10 @@ const CostSheetsTable: React.FC = () => {
       dataIndex: "valuePerUnitMeasure",
       key: "valuePerUnitMeasure",
       width: "20%",
-      ...getColumnSearchProps("valuePerUnitMeasure"),
+      filters: costSheetValuePerUnitMeasureFilter ,
+      onFilter: (value: any, record: any) => record.category.startsWith(value),
+      filterSearch: true,
+
     },
   ];
 
