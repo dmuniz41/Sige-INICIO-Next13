@@ -181,10 +181,17 @@ const CostSheetsTable: React.FC = () => {
       ...getColumnSearchProps("taskName"),
     },
     {
+      title: "Nomenclador",
+      dataIndex: "nomenclatorId",
+      key: "nomenclatorId",
+      width: "10%",
+      ...getColumnSearchProps("nomenclatorId"),
+    },
+    {
       title: "Categoría",
       dataIndex: "category",
       key: "category",
-      width: "30%",
+      width: "20%",
       ...getColumnSearchProps("category"),
     },
     {
