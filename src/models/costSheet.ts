@@ -47,6 +47,7 @@ export interface ICostSheet {
   transportationExpenses: ICostSheetSubitem[];
   transportationExpensesSubtotal: number;
   USDValue: number;
+  valuePerUnitMeasure: string
   workersAmount: number;
 }
 
@@ -78,9 +79,13 @@ const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
   approvedBy: {
     type: String,
   },
+  valuePerUnitMeasure: {
+    type: String,
+  },
   nomenclatorId: {
     unique: true,
     type: String,
+    required: [true, 'Debe asignarle un nomenclador a la tarea'],
   },
   workersAmount: {
     type: Number,

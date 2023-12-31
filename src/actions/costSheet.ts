@@ -25,6 +25,7 @@ export const startAddCostSheet = (
   taxExpenses: ICostSheetSubitem[] = [],
   transportationExpenses: ICostSheetSubitem[] = [],
   USDValue: number = 250,
+  valuePerUnitMeasure: string = "",
   workersAmount: number = 0
 ): any => {
   const token = localStorage.getItem("accessToken");
@@ -52,6 +53,7 @@ export const startAddCostSheet = (
           taxExpenses,
           transportationExpenses,
           USDValue,
+          valuePerUnitMeasure,
           workersAmount,
         },
         { headers: { accessToken: token } }
@@ -78,6 +80,7 @@ export const startAddCostSheet = (
             CostSheet.data.taxExpenses,
             CostSheet.data.transportationExpenses,
             CostSheet.data.USDValue,
+            CostSheet.data.valuePerUnitMeasure,
             CostSheet.data.workersAmount
           )
         );
@@ -115,6 +118,7 @@ export const startUpdateCostSheet = (
   taxExpenses: ICostSheetSubitem[] = [],
   transportationExpenses: ICostSheetSubitem[] = [],
   USDValue: number = 250,
+  valuePerUnitMeasure: string = "",
   workersAmount: number = 0
 ): any => {
   const token = localStorage.getItem("accessToken");
@@ -142,6 +146,7 @@ export const startUpdateCostSheet = (
           taxExpenses,
           transportationExpenses,
           USDValue,
+          valuePerUnitMeasure,
           workersAmount,
         },
         { headers: { accessToken: token } }
@@ -168,6 +173,7 @@ export const startUpdateCostSheet = (
             CostSheet.data.taxExpenses,
             CostSheet.data.transportationExpenses,
             CostSheet.data.USDValue,
+            CostSheet.data.valuePerUnitMeasure,
             CostSheet.data.workersAmount
           )
         );
@@ -253,6 +259,7 @@ const addCostSheet = (
   taxExpenses: ICostSheetSubitem[],
   transportationExpenses: ICostSheetSubitem[],
   USDValue: number,
+  valuePerUnitMeasure: string,
   workersAmount: number
 ) => ({
   type: types.addCostSheet,
@@ -276,6 +283,7 @@ const addCostSheet = (
     taxExpenses,
     transportationExpenses,
     USDValue,
+    valuePerUnitMeasure,
     workersAmount,
   },
 });
@@ -300,6 +308,7 @@ const updateCostSheet = (
   taxExpenses: ICostSheetSubitem[],
   transportationExpenses: ICostSheetSubitem[],
   USDValue: number,
+  valuePerUnitMeasure: string,
   workersAmount: number
 ) => ({
   type: types.updateCostSheet,
@@ -323,6 +332,7 @@ const updateCostSheet = (
     taxExpenses,
     transportationExpenses,
     USDValue,
+    valuePerUnitMeasure,
     workersAmount,
   },
 });

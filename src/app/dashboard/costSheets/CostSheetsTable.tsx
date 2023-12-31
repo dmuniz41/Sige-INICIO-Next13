@@ -14,15 +14,15 @@ import { Toast } from "@/helpers/customAlert";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
-import { PlusSvg } from '@/app/global/PlusSvg';
-import { RefreshSvg } from '@/app/global/RefreshSvg';
+import { PlusSvg } from "@/app/global/PlusSvg";
+import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { ICostSheet } from "@/models/costSheet";
 import { costSheetsStartLoading, loadSelectedCostSheet, startDeleteCostSheet } from "@/actions/costSheet";
 import { useRouter } from "next/navigation";
 import { SeeSvg } from "@/app/global/SeeSvg";
 import { EditSvg } from "@/app/global/EditSvg";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
-
+import { INomenclator } from "@/models/nomenclator";
 
 type DataIndex = keyof ICostSheet;
 
@@ -34,10 +34,13 @@ const CostSheetsTable: React.FC = () => {
   const searchInput = useRef<InputRef>(null);
   const router = useRouter();
   const { data: sessionData } = useSession();
+  const costSheetCategory: string[] | undefined = [];
+  const costSheetNomenclator: string[] | undefined = [];
+  const costSheetValuePerUnitMeasure: string[] | undefined = [];
 
   const canList = sessionData?.user.role.includes("Listar Ficha de Costo");
   const canCreate = sessionData?.user.role.includes("Crear Ficha de Costo");
-  const canEdit = sessionData?.user.role.includes("Editar Ficha de Costo");
+  // const canEdit = sessionData?.user.role.includes("Editar Ficha de Costo");
   const canDelete = sessionData?.user.role.includes("Eliminar Ficha de Costo");
 
   useEffect(() => {
@@ -51,10 +54,40 @@ const CostSheetsTable: React.FC = () => {
     data = [];
   }
 
+  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
+
+  nomenclators.map((nomenclator: INomenclator) => {
+    if (nomenclator.category === "Categoría de ficha de costo") costSheetCategory.push(nomenclator.code);
+    if (nomenclator.category === "Ficha de costo") costSheetNomenclator.push(nomenclator.code);
+    if (nomenclator.category === "Precio/UM en ficha de costo") costSheetValuePerUnitMeasure.push(nomenclator.code);
+  });
+
+  const costSheetCategoryFilter: any[] = [];
+  costSheetCategory.map((category: string) => {
+    costSheetCategoryFilter.push({
+      text: `${category}`,
+      value: `${category}`,
+    });
+  });
+  const costSheetNomenclatorFilter: any[] = [];
+  costSheetNomenclator.map((nomenclator: string) => {
+    costSheetNomenclatorFilter.push({
+      text: `${nomenclator}`,
+      value: `${nomenclator}`,
+    });
+  });
+  const costSheetValuePerUnitMeasureFilter: any[] = [];
+  costSheetValuePerUnitMeasure.map((valuePerUnitMeasure: string) => {
+    costSheetValuePerUnitMeasureFilter.push({
+      text: `${valuePerUnitMeasure}`,
+      value: `${valuePerUnitMeasure}`,
+    });
+  });
+
   const handleView = (): void => {
     if (selectedRow) {
-      dispatch(loadSelectedCostSheet(selectedRow._id))
-      router.push(`/dashboard/costSheets/${selectedRow._id}`)
+      dispatch(loadSelectedCostSheet(selectedRow._id));
+      router.push(`/dashboard/costSheets/${selectedRow._id}`);
     } else {
       Toast.fire({
         icon: "error",
@@ -97,17 +130,6 @@ const CostSheetsTable: React.FC = () => {
     clearFilters();
     setSearchText("");
   };
-
-  // const handleEdit = (): void => {
-  //   if (selectedRow) {
-  //     router.push(`/dashboard/costSheets/editCostSheet`)
-  //   } else {
-  //     Toast.fire({
-  //       icon: "error",
-  //       title: "Seleccione una ficha de costo a editar",
-  //     });
-  //   }
-  // };
 
   const rowSelection: TableRowSelection<ICostSheet> = {
     onChange: async (selectedRowKeys: React.Key[], selectedRows: ICostSheet[]) => {
@@ -189,8 +211,43 @@ const CostSheetsTable: React.FC = () => {
       title: "Nombre de la Tarea",
       dataIndex: "taskName",
       key: "taskName",
-      width: "100%",
+      width: "50%",
       ...getColumnSearchProps("taskName"),
+    },
+    {
+      title: "Nomenclador",
+      dataIndex: "nomenclatorId",
+      key: "nomenclatorId",
+      width: "10%",
+      filters: costSheetNomenclatorFilter ,
+      onFilter: (value: any, record: any) => record.category.startsWith(value),
+      filterSearch: true,
+    },
+    {
+      title: "Categoría",
+      dataIndex: "category",
+      key: "category",
+      width: "20%",
+      filters: costSheetCategoryFilter ,
+      onFilter: (value: any, record: any) => record.category.startsWith(value),
+      filterSearch: true,
+    },
+    {
+      title: "Precio",
+      dataIndex: "salePrice",
+      key: "salePrice",
+      width: "20%",
+      ...getColumnSearchProps("salePrice"),
+    },
+    {
+      title: "Precio/UM",
+      dataIndex: "valuePerUnitMeasure",
+      key: "valuePerUnitMeasure",
+      width: "20%",
+      filters: costSheetValuePerUnitMeasureFilter ,
+      onFilter: (value: any, record: any) => record.category.startsWith(value),
+      filterSearch: true,
+
     },
   ];
 
@@ -200,7 +257,7 @@ const CostSheetsTable: React.FC = () => {
         <div className="flex gap-2">
           <button
             disabled={!canCreate}
-            onClick={ ()=> router.push('/dashboard/costSheets/createCostSheet')}
+            onClick={() => router.push("/dashboard/costSheets/createCostSheet")}
             className={`${
               canCreate ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"
             } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
@@ -208,29 +265,18 @@ const CostSheetsTable: React.FC = () => {
             <PlusSvg />
             Nuevo
           </button>
-            <button
-              disabled={!canList}
-              onClick={handleView}
-              className={`${
-                canList ? "bg-secondary-500 cursor-pointer hover:bg-secondary-600 ease-in-out duration-300" : "bg-secondary-200"
-              } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
-            >
-              <SeeSvg />
-              Ver
-            </button>
+          <button
+            disabled={!canList}
+            onClick={handleView}
+            className={`${
+              canList ? "bg-secondary-500 cursor-pointer hover:bg-secondary-600 ease-in-out duration-300" : "bg-secondary-200"
+            } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
+          >
+            <SeeSvg />
+            Ver
+          </button>
         </div>
         <div className="flex">
-          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canEdit}
-              className={`${
-                canEdit ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={handleEdit}
-            >
-              <EditSvg />
-            </button>
-          </Tooltip> */}
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canDelete}
@@ -273,4 +319,3 @@ const CostSheetsTable: React.FC = () => {
 };
 
 export default CostSheetsTable;
-

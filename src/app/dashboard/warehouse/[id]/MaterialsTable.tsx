@@ -143,7 +143,6 @@ const MaterialsTable: React.FC = () => {
       )
       
     })
-console.log("🚀 ~ file: MaterialsTable.tsx:137 ~ categoryFilter:", categoryFilter)
 
   let PDFReportData: DataType[] = [];
 
@@ -382,7 +381,7 @@ console.log("🚀 ~ file: MaterialsTable.tsx:137 ~ categoryFilter:", categoryFil
       onFilter: (value: any, record: any) => record.category.startsWith(value),
       filterSearch: true,
       width: "15%",
-      sorter: (a: any, b: any) => a.category.localeCompare(b.category),
+      // sorter: (a: any, b: any) => a.category.localeCompare(b.category),
     },
     {
       title: "Nombre",

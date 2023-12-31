@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { ICostSheet } from "@/models/costSheet";
 import { CSFormSection } from "../createCostSheet/CSFormSection";
 import { RootState, useAppSelector } from "@/store/store";
+import { INomenclator } from "@/models/nomenclator";
 
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
@@ -26,6 +27,9 @@ const payMethod: SelectProps["options"] = [
 ];
 
 export const EditCostSheetForm = () => {
+  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
+  const costSheetCategory: string[] | undefined = [];
+  const valuePerUM: string[] | undefined = [];
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [form] = Form.useForm();
@@ -33,6 +37,24 @@ export const EditCostSheetForm = () => {
 
   const { selectedCostSheet }: { selectedCostSheet: ICostSheet } = useAppSelector((state: RootState) => state?.costSheet);
 
+  nomenclators.map((nomenclator: INomenclator) => {
+    if (nomenclator.category === "Categoría de ficha de costo") costSheetCategory.push(nomenclator.code);
+    if (nomenclator.category === "Precio/UM en ficha de costo") valuePerUM.push(nomenclator.code);
+  });
+
+  const categoriesOptions: SelectProps["options"] = costSheetCategory.map((costSheetCategory) => {
+    return {
+      label: `${costSheetCategory}`,
+      value: `${costSheetCategory}`,
+    };
+  });
+
+  const valuePerUMOptions: SelectProps["options"] = valuePerUM.map((valuePerUM) => {
+    return {
+      label: `${valuePerUM}`,
+      value: `${valuePerUM}`,
+    };
+  });
   return (
     <Form
       form={form}
@@ -49,6 +71,10 @@ export const EditCostSheetForm = () => {
         {
           name: "taskName",
           value: selectedCostSheet.taskName,
+        },
+        {
+          name: "valuePerUnitMeasure",
+          value: selectedCostSheet.valuePerUnitMeasure,
         },
         {
           name: "nomenclatorId",
@@ -139,15 +165,34 @@ export const EditCostSheetForm = () => {
               <Input disabled />
             </Form.Item>
             <Form.Item className="mb-3" label={<span className="font-bold text-md">Categoría</span>} name="category" rules={[{ required: true, message: "Campo requerido" }]}>
-              <Input />
+              <Select
+                allowClear
+                options={categoriesOptions}
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
+                filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+              />
             </Form.Item>
           </div>
           {/* <Form.Item className="mb-3 " name="payMethod" label={<span className="font-bold text-md">Método de pago</span>} rules={[{ required: true, message: "Campo requerido" }]}>
             <Select allowClear style={{ width: "10rem" }} options={payMethod} />
           </Form.Item> */}
-          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cantidad de empleados</span>} name="workersAmount" rules={[{ required: true, message: "Campo requerido" }]}>
-            <InputNumber className="w-[5rem]" />
-          </Form.Item>
+          <div className="flex flex-col">
+            <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cantidad de empleados</span>} name="workersAmount" rules={[{ required: true, message: "Campo requerido" }]}>
+              <InputNumber className="w-[5rem]" />
+            </Form.Item>
+            <Form.Item className="mb-3" label={<span className="font-bold text-md">Precio/UM</span>} name="valuePerUnitMeasure" rules={[{ required: true, message: "Campo requerido" }]}>
+              <Select
+                allowClear
+                options={valuePerUMOptions}
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
+                filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+              />
+            </Form.Item>
+          </div>
         </div>
       </section>
       <section className="flex flex-col w-full">
@@ -240,6 +285,7 @@ export const EditCostSheetForm = () => {
                     values.taxExpenses,
                     values.transportationExpenses,
                     250,
+                    values.valuePerUnitMeasure,
                     values.workersAmount
                   )
                 );

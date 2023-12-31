@@ -27,6 +27,7 @@ export async function POST(request: Request) {
     taxExpenses = [],
     transportationExpenses = [],
     USDValue = 250,
+    valuePerUnitMeasure = "",
     workersAmount = 0,
   }: ICostSheet = await request.json();
 
@@ -107,13 +108,13 @@ export async function POST(request: Request) {
 
     const salePriceMN: number = creatorPrice + rawMaterialsByClient;
     const salePriceMLC: number = salePriceMN / USDValue;
-    
+
     const newKey = generateRandomString(26);
 
     const newNomenclator = new Nomenclator({
       key: newKey,
       code: nomenclatorId,
-      category: 'Ficha de costo',
+      category: "Ficha de costo",
     });
 
     await newNomenclator.save();
@@ -154,6 +155,7 @@ export async function POST(request: Request) {
       taxExpensesSubtotal,
       transportationExpenses,
       transportationExpensesSubtotal,
+      valuePerUnitMeasure,
       workersAmount,
     });
 
@@ -231,11 +233,11 @@ export async function GET(request: Request) {
 
 export async function PUT(request: Request) {
   const {
-    _id = '',
+    _id = "",
     administrativeExpenses = [],
     approvedBy = "",
     artisticTalent = 0,
-    category = '',
+    category = "",
     createdBy = "",
     description = "",
     directSalaries = [],
@@ -250,6 +252,7 @@ export async function PUT(request: Request) {
     taxExpenses = [],
     transportationExpenses = [],
     USDValue = 250,
+    valuePerUnitMeasure = "",
     workersAmount = 1,
   }: ICostSheet = await request.json();
   const accessToken = request.headers.get("accessToken");
@@ -362,6 +365,7 @@ export async function PUT(request: Request) {
         taxExpensesSubtotal,
         transportationExpenses,
         transportationExpensesSubtotal,
+        valuePerUnitMeasure,
         workersAmount,
       },
       { new: true }

@@ -218,6 +218,14 @@ const NomenclatorsTable: React.FC = () => {
           text: "Proveedor",
           value: "Proveedor",
         },
+        {
+          text: "Categoría de ficha de costo",
+          value: "Categoría de ficha de costo",
+        },
+        {
+          text: "Precio/UM en ficha de costo",
+          value: "Precio/UM en ficha de costo",
+        },
       ],
       onFilter: (value: any, record: any) => record.category.startsWith(value),
       filterSearch: true,
