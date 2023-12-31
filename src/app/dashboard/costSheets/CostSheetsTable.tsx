@@ -14,15 +14,14 @@ import { Toast } from "@/helpers/customAlert";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
-import { PlusSvg } from '@/app/global/PlusSvg';
-import { RefreshSvg } from '@/app/global/RefreshSvg';
+import { PlusSvg } from "@/app/global/PlusSvg";
+import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { ICostSheet } from "@/models/costSheet";
 import { costSheetsStartLoading, loadSelectedCostSheet, startDeleteCostSheet } from "@/actions/costSheet";
 import { useRouter } from "next/navigation";
 import { SeeSvg } from "@/app/global/SeeSvg";
 import { EditSvg } from "@/app/global/EditSvg";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
-
 
 type DataIndex = keyof ICostSheet;
 
@@ -53,8 +52,8 @@ const CostSheetsTable: React.FC = () => {
 
   const handleView = (): void => {
     if (selectedRow) {
-      dispatch(loadSelectedCostSheet(selectedRow._id))
-      router.push(`/dashboard/costSheets/${selectedRow._id}`)
+      dispatch(loadSelectedCostSheet(selectedRow._id));
+      router.push(`/dashboard/costSheets/${selectedRow._id}`);
     } else {
       Toast.fire({
         icon: "error",
@@ -190,17 +189,17 @@ const CostSheetsTable: React.FC = () => {
     },
     {
       title: "Precio",
-      dataIndex: "salePriceMN",
-      key: "salePriceMN",
+      dataIndex: "salePrice",
+      key: "salePrice",
       width: "20%",
-      ...getColumnSearchProps("salePriceMN"),
+      ...getColumnSearchProps("salePrice"),
     },
     {
       title: "Precio/UM",
-      dataIndex: "salePriceMN",
-      key: "salePriceMN",
+      dataIndex: "valuePerUnitMeasure",
+      key: "valuePerUnitMeasure",
       width: "20%",
-      ...getColumnSearchProps("salePriceMN"),
+      ...getColumnSearchProps("valuePerUnitMeasure"),
     },
   ];
 
@@ -210,7 +209,7 @@ const CostSheetsTable: React.FC = () => {
         <div className="flex gap-2">
           <button
             disabled={!canCreate}
-            onClick={ ()=> router.push('/dashboard/costSheets/createCostSheet')}
+            onClick={() => router.push("/dashboard/costSheets/createCostSheet")}
             className={`${
               canCreate ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"
             } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
@@ -218,16 +217,16 @@ const CostSheetsTable: React.FC = () => {
             <PlusSvg />
             Nuevo
           </button>
-            <button
-              disabled={!canList}
-              onClick={handleView}
-              className={`${
-                canList ? "bg-secondary-500 cursor-pointer hover:bg-secondary-600 ease-in-out duration-300" : "bg-secondary-200"
-              } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
-            >
-              <SeeSvg />
-              Ver
-            </button>
+          <button
+            disabled={!canList}
+            onClick={handleView}
+            className={`${
+              canList ? "bg-secondary-500 cursor-pointer hover:bg-secondary-600 ease-in-out duration-300" : "bg-secondary-200"
+            } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
+          >
+            <SeeSvg />
+            Ver
+          </button>
         </div>
         <div className="flex">
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
@@ -272,4 +271,3 @@ const CostSheetsTable: React.FC = () => {
 };
 
 export default CostSheetsTable;
-
