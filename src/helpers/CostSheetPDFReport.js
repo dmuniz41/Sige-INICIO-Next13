@@ -224,14 +224,12 @@ const SmallSubsection = (props) => {
 export default function CostSheetPDFReport(props) {
   const date = new Date().toLocaleDateString("es-DO", { year: "numeric", month: "numeric", day: "numeric" });
   const { fields = [], data = {}, title = "" } = props;
-  console.log("🚀 ~ file: CostSheetPDFReport.js:179 ~ CostSheetPDFReport ~ fields:", fields);
-  console.log("🚀 ~ file: CostSheetPDFReport.js:179 ~ CostSheetPDFReport ~ data:", data);
   return (
     <Document>
       <Page wrap orientation="portrait" size={"LETTER"} style={styles.body}>
         <View style={styles.table}>
           <View style={styles.header}>
-            <Text style={styles.headerText}>{title.toUpperCase()}</Text>
+            <Text style={styles.headerText}>{title}</Text>
           </View>
           {/* Subheader */}
           <View style={styles.subHeader}>
@@ -257,7 +255,7 @@ export default function CostSheetPDFReport(props) {
                   <Text style={styles.subtitle}>{date}</Text>
                 </View>
               </View>
-              <View style={{ minHeight: 30, display: "flex" }}>
+              <View style={{ minHeight: 30, display: "flex", padding: 1}}>
                 <Text style={styles.subtitle}>{data.description}</Text>
               </View>
             </View>
@@ -279,7 +277,7 @@ export default function CostSheetPDFReport(props) {
             <SmallSubsection number={13} name={"UTILIDAD"} value={(data.representationCostValue * 250).toFixed(2)} />
             <SmallSubsection number={14} name={"PRECIO DEL CREADOR"} value={(data.creatorPrice * 250).toFixed(2)} />
             <SmallSubsection number={15} name={"MATERIA PRIMAS Y MATERIALES APORTADOS POR EL FCBC"} value={(data.rawMaterialsByClient * 250).toFixed(2)} />
-            <SmallSubsection number={16} name={"PRECIO DE VENTA MAYORISTA MÁXIMO"} value={(data.salePriceMN * 1).toFixed(2)} />
+            <SmallSubsection number={16} name={"PRECIO DE VENTA MAYORISTA MÁXIMO"} value={(data.salePrice * 1).toFixed(2)} />
           </View>
           <View wrap={false}>
             <View style={{ width: "100%", borderStyle: "solid", borderBottom: "1px", borderLeft: "1px", borderRight: "1px", textAlign: "left", display: "flex", flexDirection: "row" }}>

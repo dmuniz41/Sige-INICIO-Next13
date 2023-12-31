@@ -90,7 +90,7 @@ export const CostSheetView = () => {
             </button>
             </Tooltip>
             <PDFDownloadLink
-              document={<CostSheetPDFReport fields={fields} data={PDFReportData} title={`Ficha de costo ${selectedCostSheet.taskName}`} />}
+              document={<CostSheetPDFReport fields={fields} data={PDFReportData} title={`Ficha de costo`} />}
               fileName={`Ficha de costo ${selectedCostSheet.taskName}`}
             >
               {({ blob, url, loading, error }) => (
