@@ -11,4 +11,11 @@ module.exports = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.ttf$/i,
+      type: "asset/resource",
+    });
+    return config;
+  },
 };
