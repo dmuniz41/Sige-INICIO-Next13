@@ -1,5 +1,8 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Page, Text, Document, StyleSheet, View } from "@react-pdf/renderer";
+import { Page, Text, Document, StyleSheet, View, Font } from "@react-pdf/renderer";
+import font from "../assets/arial-font/arialceb.ttf";
+
+Font.register({ family: "Arial", src: font, fontStyle: "normal", fontWeight: "bold" });
 
 const BORDER_COLOR = "#000";
 const BORDER_STYLE = "solid";
@@ -17,6 +20,8 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: "12pt",
+    fontFamily: "Arial",
+    fontWeight: "bold",
   },
   header: {
     textAlign: "center",
@@ -52,7 +57,6 @@ const styles = StyleSheet.create({
     borderBottom: "1px",
     borderLeft: "1px",
     borderRight: "1px",
-    // minHeight: 70,
   },
   subsectionHeaderAndTableContainer: {
     display: "flex",
@@ -67,13 +71,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderStyle: "solid",
     borderLeft: "1px",
-    // width: "60%",
   },
 
   smallSubsectionContainer: {
     display: "flex",
     flexDirection: "row",
-    // flexGrow: 1,
     width: "100%",
     minHeight: 10,
     borderStyle: "solid",
@@ -84,30 +86,20 @@ const styles = StyleSheet.create({
 
   //*   Estilos para las tablas dentro de las subsecciones
 
-  headerBg: {
-    // fontWeight: "black",
-    backgroundColor: "#B8B8B8",
-  },
   subsectionTable: {
     display: "flex",
     width: "100%",
   },
   tableCellHeader: {
-    // margin: 2,
     fontSize: "8pt",
-    // fontWeight: "bold",
-    // borderStyle: 'solid',
-    // borderBottom: '1px'
+    fontWeight: "bold",
+    fontFamily: "Arial",
   },
   tableCell: {
-    // margin: 2,
     fontSize: "8pt",
   },
   tableRow: {
-    // margin: "auto",
     flexDirection: "row",
-    // borderBottom:'1px',
-    // borderStyle:'solid'
   },
 });
 
@@ -123,11 +115,8 @@ const CustomTablePDF = (props) => {
     borderBottomColor: "#000",
     justifyContent: "center",
     alignItems: "center",
-    // borderWidth: 1,
     borderLeft: "1px",
     borderBottom: "1px",
-    // borderTop: 0,
-    // borderRight: 0,
   };
   return (
     <View style={styles.subsectionTable}>
@@ -195,7 +184,7 @@ const Subsection = (props) => {
           </View>
           <View style={{ borderStyle: "solid", backgroundColor: "#B8B8B8", display: "flex", flex: 1 }}></View>
           <View style={{ borderStyle: "solid", borderLeft: "1px", justifyContent: "flex-end", backgroundColor: "#B8B8B8", display: "flex", width: 54 }}>
-            <Text style={{ fontSize: "8pt", marginLeft: 1, textAlign: "center" }}>${subtotal.toFixed(2)}</Text>
+            <Text style={{ fontSize: "8pt", marginLeft: 1, textAlign: "center", fontFamily: "Arial", fontWeight: "bold" }}>${subtotal.toFixed(2)}</Text>
           </View>
         </View>
       </View>
@@ -212,10 +201,10 @@ const SmallSubsection = (props) => {
         <Text style={styles.subtitle}>{number}</Text>
       </View>
       <View style={{ borderStyle: "solid", justifyContent: "flex-end", alignItems: "center", display: "flex", flexGrow: 1, flexDirection: "row", paddingRight: 2 }}>
-        <Text style={{ fontSize: "10pt" }}>{name}</Text>
+        <Text style={{ fontSize: "10pt", fontFamily: "Arial", fontWeight: "bold" }}>{name}</Text>
       </View>
       <View style={{ width: 54, borderStyle: "solid", borderLeft: "1px", justifyContent: "center", backgroundColor: "#B8B8B8", display: "flex", flexDirection: "row", alignItems: "center" }}>
-        <Text style={styles.subtitle}>${value}</Text>
+        <Text style={{ fontSize: "8pt", marginLeft: 1, fontFamily: "Arial", fontWeight: "bold" }}>${value}</Text>
       </View>
     </View>
   );
@@ -229,7 +218,7 @@ export default function CostSheetPDFReport(props) {
       <Page wrap orientation="portrait" size={"LETTER"} style={styles.body}>
         <View style={styles.table}>
           <View style={styles.header}>
-            <Text style={styles.headerText}>{title}</Text>
+            <Text style={styles.headerText}>{title.toUpperCase()}</Text>
           </View>
           {/* Subheader */}
           <View style={styles.subHeader}>
@@ -255,7 +244,7 @@ export default function CostSheetPDFReport(props) {
                   <Text style={styles.subtitle}>{date}</Text>
                 </View>
               </View>
-              <View style={{ minHeight: 30, display: "flex", padding: 1}}>
+              <View style={{ minHeight: 30, display: "flex", padding: 1 }}>
                 <Text style={styles.subtitle}>{data.description}</Text>
               </View>
             </View>
@@ -265,18 +254,18 @@ export default function CostSheetPDFReport(props) {
           <Subsection fields={fields} data={data.directSalaries} subtotal={data.directSalariesSubtotal} number={2} name={"Salarios Directos"} />
           <Subsection fields={fields} data={data.otherDirectExpenses} subtotal={data.otherDirectExpensesSubtotal} number={3} name={"Otros Gastos Directos"} />
           <Subsection fields={fields} data={data.productionRelatedExpenses} subtotal={data.productionRelatedExpensesSubtotal} number={4} name={"Gastos Asociados a la Producción"} />
-          <SmallSubsection number={5} name={"IMPORTE TOTAL DE COSTOS"} value={(data.costsTotalValue * 250).toFixed(2)} />
+          <SmallSubsection number={5} name={"IMPORTE TOTAL DE COSTOS"} value={(data.costsTotalValue *1).toFixed(2)} />
           <Subsection fields={fields} data={data.administrativeExpenses} subtotal={data.administrativeExpensesSubtotal} number={6} name={"Gastos Generales y de Administración"} />
           <Subsection fields={fields} data={data.transportationExpenses} subtotal={data.transportationExpensesSubtotal} number={7} name={"Gastos de Distribución y Ventas"} />
           <Subsection fields={fields} data={data.financialExpenses} subtotal={data.financialExpensesSubtotal} number={8} name={"Gastos Financieros"} />
           <Subsection fields={fields} data={data.taxExpenses} subtotal={data.taxExpensesSubtotal} number={9} name={"Gastos Tributarios"} />
           <View wrap={false}>
-            <SmallSubsection number={10} name={"IMPORTE TOTAL DE GASTOS"} value={(data.expensesTotalValue * 250).toFixed(2)} />
-            <SmallSubsection number={11} name={"IMPORTE TOTAL DE COSTOS Y GASTOS"} value={(data.expensesAndCostsTotalValue * 250).toFixed(2)} />
-            <SmallSubsection number={12} name={"TALENTO ARTÍSTICO"} value={(data.artisticTalentValue * 250).toFixed(2)} />
-            <SmallSubsection number={13} name={"UTILIDAD"} value={(data.representationCostValue * 250).toFixed(2)} />
-            <SmallSubsection number={14} name={"PRECIO DEL CREADOR"} value={(data.creatorPrice * 250).toFixed(2)} />
-            <SmallSubsection number={15} name={"MATERIA PRIMAS Y MATERIALES APORTADOS POR EL FCBC"} value={(data.rawMaterialsByClient * 250).toFixed(2)} />
+            <SmallSubsection number={10} name={"IMPORTE TOTAL DE GASTOS"} value={(data.expensesTotalValue * 1).toFixed(2)} />
+            <SmallSubsection number={11} name={"IMPORTE TOTAL DE COSTOS Y GASTOS"} value={(data.expensesAndCostsTotalValue * 1).toFixed(2)} />
+            <SmallSubsection number={12} name={"TALENTO ARTÍSTICO"} value={(data.artisticTalentValue * 1).toFixed(2)} />
+            <SmallSubsection number={13} name={"UTILIDAD"} value={(data.representationCostValue * 1).toFixed(2)} />
+            <SmallSubsection number={14} name={"PRECIO DEL CREADOR"} value={(data.creatorPrice * 1).toFixed(2)} />
+            <SmallSubsection number={15} name={"MATERIA PRIMAS Y MATERIALES APORTADOS POR EL FCBC"} value={(data.rawMaterialsByClient * 1).toFixed(2)} />
             <SmallSubsection number={16} name={"PRECIO DE VENTA MAYORISTA MÁXIMO"} value={(data.salePrice * 1).toFixed(2)} />
           </View>
           <View wrap={false}>
