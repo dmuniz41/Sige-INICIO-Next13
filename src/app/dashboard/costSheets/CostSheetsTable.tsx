@@ -20,7 +20,6 @@ import { ICostSheet } from "@/models/costSheet";
 import { costSheetsStartLoading, loadSelectedCostSheet, startDeleteCostSheet } from "@/actions/costSheet";
 import { useRouter } from "next/navigation";
 import { SeeSvg } from "@/app/global/SeeSvg";
-import { EditSvg } from "@/app/global/EditSvg";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { INomenclator } from "@/models/nomenclator";
 
@@ -219,7 +218,7 @@ const CostSheetsTable: React.FC = () => {
       dataIndex: "nomenclatorId",
       key: "nomenclatorId",
       width: "10%",
-      filters: costSheetNomenclatorFilter ,
+      filters: costSheetNomenclatorFilter,
       onFilter: (value: any, record: any) => record.category.startsWith(value),
       filterSearch: true,
     },
@@ -228,7 +227,7 @@ const CostSheetsTable: React.FC = () => {
       dataIndex: "category",
       key: "category",
       width: "20%",
-      filters: costSheetCategoryFilter ,
+      filters: costSheetCategoryFilter,
       onFilter: (value: any, record: any) => record.category.startsWith(value),
       filterSearch: true,
     },
@@ -237,17 +236,17 @@ const CostSheetsTable: React.FC = () => {
       dataIndex: "salePrice",
       key: "salePrice",
       width: "20%",
-      ...getColumnSearchProps("salePrice"),
+      render: (text) => <span>${parseFloat(text).toFixed(2)}</span>,
+      // ...getColumnSearchProps("salePrice"),
     },
     {
       title: "Precio/UM",
       dataIndex: "valuePerUnitMeasure",
       key: "valuePerUnitMeasure",
       width: "20%",
-      filters: costSheetValuePerUnitMeasureFilter ,
+      filters: costSheetValuePerUnitMeasureFilter,
       onFilter: (value: any, record: any) => record.category.startsWith(value),
       filterSearch: true,
-
     },
   ];
 
