@@ -236,7 +236,10 @@ const CostSheetsTable: React.FC = () => {
       dataIndex: "salePrice",
       key: "salePrice",
       width: "20%",
-      render: (text) => <span>${parseFloat(text).toFixed(2)}</span>,
+      sorter: {
+        compare: (a, b) => a.salePrice - b.salePrice,
+      },
+      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
       // ...getColumnSearchProps("salePrice"),
     },
     {

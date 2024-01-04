@@ -398,7 +398,8 @@ const MaterialsTable: React.FC = () => {
       sorter: {
         compare: (a, b) => a.costPerUnit - b.costPerUnit,
       },
-      ...getColumnSearchProps("costPerUnit"),
+      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>
+      // ...getColumnSearchProps("costPerUnit"),
     },
     {
       title: "Existencias",
