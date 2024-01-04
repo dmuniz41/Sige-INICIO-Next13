@@ -423,6 +423,8 @@ export async function PATCH(request: Request) {
       });
     }
 
+    const nomenclatorToDeleteCode = costSheetToDelete.nomenclatorId;
+    await Nomenclator.findOneAndDelete({ code: nomenclatorToDeleteCode });
     const deletedCostSheet = await CostSheet.findByIdAndDelete(id);
 
     return new NextResponse(
