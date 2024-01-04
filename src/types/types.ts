@@ -5,7 +5,7 @@ export const types = {
   updateUser:              "[User] Update User",
   deleteUser:              "[User] Delete User",
   usersLoaded:             "[User] Users Loaded",
-      
+    
   addWorker:               "[Worker] Add worker",
   startAddWorker:          "[Worker] Start add worker",
   updateWorker:            "[Worker] Update worker",
@@ -42,5 +42,7 @@ export const types = {
   deleteCostSheet:         "[CostSheet] Delete CostSheet",
   costSheetsLoaded:        "[CostSheet] CostSheets loaded",
   selectedCostSheet:       "[CostSheet] Load Selected Cost Sheet",
+
+  setMLCChange:            "[Global] Set MLC Change",
 
 };

@@ -10,6 +10,7 @@ import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interf
 
 import { CreateUserForm } from "./CreateUserForm";
 import { startAddUser, startDeleteUser, startUpdateUser, usersStartLoading } from "@/actions/users";
+import { setMLCChange } from "@/actions/costSheet";
 import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
@@ -23,6 +24,8 @@ import { RefreshSvg } from "../../global/RefreshSvg";
 import { PlusSvg } from "../../global/PlusSvg";
 import { ShieldSvg } from "@/app/global/ShieldSvg";
 import { PrivilegesForm } from "./PrivilegesForm";
+import { SetCurrencyChangeForm } from "./SetCurrencyChangeForm";
+import { CurrencySvg } from "@/app/global/CurrencySVG";
 
 interface DataType {
   _id: string;
@@ -43,6 +46,7 @@ const UserTable: React.FC = () => {
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [privilegesModal, setPrivilegesModal] = useState(false);
+  const [currencyChangeModal, setCurrencyChangeModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState<DataType>();
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
@@ -89,6 +93,10 @@ const UserTable: React.FC = () => {
     }
   };
 
+  const handleSetCurrencyChange = (): void => {
+    setCurrencyChangeModal(true);
+  };
+
   const onCreate = (values: any): void => {
     dispatch(startAddUser(values.user, values.userName, values.lastName, values.privileges, values.password, values.area));
     setCreateNewModal(false);
@@ -103,10 +111,22 @@ const UserTable: React.FC = () => {
   };
   const onEditPrivileges = (values: any): void => {
     console.log(values);
-    const privileges = values.humanResourcesPrivileges.concat(values.materialPrivileges, values.nomenclatorPrivileges, values.securityPrivileges, values.warehousePrivileges, values.costSheetPrivileges);
+    const privileges = values.humanResourcesPrivileges.concat(
+      values.materialPrivileges,
+      values.nomenclatorPrivileges,
+      values.securityPrivileges,
+      values.warehousePrivileges,
+      values.costSheetPrivileges
+    );
     dispatch(startUpdateUser(selectedRow?._id!, values.user, values.userName, values.lastName, privileges, values.area));
     setSelectedRow(undefined);
     setPrivilegesModal(false);
+  };
+  const setCurrencyChange = (values: any): void => {
+    console.log(values);
+
+    dispatch(setMLCChange(values.MLCChange));
+    setCurrencyChangeModal(false);
   };
 
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
@@ -306,6 +326,17 @@ const UserTable: React.FC = () => {
               <ShieldSvg />
             </button>
           </Tooltip>
+          <Tooltip placement="top" title={"Establecer Tasa de Cambio"} arrow={{ pointAtCenter: true }}>
+            <button
+              disabled={!canEdit}
+              className={`${
+                canEdit ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+              onClick={handleSetCurrencyChange}
+            >
+              <CurrencySvg />
+            </button>
+          </Tooltip>
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canDelete}
@@ -334,6 +365,7 @@ const UserTable: React.FC = () => {
       <CreateUserForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
       <EditUserForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />
       <PrivilegesForm open={privilegesModal} onCancel={() => setPrivilegesModal(false)} onCreate={onEditPrivileges} defaultValues={selectedRow} />
+      <SetCurrencyChangeForm open={currencyChangeModal} onCancel={() => setCurrencyChangeModal(false)} onCreate={setCurrencyChange} />
 
       <Table
         size="middle"

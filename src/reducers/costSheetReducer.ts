@@ -2,7 +2,8 @@ import { types } from "../types/types";
 
 const initialState = {
   costSheets: [],
-  selectedCostSheet: {}
+  selectedCostSheet: {},
+  MLCChange: 0
 };
 
 export const costSheetReducer = (state = initialState, action:any) => {
@@ -28,6 +29,11 @@ export const costSheetReducer = (state = initialState, action:any) => {
       return {
         ...state,
         selectedCostSheet: action.payload,
+      };
+    case types.setMLCChange:
+      return {
+        ...state,
+        MLCChange: action.payload,
       };
 
     default:

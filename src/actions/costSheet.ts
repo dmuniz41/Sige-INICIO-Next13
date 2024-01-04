@@ -84,7 +84,6 @@ export const startAddCostSheet = (
             CostSheet.data.workersAmount
           )
         );
-        // dispatch(startAddNomenclator("Ficha de costo", nomenclatorId));
         dispatch(nomenclatorsStartLoading());
         dispatch(costSheetsStartLoading());
         Toast.fire({
@@ -350,3 +349,8 @@ const selectedCostSheet = (costSheet: any) => ({
   type: types.selectedCostSheet,
   payload: costSheet,
 });
+
+export const setMLCChange = (MLCChange: number)=>({
+  type: types.setMLCChange,
+  payload: MLCChange
+})
