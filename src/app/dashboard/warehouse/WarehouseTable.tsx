@@ -217,7 +217,7 @@ const WarehousesTable: React.FC = () => {
       dataIndex: "totalValue",
       key: "totalValue",
       width: "25%",
-      ...getColumnSearchProps("totalValue"),
+      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>
     },
   ];
 
