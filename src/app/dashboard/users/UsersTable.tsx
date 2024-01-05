@@ -10,7 +10,7 @@ import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interf
 
 import { CreateUserForm } from "./CreateUserForm";
 import { startAddUser, startDeleteUser, startUpdateUser, usersStartLoading } from "@/actions/users";
-import { setMLCChange } from "@/actions/costSheet";
+import { costSheetsStartLoading, startLoadCurrencyChange, startSetCurrencyChange } from "@/actions/costSheet";
 import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
@@ -59,13 +59,21 @@ const UserTable: React.FC = () => {
   useEffect(() => {
     dispatch(usersStartLoading());
     dispatch(nomenclatorsStartLoading());
+    dispatch(costSheetsStartLoading());
   }, [dispatch]);
 
-  const { users } = useAppSelector((state: RootState) => state?.user);
+  const { users }: any = useAppSelector((state: RootState) => state?.user);
+  const { costSheets }: any = useAppSelector((state: RootState) => state?.costSheet);
   let data: DataType[] = useMemo(() => users, [users]);
   if (!canList) {
     data = [];
   }
+  useEffect(() => {
+    dispatch(startLoadCurrencyChange(costSheets[0]?.USDValue));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const { currencyChange }: any = useAppSelector((state: RootState) => state?.costSheet);
 
   const handleNew = (): void => {
     setCreateNewModal(true);
@@ -122,10 +130,8 @@ const UserTable: React.FC = () => {
     setSelectedRow(undefined);
     setPrivilegesModal(false);
   };
-  const setCurrencyChange = (values: any): void => {
-    console.log(values);
-
-    dispatch(setMLCChange(values.MLCChange));
+  const onSetCurrencyChange = (values: any): void => {
+    dispatch(startSetCurrencyChange(values.currencyChange, costSheets));
     setCurrencyChangeModal(false);
   };
 
@@ -365,7 +371,7 @@ const UserTable: React.FC = () => {
       <CreateUserForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
       <EditUserForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />
       <PrivilegesForm open={privilegesModal} onCancel={() => setPrivilegesModal(false)} onCreate={onEditPrivileges} defaultValues={selectedRow} />
-      <SetCurrencyChangeForm open={currencyChangeModal} onCancel={() => setCurrencyChangeModal(false)} onCreate={setCurrencyChange} />
+      <SetCurrencyChangeForm open={currencyChangeModal} onCancel={() => setCurrencyChangeModal(false)} onCreate={onSetCurrencyChange} defaultValues={currencyChange} />
 
       <Table
         size="middle"

@@ -1,5 +1,6 @@
 "use client";
 
+import { RootState, useAppSelector } from "@/store/store";
 import { Form, InputNumber, Modal } from "antd";
 
 interface Values {
@@ -66,12 +67,12 @@ export const SetCurrencyChangeForm: React.FC<CollectionCreateFormProps> = ({ ope
         size="middle"
         fields={[
           {
-            name: "MLCChange",
-            value: 250,
+            name: "currencyChange",
+            value: defaultValues,
           },
         ]}
       >
-        <Form.Item  name="MLCChange" label="Establecer Cambio" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item  name="currencyChange" label="Establecer Cambio" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber className="w-full"/>
         </Form.Item>
       </Form>

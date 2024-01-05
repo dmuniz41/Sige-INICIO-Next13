@@ -2,8 +2,8 @@ import Swal from "sweetalert2";
 import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
 import axios, { AxiosError } from "axios";
-import { ICostSheetSubitem } from "@/models/costSheet";
-import { nomenclatorsStartLoading, startAddNomenclator } from "./nomenclator";
+import { ICostSheet, ICostSheetSubitem } from "@/models/costSheet";
+import { nomenclatorsStartLoading } from "./nomenclator";
 
 export const startAddCostSheet = (
   administrativeExpenses: ICostSheetSubitem[] = [],
@@ -24,7 +24,7 @@ export const startAddCostSheet = (
   taskName: string = "",
   taxExpenses: ICostSheetSubitem[] = [],
   transportationExpenses: ICostSheetSubitem[] = [],
-  USDValue: number = 250,
+  USDValue: number = 0,
   valuePerUnitMeasure: string = "",
   workersAmount: number = 0
 ): any => {
@@ -116,7 +116,7 @@ export const startUpdateCostSheet = (
   taskName: string = "",
   taxExpenses: ICostSheetSubitem[] = [],
   transportationExpenses: ICostSheetSubitem[] = [],
-  USDValue: number = 250,
+  USDValue: number = 0,
   valuePerUnitMeasure: string = "",
   workersAmount: number = 0
 ): any => {
@@ -237,6 +237,48 @@ export const loadSelectedCostSheet = (id: string) => {
       });
   };
 };
+export const startSetCurrencyChange = (currencyChange: number, listOfCostSheets: ICostSheet[]): any => {
+  return async (dispatch: any) => {
+    listOfCostSheets.map((costSheet: ICostSheet) => {
+      dispatch(
+        startUpdateCostSheet(
+          costSheet._id,
+          costSheet.administrativeExpenses,
+          costSheet.approvedBy,
+          costSheet.artisticTalent,
+          costSheet.category,
+          costSheet.createdBy,
+          costSheet.description,
+          costSheet.directSalaries,
+          costSheet.financialExpenses,
+          costSheet.otherDirectExpenses,
+          costSheet.payMethod,
+          costSheet.productionRelatedExpenses,
+          costSheet.rawMaterials,
+          costSheet.rawMaterialsByClient,
+          costSheet.representationCost,
+          costSheet.taskName,
+          costSheet.taxExpenses,
+          costSheet.transportationExpenses,
+          currencyChange,
+          costSheet.valuePerUnitMeasure,
+          costSheet.workersAmount
+        )
+      );
+    });
+    dispatch(costSheetsStartLoading());
+    dispatch(setCurrencyChange(currencyChange));
+    Toast.fire({
+      icon: "success",
+      title: "Tasa de Cambio Actualizada",
+    });
+  };
+};
+export const startLoadCurrencyChange = (currencyChange: number): any => {
+  return async (dispatch: any) => { 
+    dispatch(setCurrencyChange(currencyChange));
+  };
+};
 
 const addCostSheet = (
   administrativeExpenses: ICostSheetSubitem[],
@@ -350,7 +392,9 @@ const selectedCostSheet = (costSheet: any) => ({
   payload: costSheet,
 });
 
-export const setMLCChange = (MLCChange: number)=>({
-  type: types.setMLCChange,
-  payload: MLCChange
-})
+export const setCurrencyChange = (currencyChange: number) => ({
+  type: types.setCurrencyChange,
+  payload: currencyChange,
+});
+
+

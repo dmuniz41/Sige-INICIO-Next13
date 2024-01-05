@@ -43,6 +43,7 @@ export const types = {
   costSheetsLoaded:        "[CostSheet] CostSheets loaded",
   selectedCostSheet:       "[CostSheet] Load Selected Cost Sheet",
 
-  setMLCChange:            "[Global] Set MLC Change",
+  setCurrencyChange:       "[Global] Set Currency Change",
+  // loadCurrencyChange:      "[Global] Load Currency Change",
 
 };

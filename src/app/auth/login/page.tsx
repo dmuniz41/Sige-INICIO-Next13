@@ -8,6 +8,7 @@ import logo from "../../../assets/inicio.svg";
 import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
+import { costSheetsStartLoading } from "@/actions/costSheet";
 
 export default function Login() {
   const [error, setError] = useState("");
@@ -37,6 +38,7 @@ export default function Login() {
     }
     if (res?.ok) {
       await dispatch(nomenclatorsStartLoading())
+      await dispatch(costSheetsStartLoading())
       return router.push("/dashboard");
     }
   };
