@@ -4,17 +4,22 @@ import { RootState, useAppSelector } from "@/store/store";
 import React, { useEffect, useMemo } from "react";
 import { useAppDispatch } from "@/hooks/hooks";
 import { usePathname } from "next/navigation";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import { useRouter } from "next/navigation";
+import { Tooltip } from "antd";
+import dynamic from "next/dynamic";
 
 import { CSViewTable } from "./CSViewTable";
 import { ICostSheet } from "@/models/costSheet";
 import { loadSelectedCostSheet } from "@/actions/costSheet";
 import { ICostSheetSubitem } from "../../../../models/costSheet";
 import { PDFSvg } from "@/app/global/PDFSvg";
-import CostSheetPDFReport from "@/helpers/CostSheetPDFReport";
-import { useRouter } from "next/navigation";
-import { Tooltip } from "antd";
 import { EditSvg } from "@/app/global/EditSvg";
+import CostSheetPDFReport from "@/helpers/CostSheetPDFReport";
+
+const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+});
 
 export const CostSheetView = () => {
   const url = usePathname().split("/");
@@ -58,13 +63,13 @@ export const CostSheetView = () => {
     {
       title: "Precio CUP",
       custom: true,
-      component: (item: any) => `${item.price}`,
+      component: (item: any) => `$ ${item.price.toFixed(2)}`,
       width: "15",
     },
     {
       title: "Importe CUP",
       custom: true,
-      component: (item: any) => `${item.value}`,
+      component: (item: any) => `$ ${item.value.toFixed(2)}`,
       width: "15",
     },
   ];
@@ -80,19 +85,15 @@ export const CostSheetView = () => {
         <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
           <div className="flex gap-2">
             <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
-            <button
-              className=
-              "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300 w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md"
+              <button
+                className="bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300 w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md"
                 onClick={handleEdit}
-            >
+              >
                 <EditSvg />
                 Editar
-            </button>
+              </button>
             </Tooltip>
-            <PDFDownloadLink
-              document={<CostSheetPDFReport fields={fields} data={PDFReportData} title={`Ficha de costo`} />}
-              fileName={`Ficha de costo ${selectedCostSheet.taskName}`}
-            >
+            <PDFDownloadLink document={<CostSheetPDFReport fields={fields} data={PDFReportData} title={`Ficha de costo`} />} fileName={`Ficha de costo ${selectedCostSheet.taskName}`}>
               {({ blob, url, loading, error }) => (
                 <button disabled={loading} className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 rounded-full w-[2.5rem] h-[2.5rem] flex justify-center items-center">
                   <PDFSvg />
@@ -121,15 +122,15 @@ export const CostSheetView = () => {
             </label>
           </div>
           <div className="flex flex-1 flex-col pl-10">
-          <label className="font-bold">
+            <label className="font-bold">
               Nomenclador: <span className="font-normal">{selectedCostSheet.nomenclatorId}</span>
             </label>
-          <label className="font-bold">
+            <label className="font-bold">
               Categoría: <span className="font-normal">{selectedCostSheet.category}</span>
             </label>
           </div>
           <div className="flex flex-1 flex-col pl-10">
-          <label className="font-bold">
+            <label className="font-bold">
               Precio/UM: <span className="font-normal">{selectedCostSheet.valuePerUnitMeasure}</span>
             </label>
           </div>
