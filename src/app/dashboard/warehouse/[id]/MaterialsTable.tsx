@@ -9,6 +9,9 @@ import { SearchOutlined } from "@ant-design/icons";
 import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
+import dynamic from "next/dynamic";
+import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
@@ -19,10 +22,8 @@ import { AddMaterialForm } from "./AddMaterialForm";
 import { IOperation } from "@/models/operation";
 import { MinusMaterialForm } from "./MinusMaterialForm";
 import { OperationsList } from "./OperationsListModal";
-import { usePathname } from "next/navigation";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { EditMaterialForm } from "./EditMaterialForm";
-import { useSession } from "next-auth/react";
 import { PlusSvg } from "../../../global/PlusSvg";
 import { MinusSvg } from "../../../global/MinusSvg";
 import { EditSvg } from "../../../global/EditSvg";
@@ -30,9 +31,13 @@ import { DeleteSvg } from "../../../global/DeleteSvg";
 import { RefreshSvg } from "../../../global/RefreshSvg";
 import { ListSvg } from "../../../global/ListSvg";
 import { PDFSvg } from "@/app/global/PDFSvg";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import PDFReport from "@/helpers/PDFReport";
 import { INomenclator } from "@/models/nomenclator";
+import PDFReport from "@/helpers/PDFReport";
+
+const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+});
 interface DataType {
   _id: string;
   code: string;
@@ -98,7 +103,7 @@ const MaterialsTable: React.FC = () => {
     {
       title: " Coste Unitario",
       custom: true,
-      component: (item: any) => `${item.costPerUnit}`,
+      component: (item: any) => `$ ${item.costPerUnit.toFixed(2)}`,
       width: "20",
     },
     {

@@ -5,13 +5,14 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { Button, Input, Space, Table, Tooltip } from "antd";
 import type { InputRef } from "antd";
-import type { ColumnType, ColumnsType } from "antd/es/table";
+import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
+import Swal from "sweetalert2";
+import dynamic from "next/dynamic";
 
 import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
-import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
@@ -22,6 +23,14 @@ import { useRouter } from "next/navigation";
 import { SeeSvg } from "@/app/global/SeeSvg";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { INomenclator } from "@/models/nomenclator";
+import { PDFSvg } from "@/app/global/PDFSvg";
+import CostSheetTablePDFReport from "@/helpers/CostSheetTablePDFReport";
+
+const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+});
+
 
 type DataIndex = keyof ICostSheet;
 
@@ -30,6 +39,7 @@ const CostSheetsTable: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRow, setSelectedRow] = useState<ICostSheet>();
+  const [filteredData, setFilteredData] = useState<ICostSheet[]>();
   const searchInput = useRef<InputRef>(null);
   const router = useRouter();
   const { data: sessionData } = useSession();
@@ -41,6 +51,39 @@ const CostSheetsTable: React.FC = () => {
   const canCreate = sessionData?.user.role.includes("Crear Ficha de Costo");
   // const canEdit = sessionData?.user.role.includes("Editar Ficha de Costo");
   const canDelete = sessionData?.user.role.includes("Eliminar Ficha de Costo");
+
+  const fields = [
+    {
+      title: " Nomenclador",
+      custom: true,
+      component: (item: any) => `${item.nomenclatorId}`,
+      width: "10",
+    },
+    {
+      title: " Nombre de la tarea",
+      custom: true,
+      component: (item: any) => `${item.taskName}`,
+      width: "50",
+    },
+    {
+      title: " Categoría",
+      custom: true,
+      component: (item: any) => `${item.category}`,
+      width: "20",
+    },
+    {
+      title: " Precio",
+      custom: true,
+      component: (item: any) => `$ ${item.salePrice}`,
+      width: "10",
+    },
+    {
+      title: " Precio/UM",
+      custom: true,
+      component: (item: any) => `${item.valuePerUnitMeasure}`,
+      width: "10",
+    },
+  ];
 
   useEffect(() => {
     dispatch(costSheetsStartLoading());
@@ -56,8 +99,16 @@ const CostSheetsTable: React.FC = () => {
   useEffect(() => {
     dispatch(startLoadCurrencyChange(costSheets[0]?.USDValue));
     console.log(costSheets[0]?.USDValue);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  let PDFReportData: ICostSheet[] = [];
+
+  if (filteredData) {
+    PDFReportData = filteredData;
+  } else {
+    PDFReportData = data;
+  }
 
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
 
@@ -134,6 +185,11 @@ const CostSheetsTable: React.FC = () => {
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText("");
+  };
+
+  const onChange: TableProps<ICostSheet>["onChange"] = (pagination, filters, sorter, extra) => {
+    setFilteredData(extra.currentDataSource);
+    console.log(filteredData);
   };
 
   const rowSelection: TableRowSelection<ICostSheet> = {
@@ -285,6 +341,13 @@ const CostSheetsTable: React.FC = () => {
           </button>
         </div>
         <div className="flex">
+          <PDFDownloadLink document={<CostSheetTablePDFReport fields={fields} data={PDFReportData} title={`Fichas de costo`} />} fileName={`Listado de fichas de costo `}>
+            {({ blob, url, loading, error }) => (
+              <button disabled={loading} className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 rounded-full w-[2.5rem] h-[2.5rem] flex justify-center items-center">
+                <PDFSvg />
+              </button>
+            )}
+          </PDFDownloadLink>
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canDelete}
@@ -314,6 +377,7 @@ const CostSheetsTable: React.FC = () => {
         size="middle"
         columns={columns}
         dataSource={data}
+        onChange={onChange}
         pagination={{ position: ["bottomCenter"], pageSize: 15 }}
         rowSelection={{
           type: "radio",
