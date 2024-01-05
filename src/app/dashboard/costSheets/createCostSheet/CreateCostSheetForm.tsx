@@ -27,6 +27,7 @@ const payMethod: SelectProps["options"] = [
 
 export const CreateCostSheetForm = () => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
+  const { currencyChange }: any = useAppSelector((state: RootState) => state?.costSheet);
   const costSheetCategory: string[] | undefined = [];
   const valuePerUM: string[] | undefined = [];
   const dispatch = useAppDispatch();
@@ -200,7 +201,7 @@ export const CreateCostSheetForm = () => {
                     values.taskName,
                     values.taxExpenses,
                     values.transportationExpenses,
-                    250,
+                    currencyChange,
                     values.valuePerUnitMeasure,
                     values.workersAmount
                   )

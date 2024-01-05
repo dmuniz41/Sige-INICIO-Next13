@@ -155,6 +155,7 @@ export async function POST(request: Request) {
       taxExpensesSubtotal,
       transportationExpenses,
       transportationExpensesSubtotal,
+      USDValue,
       valuePerUnitMeasure,
       workersAmount,
     });
@@ -251,7 +252,7 @@ export async function PUT(request: Request) {
     taskName = "",
     taxExpenses = [],
     transportationExpenses = [],
-    USDValue = 250,
+    USDValue = 0,
     valuePerUnitMeasure = "",
     workersAmount = 1,
   }: ICostSheet = await request.json();
@@ -365,6 +366,7 @@ export async function PUT(request: Request) {
         taxExpensesSubtotal,
         transportationExpenses,
         transportationExpensesSubtotal,
+        USDValue,
         valuePerUnitMeasure,
         workersAmount,
       },
