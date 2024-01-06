@@ -18,7 +18,7 @@ import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { ICostSheet } from "@/models/costSheet";
-import { costSheetsStartLoading, loadSelectedCostSheet, startDeleteCostSheet, startLoadCurrencyChange } from "@/actions/costSheet";
+import { costSheetsStartLoading, loadSelectedCostSheet, startDeleteCostSheet } from "@/actions/costSheet";
 import { useRouter } from "next/navigation";
 import { SeeSvg } from "@/app/global/SeeSvg";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
@@ -95,12 +95,6 @@ const CostSheetsTable: React.FC = () => {
   if (!canList) {
     data = [];
   }
-
-  useEffect(() => {
-    dispatch(startLoadCurrencyChange(costSheets[0]?.USDValue));
-    console.log(costSheets[0]?.USDValue);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   let PDFReportData: ICostSheet[] = [];
 
