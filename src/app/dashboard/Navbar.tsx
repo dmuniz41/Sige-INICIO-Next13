@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { UserOutlined } from "@ant-design/icons";
@@ -10,23 +10,32 @@ import logo from "../../assets/inicio.svg";
 import { Tooltip } from "antd";
 import { RootState, useAppSelector } from "@/store/store";
 import { IWarehouse } from "@/models/warehouse";
+import { useAppDispatch } from "@/hooks/hooks";
+import { startLoadCurrencyChange } from "@/actions/costSheet";
 
 export const Navbar = () => {
   const pathname = usePathname();
   let mainPath = pathname.split("/");
-  let warehouseId = mainPath[3]
+  let warehouseId = mainPath[3];
   let secondaryPath = mainPath[2];
-  let currentWarehouseName = ''
+  let currentWarehouseName = "";
   const { data: sessionData } = useSession();
   const username = sessionData?.user?.user;
+  const dispatch = useAppDispatch();
 
-  const { warehouses }:{warehouses: IWarehouse[]} = useAppSelector((state: RootState) => state?.warehouse);
-  warehouses.map((warehouse)=>{
-    if(warehouse._id === warehouseId){
-      currentWarehouseName = `/ ${warehouse.name}`
+  const { warehouses }: { warehouses: IWarehouse[] } = useAppSelector((state: RootState) => state?.warehouse);
+  const { costSheets }: any = useAppSelector((state: RootState) => state?.costSheet);
+
+  useEffect(() => {
+    dispatch(startLoadCurrencyChange(costSheets[0]?.USDValue));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  warehouses.map((warehouse) => {
+    if (warehouse._id === warehouseId) {
+      currentWarehouseName = `/ ${warehouse.name}`;
     }
-  })
-  
+  });
+
   switch (secondaryPath) {
     case "users":
       secondaryPath = "Usuarios";
@@ -60,8 +69,6 @@ export const Navbar = () => {
       break;
   }
 
-
-
   if (mainPath.includes("dashboard")) mainPath[1] = "Menú Principal";
 
   return (
@@ -77,7 +84,7 @@ export const Navbar = () => {
               <span className="text-xl">{`${username}`}</span>
             </li>
           </ul>
-          <Tooltip placement="topLeft" title={'Salir'} arrow={{pointAtCenter: true}}>
+          <Tooltip placement="topLeft" title={"Salir"} arrow={{ pointAtCenter: true }}>
             <button
               className="flex cursor-pointer left-3 text-xl bg-primary-500 text-white-100 hover:bg-primary-400 items-center rounded-full p-2 ease-in-out duration-300"
               onClick={() => {
