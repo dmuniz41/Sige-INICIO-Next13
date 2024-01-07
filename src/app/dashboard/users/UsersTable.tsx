@@ -68,10 +68,6 @@ const UserTable: React.FC = () => {
   if (!canList) {
     data = [];
   }
-  useEffect(() => {
-    dispatch(startLoadCurrencyChange(costSheets[0]?.USDValue));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const { currencyChange }: any = useAppSelector((state: RootState) => state?.costSheet);
 
