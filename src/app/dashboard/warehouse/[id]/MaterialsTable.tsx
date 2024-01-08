@@ -386,7 +386,6 @@ const MaterialsTable: React.FC = () => {
       onFilter: (value: any, record: any) => record.category.startsWith(value),
       filterSearch: true,
       width: "15%",
-      // sorter: (a: any, b: any) => a.category.localeCompare(b.category),
     },
     {
       title: "Nombre",
@@ -404,7 +403,6 @@ const MaterialsTable: React.FC = () => {
         compare: (a, b) => a.costPerUnit - b.costPerUnit,
       },
       render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>
-      // ...getColumnSearchProps("costPerUnit"),
     },
     {
       title: "Existencias",

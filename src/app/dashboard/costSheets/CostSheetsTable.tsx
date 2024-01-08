@@ -31,7 +31,6 @@ const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) =
   loading: () => <p>Loading...</p>,
 });
 
-
 type DataIndex = keyof ICostSheet;
 
 const CostSheetsTable: React.FC = () => {
@@ -267,6 +266,7 @@ const CostSheetsTable: React.FC = () => {
       dataIndex: "taskName",
       key: "taskName",
       width: "50%",
+      sorter: (a: any, b: any) => a.taskName.localeCompare(b.taskName),
       ...getColumnSearchProps("taskName"),
     },
     {
@@ -275,8 +275,9 @@ const CostSheetsTable: React.FC = () => {
       key: "nomenclatorId",
       width: "10%",
       filters: costSheetNomenclatorFilter,
-      onFilter: (value: any, record: any) => record.category.startsWith(value),
+      onFilter: (value: any, record: any) => record.nomenclatorId.startsWith(value),
       filterSearch: true,
+      sorter: (a: any, b: any) => a.nomenclatorId.localeCompare(b.nomenclatorId),
     },
     {
       title: "Categoría",
@@ -286,17 +287,17 @@ const CostSheetsTable: React.FC = () => {
       filters: costSheetCategoryFilter,
       onFilter: (value: any, record: any) => record.category.startsWith(value),
       filterSearch: true,
+      sorter: (a: any, b: any) => a.category.localeCompare(b.category),
     },
     {
       title: "Precio",
       dataIndex: "salePrice",
       key: "salePrice",
       width: "20%",
+      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
       sorter: {
         compare: (a, b) => a.salePrice - b.salePrice,
       },
-      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
-      // ...getColumnSearchProps("salePrice"),
     },
     {
       title: "Precio/UM",
@@ -304,7 +305,7 @@ const CostSheetsTable: React.FC = () => {
       key: "valuePerUnitMeasure",
       width: "20%",
       filters: costSheetValuePerUnitMeasureFilter,
-      onFilter: (value: any, record: any) => record.category.startsWith(value),
+      onFilter: (value: any, record: any) => record.valuePerUnitMeasure.startsWith(value),
       filterSearch: true,
     },
   ];
@@ -378,7 +379,6 @@ const CostSheetsTable: React.FC = () => {
           ...rowSelection,
         }}
         className="shadow-md"
-        sortDirections={["ascend"]}
       />
     </>
   );

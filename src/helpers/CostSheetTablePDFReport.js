@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   tableCell: {
     margin: 2,
-    fontSize: 10,
+    fontSize: 8,
   },
   textCenter: {
     textAlign: "center",
