@@ -11,7 +11,8 @@ import { Tooltip } from "antd";
 import { RootState, useAppSelector } from "@/store/store";
 import { IWarehouse } from "@/models/warehouse";
 import { useAppDispatch } from "@/hooks/hooks";
-import { startLoadCurrencyChange } from "@/actions/costSheet";
+import { costSheetsStartLoading, startLoadCurrencyChange } from "@/actions/costSheet";
+import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 
 export const Navbar = () => {
   const pathname = usePathname();
@@ -24,10 +25,11 @@ export const Navbar = () => {
   const dispatch = useAppDispatch();
 
   const { warehouses }: { warehouses: IWarehouse[] } = useAppSelector((state: RootState) => state?.warehouse);
-  const { costSheets }: any = useAppSelector((state: RootState) => state?.costSheet);
 
   useEffect(() => {
-    dispatch(startLoadCurrencyChange(costSheets[0]?.USDValue));
+    dispatch(costSheetsStartLoading())
+    dispatch(nomenclatorsStartLoading())
+    dispatch(startLoadCurrencyChange())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   warehouses.map((warehouse) => {

@@ -28,6 +28,7 @@ const payMethod: SelectProps["options"] = [
 
 export const EditCostSheetForm = () => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
+  const { currencyChange }: any = useAppSelector((state: RootState) => state?.costSheet);
   const costSheetCategory: string[] | undefined = [];
   const valuePerUM: string[] | undefined = [];
   const dispatch = useAppDispatch();
@@ -148,6 +149,10 @@ export const EditCostSheetForm = () => {
           name: "rawMaterialsByClient",
           value: selectedCostSheet.rawMaterialsByClient,
         },
+        {
+          name: "USDValue",
+          value: currencyChange,
+        },
       ]}
     >
       <section className=" flex-col">
@@ -191,6 +196,11 @@ export const EditCostSheetForm = () => {
                 filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
               />
+            </Form.Item>
+          </div>
+          <div className="flex flex-col">
+            <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cambio $ </span>} name="USDValue" rules={[{ required: true, message: "Campo requerido" }]}>
+              <InputNumber disabled className="w-[5rem]" />
             </Form.Item>
           </div>
         </div>
@@ -284,7 +294,7 @@ export const EditCostSheetForm = () => {
                     values.taskName,
                     values.taxExpenses,
                     values.transportationExpenses,
-                    250,
+                    values.USDValue,
                     values.valuePerUnitMeasure,
                     values.workersAmount
                   )
