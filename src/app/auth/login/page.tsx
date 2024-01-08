@@ -7,12 +7,9 @@ import { signIn } from "next-auth/react";
 import logo from "../../../assets/inicio.svg";
 import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
-import { nomenclatorsStartLoading } from "@/actions/nomenclator";
-import { costSheetsStartLoading } from "@/actions/costSheet";
 
 export default function Login() {
   const [error, setError] = useState("");
-  const dispatch = useAppDispatch();
 
   const router = useRouter();
 
@@ -26,7 +23,7 @@ export default function Login() {
       redirect: false,
       callbackUrl: "/dashboard",
     });
-      
+
     if (res?.error) {
       console.log(error);
       Toast.fire({
@@ -37,8 +34,6 @@ export default function Login() {
       return setError(res.error as string);
     }
     if (res?.ok) {
-      await dispatch(nomenclatorsStartLoading())
-      await dispatch(costSheetsStartLoading())
       return router.push("/dashboard");
     }
   };
@@ -47,10 +42,7 @@ export default function Login() {
       <div className="mb-[3rem] w-[15rem]">
         <Image src={logo} width={500} height={300} alt="Inicio logo" priority={true} />
       </div>
-      <form
-        onSubmit={handleSubmit}
-        className="grid w-[380px] p-[30px] h-[300px] border-t-[4px] border-solid border-t-primary-500 font-bold bg-white-100 rounded-[5px] shadow-xl"
-      >
+      <form onSubmit={handleSubmit} className="grid w-[380px] p-[30px] h-[300px] border-t-[4px] border-solid border-t-primary-500 font-bold bg-white-100 rounded-[5px] shadow-xl">
         <h5 className="h-[15px] mb-0">Usuario</h5>
         <input
           className="w-full h-[50px] font-medium pl-[10px] outline-none border-solid border-[1px] rounded-md border-border_input  focus:border-primary-500 "

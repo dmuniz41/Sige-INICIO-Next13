@@ -66,6 +66,12 @@ export const CreateCostSheetForm = () => {
       autoComplete="off"
       requiredMark={"optional"}
       size="middle"
+      fields={[
+        {
+          name: "USDValue",
+          value: currencyChange
+        },
+      ]}
     >
       <section className=" flex-col">
         <div className="flex gap-2 pr-[13rem]">
@@ -108,6 +114,11 @@ export const CreateCostSheetForm = () => {
                 filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
               />
+            </Form.Item>
+          </div>
+          <div className="flex flex-col">
+            <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cambio $ </span>} name="USDValue" rules={[{ required: true, message: "Campo requerido" }]}>
+              <InputNumber disabled className="w-[5rem]" />
             </Form.Item>
           </div>
         </div>
@@ -201,7 +212,7 @@ export const CreateCostSheetForm = () => {
                     values.taskName,
                     values.taxExpenses,
                     values.transportationExpenses,
-                    currencyChange,
+                    values.USDValue,
                     values.valuePerUnitMeasure,
                     values.workersAmount
                   )

@@ -93,7 +93,8 @@ export const startAddCostSheet = (
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ file: costSheet.ts:96 ~ return ~ message:", message)
+        Swal.fire("Error", 'Error al crear la ficha de costo', "error");
       });
   };
 };
@@ -184,7 +185,8 @@ export const startUpdateCostSheet = (
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ file: costSheet.ts:188 ~ return ~ message:", message)
+        Swal.fire("Error", 'Error al editar la ficha de costo', "error");
       });
   };
 };
@@ -203,7 +205,8 @@ export const startDeleteCostSheet = (id: string): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ file: costSheet.ts:208 ~ return ~ message:", message)
+        Swal.fire("Error", 'Error al eliminar la ficha de costo', "error");
       });
   };
 };
@@ -218,7 +221,8 @@ export const costSheetsStartLoading = () => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ file: costSheet.ts:221 ~ return ~ message:", message)
+        Swal.fire("Error", 'Error al cargar las fichas de costo', "error");
       });
   };
 };
@@ -233,7 +237,8 @@ export const loadSelectedCostSheet = (id: string) => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ file: costSheet.ts:240 ~ return ~ message:", message)
+        Swal.fire("Error", 'Error al cargar la ficha de costo seleccionada', "error");
       });
   };
 };
@@ -274,9 +279,20 @@ export const startSetCurrencyChange = (currencyChange: number, listOfCostSheets:
     });
   };
 };
-export const startLoadCurrencyChange = (currencyChange: number): any => {
-  return async (dispatch: any) => { 
-    dispatch(setCurrencyChange(currencyChange));
+export const startLoadCurrencyChange = (): any => {
+  const token = localStorage.getItem("accessToken");
+  return async (dispatch: any) => {
+    await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/costSheet`, { headers: { accessToken: token } })
+      .then((resp) => {
+        let { listOfCostSheets } = resp.data;
+        dispatch(setCurrencyChange(listOfCostSheets[0].USDValue));
+      })
+      .catch((error: AxiosError) => {
+        let { message }: any = error.response?.data;
+        console.log("🚀 ~ file: costSheet.ts:288 ~ return ~ message:", message)
+        Swal.fire("Error", 'Error al cargar el valor del cambio de moneda', "error");
+      });
   };
 };
 
@@ -396,5 +412,3 @@ export const setCurrencyChange = (currencyChange: number) => ({
   type: types.setCurrencyChange,
   payload: currencyChange,
 });
-
-
