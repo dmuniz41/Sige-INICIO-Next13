@@ -40,17 +40,18 @@ const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) =
 });
 interface DataType {
   _id: string;
+  category: string;
   code: string;
+  costPerUnit: number;
+  description: string;
+  enterDate: string;
   key: string;
   materialName: string;
-  enterDate: string;
-  category: string;
-  costPerUnit: number;
-  unitsTotal: number;
   minimumExistence: number;
+  operations: [IOperation];
   provider: string;
   unitMeasure: string;
-  operations: [IOperation];
+  unitsTotal: number;
 }
 
 type DataIndex = keyof DataType;
@@ -138,16 +139,13 @@ const MaterialsTable: React.FC = () => {
     if (nomenclator.category === "Categoría de material") materialCategory.push(nomenclator.code);
   });
 
-  const categoryFilter: any[] =[]
-  materialCategory.map((category: string) =>{
-    categoryFilter.push(
-      {
-        text: `${category}`,
-        value: `${category}`
-      }
-      )
-      
-    })
+  const categoryFilter: any[] = [];
+  materialCategory.map((category: string) => {
+    categoryFilter.push({
+      text: `${category}`,
+      value: `${category}`,
+    });
+  });
 
   let PDFReportData: DataType[] = [];
 
@@ -249,15 +247,16 @@ const MaterialsTable: React.FC = () => {
     };
     dispatch(
       startAddMaterial(
-        selectedWarehouse,
-        operation,
-        values.materialName,
         values.category,
-        values.unitMeasure,
         values.costPerUnit,
+        values.description,
+        values.enterDate.format("MM/DD/YYYY"),
+        values.materialName,
         values.minimumExistence,
+        operation,
         values.provider,
-        values.enterDate.format("MM/DD/YYYY")
+        values.unitMeasure,
+        selectedWarehouse,
       )
     );
     setCreateNewModal(false);
@@ -270,7 +269,20 @@ const MaterialsTable: React.FC = () => {
       tipo: "Añadir",
       amount: values.unitsTotal,
     };
-    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence, values.provider, currentDate));
+    dispatch(
+      startAddMaterial(
+        values.category,
+        values.costPerUnit,
+        values.description,
+        currentDate,
+        values.materialName,
+        values.minimumExistence,
+        operation,
+        values.provider,
+        values.unitMeasure,
+        selectedWarehouse
+      )
+    );
     setAddModal(false);
   };
 
@@ -280,7 +292,18 @@ const MaterialsTable: React.FC = () => {
       tipo: "Sustraer",
       amount: values.unitsTotal,
     };
-    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence, values.provider, currentDate));
+    dispatch(startAddMaterial(
+      values.category,
+      values.costPerUnit,
+      values.description,
+      currentDate,
+      values.materialName,
+      values.minimumExistence,
+      operation,
+      values.provider,
+      values.unitMeasure,
+      selectedWarehouse
+      ));
     setMinusModal(false);
   };
 
@@ -375,14 +398,14 @@ const MaterialsTable: React.FC = () => {
       title: "Código",
       dataIndex: "code",
       key: "code",
-      width: "8%",
+      width: "5%",
       ...getColumnSearchProps("code"),
     },
     {
       title: "Categoría",
       dataIndex: "category",
       key: "category",
-      filters: categoryFilter ,
+      filters: categoryFilter,
       onFilter: (value: any, record: any) => record.category.startsWith(value),
       filterSearch: true,
       width: "15%",
@@ -395,6 +418,13 @@ const MaterialsTable: React.FC = () => {
       ...getColumnSearchProps("materialName"),
     },
     {
+      title: "Descripción",
+      dataIndex: "description",
+      key: "description",
+      width: "15%",
+      // ...getColumnSearchProps("description"),
+    },
+    {
       title: "Coste Unitario",
       dataIndex: "costPerUnit",
       key: "costPerUnit",
@@ -402,32 +432,31 @@ const MaterialsTable: React.FC = () => {
       sorter: {
         compare: (a, b) => a.costPerUnit - b.costPerUnit,
       },
-      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>
+      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
     },
     {
       title: "Existencias",
       dataIndex: "unitsTotal",
       key: "unitsTotal",
-      width: "10%",
+      width: "5%",
       sorter: {
         compare: (a, b) => a.unitsTotal - b.unitsTotal,
       },
       ...getColumnSearchProps("unitsTotal"),
     },
     {
-      title: "Existencias Mínimas",
-      dataIndex: "minimumExistence",
-      key: "minimumExistence",
-      width: "10%",
-      ...getColumnSearchProps("minimumExistence"),
-    },
-
-    {
       title: "Unidad de Medida",
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "10%",
       ...getColumnSearchProps("unitMeasure"),
+    },
+    {
+      title: "Existencias Mínimas",
+      dataIndex: "minimumExistence",
+      key: "minimumExistence",
+      width: "5%",
+      ...getColumnSearchProps("minimumExistence"),
     },
     {
       title: "Proveedor",
@@ -441,7 +470,7 @@ const MaterialsTable: React.FC = () => {
       title: "Fecha de Entrada",
       dataIndex: "enterDate",
       key: "enterDate",
-      width: "10%",
+      width: "8%",
       ...getColumnSearchProps("enterDate"),
     },
   ];

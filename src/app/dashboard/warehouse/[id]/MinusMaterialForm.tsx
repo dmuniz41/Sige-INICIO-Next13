@@ -4,16 +4,17 @@ import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
 
 interface Values {
   _id: string;
+  category: string;
   code: string;
+  costPerUnit: number;
+  description: string;
+  enterDate: string;
   key: string;
   materialName: string;
-  enterDate: string;
-  category: string;
-  costPerUnit: number;
-  unitsTotal: number;
   minimumExistence: number;
   provider: string;
   unitMeasure: string;
+  unitsTotal: number;
 }
 interface CollectionCreateFormProps {
   open: boolean;
@@ -84,6 +85,10 @@ export const MinusMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, o
             value: defaultValues?.materialName,
           },
           {
+            name: "description",
+            value: defaultValues?.description,
+          },
+          {
             name: "costPerUnit",
             value: defaultValues?.costPerUnit,
           },
@@ -105,6 +110,9 @@ export const MinusMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, o
           <Select allowClear style={{ width: "100%" }} disabled />
         </Form.Item>
         <Form.Item name="materialName" label="Nombre del material">
+          <Input disabled />
+        </Form.Item>
+        <Form.Item name="description" label="Descripción">
           <Input disabled />
         </Form.Item>
         <Form.Item name="costPerUnit" label="Costo por unidad de medida">

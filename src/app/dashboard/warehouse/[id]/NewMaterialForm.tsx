@@ -116,6 +116,9 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
         <Form.Item name="materialName" label="Nombre del material" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
+        <Form.Item name="description" label="Descripción">
+          <Input />
+        </Form.Item>
         <Form.Item name="costPerUnit" label="Costo por unidad de medida" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber className="w-full" />
         </Form.Item>
