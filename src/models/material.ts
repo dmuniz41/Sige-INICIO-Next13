@@ -2,19 +2,20 @@ import { Model, Schema, Types, model, models } from "mongoose";
 import { IOperation } from "./operation";
 
 export interface IMaterial {
+  category: string;
   code: number;
+  costPerUnit: number;
+  description: string;
+  enterDate: string;
   key: string;
   materialName: string;
-  enterDate: string;
-  category: string;
-  costPerUnit: number;
-  unitsTotal: number;
-  minimumExistence: number;
-  warehouse: string
-  unitMeasure?: string;
   materialTotalValue?: number,
-  provider: string,
+  minimumExistence: number;
   operations?: Types.DocumentArray<IOperation>;
+  provider: string,
+  unitMeasure?: string;
+  unitsTotal: number;
+  warehouse: string
 }
 
 const MaterialSchema = new Schema<IMaterial, Model<IMaterial>>({
@@ -28,6 +29,9 @@ const MaterialSchema = new Schema<IMaterial, Model<IMaterial>>({
   materialName: {
     type: String,
     required: [true, "El nombre del material es requerido"],
+  },
+  description: {
+    type: String,
   },
   category: {
     type: String,

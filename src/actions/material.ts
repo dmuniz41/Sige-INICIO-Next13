@@ -6,27 +6,28 @@ import { Toast } from "../helpers/customAlert";
 import { IOperation } from "@/models/operation";
 
 export const startAddMaterial = (
-  warehouse: string,
-  operation: IOperation,
-  materialName: string,
   category: string,
-  unitMeasure: string,
   costPerUnit: number,
+  description: string,
+  enterDate: string,
+  materialName: string,
   minimumExistence: number,
+  operation: IOperation,
   provider: string,
-  enterDate: string
+  unitMeasure: string,
+  warehouse: string
 ): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/material`,
-        { operation, warehouse, category, materialName, unitMeasure, costPerUnit, minimumExistence, provider, enterDate },
+        { operation, description, warehouse, category, materialName, unitMeasure, costPerUnit, minimumExistence, provider, enterDate },
         { headers: { accessToken: token } }
       )
       .then(() => {
         let code = `${category}${materialName}${costPerUnit}`;
-        dispatch(addMaterial(code, materialName, category, costPerUnit, minimumExistence, unitMeasure, provider, enterDate));
+        dispatch(addMaterial(category, code, costPerUnit, description, enterDate, materialName, minimumExistence, provider, unitMeasure));
         dispatch(materialsStartLoading(warehouse));
 
         if (operation.tipo === "Sustraer") {
@@ -84,7 +85,7 @@ export const startDeleteMaterial = (code: string, warehouse: string): any => {
   };
 };
 
-export const editMaterial = (code: string, minimumExistence: number,materialName: string, warehouse: string, ): any => {
+export const editMaterial = (code: string, minimumExistence: number, materialName: string, warehouse: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
@@ -104,17 +105,28 @@ export const editMaterial = (code: string, minimumExistence: number,materialName
   };
 };
 
-const addMaterial = (code: string, materialName: string, category: string, costPerUnit: number, minimumExistence: number, unitMeasure?: string, provider?: string, enterDate?: string) => ({
+const addMaterial = (
+  category: string,
+  code: string,
+  costPerUnit: number,
+  description: string,
+  enterDate: string,
+  materialName: string,
+  minimumExistence: number,
+  provider: string,
+  unitMeasure: string
+) => ({
   type: types.addWarehouse,
   payload: {
-    code,
-    materialName,
     category,
+    code,
     costPerUnit,
+    description,
+    enterDate,
+    materialName,
     minimumExistence,
-    unitMeasure,
     provider,
-    enterDate
+    unitMeasure,
   },
 });
 
