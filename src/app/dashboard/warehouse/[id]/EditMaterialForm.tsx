@@ -4,15 +4,16 @@ import { Form, Input, InputNumber, Modal } from "antd";
 
 interface Values {
   _id: string;
+  category: string;
   code: string;
+  costPerUnit: number;
+  description: string;
+  enterDate: string;
   key: string;
   materialName: string;
-  enterDate: string;
-  category: string;
-  costPerUnit: number;
-  unitsTotal: number;
   minimumExistence: number;
   unitMeasure: string;
+  unitsTotal: number;
 }
 interface CollectionCreateFormProps {
   open: boolean;
@@ -87,12 +88,19 @@ export const EditMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, on
             name: "materialName",
             value: defaultValues?.materialName,
           },
+          {
+            name: "description",
+            value: defaultValues?.description,
+          },
         ]}
       >
         <Form.Item name="code" label="Código">
           <Input disabled />
         </Form.Item>
         <Form.Item name="materialName" label="Nombre del material">
+          <Input className="w-full"/>
+        </Form.Item>
+        <Form.Item name="description" label="Descripción">
           <Input className="w-full"/>
         </Form.Item>
         <Form.Item  className="w-full" name="minimumExistence" label="Existencias mínimas">

@@ -93,7 +93,7 @@ const MaterialsTable: React.FC = () => {
       title: " Categoría",
       custom: true,
       component: (item: any) => `${item.category}`,
-      width: "30",
+      width: "20",
     },
     {
       title: " Nombre",
@@ -102,10 +102,16 @@ const MaterialsTable: React.FC = () => {
       width: "20",
     },
     {
+      title: " Descripción",
+      custom: true,
+      component: (item: any) => `${item.description}`,
+      width: "20",
+    },
+    {
       title: " Coste Unitario",
       custom: true,
       component: (item: any) => `$ ${item.costPerUnit.toFixed(2)}`,
-      width: "20",
+      width: "10",
     },
     {
       title: " Existencias",
@@ -308,9 +314,13 @@ const MaterialsTable: React.FC = () => {
   };
 
   const onEditMaterial = (values: any): void => {
-    dispatch(editMaterial(values.code, values.minimumExistence, values.materialName, selectedWarehouse));
-    console.log("🚀 ~ file: MaterialsTable.tsx:147 ~ onEditMaterial ~ values.code, values.minimumExistence:", values.code, values.minimumExistence);
-    // setSelectedRow(undefined);
+    dispatch(editMaterial(
+      values.code, 
+      values.description,
+      values.materialName, 
+      values.minimumExistence, 
+      selectedWarehouse
+      ));
     setEditMaterialModal(false);
   };
 
@@ -399,7 +409,7 @@ const MaterialsTable: React.FC = () => {
       dataIndex: "code",
       key: "code",
       width: "5%",
-      ...getColumnSearchProps("code"),
+      // ...getColumnSearchProps("code"),
     },
     {
       title: "Categoría",

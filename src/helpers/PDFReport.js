@@ -50,12 +50,12 @@ const styles = StyleSheet.create({
   },
   tableCellHeader: {
     margin: 2,
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: "bold",
   },
   tableCell: {
     margin: 2,
-    fontSize: 12,
+    fontSize: 10,
   },
   textCenter: {
     textAlign: "center",
