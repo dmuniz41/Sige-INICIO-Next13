@@ -66,6 +66,9 @@ export const Navbar = () => {
     case "costSheets":
       secondaryPath = "Fichas de Costo";
       break;
+    case "serviceFees":
+      secondaryPath = "Tarifas de Servicio";
+      break;
 
     default:
       break;
