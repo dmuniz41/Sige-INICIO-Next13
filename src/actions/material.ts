@@ -26,8 +26,7 @@ export const startAddMaterial = (
         { headers: { accessToken: token } }
       )
       .then(() => {
-        let code = `${category}${materialName}${costPerUnit}`;
-        dispatch(addMaterial(category, code, costPerUnit, description, enterDate, materialName, minimumExistence, provider, unitMeasure));
+        dispatch(addMaterial(category, costPerUnit, description, enterDate, materialName, minimumExistence, provider, unitMeasure));
         dispatch(materialsStartLoading(warehouse));
 
         if (operation.tipo === "Sustraer") {
@@ -107,7 +106,6 @@ export const editMaterial = (code: string, minimumExistence: number, materialNam
 
 const addMaterial = (
   category: string,
-  code: string,
   costPerUnit: number,
   description: string,
   enterDate: string,
@@ -119,7 +117,6 @@ const addMaterial = (
   type: types.addWarehouse,
   payload: {
     category,
-    code,
     costPerUnit,
     description,
     enterDate,

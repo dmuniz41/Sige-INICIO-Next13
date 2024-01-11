@@ -41,7 +41,7 @@ export async function POST(request: Request) {
       let newTotal = BDMaterial.unitsTotal + operation?.amount;
       let newTotalValue = BDMaterial.materialTotalValue! + operation?.amount * BDMaterial.costPerUnit;
       let updatedMaterial = await Material.findOneAndUpdate(
-        { materialName, category, costPerUnit },
+        { materialName, category, costPerUnit, description },
         {
           $push: { operations: operation },
           materialTotalValue: newTotalValue,
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
         }
       }
       let updatedMaterial = await Material.findOneAndUpdate(
-        { materialName, category, costPerUnit },
+        { materialName, category, costPerUnit, description },
         {
           $push: { operations: operation },
           unitsTotal: newTotal,
