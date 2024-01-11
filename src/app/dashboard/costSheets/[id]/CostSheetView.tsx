@@ -105,13 +105,13 @@ export const CostSheetView = () => {
       </article>
 
       <article className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-2">
-        <div className="flex pr-20">
+        {/* <div className="flex pr-20">
           <h2 className="font-bold mr-auto w-[100%] flex pl-2">
             Tarea a ejecutar: <span className="ml-2 font-normal flex-1">{selectedCostSheet.taskName}</span>
           </h2>
-        </div>
+        </div> */}
         <section className="w-full flex flex-row p-2 ">
-          <label className="font-bold mr-2 ">Descripción:</label>
+          <label className="font-bold mr-2 ">Descripción del servicio:</label>
           <p className="w-[40%]">{selectedCostSheet.description}</p>
           <div className="w-[15%] flex flex-col pl-10">
             <label className="font-bold">
@@ -133,6 +133,9 @@ export const CostSheetView = () => {
             <label className="font-bold">
               Precio/UM: <span className="font-normal">{selectedCostSheet.valuePerUnitMeasure}</span>
             </label>
+            <label className="font-bold">
+              Cliente: <span className="font-normal">Cliente</span>
+            </label>
           </div>
         </section>
         <section className="flex flex-col w-full ">
@@ -140,23 +143,36 @@ export const CostSheetView = () => {
           <CSViewTable subtotal={selectedCostSheet.directSalariesSubtotal} label="Salarios Directos" data={directSalaries} />
           <CSViewTable subtotal={selectedCostSheet.otherDirectExpensesSubtotal} label="Otros Gastos Directos" data={otherDirectExpenses} />
           <CSViewTable subtotal={selectedCostSheet.productionRelatedExpensesSubtotal} label="Gastos Asociados a la Producción" data={productionRelatedExpenses} />
+          <div className="flex w-full h-10 items-center border-solid border-[1px] mt-1 ">
+            <div className="flex flex-1 justify-end pr-4">
+              <label className="font-bold">Importe Total de Costos:</label>
+            </div>
+            <div className="flex border-l-[1px] border-solid w-[8.7%] h-full items-center justify-center bg-background_light">
+              <span className="font-bold">${(selectedCostSheet.costsTotalValue * 1).toFixed(2)}</span>
+            </div>
+          </div>
           <CSViewTable subtotal={selectedCostSheet.administrativeExpensesSubtotal} label="Gastos Generales y de Administración" data={administrativeExpenses} />
           <CSViewTable subtotal={selectedCostSheet.transportationExpensesSubtotal} label="Gastos de Distribución y Ventas" data={transportationExpenses} />
           <CSViewTable subtotal={selectedCostSheet.financialExpensesSubtotal} label="Gastos Financieros" data={financialExpenses} />
           <CSViewTable subtotal={selectedCostSheet.taxExpensesSubtotal} label="Gastos Tributarios" data={taxExpenses} />
+          <div className="flex w-full h-10 items-center border-solid border-[1px] mt-1 ">
+            <div className="flex flex-1 justify-end pr-4">
+              <label className="font-bold">Importe Total de Gastos:</label>
+            </div>
+            <div className="flex border-l-[1px] border-solid w-[8.7%] h-full items-center justify-center bg-background_light">
+              <span className="font-bold">${(selectedCostSheet.expensesTotalValue * 1).toFixed(2)}</span>
+            </div>
+          </div>
+          <div className="flex w-full h-10 items-center border-solid border-[1px] mt-1 ">
+            <div className="flex flex-1 justify-end pr-4">
+              <label className="font-bold">Importe Total de Costos y Gastos:</label>
+            </div>
+            <div className="flex border-l-[1px] border-solid w-[8.7%] h-full items-center justify-center bg-background_light">
+              <span className="font-bold">${(selectedCostSheet.expensesAndCostsTotalValue * 1).toFixed(2)}</span>
+            </div>
+          </div>
         </section>
         <section className="w-full flex flex-row gap-5 p-2">
-          <div className="flex flex-col w-[40%]">
-            <label className="font-bold">
-              Importe Total de Costos: <span className="font-normal">${(selectedCostSheet.costsTotalValue * 1).toFixed(2)}</span>
-            </label>
-            <label className="font-bold">
-              Importe Total de Gastos: <span className="font-normal">${(selectedCostSheet.expensesTotalValue * 1).toFixed(2)}</span>
-            </label>
-            <label className="font-bold">
-              Importe Total de Costos y Gastos: <span className="font-normal">${(selectedCostSheet.expensesAndCostsTotalValue * 1).toFixed(2)}</span>
-            </label>
-          </div>
           <div className="flex flex-col w-[40%]">
             <label className="font-bold">
               Talento Artístico ({selectedCostSheet.artisticTalent}%): <span className="font-normal">${(selectedCostSheet.artisticTalentValue * 1).toFixed(2)}</span>
