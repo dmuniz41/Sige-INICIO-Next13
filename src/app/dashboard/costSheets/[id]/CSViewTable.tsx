@@ -6,7 +6,7 @@ export const CSViewTable = (props: any) => {
   let row: ICostSheetSubitem[] = useMemo(() => data, [data]);
   return (
     <article className="flex flex-row w-full mt-1">
-      <div className="p-2 w-full">
+      <div className="mt-1 w-full">
         <table className=" flex flex-row w-full border rounded-sm">
           <th className="w-[15%] flex justify-center items-center bg-background_light border-r">{label}</th>
           <div className="flex flex-col w-full ">
