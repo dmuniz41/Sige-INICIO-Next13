@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
+import { Form, Input, InputNumber, Modal, Select } from "antd";
 
 interface Values {
   _id: string;

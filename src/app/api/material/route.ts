@@ -5,6 +5,7 @@ import Material, { IMaterial } from "@/models/material";
 import Operation from "@/models/operation";
 import { verifyJWT } from "@/libs/jwt";
 import Warehouse from "@/models/warehouse";
+import Nomenclator, { INomenclator } from "@/models/nomenclator";
 
 export async function POST(request: Request) {
   const {
@@ -159,6 +160,19 @@ export async function POST(request: Request) {
 
       newMaterial.operations.push(newOperation);
 
+      // * Crea un nuevo nomenclador asociado a ese material
+
+      const BDNomenclator = (await Nomenclator.findOne({ category: "Material", code: `${category} ${materialName}` })) as INomenclator;
+
+      if (!BDNomenclator) {
+        const newNomenclator = new Nomenclator({
+          key: category + materialName + costPerUnit + description,
+          category: "Material",
+          code: `${category} ${materialName}`,
+        });
+        await newNomenclator.save();
+      }
+
       //* Actualiza el valor total del almacén
 
       const DBWarehouse = await Warehouse.findById(warehouse);
@@ -240,12 +254,7 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const { 
-    code, 
-    description = "",
-    materialName = "", 
-    minimumExistence = 1, 
-  } = await request.json();
+  const { code = "", description = "", materialName = "", minimumExistence = 1 } = await request.json();
   const accessToken = request.headers.get("accessToken");
 
   try {
@@ -270,7 +279,20 @@ export async function PUT(request: Request) {
       });
     }
 
-    const updatedMaterial = await Material.findOneAndUpdate({ code }, { materialName, minimumExistence, description }, { new: true });
+    const updatedMaterial = (await Material.findOneAndUpdate({ code }, { materialName, minimumExistence, description }, { new: true })) as IMaterial;
+
+    // * Verifica si exsite un nomenclador con esa categoría y material en la BD, si no existe crea uno nuevo
+
+    const BDNomenclator = (await Nomenclator.findOne({ category: "Material", code: `${updatedMaterial.category} ${updatedMaterial.materialName}` })) as INomenclator;
+
+    if (!BDNomenclator) {
+      const newNomenclator = new Nomenclator({
+        key: updatedMaterial.category + materialName + updatedMaterial.costPerUnit + updatedMaterial.description,
+        category: "Material",
+        code: `${updatedMaterial.category} ${updatedMaterial.materialName}`,
+      });
+      await newNomenclator.save();
+    }
 
     return new NextResponse(
       JSON.stringify({

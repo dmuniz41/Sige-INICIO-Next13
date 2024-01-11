@@ -1,16 +1,16 @@
 "use client";
 
+import { DatePicker, Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
 import { INomenclator } from "@/models/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
-import { DatePicker, DatePickerProps, Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
 interface Values {
-  materialName: string;
   category: string;
   costPerUnit: number;
-  unitsTotal: number;
+  materialName: string;
   minimumExistence: number;
   provider: string;
   unitMeasure?: string;
+  unitsTotal: number;
 }
 interface CollectionCreateFormProps {
   open: boolean;

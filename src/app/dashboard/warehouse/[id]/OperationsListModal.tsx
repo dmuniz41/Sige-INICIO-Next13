@@ -1,13 +1,13 @@
 "use client";
 
+import { Button, Input, Space, Table } from "antd";
 import { Modal, Tag } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import React, { useMemo, useRef, useState } from "react";
-import { Button, Input, Space, Table } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
-import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
+import type { InputRef } from "antd";
 
 import { IOperation } from "@/models/operation";
 interface Values {
@@ -15,9 +15,9 @@ interface Values {
 }
 
 interface DataType {
-  tipo: string;
-  date: string;
   amount: number;
+  date: string;
+  tipo: string;
 }
 
 type DataIndex = keyof DataType;

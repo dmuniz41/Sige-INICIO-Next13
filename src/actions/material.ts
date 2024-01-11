@@ -4,6 +4,7 @@ import axios, { AxiosError } from "axios";
 import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
 import { IOperation } from "@/models/operation";
+import { startAddNomenclator } from "./nomenclator";
 
 export const startAddMaterial = (
   category: string,
@@ -84,13 +85,7 @@ export const startDeleteMaterial = (code: string, warehouse: string): any => {
   };
 };
 
-export const editMaterial = (
-  code: string, 
-  description: string,
-  materialName: string, 
-  minimumExistence: number, 
-  warehouse: string
-  ): any => {
+export const editMaterial = (code: string, description: string, materialName: string, minimumExistence: number, warehouse: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
@@ -110,16 +105,7 @@ export const editMaterial = (
   };
 };
 
-const addMaterial = (
-  category: string,
-  costPerUnit: number,
-  description: string,
-  enterDate: string,
-  materialName: string,
-  minimumExistence: number,
-  provider: string,
-  unitMeasure: string
-) => ({
+const addMaterial = (category: string, costPerUnit: number, description: string, enterDate: string, materialName: string, minimumExistence: number, provider: string, unitMeasure: string) => ({
   type: types.addWarehouse,
   payload: {
     category,
