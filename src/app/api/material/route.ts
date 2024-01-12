@@ -1,19 +1,26 @@
 import { connectDB } from "@/libs/mongodb";
-import moment from "moment";
 import { NextResponse } from "next/server";
 
 import Material, { IMaterial } from "@/models/material";
 import Operation from "@/models/operation";
 import { verifyJWT } from "@/libs/jwt";
 import Warehouse from "@/models/warehouse";
+import Nomenclator, { INomenclator } from "@/models/nomenclator";
 
 export async function POST(request: Request) {
-  const { warehouse, operation, materialName, category, unitMeasure, costPerUnit, minimumExistence = 1, provider = "", enterDate="" } = await request.json();
+  const {
+    category = "",
+    costPerUnit = 0,
+    description = "",
+    enterDate = "",
+    materialName = "",
+    minimumExistence = 1,
+    operation = {},
+    provider = "",
+    unitMeasure = "",
+    warehouse = "",
+  } = await request.json();
   const accessToken = request.headers.get("accessToken");
-
-  // let date = moment();
-  // let currentDate = date.format("L");
-
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(
@@ -27,7 +34,7 @@ export async function POST(request: Request) {
       );
     }
     await connectDB();
-    let BDMaterial = (await Material.findOne({ materialName, category, costPerUnit })) as IMaterial;
+    let BDMaterial = (await Material.findOne({ materialName, category, costPerUnit, description })) as IMaterial;
 
     // * Si ya existe un material con ese código suma la cantidad que se está entrando al total y agrega la nueva operacion a la lista de operaciones del material ya existente
 
@@ -35,17 +42,11 @@ export async function POST(request: Request) {
       let newTotal = BDMaterial.unitsTotal + operation?.amount;
       let newTotalValue = BDMaterial.materialTotalValue! + operation?.amount * BDMaterial.costPerUnit;
       let updatedMaterial = await Material.findOneAndUpdate(
-        { materialName, category, costPerUnit },
+        { materialName, category, costPerUnit, description },
         {
           $push: { operations: operation },
-          materialName,
-          category,
-          unitMeasure,
-          costPerUnit,
-          minimumExistence,
-          provider,
-          unitsTotal: newTotal,
           materialTotalValue: newTotalValue,
+          unitsTotal: newTotal,
         },
         { new: true }
       );
@@ -105,15 +106,9 @@ export async function POST(request: Request) {
         }
       }
       let updatedMaterial = await Material.findOneAndUpdate(
-        { materialName, category, costPerUnit },
+        { materialName, category, costPerUnit, description },
         {
           $push: { operations: operation },
-          materialName,
-          category,
-          unitMeasure,
-          costPerUnit,
-          minimumExistence,
-          provider,
           unitsTotal: newTotal,
           materialTotalValue: newTotalValue,
         },
@@ -121,7 +116,6 @@ export async function POST(request: Request) {
       );
 
       //* Actualiza el valor total del almacén
-
       const DBWarehouse = await Warehouse.findById(warehouse);
       let newWarehouseValue = DBWarehouse.totalValue - operation?.amount * costPerUnit;
       await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
@@ -149,21 +143,35 @@ export async function POST(request: Request) {
       }
 
       const newMaterial = new Material({
-        code: ++materialCount,
-        materialName,
         category,
-        unitMeasure,
+        code: ++materialCount,
         costPerUnit,
+        description,
+        enterDate,
+        key: category + materialName + costPerUnit + description,
+        materialName,
+        materialTotalValue: costPerUnit * operation?.amount,
         minimumExistence,
         provider,
-        warehouse,
-        enterDate,
+        unitMeasure,
         unitsTotal: operation?.amount,
-        materialTotalValue: costPerUnit * operation?.amount,
-        key: category + materialName + costPerUnit,
+        warehouse,
       });
 
       newMaterial.operations.push(newOperation);
+
+      // * Crea un nuevo nomenclador asociado a ese material
+
+      const BDNomenclator = (await Nomenclator.findOne({ category: "Material", code: `${category} ${materialName}` })) as INomenclator;
+
+      if (!BDNomenclator) {
+        const newNomenclator = new Nomenclator({
+          key: category + materialName + costPerUnit + description,
+          category: "Material",
+          code: `${category} ${materialName}`,
+        });
+        await newNomenclator.save();
+      }
 
       //* Actualiza el valor total del almacén
 
@@ -246,7 +254,7 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const { minimumExistence = 1, code, materialName="" } = await request.json();
+  const { code = "", description = "", materialName = "", minimumExistence = 1 } = await request.json();
   const accessToken = request.headers.get("accessToken");
 
   try {
@@ -271,7 +279,20 @@ export async function PUT(request: Request) {
       });
     }
 
-    const updatedMaterial = await Material.findOneAndUpdate({ code }, {materialName, minimumExistence}, { new: true });
+    const updatedMaterial = (await Material.findOneAndUpdate({ code }, { materialName, minimumExistence, description }, { new: true })) as IMaterial;
+
+    // * Verifica si exsite un nomenclador con esa categoría y material en la BD, si no existe crea uno nuevo
+
+    const BDNomenclator = (await Nomenclator.findOne({ category: "Material", code: `${updatedMaterial.category} ${updatedMaterial.materialName}` })) as INomenclator;
+
+    if (!BDNomenclator) {
+      const newNomenclator = new Nomenclator({
+        key: updatedMaterial.category + materialName + updatedMaterial.costPerUnit + updatedMaterial.description,
+        category: "Material",
+        code: `${updatedMaterial.category} ${updatedMaterial.materialName}`,
+      });
+      await newNomenclator.save();
+    }
 
     return new NextResponse(
       JSON.stringify({

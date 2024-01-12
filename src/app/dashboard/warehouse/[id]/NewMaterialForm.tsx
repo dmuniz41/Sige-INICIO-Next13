@@ -1,16 +1,16 @@
 "use client";
 
+import { DatePicker, Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
 import { INomenclator } from "@/models/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
-import { DatePicker, DatePickerProps, Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
 interface Values {
-  materialName: string;
   category: string;
   costPerUnit: number;
-  unitsTotal: number;
+  materialName: string;
   minimumExistence: number;
   provider: string;
   unitMeasure?: string;
+  unitsTotal: number;
 }
 interface CollectionCreateFormProps {
   open: boolean;
@@ -114,6 +114,9 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
           />
         </Form.Item>
         <Form.Item name="materialName" label="Nombre del material" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Input />
+        </Form.Item>
+        <Form.Item name="description" label="Descripción">
           <Input />
         </Form.Item>
         <Form.Item name="costPerUnit" label="Costo por unidad de medida" rules={[{ required: true, message: "Campo requerido" }]}>

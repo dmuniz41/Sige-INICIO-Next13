@@ -1,37 +1,37 @@
 "use client";
 
-import Highlighter from "react-highlight-words";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import moment from "moment";
-import Swal from "sweetalert2";
 import { Button, Input, Space, Table, Tooltip } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import type { InputRef } from "antd";
+import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
+import Highlighter from "react-highlight-words";
+import moment from "moment";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import Swal from "sweetalert2";
 import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
-import dynamic from "next/dynamic";
-import { useSession } from "next-auth/react";
-import { usePathname } from "next/navigation";
+import type { InputRef } from "antd";
 
-import { useAppDispatch } from "@/hooks/hooks";
+import { AddMaterialForm } from "./AddMaterialForm";
+import { DeleteSvg } from "../../../global/DeleteSvg";
+import { editMaterial, materialsStartLoading, startAddMaterial, startDeleteMaterial } from "@/actions/material";
+import { EditMaterialForm } from "./EditMaterialForm";
+import { EditSvg } from "../../../global/EditSvg";
+import { INomenclator } from "@/models/nomenclator";
+import { IOperation } from "@/models/operation";
+import { ListSvg } from "../../../global/ListSvg";
+import { MinusMaterialForm } from "./MinusMaterialForm";
+import { MinusSvg } from "../../../global/MinusSvg";
+import { NewMaterialForm } from "./NewMaterialForm";
+import { nomenclatorsStartLoading } from "@/actions/nomenclator";
+import { OperationsList } from "./OperationsListModal";
+import { PDFSvg } from "@/app/global/PDFSvg";
+import { PlusSvg } from "../../../global/PlusSvg";
+import { RefreshSvg } from "../../../global/RefreshSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
-import { editMaterial, materialsStartLoading, startAddMaterial, startDeleteMaterial } from "@/actions/material";
-import { NewMaterialForm } from "./NewMaterialForm";
-import { AddMaterialForm } from "./AddMaterialForm";
-import { IOperation } from "@/models/operation";
-import { MinusMaterialForm } from "./MinusMaterialForm";
-import { OperationsList } from "./OperationsListModal";
-import { nomenclatorsStartLoading } from "@/actions/nomenclator";
-import { EditMaterialForm } from "./EditMaterialForm";
-import { PlusSvg } from "../../../global/PlusSvg";
-import { MinusSvg } from "../../../global/MinusSvg";
-import { EditSvg } from "../../../global/EditSvg";
-import { DeleteSvg } from "../../../global/DeleteSvg";
-import { RefreshSvg } from "../../../global/RefreshSvg";
-import { ListSvg } from "../../../global/ListSvg";
-import { PDFSvg } from "@/app/global/PDFSvg";
-import { INomenclator } from "@/models/nomenclator";
+import { useAppDispatch } from "@/hooks/hooks";
 import PDFReport from "@/helpers/PDFReport";
 
 const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
@@ -40,17 +40,18 @@ const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) =
 });
 interface DataType {
   _id: string;
+  category: string;
   code: string;
+  costPerUnit: number;
+  description: string;
+  enterDate: string;
   key: string;
   materialName: string;
-  enterDate: string;
-  category: string;
-  costPerUnit: number;
-  unitsTotal: number;
   minimumExistence: number;
+  operations: [IOperation];
   provider: string;
   unitMeasure: string;
-  operations: [IOperation];
+  unitsTotal: number;
 }
 
 type DataIndex = keyof DataType;
@@ -92,7 +93,7 @@ const MaterialsTable: React.FC = () => {
       title: " Categoría",
       custom: true,
       component: (item: any) => `${item.category}`,
-      width: "30",
+      width: "20",
     },
     {
       title: " Nombre",
@@ -101,10 +102,16 @@ const MaterialsTable: React.FC = () => {
       width: "20",
     },
     {
+      title: " Descripción",
+      custom: true,
+      component: (item: any) => `${item.description}`,
+      width: "20",
+    },
+    {
       title: " Coste Unitario",
       custom: true,
       component: (item: any) => `$ ${item.costPerUnit.toFixed(2)}`,
-      width: "20",
+      width: "10",
     },
     {
       title: " Existencias",
@@ -138,16 +145,13 @@ const MaterialsTable: React.FC = () => {
     if (nomenclator.category === "Categoría de material") materialCategory.push(nomenclator.code);
   });
 
-  const categoryFilter: any[] =[]
-  materialCategory.map((category: string) =>{
-    categoryFilter.push(
-      {
-        text: `${category}`,
-        value: `${category}`
-      }
-      )
-      
-    })
+  const categoryFilter: any[] = [];
+  materialCategory.map((category: string) => {
+    categoryFilter.push({
+      text: `${category}`,
+      value: `${category}`,
+    });
+  });
 
   let PDFReportData: DataType[] = [];
 
@@ -249,15 +253,16 @@ const MaterialsTable: React.FC = () => {
     };
     dispatch(
       startAddMaterial(
-        selectedWarehouse,
-        operation,
-        values.materialName,
         values.category,
-        values.unitMeasure,
         values.costPerUnit,
+        values.description,
+        values.enterDate.format("MM/DD/YYYY"),
+        values.materialName,
         values.minimumExistence,
+        operation,
         values.provider,
-        values.enterDate.format("MM/DD/YYYY")
+        values.unitMeasure,
+        selectedWarehouse,
       )
     );
     setCreateNewModal(false);
@@ -270,7 +275,20 @@ const MaterialsTable: React.FC = () => {
       tipo: "Añadir",
       amount: values.unitsTotal,
     };
-    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence, values.provider, currentDate));
+    dispatch(
+      startAddMaterial(
+        values.category,
+        values.costPerUnit,
+        values.description,
+        currentDate,
+        values.materialName,
+        values.minimumExistence,
+        operation,
+        values.provider,
+        values.unitMeasure,
+        selectedWarehouse
+      )
+    );
     setAddModal(false);
   };
 
@@ -280,14 +298,29 @@ const MaterialsTable: React.FC = () => {
       tipo: "Sustraer",
       amount: values.unitsTotal,
     };
-    dispatch(startAddMaterial(selectedWarehouse, operation, values.materialName, values.category, values.unitMeasure, values.costPerUnit, values.minimumExistence, values.provider, currentDate));
+    dispatch(startAddMaterial(
+      values.category,
+      values.costPerUnit,
+      values.description,
+      currentDate,
+      values.materialName,
+      values.minimumExistence,
+      operation,
+      values.provider,
+      values.unitMeasure,
+      selectedWarehouse
+      ));
     setMinusModal(false);
   };
 
   const onEditMaterial = (values: any): void => {
-    dispatch(editMaterial(values.code, values.minimumExistence, values.materialName, selectedWarehouse));
-    console.log("🚀 ~ file: MaterialsTable.tsx:147 ~ onEditMaterial ~ values.code, values.minimumExistence:", values.code, values.minimumExistence);
-    // setSelectedRow(undefined);
+    dispatch(editMaterial(
+      values.code, 
+      values.description,
+      values.materialName, 
+      values.minimumExistence, 
+      selectedWarehouse
+      ));
     setEditMaterialModal(false);
   };
 
@@ -375,14 +408,14 @@ const MaterialsTable: React.FC = () => {
       title: "Código",
       dataIndex: "code",
       key: "code",
-      width: "8%",
-      ...getColumnSearchProps("code"),
+      width: "5%",
+      // ...getColumnSearchProps("code"),
     },
     {
       title: "Categoría",
       dataIndex: "category",
       key: "category",
-      filters: categoryFilter ,
+      filters: categoryFilter,
       onFilter: (value: any, record: any) => record.category.startsWith(value),
       filterSearch: true,
       width: "15%",
@@ -395,6 +428,13 @@ const MaterialsTable: React.FC = () => {
       ...getColumnSearchProps("materialName"),
     },
     {
+      title: "Descripción",
+      dataIndex: "description",
+      key: "description",
+      width: "15%",
+      // ...getColumnSearchProps("description"),
+    },
+    {
       title: "Coste Unitario",
       dataIndex: "costPerUnit",
       key: "costPerUnit",
@@ -402,32 +442,31 @@ const MaterialsTable: React.FC = () => {
       sorter: {
         compare: (a, b) => a.costPerUnit - b.costPerUnit,
       },
-      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>
+      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
     },
     {
       title: "Existencias",
       dataIndex: "unitsTotal",
       key: "unitsTotal",
-      width: "10%",
+      width: "5%",
       sorter: {
         compare: (a, b) => a.unitsTotal - b.unitsTotal,
       },
       ...getColumnSearchProps("unitsTotal"),
     },
     {
-      title: "Existencias Mínimas",
-      dataIndex: "minimumExistence",
-      key: "minimumExistence",
-      width: "10%",
-      ...getColumnSearchProps("minimumExistence"),
-    },
-
-    {
       title: "Unidad de Medida",
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "10%",
       ...getColumnSearchProps("unitMeasure"),
+    },
+    {
+      title: "Existencias Mínimas",
+      dataIndex: "minimumExistence",
+      key: "minimumExistence",
+      width: "5%",
+      ...getColumnSearchProps("minimumExistence"),
     },
     {
       title: "Proveedor",
@@ -441,7 +480,7 @@ const MaterialsTable: React.FC = () => {
       title: "Fecha de Entrada",
       dataIndex: "enterDate",
       key: "enterDate",
-      width: "10%",
+      width: "8%",
       ...getColumnSearchProps("enterDate"),
     },
   ];
