@@ -44,6 +44,7 @@ export const types = {
   selectedCostSheet:       "[CostSheet] Load Selected Cost Sheet",
 
   setCurrencyChange:       "[Global] Set Currency Change",
-  // loadCurrencyChange:      "[Global] Load Currency Change",
 
+  updateServiceFeeAuxiliary: "[ServiceFeeAuxiliary] Update Service Fee Auxiliary" ,
+  serviceFeeAuxiliaryLoaded: "[ServiceFeeAuxiliary] Load Service Fee Auxiliary" 
 };
