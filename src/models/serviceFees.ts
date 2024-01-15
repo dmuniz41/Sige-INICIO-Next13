@@ -9,41 +9,49 @@ export interface IServiceFeeSubItem {
 }
 export interface IServiceFee {
   _id: string;
-  administrativeExpensesSubtotal: number;
-  artisticPrice: number;
-  artisticTalentValue: number;
   category: string;
-  commercialMargin: number;
-  createdBy: string;
-  currencyChange: number;
-  electricityExpense: IServiceFeeSubItem;
-  equipmentDepreciation: IServiceFeeSubItem[];
-  equipmentDepreciationSubtotal: number;
-  equipmentMaintenance: IServiceFeeSubItem[];
-  equipmentMaintenanceSubtotal: number;
-  expensesTotalValue: number;
-  feedingExpense: IServiceFeeSubItem;
-  fuelExpense: IServiceFeeSubItem;
-  indirectSalaries: IServiceFeeSubItem;
-  key: string;
-  leaseExpense: IServiceFeeSubItem;
   nomenclatorId: string;
-  ONAT: number;
+  key: string;
+  workersAmount: number;
+  taskName: string;
   payMethod: "CASH" | "CONTRACT";
-  phoneExpense: IServiceFeeSubItem;
+  valuePerUnitMeasure: string;
+  //* MATERIAS PRIMAS
   rawMaterials: IServiceFeeSubItem[];
-  rawMaterialsByClient: number;
   rawMaterialsSubtotal: number;
-  rawMaterialsTransportationExpenses: IServiceFeeSubItem;
-  salePrice: number;
-  salePriceUSD: number;
-  salesAndDistributionExpenses: IServiceFeeSubItem;
-  subcontractExpenses: number;
+  // *ACTIVIDADES O OPERACIONES
   taskList: IServiceFeeSubItem[];
   taskListSubtotal: number;
-  taskName: string;
-  valuePerUnitMeasure: string;
-  workersAmount: number;
+  //*DEPRECIACION DE EQUIPOS
+  equipmentDepreciation: IServiceFeeSubItem[];
+  equipmentDepreciationSubtotal: number;
+  //*MANTENIMIENTO DE EQUIPOS
+  equipmentMaintenance: IServiceFeeSubItem[];
+  equipmentMaintenanceSubtotal: number;
+  //*GASTOS ADMINISTRATIVOS
+  electricityExpense: IServiceFeeSubItem;
+  fuelExpense: IServiceFeeSubItem;
+  feedingExpense: IServiceFeeSubItem;
+  phoneExpense: IServiceFeeSubItem;
+  leaseExpense: IServiceFeeSubItem;
+  administrativeExpensesSubtotal: number;
+  //*GASTOS DE TRANSPORTE
+  rawMaterialsTransportationExpenses: IServiceFeeSubItem;
+  salesAndDistributionExpenses: IServiceFeeSubItem;
+  //*GASTO DE PERSONAL CONTRATADO
+  indirectSalaries: IServiceFeeSubItem;
+  subcontractExpenses: number;
+  //*OTROS
+  expensesTotalValue: number;
+  artisticTalentValue: number;
+  artisticPrice: number;
+  ONAT: number;
+  commercialMargin: number;
+  salePrice: number;
+  salePriceUSD: number;
+  rawMaterialsByClient: number;
+  // createdBy: string;
+  // currencyChange: number;
 }
 
 const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
@@ -60,9 +68,9 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
     unique: true,
     required: [true, "El nombre de la tarea a ejecutar es requerida"],
   },
-  createdBy: {
-    type: String,
-  },
+  // createdBy: {
+  //   type: String,
+  // },
   category: {
     type: String,
   },
@@ -77,9 +85,9 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
   workersAmount: {
     type: Number,
   },
-  currencyChange: {
-    type: Number,
-  },
+  // currencyChange: {
+  //   type: Number,
+  // },
   rawMaterials: [
     {
       description: String,
