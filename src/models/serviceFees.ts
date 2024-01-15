@@ -1,6 +1,7 @@
 import { Model, Schema, model, models } from "mongoose";
 
 export interface IServiceFeeSubItem {
+  // *La descripcion es Categoria + Nombre que se debe generar previamente al crear el material en el almacen 
   description: string;
   unitMeasure?: string;
   amount: number;
