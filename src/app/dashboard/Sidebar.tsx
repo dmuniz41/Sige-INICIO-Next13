@@ -11,7 +11,11 @@ const items: MenuProps["items"] = [
     key: "security",
     children: [
       {
-        label: <Link href="/dashboard/users">Usuarios</Link>,
+        label: (
+          <Link prefetch href="/dashboard/users">
+            Usuarios
+          </Link>
+        ),
         key: "users",
       },
     ],
@@ -30,7 +34,11 @@ const items: MenuProps["items"] = [
     key: "humanResources",
     children: [
       {
-        label: <Link href="/dashboard/humanResources">Trabajador</Link>,
+        label: (
+          <Link prefetch href="/dashboard/humanResources">
+            Trabajador
+          </Link>
+        ),
         key: "worker",
       },
     ],
@@ -49,7 +57,11 @@ const items: MenuProps["items"] = [
     key: "office",
     children: [
       {
-        label: <Link href="/dashboard/office">Gastos de oficina</Link>,
+        label: (
+          <Link prefetch href="/dashboard/office">
+            Gastos de oficina
+          </Link>
+        ),
         key: "officeExpenses",
       },
     ],
@@ -72,11 +84,19 @@ const items: MenuProps["items"] = [
     key: "warehouse",
     children: [
       {
-        label: <Link href="/dashboard/warehouse">Materiales</Link>,
+        label: (
+          <Link prefetch href="/dashboard/warehouse">
+            Materiales
+          </Link>
+        ),
         key: "warehouse1",
       },
       {
-        label: <Link href="/dashboard/ticketsWarehouse">Almacén de Vales</Link>,
+        label: (
+          <Link prefetch href="/dashboard/ticketsWarehouse">
+            Almacén de Vales
+          </Link>
+        ),
         key: "ticketsWarehouse",
       },
     ],
@@ -94,15 +114,27 @@ const items: MenuProps["items"] = [
     key: "project",
     children: [
       {
-        label: <Link href="/dashboard/project">Proyectos</Link>,
+        label: (
+          <Link prefetch href="/dashboard/project">
+            Proyectos
+          </Link>
+        ),
         key: "projects",
       },
       {
-        label: <Link href="/dashboard/projectExpenses">Gastos de proyectos</Link>,
+        label: (
+          <Link prefetch href="/dashboard/projectExpenses">
+            Gastos de proyectos
+          </Link>
+        ),
         key: "projectExpenses",
       },
       {
-        label: <Link href="/dashboard/costSheets">Fichas de costo</Link>,
+        label: (
+          <Link prefetch href="/dashboard/costSheets">
+            Fichas de costo
+          </Link>
+        ),
         key: "costSheets",
       },
     ],
@@ -115,8 +147,26 @@ const items: MenuProps["items"] = [
     ),
   },
   {
-    label: <Link href="/dashboard/serviceFees">Tarifas de Servicios</Link>,
-    key: "serviceFees",
+    label: "Tarifas de Servicios",
+    key: "serviceFee",
+    children: [
+      {
+        label: (
+          <Link prefetch href="/dashboard/serviceFees">
+            Tarifas de Servicio
+          </Link>
+        ),
+        key: "serviceFees",
+      },
+      {
+        label: (
+          <Link prefetch href="/dashboard/serviceFeesAuxiliary">
+            Auxiliares
+          </Link>
+        ),
+        key: "serviceFeesAuxiliary",
+      },
+    ],
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -132,7 +182,11 @@ const items: MenuProps["items"] = [
     ),
   },
   {
-    label: <Link href="/dashboard/nomenclators">Nomencladores</Link>,
+    label: (
+      <Link prefetch href="/dashboard/nomenclators">
+        Nomencladores
+      </Link>
+    ),
     key: "nomenclator",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
