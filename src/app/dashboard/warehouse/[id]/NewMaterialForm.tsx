@@ -23,6 +23,7 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
   const materialCategory: string[] | undefined = [];
   const unitMeasures: string[] | undefined = [];
   const providers: string[] | undefined = [];
+  
   nomenclators.map((nomenclator: INomenclator) => {
     if (nomenclator.category === "Categoría de material") materialCategory.push(nomenclator.code);
     if (nomenclator.category === "Unidad de medida") {
