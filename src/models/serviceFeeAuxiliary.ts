@@ -15,7 +15,24 @@ export interface IServiceFeeAuxiliary {
   currencyChange: number;
   officialCurrencyChangeCoefficient: number;
   informalCurrencyChange: number;
-  currency: ["USD" ,"CUP"];
+  currency: ["USD", "CUP"];
+  administrativeExpensesCoefficients: {
+    electricityExpense: number;
+    fuelExpense: number;
+    feedingExpense: number;
+    phoneExpense: number;
+    leaseExpense: number;
+  };
+  equipmentDepreciationCoefficients: {
+    plotter: number;
+    router: number;
+    bendingMachine: number;
+    manualTools: number;
+  };
+  equipmentMaintenanceCoefficients: {
+    plotter: number;
+    router: number;
+  };
   payMethod: IRepresentationCoefficients[];
 }
 
@@ -25,27 +42,21 @@ const ServiceFeeAuxiliarySchema = new Schema<IServiceFeeAuxiliary, Model<IServic
   },
   currency: {
     type: [String],
-    required: [true, "la moneda es requerida"],
   },
   calculationCoefficient: {
     type: Number,
-    required: [true, "El coeficiente de cálculo es requerido"],
   },
   officialCurrencyChangeCoefficient: {
     type: Number,
-    required: [true, "El coeficiente de cambio monetario oficial es requerido"],
   },
   informalCurrencyChange: {
     type: Number,
-    required: [true, "El cambio informal es requerido"],
   },
   currencyChange: {
     type: Number,
-    required: [true, "El cambio de moneda requerido"],
   },
   mermaCoefficient: {
     type: Number,
-    required: [true, "El coeficiente de merma requerido"],
   },
   payMethod: [
     {
@@ -53,6 +64,23 @@ const ServiceFeeAuxiliarySchema = new Schema<IServiceFeeAuxiliary, Model<IServic
       coefficientValue: Number,
     },
   ],
+  administrativeExpensesCoefficients: {
+    electricityExpense: Number,
+    fuelExpense: Number,
+    feedingExpense: Number,
+    phoneExpense: Number,
+    leaseExpense: Number,
+  },
+  equipmentDepreciationCoefficients: {
+    plotter: Number,
+    router: Number,
+    bendingMachine: Number,
+    manualTools: Number,
+  },
+  equipmentMaintenanceCoefficients: {
+    plotter: Number,
+    router: Number,
+  },
 });
 
 const ServiceFeeAuxiliary = models.ServiceFeeAuxiliary || model("ServiceFeeAuxiliary", ServiceFeeAuxiliarySchema);
