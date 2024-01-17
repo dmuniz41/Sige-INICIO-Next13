@@ -16,6 +16,23 @@ export const serviceFeeReducer = (state = initialState, action: any) => {
         ...state,
         serviceFeeAuxiliary: action.payload,
       };
+    case types.serviceFeesLoaded:
+      return {
+        ...state,
+        serviceFees: [...action.payload],
+      };
+    case types.addServiceFee:
+      return {
+        ...state,
+      };
+    case types.updateServiceFee:
+      return {
+        ...state,
+      };
+    case types.deleteServiceFee:
+      return {
+        ...state,
+      };
 
     default:
       return state;

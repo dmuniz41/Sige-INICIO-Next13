@@ -1,11 +1,17 @@
 import { Model, Schema, model, models } from "mongoose";
 
 export interface IServiceFeeSubItem {
-  // *La descripcion es Categoria + Nombre que se debe generar previamente al crear el material en el almacen 
+  // *La descripcion es Categoria + Nombre que se debe generar previamente al crear el material en el almacen
   description: string;
   unitMeasure?: string;
   amount: number;
   price: number;
+  value: number;
+}
+export interface IServiceFeeSubItemCoefficient {
+  description: string;
+  coefficient: number;
+  amount: number;
   value: number;
 }
 export interface IServiceFee {
@@ -15,37 +21,42 @@ export interface IServiceFee {
   key: string;
   workersAmount: number;
   taskName: string;
-  payMethod: "CASH" | "CONTRACT";
+  payMethodCoef: number;
+  currencyChange: number;
   valuePerUnitMeasure: string;
   //* MATERIAS PRIMAS
   rawMaterials: IServiceFeeSubItem[];
   rawMaterialsSubtotal: number;
   // *ACTIVIDADES O OPERACIONES
-  taskList: IServiceFeeSubItem[];
+  taskList: IServiceFeeSubItemCoefficient[];
   taskListSubtotal: number;
   //*DEPRECIACION DE EQUIPOS
-  equipmentDepreciation: IServiceFeeSubItem[];
+  equipmentDepreciation: IServiceFeeSubItemCoefficient[];
   equipmentDepreciationSubtotal: number;
   //*MANTENIMIENTO DE EQUIPOS
-  equipmentMaintenance: IServiceFeeSubItem[];
+  equipmentMaintenance: IServiceFeeSubItemCoefficient[];
   equipmentMaintenanceSubtotal: number;
   //*GASTOS ADMINISTRATIVOS
-  electricityExpense: IServiceFeeSubItem;
-  fuelExpense: IServiceFeeSubItem;
-  feedingExpense: IServiceFeeSubItem;
-  phoneExpense: IServiceFeeSubItem;
-  leaseExpense: IServiceFeeSubItem;
+  electricityExpense: IServiceFeeSubItemCoefficient;
+  fuelExpense: IServiceFeeSubItemCoefficient;
+  feedingExpense: IServiceFeeSubItemCoefficient;
+  phoneExpense: IServiceFeeSubItemCoefficient;
+  leaseExpense: IServiceFeeSubItemCoefficient;
   administrativeExpensesSubtotal: number;
   //*GASTOS DE TRANSPORTE
-  rawMaterialsTransportationExpenses: IServiceFeeSubItem;
-  salesAndDistributionExpenses: IServiceFeeSubItem;
+  rawMaterialsTransportationExpenses: IServiceFeeSubItemCoefficient;
+  salesAndDistributionExpenses: IServiceFeeSubItemCoefficient;
+  transportationExpensesSubtotal: number;
   //*GASTO DE PERSONAL CONTRATADO
-  indirectSalaries: IServiceFeeSubItem;
+  indirectSalaries: {
+    coef: number;
+    value: number;
+  };
   subcontractExpenses: number;
+  subcontractExpensesSubtotal: number;
   //*OTROS
   expensesTotalValue: number;
   artisticTalentValue: number;
-  artisticPrice: number;
   ONAT: number;
   commercialMargin: number;
   salePrice: number;
@@ -56,39 +67,37 @@ export interface IServiceFee {
 }
 
 const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
-  key: {
-    type: String,
-    unique: true,
-  },
-  payMethod: {
-    type: String,
-    required: [true, "La forma de cobro es requerida"],
-  },
-  taskName: {
-    type: String,
-    unique: true,
-    required: [true, "El nombre de la tarea a ejecutar es requerida"],
-  },
-  // createdBy: {
-  //   type: String,
-  // },
   category: {
-    type: String,
-  },
-  valuePerUnitMeasure: {
     type: String,
   },
   nomenclatorId: {
     unique: true,
     type: String,
-    required: [true, "Debe asignarle un nomenclador a la tarea"],
+  },
+  key: {
+    type: String,
+    unique: true,
   },
   workersAmount: {
     type: Number,
   },
-  // currencyChange: {
-  //   type: Number,
+  taskName: {
+    type: String,
+    unique: true,
+  },
+  payMethodCoef: {
+    type: Number,
+  },
+  currencyChange: {
+    type: Number,
+  },
+  // createdBy: {
+  //   type: String,
   // },
+  valuePerUnitMeasure: {
+    type: String,
+  },
+
   rawMaterials: [
     {
       description: String,
@@ -101,28 +110,23 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
   rawMaterialsSubtotal: {
     type: Number,
   },
-
-  indirectSalaries: {
-    type: Number,
-  },
   taskList: [
     {
       description: String,
-      unitMeasure: String,
+      complexityCoefficient: Number,
       amount: Number,
-      price: Number,
       value: Number,
     },
   ],
   taskListSubtotal: {
     type: Number,
   },
+
   equipmentDepreciation: [
     {
       description: String,
-      unitMeasure: String,
+      coefficient: Number,
       amount: Number,
-      price: Number,
       value: Number,
     },
   ],
@@ -132,19 +136,67 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
   equipmentMaintenance: [
     {
       description: String,
-      unitMeasure: String,
+      coefficient: Number,
       amount: Number,
-      price: Number,
       value: Number,
     },
   ],
   equipmentMaintenanceSubtotal: {
     type: Number,
   },
+  fuelExpense: {
+    description: String,
+    coefficient: Number,
+    amount: Number,
+    value: Number,
+  },
+  feedingExpense: {
+    description: String,
+    coefficient: Number,
+    amount: Number,
+    value: Number,
+  },
+  electricityExpense: {
+    description: String,
+    coefficient: Number,
+    amount: Number,
+    value: Number,
+  },
+  leaseExpense: {
+    description: String,
+    coefficient: Number,
+    amount: Number,
+    value: Number,
+  },
+  phoneExpense: {
+    description: String,
+    coefficient: Number,
+    amount: Number,
+    value: Number,
+  },
   rawMaterialsTransportationExpenses: {
-    type: Number,
+    description: String,
+    coefficient: Number,
+    amount: Number,
+    value: Number,
   },
   salesAndDistributionExpenses: {
+    description: String,
+    coefficient: Number,
+    amount: Number,
+    value: Number,
+  },
+  transportationExpensesSubtotal: {
+    type: Number,
+  },
+  indirectSalaries: {
+    coef: Number,
+    value: Number,
+  },
+  subcontractExpenses: {
+    type: Number,
+  },
+  subcontractExpensesSubtotal: {
     type: Number,
   },
   expensesTotalValue: {
@@ -159,31 +211,13 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
   rawMaterialsByClient: {
     type: Number,
   },
-  salePriceUSD: {
+  commercialMargin: {
     type: Number,
   },
   salePrice: {
     type: Number,
   },
-  fuelExpense: {
-    type: Number,
-  },
-  feedingExpense: {
-    type: Number,
-  },
-  electricityExpense: {
-    type: Number,
-  },
-  leaseExpense: {
-    type: Number,
-  },
-  phoneExpense: {
-    type: Number,
-  },
-  artisticPrice: {
-    type: Number,
-  },
-  commercialMargin: {
+  salePriceUSD: {
     type: Number,
   },
 });
