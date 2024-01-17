@@ -19,15 +19,14 @@ export const startUpdateServiceFeeAuxiliary = ({ ...serviceFeeAuxiliary }): any 
           informalCurrencyChange: serviceFeeAuxiliary.informalCurrencyChange,
           currency: serviceFeeAuxiliary.currency,
           payMethod: serviceFeeAuxiliary.payMethod,
+          administrativeExpensesCoefficients: serviceFeeAuxiliary.administrativeExpensesCoefficients,
+          equipmentDepreciationCoefficients: serviceFeeAuxiliary.equipmentDepreciationCoefficients,
+          equipmentMaintenanceCoefficients: serviceFeeAuxiliary.equipmentMaintenanceCoefficients,
         },
         { headers: { accessToken: token } }
       )
-      .then((ServiceFeeAuxiliary) => {
-        dispatch(
-          updateServiceFeeAuxiliary(
-            serviceFeeAuxiliary
-          )
-        );
+      .then((serviceFeeAuxiliary) => {
+        dispatch(updateServiceFeeAuxiliary(serviceFeeAuxiliary));
         dispatch(startLoadServiceFeeAuxiliary());
         Toast.fire({
           icon: "success",
@@ -54,7 +53,7 @@ export const startLoadServiceFeeAuxiliary = (): any => {
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
         console.log("🚀 ~ file: serviceFeeAuxiliary.ts:56 ~ return ~ message:", message);
-        Swal.fire("Error", 'Error al cargar los auxiliares de las tarifas de servicio', "error");
+        Swal.fire("Error", "Error al cargar los auxiliares de las tarifas de servicio", "error");
       });
   };
 };
@@ -70,6 +69,9 @@ const updateServiceFeeAuxiliary = ({ ...serviceFeeAuxiliary }) => ({
     informalCurrencyChange: serviceFeeAuxiliary.informalCurrencyChange,
     currency: serviceFeeAuxiliary.currency,
     payMethod: serviceFeeAuxiliary.payMethod,
+    administrativeExpensesCoefficients: serviceFeeAuxiliary.administrativeExpensesCoefficients,
+    equipmentDepreciationCoefficients: serviceFeeAuxiliary.equipmentDepreciationCoefficients,
+    equipmentMaintenanceCoefficients: serviceFeeAuxiliary.equipmentMaintenanceCoefficients,
   },
 });
 

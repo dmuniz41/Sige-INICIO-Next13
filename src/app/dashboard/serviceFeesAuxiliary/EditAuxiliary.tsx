@@ -51,11 +51,60 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
           name: "payMethod",
           value: defaultValues[0]?.payMethod,
         },
+        {
+          name: "fuelExpense",
+          value: defaultValues[0]?.administrativeExpensesCoefficients.fuelExpense,
+        },
+        {
+          name: "electricityExpense",
+          value: defaultValues[0]?.administrativeExpensesCoefficients.electricityExpense,
+        },
+        {
+          name: "leaseExpense",
+          value: defaultValues[0]?.administrativeExpensesCoefficients.leaseExpense,
+        },
+        {
+          name: "feedingExpense",
+          value: defaultValues[0]?.administrativeExpensesCoefficients.feedingExpense,
+        },
+        {
+          name: "phoneExpense",
+          value: defaultValues[0]?.administrativeExpensesCoefficients.phoneExpense,
+        },
+        {
+          name: "plotterDepreciation",
+          value: defaultValues[0]?.equipmentDepreciationCoefficients.plotter,
+        },
+        {
+          name: "routerDepreciation",
+          value: defaultValues[0]?.equipmentDepreciationCoefficients.router,
+        },
+        {
+          name: "bendingMachine",
+          value: defaultValues[0]?.equipmentDepreciationCoefficients.bendingMachine,
+        },
+        {
+          name: "manualTools",
+          value: defaultValues[0]?.equipmentDepreciationCoefficients.manualTools,
+        },
+        {
+          name: "plotterMaintenance",
+          value: defaultValues[0]?.equipmentMaintenanceCoefficients.plotter,
+        },
+        {
+          name: "routerMaintenance",
+          value: defaultValues[0]?.equipmentMaintenanceCoefficients.router,
+        },
       ]}
     >
       <section className=" flex-col">
         <div className="flex gap-2 pr-[13rem]">
-          <Form.Item className="mb-3 flex-1" label={<span className="font-bold text-md">Coeficiente de Cálculo</span>} name="calculationCoefficient" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            className="mb-3 flex-1"
+            label={<span className="font-bold text-md">Coeficiente de Cálculo</span>}
+            name="calculationCoefficient"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <InputNumber />
           </Form.Item>
         </div>
@@ -80,33 +129,136 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
           </Form.Item>
         </div>
         {/* Listado de métodos de pago */}
-        <div className="grid gap-4">
-          <label className="font-bold text-md">Métodos de pago: </label>
-          <Form.List name="payMethod">
-            {(fields, { add, remove }) => (
-              <div className="flex flex-col w-full">
-                {fields.map(({ key, name, ...restField }) => (
-                  <div key={key} className="w-full">
-                    <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                      <Form.Item className="w-[70%]" {...restField} name={[name, "representative"]} rules={[{ required: true, message: "Introduzca el método de pago" }]}>
-                        <Input placeholder="Descripción" className="w-full" />
-                      </Form.Item>
-                      <Form.Item {...restField} name={[name, "coefficientValue"]} rules={[{ required: true, message: "Campo requerido" }]}>
-                        <InputNumber placeholder="Coeficiente" />
-                      </Form.Item>
-                      <MinusCircleOutlined className="mb-auto" onClick={() => remove(name)} />
-                    </div>
+        <label className="font-bold text-md">Métodos de pago: </label>
+        <Form.List name="payMethod">
+          {(fields, { add, remove }) => (
+            <div className="flex flex-col w-full mt-5">
+              {fields.map(({ key, name, ...restField }) => (
+                <div key={key} className="w-full">
+                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                    <Form.Item className="w-[70%]" {...restField} name={[name, "representative"]} rules={[{ required: true, message: "Introduzca el método de pago" }]}>
+                      <Input placeholder="Descripción" className="w-full" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "coefficientValue"]} rules={[{ required: true, message: "Campo requerido" }]}>
+                      <InputNumber placeholder="Coeficiente" />
+                    </Form.Item>
+                    <MinusCircleOutlined className="mb-auto" onClick={() => remove(name)} />
                   </div>
-                ))}
-                <Form.Item className="mb-2">
-                  <Button className="flex flex-row justify-center items-center" type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                    Añadir método de pago
-                  </Button>
-                </Form.Item>
-              </div>
-            )}
-          </Form.List>
-        </div>
+                </div>
+              ))}
+              <Form.Item className="mb-2">
+                <Button className="flex flex-row justify-center items-center" type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                  Añadir método de pago
+                </Button>
+              </Form.Item>
+            </div>
+          )}
+        </Form.List>
+        <section className="grid gap-3">
+          <label className="font-bold text-md">Coeficientes de Gastos Administrativos: </label>
+          <article>
+            <div className="flex gap-2 pr-[13rem]">
+              <Form.Item
+                className="mb-3 flex-1"
+                label={<span className=" w-[6rem] text-start font-bold text-md">Combustible</span>}
+                name="fuelExpense"
+                rules={[{ required: true, message: "Campo requerido" }]}
+              >
+                <InputNumber />
+              </Form.Item>
+            </div>
+            <div className="flex gap-2 pr-[13rem]">
+              <Form.Item
+                className="mb-3 flex-1"
+                label={<span className=" w-[6rem] text-start font-bold text-md">Electricidad</span>}
+                name="electricityExpense"
+                rules={[{ required: true, message: "Campo requerido" }]}
+              >
+                <InputNumber />
+              </Form.Item>
+            </div>
+            <div className="flex gap-2 pr-[13rem]">
+              <Form.Item
+                className="mb-3 flex-1"
+                label={<span className=" w-[6rem] text-start font-bold text-md">Arrendamiento</span>}
+                name="leaseExpense"
+                rules={[{ required: true, message: "Campo requerido" }]}
+              >
+                <InputNumber />
+              </Form.Item>
+            </div>
+            <div className="flex gap-2 pr-[13rem]">
+              <Form.Item
+                className="mb-3 flex-1"
+                label={<span className=" w-[6rem] text-start font-bold text-md">Alimentación</span>}
+                name="feedingExpense"
+                rules={[{ required: true, message: "Campo requerido" }]}
+              >
+                <InputNumber />
+              </Form.Item>
+            </div>
+            <div className="flex gap-2 pr-[13rem]">
+              <Form.Item
+                className="mb-3 flex-1"
+                label={<span className=" w-[6rem] text-start font-bold text-md">Teléfono</span>}
+                name="phoneExpense"
+                rules={[{ required: true, message: "Campo requerido" }]}
+              >
+                <InputNumber />
+              </Form.Item>
+            </div>
+          </article>
+        </section>
+        <section className="grid gap-3">
+          <label className="font-bold text-md">Coeficientes de Depreciación de Equipos: </label>
+          <article>
+            <div className="flex gap-2  pr-[13rem]">
+              <Form.Item
+                className="mb-3 flex-1"
+                label={<span className=" font-bold text-md">Plotter de Impresión y Corte</span>}
+                name="plotterDepreciation"
+                rules={[{ required: true, message: "Campo requerido" }]}
+              >
+                <InputNumber />
+              </Form.Item>
+            </div>
+            <div className="flex gap-2 pr-[13rem]">
+              <Form.Item className="mb-3 flex-1" label={<span className=" font-bold text-md">Router</span>} name="routerDepreciation" rules={[{ required: true, message: "Campo requerido" }]}>
+                <InputNumber />
+              </Form.Item>
+            </div>
+            <div className="flex gap-2 pr-[13rem]">
+              <Form.Item className="mb-3 flex-1" label={<span className=" font-bold text-md">Dobladora</span>} name="bendingMachine" rules={[{ required: true, message: "Campo requerido" }]}>
+                <InputNumber />
+              </Form.Item>
+            </div>
+            <div className="flex gap-2 pr-[13rem]">
+              <Form.Item className="mb-3 flex-1" label={<span className=" font-bold text-md">Herramientas Manuales</span>} name="manualTools" rules={[{ required: true, message: "Campo requerido" }]}>
+                <InputNumber />
+              </Form.Item>
+            </div>
+          </article>
+        </section>
+        <section className="grid gap-3">
+          <label className="font-bold text-md">Coeficientes de Mantenimiento de Equipos: </label>
+          <article>
+            <div className="flex gap-2 pr-[13rem]">
+              <Form.Item
+                className="mb-3 flex-1"
+                label={<span className=" font-bold text-md">Plotter de Impresión y Corte</span>}
+                name="plotterMaintenance"
+                rules={[{ required: true, message: "Campo requerido" }]}
+              >
+                <InputNumber />
+              </Form.Item>
+            </div>
+            <div className="flex gap-2 pr-[13rem]">
+              <Form.Item className="mb-3 flex-1" label={<span className=" font-bold text-md">Router</span>} name="routerMaintenance" rules={[{ required: true, message: "Campo requerido" }]}>
+                <InputNumber />
+              </Form.Item>
+            </div>
+          </article>
+        </section>
       </section>
 
       <Form.Item>
