@@ -49,6 +49,9 @@ export async function POST(request: Request) {
       informalCurrencyChange: serviceFeeAuxiliary.informalCurrencyChange,
       currency: serviceFeeAuxiliary.currency,
       payMethod: serviceFeeAuxiliary.payMethod,
+      administrativeExpensesCoefficients: serviceFeeAuxiliary.administrativeExpensesCoefficients,
+      equipmentDepreciationCoefficients: serviceFeeAuxiliary.equipmentDepreciationCoefficients,
+      equipmentMaintenanceCoefficients: serviceFeeAuxiliary.equipmentMaintenanceCoefficients,
     });
 
     await newServiceFeeAuxiliary.save();
@@ -156,13 +159,16 @@ export async function PUT(request: Request) {
     const updatedServiceFeeAuxiliary = await ServiceFeeAuxiliary.findByIdAndUpdate(
       { _id: serviceFeeAuxiliary._id },
       {
-        calculationCoefficient: serviceFeeAuxiliary.calculationCoefficient,
-        mermaCoefficient: serviceFeeAuxiliary.mermaCoefficient,
-        currencyChange: serviceFeeAuxiliary.currencyChange,
-        officialCurrencyChangeCoefficient: serviceFeeAuxiliary.officialCurrencyChangeCoefficient,
-        informalCurrencyChange: serviceFeeAuxiliary.informalCurrencyChange,
-        currency: serviceFeeAuxiliary.currency,
-        payMethod: serviceFeeAuxiliary.payMethod,
+      calculationCoefficient: serviceFeeAuxiliary.calculationCoefficient,
+      mermaCoefficient: serviceFeeAuxiliary.mermaCoefficient,
+      currencyChange: serviceFeeAuxiliary.currencyChange,
+      officialCurrencyChangeCoefficient: serviceFeeAuxiliary.officialCurrencyChangeCoefficient,
+      informalCurrencyChange: serviceFeeAuxiliary.informalCurrencyChange,
+      currency: serviceFeeAuxiliary.currency,
+      payMethod: serviceFeeAuxiliary.payMethod,
+      administrativeExpensesCoefficients: serviceFeeAuxiliary.administrativeExpensesCoefficients,
+      equipmentDepreciationCoefficients: serviceFeeAuxiliary.equipmentDepreciationCoefficients,
+      equipmentMaintenanceCoefficients: serviceFeeAuxiliary.equipmentMaintenanceCoefficients,
       },
       { new: true }
     );
