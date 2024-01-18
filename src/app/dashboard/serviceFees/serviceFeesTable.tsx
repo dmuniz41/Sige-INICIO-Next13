@@ -1,29 +1,28 @@
 "use client";
-
+import { Button, Input, Space, Table, Tooltip } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+import dynamic from "next/dynamic";
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, Tooltip } from "antd";
-import type { InputRef } from "antd";
+import Swal from "sweetalert2";
 import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
-import Swal from "sweetalert2";
-import dynamic from "next/dynamic";
+import type { InputRef } from "antd";
 
-import { useAppDispatch } from "@/hooks/hooks";
-import { RootState, useAppSelector } from "@/store/store";
-import { Toast } from "@/helpers/customAlert";
-import { useSession } from "next-auth/react";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
+import { INomenclator } from "@/models/nomenclator";
+import { IServiceFee } from "@/models/serviceFees";
+import { loadSelectedServiceFee, serviceFeeStartLoading, startDeleteServiceFee } from "@/actions/serviceFee";
+import { nomenclatorsStartLoading, startDeleteNomenclator } from "@/actions/nomenclator";
+import { PDFSvg } from "@/app/global/PDFSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
-import { useRouter } from "next/navigation";
+import { RootState, useAppSelector } from "@/store/store";
 import { SeeSvg } from "@/app/global/SeeSvg";
-import { nomenclatorsStartLoading } from "@/actions/nomenclator";
-import { INomenclator } from "@/models/nomenclator";
-import { PDFSvg } from "@/app/global/PDFSvg";
-import { loadSelectedServiceFee, serviceFeeStartLoading, startDeleteServiceFee } from "@/actions/serviceFee";
-import { IServiceFee } from "@/models/serviceFees";
+import { Toast } from "@/helpers/customAlert";
+import { useAppDispatch } from "@/hooks/hooks";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
   ssr: false,
@@ -145,7 +144,9 @@ const ServiceFeeTable: React.FC = () => {
         confirmButtonText: "Eliminar",
       }).then((result) => {
         if (result.isConfirmed) {
+          const nomenclatorToDelete = nomenclators.find((nomenclator: INomenclator) => nomenclator?.code === selectedRow?.nomenclatorId);
           dispatch(startDeleteServiceFee(selectedRow?._id));
+          dispatch(startDeleteNomenclator(nomenclatorToDelete?._id));
         }
       });
     } else {
@@ -294,7 +295,6 @@ const ServiceFeeTable: React.FC = () => {
       key: "valuePerUnitMeasure",
       width: "10%",
     },
-
   ];
 
   return (

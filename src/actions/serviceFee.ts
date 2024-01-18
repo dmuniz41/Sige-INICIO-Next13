@@ -152,7 +152,6 @@ export const loadSelectedServiceFee = (id: string) => {
       .get(`${process.env.NEXT_PUBLIC_API_URL}/serviceFee/${id}`, { headers: { accessToken: token } })
       .then((resp) => {
         let { BDServiceFee } = resp.data;
-        console.log("🚀 ~ .then ~ BDServiceFee:", BDServiceFee)
         dispatch(selectedServiceFee(BDServiceFee));
       })
       .catch((error: AxiosError) => {
