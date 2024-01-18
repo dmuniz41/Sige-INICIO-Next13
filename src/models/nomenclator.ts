@@ -1,15 +1,16 @@
 import { Schema, model, models, Model } from "mongoose";
 
 export interface INomenclator {
-  key      : string;
-  category : string;
-  code     : string;
+  _id: string;
+  key: string;
+  category: string;
+  code: string;
 }
 
 const NomenclatorSchema = new Schema<INomenclator, Model<INomenclator>>({
   key: {
     type: String,
-    unique: true
+    unique: true,
   },
   category: {
     type: String,

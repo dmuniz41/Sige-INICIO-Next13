@@ -1,59 +1,55 @@
 "use client";
-
+import { Button, Input, Space, Table, Tooltip } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+import dynamic from "next/dynamic";
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, Tooltip } from "antd";
-import type { InputRef } from "antd";
+import Swal from "sweetalert2";
 import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
-import Swal from "sweetalert2";
-import dynamic from "next/dynamic";
+import type { InputRef } from "antd";
 
-import { useAppDispatch } from "@/hooks/hooks";
-import { RootState, useAppSelector } from "@/store/store";
-import { Toast } from "@/helpers/customAlert";
-import { useSession } from "next-auth/react";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
+import { INomenclator } from "@/models/nomenclator";
+import { IServiceFee } from "@/models/serviceFees";
+import { loadSelectedServiceFee, serviceFeeStartLoading, startDeleteServiceFee } from "@/actions/serviceFee";
+import { nomenclatorsStartLoading, startDeleteNomenclator } from "@/actions/nomenclator";
+import { PDFSvg } from "@/app/global/PDFSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
-import { ICostSheet } from "@/models/costSheet";
-import { costSheetsStartLoading, loadSelectedCostSheet, startDeleteCostSheet } from "@/actions/costSheet";
-import { useRouter } from "next/navigation";
+import { RootState, useAppSelector } from "@/store/store";
 import { SeeSvg } from "@/app/global/SeeSvg";
-import { nomenclatorsStartLoading } from "@/actions/nomenclator";
-import { INomenclator } from "@/models/nomenclator";
-import { PDFSvg } from "@/app/global/PDFSvg";
-import CostSheetTablePDFReport from "@/helpers/CostSheetTablePDFReport";
+import { Toast } from "@/helpers/customAlert";
+import { useAppDispatch } from "@/hooks/hooks";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
   ssr: false,
   loading: () => <p>Loading...</p>,
 });
 
-type DataIndex = keyof ICostSheet;
+type DataIndex = keyof IServiceFee;
 
-const CostSheetsTable: React.FC = () => {
+const ServiceFeeTable: React.FC = () => {
   const dispatch = useAppDispatch();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [selectedRow, setSelectedRow] = useState<ICostSheet>();
-  const [filteredData, setFilteredData] = useState<ICostSheet[]>();
+  const [selectedRow, setSelectedRow] = useState<IServiceFee>();
+  const [filteredData, setFilteredData] = useState<IServiceFee[]>();
   const searchInput = useRef<InputRef>(null);
   const router = useRouter();
   const { data: sessionData } = useSession();
-  const costSheetCategory: string[] | undefined = [];
-  const costSheetNomenclator: string[] | undefined = [];
-  const costSheetValuePerUnitMeasure: string[] | undefined = [];
+  const serviceFeeNomenclator: string[] | undefined = [];
 
-  const canList = sessionData?.user.role.includes("Listar Ficha de Costo");
-  const canCreate = sessionData?.user.role.includes("Crear Ficha de Costo");
-  // const canEdit = sessionData?.user.role.includes("Editar Ficha de Costo");
-  const canDelete = sessionData?.user.role.includes("Eliminar Ficha de Costo");
+  const canList = sessionData?.user.role.includes("Listar Tarifas de Servicio");
+  const canCreate = sessionData?.user.role.includes("Crear Tarifas de Servicio");
+  const canEdit = sessionData?.user.role.includes("Editar Tarifas de Servicio");
+  const canDelete = sessionData?.user.role.includes("Eliminar Tarifas de Servicio");
 
   const fields = [
     {
-      title: " Nomenclador",
+      title: "Nomenclador",
       custom: true,
       component: (item: any) => `${item.nomenclatorId}`,
       width: "10",
@@ -85,58 +81,42 @@ const CostSheetsTable: React.FC = () => {
   ];
 
   useEffect(() => {
-    dispatch(costSheetsStartLoading());
+    dispatch(serviceFeeStartLoading());
     dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
-  const { costSheets }: any = useAppSelector((state: RootState) => state?.costSheet);
-  let data: ICostSheet[] = useMemo(() => costSheets, [costSheets]);
+  const { serviceFees }: any = useAppSelector((state: RootState) => state?.serviceFee);
+  let data: IServiceFee[] = useMemo(() => serviceFees, [serviceFees]);
   if (!canList) {
     data = [];
   }
 
-  let PDFReportData: ICostSheet[] = [];
+  // let PDFReportData: ICostSheet[] = [];
 
-  if (filteredData) {
-    PDFReportData = filteredData;
-  } else {
-    PDFReportData = data;
-  }
+  // if (filteredData) {
+  //   PDFReportData = filteredData;
+  // } else {
+  //   PDFReportData = data;
+  // }
 
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
 
   nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Categoría de ficha de costo") costSheetCategory.push(nomenclator.code);
-    if (nomenclator.category === "Ficha de costo") costSheetNomenclator.push(nomenclator.code);
-    if (nomenclator.category === "Precio/UM en ficha de costo") costSheetValuePerUnitMeasure.push(nomenclator.code);
+    if (nomenclator.category === "Tarifa de Servicio") serviceFeeNomenclator.push(nomenclator.code);
   });
 
-  const costSheetCategoryFilter: any[] = [];
-  costSheetCategory.map((category: string) => {
-    costSheetCategoryFilter.push({
-      text: `${category}`,
-      value: `${category}`,
-    });
-  });
   const costSheetNomenclatorFilter: any[] = [];
-  costSheetNomenclator.map((nomenclator: string) => {
+  serviceFeeNomenclator.map((nomenclator: string) => {
     costSheetNomenclatorFilter.push({
       text: `${nomenclator}`,
       value: `${nomenclator}`,
     });
   });
-  const costSheetValuePerUnitMeasureFilter: any[] = [];
-  costSheetValuePerUnitMeasure.map((valuePerUnitMeasure: string) => {
-    costSheetValuePerUnitMeasureFilter.push({
-      text: `${valuePerUnitMeasure}`,
-      value: `${valuePerUnitMeasure}`,
-    });
-  });
 
   const handleView = (): void => {
     if (selectedRow) {
-      dispatch(loadSelectedCostSheet(selectedRow._id));
-      router.push(`/dashboard/costSheets/${selectedRow._id}`);
+      dispatch(loadSelectedServiceFee(selectedRow._id));
+      router.push(`/dashboard/serviceFees/${selectedRow._id}`);
     } else {
       Toast.fire({
         icon: "error",
@@ -154,8 +134,8 @@ const CostSheetsTable: React.FC = () => {
   const handleDelete = () => {
     if (selectedRow) {
       Swal.fire({
-        title: "Eliminar Ficha de Costo",
-        text: "La ficha de costo seleccionada se borrará de forma permanente",
+        title: "Eliminar Tarifa de Servicio",
+        text: "La tarifa de servicio seleccionada se borrará de forma permanente",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -164,13 +144,15 @@ const CostSheetsTable: React.FC = () => {
         confirmButtonText: "Eliminar",
       }).then((result) => {
         if (result.isConfirmed) {
-          dispatch(startDeleteCostSheet(selectedRow?._id));
+          const nomenclatorToDelete = nomenclators.find((nomenclator: INomenclator) => nomenclator?.code === selectedRow?.nomenclatorId);
+          dispatch(startDeleteServiceFee(selectedRow?._id));
+          dispatch(startDeleteNomenclator(nomenclatorToDelete?._id));
         }
       });
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione una ficha de costo a eliminar",
+        title: "Seleccione una tarifa de servicio a eliminar",
       });
     }
   };
@@ -180,20 +162,20 @@ const CostSheetsTable: React.FC = () => {
     setSearchText("");
   };
 
-  const onChange: TableProps<ICostSheet>["onChange"] = (pagination, filters, sorter, extra) => {
+  const onChange: TableProps<IServiceFee>["onChange"] = (pagination, filters, sorter, extra) => {
     setFilteredData(extra.currentDataSource);
     console.log(filteredData);
   };
 
-  const rowSelection: TableRowSelection<ICostSheet> = {
-    onChange: async (selectedRowKeys: React.Key[], selectedRows: ICostSheet[]) => {
+  const rowSelection: TableRowSelection<IServiceFee> = {
+    onChange: async (selectedRowKeys: React.Key[], selectedRows: IServiceFee[]) => {
       setSelectedRow(selectedRows[0]);
-      dispatch(loadSelectedCostSheet(selectedRows[0]._id));
+      dispatch(loadSelectedServiceFee(selectedRows[0]._id));
       console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows);
     },
   };
 
-  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<ICostSheet> => ({
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<IServiceFee> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
@@ -260,12 +242,12 @@ const CostSheetsTable: React.FC = () => {
       ),
   });
 
-  const columns: ColumnsType<ICostSheet> = [
+  const columns: ColumnsType<IServiceFee> = [
     {
       title: "Nombre de la Tarea",
       dataIndex: "taskName",
       key: "taskName",
-      width: "50%",
+      width: "40%",
       sorter: (a: any, b: any) => a.taskName.localeCompare(b.taskName),
       ...getColumnSearchProps("taskName"),
     },
@@ -283,12 +265,10 @@ const CostSheetsTable: React.FC = () => {
       title: "Categoría",
       dataIndex: "category",
       key: "category",
-      width: "20%",
-      filters: costSheetCategoryFilter,
-      onFilter: (value: any, record: any) => record.category.startsWith(value),
+      width: "15%",
       filterSearch: true,
-      sorter: (a: any, b: any) => a.category.localeCompare(b.category),
     },
+
     {
       title: "Precio",
       dataIndex: "salePrice",
@@ -300,13 +280,20 @@ const CostSheetsTable: React.FC = () => {
       },
     },
     {
-      title: "Precio/UM",
+      title: "Precio USD",
+      dataIndex: "salePriceUSD",
+      key: "salePriceUSD",
+      width: "30%",
+      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
+      sorter: {
+        compare: (a, b) => a.salePriceUSD - b.salePriceUSD,
+      },
+    },
+    {
+      title: "$/UM",
       dataIndex: "valuePerUnitMeasure",
       key: "valuePerUnitMeasure",
-      width: "20%",
-      filters: costSheetValuePerUnitMeasureFilter,
-      onFilter: (value: any, record: any) => record.valuePerUnitMeasure.startsWith(value),
-      filterSearch: true,
+      width: "10%",
     },
   ];
 
@@ -316,7 +303,7 @@ const CostSheetsTable: React.FC = () => {
         <div className="flex gap-2">
           <button
             disabled={!canCreate}
-            onClick={() => router.push("/dashboard/costSheets/createCostSheet")}
+            onClick={() => router.push("/dashboard/serviceFees/createServiceFee")}
             className={`${
               canCreate ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"
             } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
@@ -336,13 +323,13 @@ const CostSheetsTable: React.FC = () => {
           </button>
         </div>
         <div className="flex">
-          <PDFDownloadLink document={<CostSheetTablePDFReport fields={fields} data={PDFReportData} title={`Fichas de costo`} />} fileName={`Listado de fichas de costo `}>
+          {/* <PDFDownloadLink document={<CostSheetTablePDFReport fields={fields} data={PDFReportData} title={`Fichas de costo`} />} fileName={`Listado de fichas de costo `}>
             {({ blob, url, loading, error }) => (
               <button disabled={loading} className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 rounded-full w-[2.5rem] h-[2.5rem] flex justify-center items-center">
                 <PDFSvg />
               </button>
             )}
-          </PDFDownloadLink>
+          </PDFDownloadLink> */}
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canDelete}
@@ -360,7 +347,7 @@ const CostSheetsTable: React.FC = () => {
               className={`${
                 canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={() => dispatch(costSheetsStartLoading())}
+              onClick={() => dispatch(serviceFeeStartLoading())}
             >
               <RefreshSvg />
             </button>
@@ -384,4 +371,4 @@ const CostSheetsTable: React.FC = () => {
   );
 };
 
-export default CostSheetsTable;
+export default ServiceFeeTable;

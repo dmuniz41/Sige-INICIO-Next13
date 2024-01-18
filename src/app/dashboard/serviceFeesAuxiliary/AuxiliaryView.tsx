@@ -5,11 +5,15 @@ import { IServiceFeeAuxiliary } from "../../../models/serviceFeeAuxiliary";
 import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary, startUpdateServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
+import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 
 export const AuxiliaryView = () => {
   const dispatch = useAppDispatch();
   const [editing, setEditing] = useState(false);
+  const { data: sessionData } = useSession();
+
+  const canEdit = sessionData?.user.role.includes("Editar Tarifas de Servicio");
 
   useEffect(() => {
     dispatch(startLoadServiceFeeAuxiliary());
@@ -61,7 +65,7 @@ export const AuxiliaryView = () => {
         <section className="grid w-full gap-4">
           <article className="flex h-16 w-full bg-white-100 rounded-md shadow-md  items-center pl-4 gap-3 animate-fade animate-once animate-duration-200">
             <button
-              // disabled={!canCreate}
+              disabled={!canEdit}
               onClick={handleEdit}
               className={`${
                 true ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"

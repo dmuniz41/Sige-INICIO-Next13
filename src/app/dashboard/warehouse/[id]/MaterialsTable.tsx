@@ -76,7 +76,7 @@ const MaterialsTable: React.FC = () => {
 
   const canList = sessionData?.user.role.includes("Listar Materiales");
   const canCreate = sessionData?.user.role.includes("Nuevo Material");
-  const canEditMinimumExistences = sessionData?.user.role.includes("Editar Existencias Mínimas");
+  const canEditMaterial = sessionData?.user.role.includes("Editar Material");
   const canDelete = sessionData?.user.role.includes("Eliminar Material");
   const canAdd = sessionData?.user.role.includes("Añadir Material");
   const canMinus = sessionData?.user.role.includes("Sustraer Material");
@@ -524,9 +524,9 @@ const MaterialsTable: React.FC = () => {
           </Tooltip>
           <Tooltip placement="top" title={"Editar Material"} arrow={{ pointAtCenter: true }}>
             <button
-              disabled={!canEditMinimumExistences}
+              disabled={!canEditMaterial}
               className={`${
-                canEditMinimumExistences ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canEditMaterial ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleEditMaterial}
             >

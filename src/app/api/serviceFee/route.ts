@@ -1,13 +1,12 @@
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
 import { connectDB } from "@/libs/mongodb";
-import Nomenclator from "@/models/nomenclator";
+import Nomenclator, { INomenclator } from "@/models/nomenclator";
 import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const { ...serviceFee }: IServiceFee = await request.json();
-  console.log("🚀 ~ POST ~ serviceFee:", serviceFee);
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -100,14 +99,16 @@ export async function POST(request: Request) {
 
     const newKey = generateRandomString(26);
 
-    const newNomenclator = new Nomenclator({
-      key: newKey,
-      code: serviceFee.nomenclatorId,
-      category: "Tarifa de Servicio",
-    });
+    const BDNomenclator = (await Nomenclator.findOne({ category: "Tarifa de Servicio", code: serviceFee.nomenclatorId })) as INomenclator;
 
-    await newNomenclator.save();
-
+    if (!BDNomenclator) {
+      const newNomenclator = new Nomenclator({
+        key: newKey,
+        code: serviceFee.nomenclatorId,
+        category: "Tarifa de Servicio",
+      });
+      await newNomenclator.save();
+    }
     const newServiceFee = new ServiceFee({
       category: serviceFee.category,
       nomenclatorId: serviceFee.nomenclatorId,
@@ -160,7 +161,6 @@ export async function POST(request: Request) {
       }
     );
   } catch (error) {
-    console.log("🚀 ~ POST ~ error:", error);
     if (error instanceof Error) {
       return NextResponse.json(
         {
