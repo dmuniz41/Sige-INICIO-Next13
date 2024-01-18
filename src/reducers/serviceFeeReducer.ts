@@ -3,6 +3,7 @@ import { types } from "../types/types";
 const initialState = {
   serviceFees: [],
   serviceFeeAuxiliary: {},
+  selectedServiceFee: {},
 };
 
 export const serviceFeeReducer = (state = initialState, action: any) => {
@@ -32,6 +33,11 @@ export const serviceFeeReducer = (state = initialState, action: any) => {
     case types.deleteServiceFee:
       return {
         ...state,
+      };
+    case types.selectedServiceFee:
+      return {
+        ...state,
+        selectedServiceFee: action.payload,
       };
 
     default:
