@@ -17,13 +17,11 @@ import { useSession } from "next-auth/react";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
-import { costSheetsStartLoading, loadSelectedCostSheet, startDeleteCostSheet } from "@/actions/costSheet";
 import { useRouter } from "next/navigation";
 import { SeeSvg } from "@/app/global/SeeSvg";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { INomenclator } from "@/models/nomenclator";
 import { PDFSvg } from "@/app/global/PDFSvg";
-import CostSheetTablePDFReport from "@/helpers/CostSheetTablePDFReport";
 import { loadSelectedServiceFee, serviceFeeStartLoading, startDeleteServiceFee } from "@/actions/serviceFee";
 import { IServiceFee } from "@/models/serviceFees";
 
@@ -45,10 +43,10 @@ const ServiceFeeTable: React.FC = () => {
   const { data: sessionData } = useSession();
   const serviceFeeNomenclator: string[] | undefined = [];
 
-  const canList = sessionData?.user.role.includes("Listar Ficha de Costo");
-  const canCreate = sessionData?.user.role.includes("Crear Ficha de Costo");
-  // const canEdit = sessionData?.user.role.includes("Editar Ficha de Costo");
-  const canDelete = sessionData?.user.role.includes("Eliminar Ficha de Costo");
+  const canList = sessionData?.user.role.includes("Listar Tarifas de Servicio");
+  const canCreate = sessionData?.user.role.includes("Crear Tarifas de Servicio");
+  const canEdit = sessionData?.user.role.includes("Editar Tarifas de Servicio");
+  const canDelete = sessionData?.user.role.includes("Eliminar Tarifas de Servicio");
 
   const fields = [
     {

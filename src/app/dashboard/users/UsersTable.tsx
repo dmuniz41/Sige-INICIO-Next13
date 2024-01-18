@@ -120,7 +120,8 @@ const UserTable: React.FC = () => {
       values.nomenclatorPrivileges,
       values.securityPrivileges,
       values.warehousePrivileges,
-      values.costSheetPrivileges
+      values.costSheetPrivileges,
+      values.serviceFeePrivileges,
     );
     dispatch(startUpdateUser(selectedRow?._id!, values.user, values.userName, values.lastName, privileges, values.area));
     setSelectedRow(undefined);

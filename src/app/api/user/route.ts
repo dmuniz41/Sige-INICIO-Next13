@@ -4,7 +4,6 @@ import bcrypt from "bcryptjs";
 import User from "@/models/user";
 import { connectDB } from "@/libs/mongodb";
 import { verifyJWT } from "@/libs/jwt";
-import { headers } from "next/headers";
 
 export async function POST(request: Request) {
   const { user, userName, lastName, privileges, password, area } = await request.json();

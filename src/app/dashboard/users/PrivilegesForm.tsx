@@ -121,12 +121,31 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
       value: "Nuevo Material",
     },
     {
-      label: "Editar Existencias Mínimas",
-      value: "Editar Existencias Mínimas",
+      label: "Editar Material",
+      value: "Editar Material",
     },
     {
       label: "Eliminar Material",
       value: "Eliminar Material",
+    },
+  ]
+  const serviceFeePrivileges: SelectProps["options"]= [ 
+    
+    {
+      label: "Listar Tarifas de Servicio",
+      value: "Listar Tarifas de Servicio",
+    },
+    {
+      label: "Crear Tarifas de Servicio",
+      value: "Crear Tarifas de Servicio",
+    },
+    {
+      label: "Editar Tarifas de Servicio",
+      value: "Editar Tarifas de Servicio",
+    },
+    {
+      label: "Eliminar Tarifas de Servicio",
+      value: "Eliminar Tarifas de Servicio",
     },
   ]
   const costSheetPrivileges: SelectProps["options"]= [ 
@@ -279,6 +298,10 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
             value: defaultValues?.privileges.filter((privilege)=>privilege.includes("Ficha de Costo")),
           },
           {
+            name: "serviceFeePrivileges",
+            value: defaultValues?.privileges.filter((privilege)=>privilege.includes("Tarifas de Servicio")),
+          },
+          {
             name: "area",
             value: defaultValues?.area,
           },
@@ -316,6 +339,9 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
         </Form.Item>
         <Form.Item name="costSheetPrivileges" label="Fichas de Costo" >
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={costSheetPrivileges} />
+        </Form.Item>
+        <Form.Item name="serviceFeePrivileges" label="Tarifas de Servicio" >
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={serviceFeePrivileges} />
         </Form.Item>
       </Form>
     </Modal>
