@@ -2,8 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+* {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.ant-table
+  .ant-table-container
+  .ant-table-content
+  table
+  thead.ant-table-thead
+  .ant-table-cell {
+  background-color:  #f4f6f9;
 }
 /* 
 .ant-table-row:hover {
