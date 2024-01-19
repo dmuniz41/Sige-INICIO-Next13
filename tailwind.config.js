@@ -77,6 +77,7 @@ module.exports = {
       },
       light: "#e3eaef",
       dark: "#191d21",
+      border_light: "#f0f0f0",
       background_light: "#f4f6f9",
       icon_color: " rgba(0, 0, 0, 0.54)",
       icon_disabled: "rgb(221, 216, 216)",

@@ -149,6 +149,60 @@ export const ServiceFeeView = () => {
           <ServiceFeeViewSection name="Gastos de Transporte" data={transportationExpenses} subtotal={selectedServiceFee?.transportationExpensesSubtotal} />
           <ServiceFeeViewSection name="Gastos de Personal Contratado" data={subcontractExpenses} subtotal={selectedServiceFee?.subcontractExpensesSubtotal} />
         </article>
+        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+            <div className="flex w-[90%] justify-end pr-4 font-bold">
+              <h2>IMPORTE TOTAL DE GASTOS: </h2>
+            </div>
+            <div className="flex w-[9.5%] pl-2">$ {selectedServiceFee?.expensesTotalValue?.toFixed(2)}</div>
+        </article>
+        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+            <div className="flex w-[90%] justify-end pr-4 font-bold">
+              <h2>TALENTO ARTISTICO (UTILIDAD): </h2>
+            </div>
+            <div className="flex w-[9.5%] pl-2">$ {selectedServiceFee?.artisticTalentValue?.toFixed(2)}</div>
+        </article>
+        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+            <div className="flex w-[90%] justify-end pr-4 font-bold">
+              <h2>PRECIO ARTISTICO: </h2>
+            </div>
+            <div className="flex w-[9.5%] pl-2">$ ####</div>
+        </article>
+        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+            <div className="flex w-[90%] justify-end pr-4 font-bold">
+              <h2>ONAT (0%): </h2>
+            </div>
+            <div className="flex w-[9.5%] pl-2">$ ####</div>
+        </article>
+        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+            <div className="flex w-[90%] justify-end pr-4 font-bold">
+              <h2>MARGEN COMERCIAL APLICADO (0%): </h2>
+            </div>
+            <div className="flex w-[9.5%] pl-2">$ ####</div>
+        </article>
+        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+            <div className="flex w-[90%] justify-end pr-4 font-bold">
+              <h2>PRECIO DE VENTA (MN): </h2>
+            </div>
+            <div className="flex w-[9.5%] pl-2">$ ####</div>
+        </article>
+        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+            <div className="flex w-[90%] justify-end pr-4 font-bold">
+              <h2>PRECIO DE VENTA (USD): </h2>
+            </div>
+            <div className="flex w-[9.5%] pl-2">$ ####</div>
+        </article>
+        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+            <div className="flex w-[90%] justify-end pr-4 font-bold">
+              <h2>MATERIAS PRIMAS Y MATERIALES APORTADOS POR EL CLIENTE: </h2>
+            </div>
+            <div className="flex w-[9.5%] pl-2">$ ####</div>
+        </article>
+        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+            <div className="flex w-[90%] justify-end pr-4 font-bold">
+              <h2>PRECIO DE VENTA MAYORISTA MAXIMO: </h2>
+            </div>
+            <div className="flex w-[9.5%] pl-2">$ ####</div>
+        </article>
       </section>
     </>
   );
