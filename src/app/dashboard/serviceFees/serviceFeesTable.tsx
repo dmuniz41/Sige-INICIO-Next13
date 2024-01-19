@@ -23,6 +23,7 @@ import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 
 const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
   ssr: false,
@@ -83,6 +84,7 @@ const ServiceFeeTable: React.FC = () => {
   useEffect(() => {
     dispatch(serviceFeeStartLoading());
     dispatch(nomenclatorsStartLoading());
+    dispatch(startLoadServiceFeeAuxiliary())
   }, [dispatch]);
 
   const { serviceFees }: any = useAppSelector((state: RootState) => state?.serviceFee);
