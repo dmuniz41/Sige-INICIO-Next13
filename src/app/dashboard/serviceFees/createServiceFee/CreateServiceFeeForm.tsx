@@ -1,17 +1,19 @@
 "use client";
-import { AddRawMaterialModal } from "./AddRawMaterialModal";
 import { Button, Form, Input, InputNumber, Select, SelectProps } from "antd";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+
+import { AddAdministrativeExpensesModal } from "./AddAdministrativeExpenses";
+import { AddEquipmentDepreciationModal } from "./AddEquipmentDepreciation";
+import { AddEquipmentMaintenanceModal } from "./AddEquipmentMaintenance";
+import { AddRawMaterialModal } from "./AddRawMaterial";
+import { AddTaskListModal } from "./AddTaskList";
 import { INomenclator } from "@/models/nomenclator";
 import { IRepresentationCoefficients, IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
-import React, { useEffect, useState } from "react";
-import { AddTaskListModal } from "./AddTaskListModal";
-import { AddEquipmentDepreciationModal } from "./AddEquipmentDepreciation";
-import { AddEquipmentMaintenanceModal } from "./AddEquipmentMaintenance";
 
 export const CreateServiceFeeForm = () => {
   const dispatch = useAppDispatch();
@@ -23,10 +25,12 @@ export const CreateServiceFeeForm = () => {
   const [addTaskListModal, setAddTaskListModal] = useState(false);
   const [addEquipmentDepreciationModal, setAddEquipmentDepreciationModal] = useState(false);
   const [addEquipmentMaintenanceModal, setAddEquipmentMaintenanceModal] = useState(false);
+  const [addAdministrativeExpensesModal, setAddAdministrativeExpensesModal] = useState(false);
   const [rawMaterialsValues, setRawMaterialsValues]: any = useState([]);
   const [taskListValues, setTaskListValues]: any = useState([]);
   const [equipmentDepreciationValues, setEquipmentDepreciationValues]: any = useState([]);
   const [equipmentMaintenanceValues, setEquipmentMaintenanceValues]: any = useState([]);
+  const [administrativeExpensesValues, setAdministrativeExpensesValues]: any = useState([]);
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
@@ -83,6 +87,84 @@ export const CreateServiceFeeForm = () => {
     setEquipmentMaintenanceValues([values, ...equipmentMaintenanceValues]);
     form.setFieldValue("equipmentMaintenance", [...equipmentMaintenanceValues, values]);
     setAddEquipmentMaintenanceModal(false);
+  };
+  const onAddAdministrativeExpenses = (values: any) => {
+    console.log("🚀 ~ onAddAdministrativeExpenses ~ values:", values);
+    setAdministrativeExpensesValues([
+      {
+        description: "Combustible",
+        price: values.fuelExpenseCoef,
+        unitMeasure: "$/h",
+        amount: values.fuelAmount,
+        value: values.fuelExpenseValue,
+      },
+      {
+        description: "Electricidad",
+        price: values.electricityExpenseCoef,
+        unitMeasure: "$/h",
+        amount: values.electricityAmount,
+        value: values.electricityExpenseValue,
+      },
+      {
+        description: "Alimentacion",
+        price: values.feedingExpenseCoef,
+        unitMeasure: "$/h",
+        amount: values.feedingAmount,
+        value: values.feedingExpenseValue,
+      },
+      {
+        description: "Arrendamiento",
+        price: values.leaseExpenseCoef,
+        unitMeasure: "$/h",
+        amount: values.leaseAmount,
+        value: values.leaseExpenseValue,
+      },
+      {
+        description: "Telefono",
+        price: values.phoneExpenseCoef,
+        unitMeasure: "$/h",
+        amount: values.phoneAmount,
+        value: values.phoneExpenseValue,
+      },
+    ]);
+    form.setFieldValue("administrativeExpenses", [
+      {
+        description: "Combustible",
+        price: values.fuelExpenseCoef,
+        unitMeasure: "$/h",
+        amount: values.fuelAmount,
+        value: values.fuelExpenseValue,
+      },
+      {
+        description: "Electricidad",
+        price: values.electricityExpenseCoef,
+        unitMeasure: "$/h",
+        amount: values.electricityAmount,
+        value: values.electricityExpenseValue,
+      },
+      {
+        description: "Alimentacion",
+        price: values.feedingExpenseCoef,
+        unitMeasure: "$/h",
+        amount: values.feedingAmount,
+        value: values.feedingExpenseValue,
+      },
+      {
+        description: "Arrendamiento",
+        price: values.leaseExpenseCoef,
+        unitMeasure: "$/h",
+        amount: values.leaseAmount,
+        value: values.leaseExpenseValue,
+      },
+      {
+        description: "Telefono",
+        price: values.phoneExpenseCoef,
+        unitMeasure: "$/h",
+        amount: values.phoneAmount,
+        value: values.phoneExpenseValue,
+      },
+    ]);
+    setAddAdministrativeExpensesModal(false);
   };
 
   const onAddTaskList = (values: any) => {
@@ -315,6 +397,7 @@ export const CreateServiceFeeForm = () => {
           )}
         </Form.List>
       </section>
+      {/* seccion para introducir el mantenimiento de equipos */}
       <section className=" flex flex-col w-full mb-0">
         <div className="flex gap-1 ">
           <label className="text-md font-bold mb-3">Mantenimiento de Equipos</label>
@@ -353,6 +436,50 @@ export const CreateServiceFeeForm = () => {
               <Form.Item className="mb-2 w-full ">
                 <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddEquipmentMaintenanceModal(true)} block icon={<PlusOutlined />}>
                   Añadir Mantenimiento de Equipos
+                </Button>
+              </Form.Item>
+            </div>
+          )}
+        </Form.List>
+      </section>
+      <section className=" flex flex-col w-full mb-0">
+        <div className="flex gap-1 ">
+          <label className="text-md font-bold mb-3">Gastos Administrativos</label>
+        </div>
+        <Form.List name="administrativeExpenses">
+          {(fields, { add, remove }) => (
+            <div className="flex flex-col w-full">
+              {fields.map(({ key, name, ...restField }) => (
+                <div key={key} className="w-full">
+                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true, message: "Introduzca la descripción" }]}>
+                      <Input placeholder="Descripción" className="w-full" />
+                    </Form.Item>
+                    <Form.Item {...restField} className="w-[20%]" name={[name, "unitMeasure"]} rules={[{ required: true }]}>
+                      <InputNumber className="w-full" placeholder="Unidad de Medida" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
+                      <InputNumber placeholder="Cantidad" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
+                      <InputNumber placeholder="Precio" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
+                      <InputNumber disabled />
+                    </Form.Item>
+                    <MinusCircleOutlined
+                      className="mb-auto"
+                      onClick={() => {
+                        remove(name);
+                        setAdministrativeExpensesValues(form.getFieldValue("administrativeExpenses"));
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+              <Form.Item className="mb-2 w-full ">
+                <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddAdministrativeExpensesModal(true)} block icon={<PlusOutlined />}>
+                  Gastos Administrativos
                 </Button>
               </Form.Item>
             </div>
@@ -408,6 +535,7 @@ export const CreateServiceFeeForm = () => {
       <AddTaskListModal open={addTaskListModal} onCancel={() => setAddTaskListModal(false)} onCreate={onAddTaskList} />
       <AddEquipmentDepreciationModal open={addEquipmentDepreciationModal} onCancel={() => setAddEquipmentDepreciationModal(false)} onCreate={onAddEquipmentDepreciation} />
       <AddEquipmentMaintenanceModal open={addEquipmentMaintenanceModal} onCancel={() => setAddEquipmentMaintenanceModal(false)} onCreate={onAddEquipmentMaintenance} />
+      <AddAdministrativeExpensesModal open={addAdministrativeExpensesModal} onCancel={() => setAddAdministrativeExpensesModal(false)} onCreate={onAddAdministrativeExpenses} />
     </Form>
   );
 };
