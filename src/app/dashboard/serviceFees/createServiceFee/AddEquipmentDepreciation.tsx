@@ -1,7 +1,6 @@
 "use client";
 
 import { DatePicker, Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
-import { INomenclator } from "@/models/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
 import { IServiceFeeSubItem } from "@/models/serviceFees";
 import { useState } from "react";
@@ -12,20 +11,32 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
-  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-  const materialNames: string[] | undefined = [];
-  const [rawMaterialValue, setRawMaterialValue] = useState(0);
+export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+  const { serviceFeeAuxiliary }: any = useAppSelector((state: RootState) => state?.serviceFee);
+  const equipmentNames = [
+    {
+      name: "Plotter de Impresión y corte",
+      coefficient: serviceFeeAuxiliary[0]?.equipmentDepreciationCoefficients.plotter,
+    },
+    {
+      name: "Router",
+      coefficient: serviceFeeAuxiliary[0]?.equipmentDepreciationCoefficients.router,
+    },
+    {
+      name: "Dobladora",
+      coefficient: serviceFeeAuxiliary[0]?.equipmentDepreciationCoefficients.bendingMachine,
+    },
+    {
+      name: "Herramientas manuales",
+      coefficient: serviceFeeAuxiliary[0]?.equipmentDepreciationCoefficients.manualTools,
+    },
+  ];
+  const [equipmentDepreciationValue, setEquipmentDepreciationValue] = useState(0);
 
-  nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Material") {
-      materialNames.push(nomenclator.code);
-    }
-  });
-  const materials: SelectProps["options"] = materialNames.map((name) => {
+  const equipments: SelectProps["options"] = equipmentNames.map((equipmentDepreciation) => {
     return {
-      label: `${name}`,
-      value: `${name}`,
+      label: `${equipmentDepreciation.name}`,
+      value: `${equipmentDepreciation.name}`,
     };
   });
 
@@ -35,7 +46,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Nueva Materia Prima</span>
+          <span className="font-black text-lg">Nueva Depreciación de Equipo</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -62,9 +73,9 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate({ ...values, value: rawMaterialValue });
+                  onCreate({ ...values, value: equipmentDepreciationValue });
                   form.resetFields();
-                  setRawMaterialValue(0);
+                  setEquipmentDepreciationValue(0);
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -76,18 +87,23 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
         </div>,
       ]}
     >
-      <Form form={form} layout="horizontal" name="addRawMaterial" size="middle">
+      <Form form={form} layout="horizontal" name="addEquipmentDepreciation" size="middle">
         <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select
             allowClear
-            style={{ width: "100%" }}
-            options={materials}
-            onChange={() => {
-              form.setFieldsValue({
-                unitMeasure: "m2",
-                price: 10,
+            onSelect={() => {
+              let values = form.getFieldsValue();
+              equipmentNames.map((equipmentName) => {
+                if (values.description === equipmentName.name)
+                  form.setFieldsValue({
+                    unitMeasure: "m2",
+                    price: equipmentName.coefficient,
+                  });
               });
+              setEquipmentDepreciationValue(values.amount * values.price);
             }}
+            style={{ width: "100%" }}
+            options={equipments}
             showSearch
             optionFilterProp="children"
             filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
@@ -98,19 +114,19 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
           <Input />
         </Form.Item>
         <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input
+          <InputNumber
             onChange={() => {
               let values = form.getFieldsValue();
-              setRawMaterialValue(values.amount * values.price);
+              setEquipmentDepreciationValue(values.amount * values.price);
             }}
           />
         </Form.Item>
         <Form.Item name="price" label="Precio" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input />
+          <InputNumber />
         </Form.Item>
         <div className=" flex gap-2 pl-2">
           <span className="font-bold">Importe:</span>
-          <span>${rawMaterialValue?.toFixed(2)}</span>
+          <span>${!equipmentDepreciationValue ? 0 : equipmentDepreciationValue?.toFixed(2)}</span>
         </div>
       </Form>
     </Modal>

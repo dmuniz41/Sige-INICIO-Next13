@@ -1,7 +1,6 @@
 "use client";
 
 import { DatePicker, Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
-import { INomenclator } from "@/models/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
 import { IServiceFeeSubItem } from "@/models/serviceFees";
 import { useState } from "react";
@@ -12,20 +11,24 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
-  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-  const materialNames: string[] | undefined = [];
-  const [rawMaterialValue, setRawMaterialValue] = useState(0);
+export const AddEquipmentMaintenanceModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+  const { serviceFeeAuxiliary }: any = useAppSelector((state: RootState) => state?.serviceFee);
+  const equipmentNames = [
+    {
+      name: "Plotter de Impresión y corte",
+      coefficient: serviceFeeAuxiliary[0]?.equipmentMaintenanceCoefficients.plotter,
+    },
+    {
+      name: "Router",
+      coefficient: serviceFeeAuxiliary[0]?.equipmentMaintenanceCoefficients.router,
+    },
+  ];
+  const [equipmentMaintenanceValue, setEquipmentMaintenanceValue] = useState(0);
 
-  nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Material") {
-      materialNames.push(nomenclator.code);
-    }
-  });
-  const materials: SelectProps["options"] = materialNames.map((name) => {
+  const equipments: SelectProps["options"] = equipmentNames.map((equipment) => {
     return {
-      label: `${name}`,
-      value: `${name}`,
+      label: `${equipment.name}`,
+      value: `${equipment.name}`,
     };
   });
 
@@ -35,7 +38,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Nueva Materia Prima</span>
+          <span className="font-black text-lg">Nuevo Mantenimiento de Equipo</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -62,9 +65,9 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate({ ...values, value: rawMaterialValue });
+                  onCreate({ ...values, value: equipmentMaintenanceValue });
                   form.resetFields();
-                  setRawMaterialValue(0);
+                  setEquipmentMaintenanceValue(0);
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -76,18 +79,23 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
         </div>,
       ]}
     >
-      <Form form={form} layout="horizontal" name="addRawMaterial" size="middle">
+      <Form form={form} layout="horizontal" name="addEquipmentMaintenance" size="middle">
         <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select
             allowClear
-            style={{ width: "100%" }}
-            options={materials}
-            onChange={() => {
-              form.setFieldsValue({
-                unitMeasure: "m2",
-                price: 10,
+            onSelect={() => {
+              let values = form.getFieldsValue();
+              equipmentNames.map((equipment) => {
+                if (values.description === equipment.name)
+                  form.setFieldsValue({
+                    unitMeasure: "m2",
+                    price: equipment.coefficient,
+                  });
               });
+              setEquipmentMaintenanceValue(values.amount * values.price);
             }}
+            style={{ width: "100%" }}
+            options={equipments}
             showSearch
             optionFilterProp="children"
             filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
@@ -98,19 +106,19 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
           <Input />
         </Form.Item>
         <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input
+          <InputNumber
             onChange={() => {
               let values = form.getFieldsValue();
-              setRawMaterialValue(values.amount * values.price);
+              setEquipmentMaintenanceValue(values.amount * values.price);
             }}
           />
         </Form.Item>
         <Form.Item name="price" label="Precio" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input />
+          <InputNumber />
         </Form.Item>
         <div className=" flex gap-2 pl-2">
           <span className="font-bold">Importe:</span>
-          <span>${rawMaterialValue?.toFixed(2)}</span>
+          <span>${!equipmentMaintenanceValue ? 0 : equipmentMaintenanceValue?.toFixed(2)}</span>
         </div>
       </Form>
     </Modal>

@@ -9,8 +9,9 @@ import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import React, { useEffect, useState } from "react";
-import { IServiceFeeSubItem } from "@/models/serviceFees";
 import { AddTaskListModal } from "./AddTaskListModal";
+import { AddEquipmentDepreciationModal } from "./AddEquipmentDepreciation";
+import { AddEquipmentMaintenanceModal } from "./AddEquipmentMaintenance";
 
 export const CreateServiceFeeForm = () => {
   const dispatch = useAppDispatch();
@@ -20,8 +21,12 @@ export const CreateServiceFeeForm = () => {
   const payMethods: IRepresentationCoefficients[] | undefined = [];
   const [addRawMaterialModal, setAddRawMaterialModal] = useState(false);
   const [addTaskListModal, setAddTaskListModal] = useState(false);
+  const [addEquipmentDepreciationModal, setAddEquipmentDepreciationModal] = useState(false);
+  const [addEquipmentMaintenanceModal, setAddEquipmentMaintenanceModal] = useState(false);
   const [rawMaterialsValues, setRawMaterialsValues]: any = useState([]);
   const [taskListValues, setTaskListValues]: any = useState([]);
+  const [equipmentDepreciationValues, setEquipmentDepreciationValues]: any = useState([]);
+  const [equipmentMaintenanceValues, setEquipmentMaintenanceValues]: any = useState([]);
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
@@ -54,7 +59,7 @@ export const CreateServiceFeeForm = () => {
   const payMethodOptions: SelectProps["options"] = payMethods.map((payMethod) => {
     return {
       label: `${payMethod.representative}`,
-      value: `${payMethod.coefficientValue}`,
+      value: payMethod.coefficientValue,
     };
   });
 
@@ -64,30 +69,44 @@ export const CreateServiceFeeForm = () => {
 
   const onAddRawMaterial = (values: any) => {
     setRawMaterialsValues([values, ...rawMaterialsValues]);
-    form.setFieldValue("Materias Primas", [...rawMaterialsValues, values]);
-    // form.setFieldValue("Materias Primas", [
-    //   {
-    //     description: "descripcion",
-    //     amount: 11,
-    //     price: 1,
-    //     unitMeasure: " m",
-    //     value: 12,
-    //   },
-    //   {
-    //     description: "descripcion",
-    //     amount: 11,
-    //     price: 1,
-    //     unitMeasure: " m",
-    //     value: 12,
-    //   },
-    // ]);
+    form.setFieldValue("rawMaterials", [...rawMaterialsValues, values]);
     setAddRawMaterialModal(false);
+  };
+  const onAddEquipmentDepreciation = (values: any) => {
+    console.log("🚀 ~ onAddEquipmentDepreciation ~ values:", values);
+    setEquipmentDepreciationValues([values, ...equipmentDepreciationValues]);
+    form.setFieldValue("equipmentDepreciation", [...equipmentDepreciationValues, values]);
+    setAddEquipmentDepreciationModal(false);
+  };
+  const onAddEquipmentMaintenance = (values: any) => {
+    console.log("🚀 ~ onAddEquipmentMaintenance ~ values:", values);
+    setEquipmentMaintenanceValues([values, ...equipmentMaintenanceValues]);
+    form.setFieldValue("equipmentMaintenance", [...equipmentMaintenanceValues, values]);
+    setAddEquipmentMaintenanceModal(false);
   };
 
   const onAddTaskList = (values: any) => {
     console.log("🚀 ~ onAddTaskList ~ values:", values);
-    setTaskListValues([values, ...taskListValues]);
-    form.setFieldValue("Actividades a Ejecutar", [...taskListValues, values]);
+    setTaskListValues([
+      {
+        description: values.description,
+        unitMeasure: values.unitMeasure,
+        amount: values.amount,
+        price: values.price,
+        value: values.value,
+      },
+      ...taskListValues,
+    ]);
+    form.setFieldValue("taskList", [
+      ...taskListValues,
+      {
+        description: values.description,
+        unitMeasure: values.unitMeasure,
+        amount: values.amount,
+        price: values.price,
+        value: values.value,
+      },
+    ]);
     setAddTaskListModal(false);
   };
   return (
@@ -104,7 +123,7 @@ export const CreateServiceFeeForm = () => {
       size="middle"
       fields={[
         {
-          name: "USDValue",
+          name: "currencyChange",
           value: currencyChange,
         },
       ]}
@@ -145,10 +164,10 @@ export const CreateServiceFeeForm = () => {
             </Form.Item>
           </article>
           <article className="flex flex-col w-[300px]">
-            <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cambio $ </span>} name="USDValue" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cambio $ </span>} name="currencyChange" rules={[{ required: true, message: "Campo requerido" }]}>
               <InputNumber disabled className="w-full" />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Método de pago: </span>} name="payMethod" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item className="mb-3" label={<span className="font-bold text-md">Método de pago: </span>} name="payMethodCoef" rules={[{ required: true, message: "Campo requerido" }]}>
               <Select
                 allowClear
                 options={payMethodOptions}
@@ -166,7 +185,7 @@ export const CreateServiceFeeForm = () => {
         <div className="flex gap-1 ">
           <label className="text-md font-bold mb-3">Materias Primas</label>
         </div>
-        <Form.List name="Materias Primas">
+        <Form.List name="rawMaterials">
           {(fields, { add, remove }) => (
             <div className="flex flex-col w-full">
               {fields.map(({ key, name, ...restField }) => (
@@ -191,8 +210,7 @@ export const CreateServiceFeeForm = () => {
                       className="mb-auto"
                       onClick={() => {
                         remove(name);
-                        form.getFieldValue("Materias Primas");
-                        setRawMaterialsValues(form.getFieldValue("Materias Primas"));
+                        setRawMaterialsValues(form.getFieldValue("rawMaterials"));
                       }}
                     />
                   </div>
@@ -212,7 +230,7 @@ export const CreateServiceFeeForm = () => {
         <div className="flex gap-1 ">
           <label className="text-md font-bold mb-3">Actividades a Ejecutar</label>
         </div>
-        <Form.List name="Actividades a Ejecutar">
+        <Form.List name="taskList">
           {(fields, { add, remove }) => (
             <div className="flex flex-col w-full">
               {fields.map(({ key, name, ...restField }) => (
@@ -237,8 +255,7 @@ export const CreateServiceFeeForm = () => {
                       className="mb-auto"
                       onClick={() => {
                         remove(name);
-                        form.getFieldValue("Actividades a Ejecutar");
-                        setTaskListValues(form.getFieldValue("Actividades a Ejecutar"));
+                        setTaskListValues(form.getFieldValue("taskList"));
                       }}
                     />
                   </div>
@@ -247,6 +264,95 @@ export const CreateServiceFeeForm = () => {
               <Form.Item className="mb-2 w-full">
                 <Button className="flex flex-row  justify-center items-center" type="dashed" onClick={() => setAddTaskListModal(true)} block icon={<PlusOutlined />}>
                   Añadir Actividad
+                </Button>
+              </Form.Item>
+            </div>
+          )}
+        </Form.List>
+      </section>
+      {/* Seccion para introducir la depreciacion de equipos */}
+      <section className=" flex flex-col w-full mb-0">
+        <div className="flex gap-1 ">
+          <label className="text-md font-bold mb-3">Depreciación de Equipos</label>
+        </div>
+        <Form.List name="equipmentDepreciation">
+          {(fields, { add, remove }) => (
+            <div className="flex flex-col w-full">
+              {fields.map(({ key, name, ...restField }) => (
+                <div key={key} className="w-full">
+                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true, message: "Introduzca la descripción" }]}>
+                      <Input placeholder="Descripción" className="w-full" />
+                    </Form.Item>
+                    <Form.Item {...restField} className="w-[20%]" name={[name, "unitMeasure"]} rules={[{ required: true }]}>
+                      <InputNumber className="w-full" placeholder="Unidad de Medida" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
+                      <InputNumber placeholder="Cantidad" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
+                      <InputNumber placeholder="Precio" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
+                      <InputNumber disabled />
+                    </Form.Item>
+                    <MinusCircleOutlined
+                      className="mb-auto"
+                      onClick={() => {
+                        remove(name);
+                        setEquipmentDepreciationValues(form.getFieldValue("equipmentDepreciation"));
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+              <Form.Item className="mb-2 w-full ">
+                <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddEquipmentDepreciationModal(true)} block icon={<PlusOutlined />}>
+                  Añadir Depreciación de Equipos
+                </Button>
+              </Form.Item>
+            </div>
+          )}
+        </Form.List>
+      </section>
+      <section className=" flex flex-col w-full mb-0">
+        <div className="flex gap-1 ">
+          <label className="text-md font-bold mb-3">Mantenimiento de Equipos</label>
+        </div>
+        <Form.List name="equipmentMaintenance">
+          {(fields, { add, remove }) => (
+            <div className="flex flex-col w-full">
+              {fields.map(({ key, name, ...restField }) => (
+                <div key={key} className="w-full">
+                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true, message: "Introduzca la descripción" }]}>
+                      <Input placeholder="Descripción" className="w-full" />
+                    </Form.Item>
+                    <Form.Item {...restField} className="w-[20%]" name={[name, "unitMeasure"]} rules={[{ required: true }]}>
+                      <InputNumber className="w-full" placeholder="Unidad de Medida" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
+                      <InputNumber placeholder="Cantidad" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
+                      <InputNumber placeholder="Precio" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
+                      <InputNumber disabled />
+                    </Form.Item>
+                    <MinusCircleOutlined
+                      className="mb-auto"
+                      onClick={() => {
+                        remove(name);
+                        setEquipmentMaintenanceValues(form.getFieldValue("equipmentMaintenance"));
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+              <Form.Item className="mb-2 w-full ">
+                <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddEquipmentMaintenanceModal(true)} block icon={<PlusOutlined />}>
+                  Añadir Mantenimiento de Equipos
                 </Button>
               </Form.Item>
             </div>
@@ -287,7 +393,7 @@ export const CreateServiceFeeForm = () => {
                 //     values.workersAmount
                 //   )
                 // );
-                form.resetFields();
+                // form.resetFields();
                 // router.push("/dashboard/costSheets");
               })
               .catch((error) => {
@@ -300,6 +406,8 @@ export const CreateServiceFeeForm = () => {
       </Form.Item>
       <AddRawMaterialModal open={addRawMaterialModal} onCancel={() => setAddRawMaterialModal(false)} onCreate={onAddRawMaterial} />
       <AddTaskListModal open={addTaskListModal} onCancel={() => setAddTaskListModal(false)} onCreate={onAddTaskList} />
+      <AddEquipmentDepreciationModal open={addEquipmentDepreciationModal} onCancel={() => setAddEquipmentDepreciationModal(false)} onCreate={onAddEquipmentDepreciation} />
+      <AddEquipmentMaintenanceModal open={addEquipmentMaintenanceModal} onCancel={() => setAddEquipmentMaintenanceModal(false)} onCreate={onAddEquipmentMaintenance} />
     </Form>
   );
 };
