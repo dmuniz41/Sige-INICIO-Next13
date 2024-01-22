@@ -1,8 +1,6 @@
 "use client";
 
-import { DatePicker, Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
-import { INomenclator } from "@/models/nomenclator";
-import { RootState, useAppSelector } from "@/store/store";
+import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
 import { IServiceFeeSubItem } from "@/models/serviceFees";
 import { useState } from "react";
 
@@ -12,22 +10,24 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
-  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-  const materialNames: string[] | undefined = [];
-  const [rawMaterialValue, setRawMaterialValue] = useState(0);
+export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+  const [complexityCoefficient, setComplexityCoefficient] = useState(0);
+  const [taskValue, setTaskValue] = useState(0);
 
-  nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Material") {
-      materialNames.push(nomenclator.code);
-    }
-  });
-  const materials: SelectProps["options"] = materialNames.map((name) => {
-    return {
-      label: `${name}`,
-      value: `${name}`,
-    };
-  });
+  const complexityOptions: SelectProps["options"] = [
+    {
+      label: `Alta`,
+      value: 3,
+    },
+    {
+      label: `Media`,
+      value: 2,
+    },
+    {
+      label: `Baja`,
+      value: 1,
+    },
+  ];
 
   const [form] = Form.useForm();
   return (
@@ -35,7 +35,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Nueva Materia Prima</span>
+          <span className="font-black text-lg">Nueva Actividad</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -62,9 +62,10 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate({ ...values, value: rawMaterialValue });
+                  onCreate({ ...values, value: taskValue });
                   form.resetFields();
-                  setRawMaterialValue(0);
+                  setComplexityCoefficient(0);
+                  setTaskValue(0);
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -76,41 +77,53 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
         </div>,
       ]}
     >
-      <Form form={form} layout="vertical" name="addRawMaterial" size="middle">
+      <Form form={form} layout="horizontal" name="addRawMaterial" size="middle">
         <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Select
-            allowClear
-            style={{ width: "100%" }}
-            options={materials}
+          <Input
             onChange={() => {
               form.setFieldsValue({
-                unitMeasure: "m2",
                 price: 10,
               });
             }}
-            showSearch
-            optionFilterProp="children"
-            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
           />
         </Form.Item>
         <Form.Item name="unitMeasure" label="Unidad de Medida" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="amount" label="Cantidad" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input
+        <div className="flex gap-2">
+          <Form.Item name="complexity" label="Complejidad" className="w-[15rem]" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Select
+              allowClear
+              options={complexityOptions}
+              onChange={() => {
+                let values = form.getFieldsValue();
+                setComplexityCoefficient(values.complexity);
+                setTaskValue(values.amount * values.price * values.complexity);
+              }}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
+              filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+            />
+          </Form.Item>
+          <div className="mt-1">
+            <span>: {complexityCoefficient?.toFixed(2)}</span>
+          </div>
+        </div>
+        <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
+          <InputNumber
             onChange={() => {
               let values = form.getFieldsValue();
-              setRawMaterialValue(values.amount * values.price);
+              setTaskValue(values.amount * values.price * values.complexity);
             }}
           />
         </Form.Item>
-        <Form.Item name="price" label="Precio" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input />
+        <Form.Item name="price" label="Precio" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
+          <InputNumber />
         </Form.Item>
         <div className=" flex gap-2 pl-2">
           <span className="font-bold">Importe:</span>
-          <span>${rawMaterialValue?.toFixed(2)}</span>
+          <span>${!taskValue ? 0 : taskValue?.toFixed(2)}</span>
         </div>
       </Form>
     </Modal>

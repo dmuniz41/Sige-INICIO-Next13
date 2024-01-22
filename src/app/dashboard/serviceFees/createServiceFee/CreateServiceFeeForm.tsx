@@ -10,16 +10,18 @@ import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import React, { useEffect, useState } from "react";
 import { IServiceFeeSubItem } from "@/models/serviceFees";
+import { AddTaskListModal } from "./AddTaskListModal";
 
 export const CreateServiceFeeForm = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const serviceFeeCategory: string[] | undefined = [];
   const valuePerUM: string[] | undefined = [];
-  let aux: IServiceFeeSubItem[] | undefined = [];
   const payMethods: IRepresentationCoefficients[] | undefined = [];
   const [addRawMaterialModal, setAddRawMaterialModal] = useState(false);
+  const [addTaskListModal, setAddTaskListModal] = useState(false);
   const [rawMaterialsValues, setRawMaterialsValues]: any = useState([]);
+  const [taskListValues, setTaskListValues]: any = useState([]);
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
@@ -59,10 +61,8 @@ export const CreateServiceFeeForm = () => {
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
-  // aux = form.getFieldValue('Materias Primas')
-  // console.log("🚀 ~ onAddRawMaterial ~ aux:", aux)
 
-  const onAddRawMaterial =  (values: any) => {
+  const onAddRawMaterial = (values: any) => {
     setRawMaterialsValues([values, ...rawMaterialsValues]);
     form.setFieldValue("Materias Primas", [...rawMaterialsValues, values]);
     // form.setFieldValue("Materias Primas", [
@@ -82,6 +82,13 @@ export const CreateServiceFeeForm = () => {
     //   },
     // ]);
     setAddRawMaterialModal(false);
+  };
+
+  const onAddTaskList = (values: any) => {
+    console.log("🚀 ~ onAddTaskList ~ values:", values);
+    setTaskListValues([values, ...taskListValues]);
+    form.setFieldValue("Actividades a Ejecutar", [...taskListValues, values]);
+    setAddTaskListModal(false);
   };
   return (
     <Form
@@ -168,108 +175,131 @@ export const CreateServiceFeeForm = () => {
                     <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true, message: "Introduzca la descripción" }]}>
                       <Input placeholder="Descripción" className="w-full" />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true, message: "Introduzca la cantidad" }]}>
+                    <Form.Item {...restField} className="w-[20%]" name={[name, "unitMeasure"]} rules={[{ required: true }]}>
+                      <InputNumber className="w-full" placeholder="Unidad de Medida" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
                       <InputNumber placeholder="Cantidad" />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true, message: "Introduzca el precio" }]}>
+                    <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
                       <InputNumber placeholder="Precio" />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "unitMeasure"]} rules={[{ required: true, message: "Introduzca el precio" }]}>
-                      <InputNumber placeholder="Unidad de Medida" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true, message: "Introduzca el precio" }]}>
+                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
                       <InputNumber disabled />
                     </Form.Item>
-                    <MinusCircleOutlined className="mb-auto" onClick={() => remove(name)} />
+                    <MinusCircleOutlined
+                      className="mb-auto"
+                      onClick={() => {
+                        remove(name);
+                        form.getFieldValue("Materias Primas");
+                        setRawMaterialsValues(form.getFieldValue("Materias Primas"));
+                      }}
+                    />
                   </div>
                 </div>
               ))}
               <Form.Item className="mb-2 w-full">
                 <Button className="flex flex-row  justify-center items-center" type="dashed" onClick={() => setAddRawMaterialModal(true)} block icon={<PlusOutlined />}>
-                  Añadir entrada
+                  Añadir Materia Prima
                 </Button>
               </Form.Item>
             </div>
           )}
         </Form.List>
       </section>
-      {/* <section className="flex gap-5 pt-3">
-      <div className="flex flex-col gap-2 justify-start">
-        <Form.Item
-          className="mb-3 "
-          tooltip="Para la actividad de producción de bienes, la tasa máxima de utilidad aprobada no puede exceder el 25%"
-          label={<span className="font-bold text-md">Utilidad</span>}
-          name="representationCost"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
-          <InputNumber className="w-[5rem] " />
-        </Form.Item>
-        <Form.Item className="mb-3 " label={<span className="font-bold text-md">Talento artístico</span>} name="artisticTalent" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber className="w-[5rem] " />
-        </Form.Item>
-      </div>
-      <div className="flex flex-col gap-1 justify-start">
-        <Form.Item className="mb-3 " label={<span className="font-bold text-md">Elaborado por</span>} name="createdBy" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input className="w-[15rem]" />
-        </Form.Item>
-        <Form.Item className="mb-3 " label={<span className="font-bold text-md">Aprobado por</span>} name="approvedBy" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input className="w-[15rem]" />
-        </Form.Item>
-      </div>
-      <Form.Item
-        className="mb-3 "
-        label={<span className="font-bold text-md">Materias primas aportadas por el cliente</span>}
-        name="rawMaterialsByClient"
-        rules={[{ required: true, message: "Campo requerido" }]}
-      >
-        <InputNumber className="w-[5rem] " />
-      </Form.Item>
-    </section> */}
+      {/* Seccion para introducir la lista de tareas */}
+      <section className=" flex flex-col w-full mb-0">
+        <div className="flex gap-1 ">
+          <label className="text-md font-bold mb-3">Actividades a Ejecutar</label>
+        </div>
+        <Form.List name="Actividades a Ejecutar">
+          {(fields, { add, remove }) => (
+            <div className="flex flex-col w-full">
+              {fields.map(({ key, name, ...restField }) => (
+                <div key={key} className="w-full">
+                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
+                      <Input placeholder="Descripción" className="w-full" />
+                    </Form.Item>
+                    <Form.Item className="w-[20%]" {...restField} name={[name, "unitMeasure"]} rules={[{ required: true }]}>
+                      <InputNumber className="w-full" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
+                      <InputNumber />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
+                      <InputNumber />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
+                      <InputNumber disabled />
+                    </Form.Item>
+                    <MinusCircleOutlined
+                      className="mb-auto"
+                      onClick={() => {
+                        remove(name);
+                        form.getFieldValue("Actividades a Ejecutar");
+                        setTaskListValues(form.getFieldValue("Actividades a Ejecutar"));
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+              <Form.Item className="mb-2 w-full">
+                <Button className="flex flex-row  justify-center items-center" type="dashed" onClick={() => setAddTaskListModal(true)} block icon={<PlusOutlined />}>
+                  Añadir Actividad
+                </Button>
+              </Form.Item>
+            </div>
+          )}
+        </Form.List>
+      </section>
       <Form.Item>
         <button
           type="submit"
           className="bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300 w-[5rem] h-[2rem] flex items-center p-1 text-sm font-bold text-white-100  justify-center gap-2 rounded-md "
-          // onClick={() => {
-          //   form
-          //     .validateFields()
-          //     .then((values: ICostSheet) => {
-          //       dispatch(
-          //         startAddCostSheet(
-          //           values.administrativeExpenses,
-          //           values.approvedBy,
-          //           values.artisticTalent,
-          //           values.category,
-          //           values.createdBy,
-          //           values.description,
-          //           values.directSalaries,
-          //           values.financialExpenses,
-          //           values.nomenclatorId,
-          //           values.otherDirectExpenses,
-          //           values.payMethod,
-          //           values.productionRelatedExpenses,
-          //           values.rawMaterials,
-          //           values.rawMaterialsByClient,
-          //           values.representationCost,
-          //           values.taskName,
-          //           values.taxExpenses,
-          //           values.transportationExpenses,
-          //           values.USDValue,
-          //           values.valuePerUnitMeasure,
-          //           values.workersAmount
-          //         )
-          //       );
-          //       form.resetFields();
-          //       router.push("/dashboard/costSheets");
-          //     })
-          //     .catch((error) => {
-          //       console.log("Validate Failed:", error);
-          //     });
-          // }}
+          onClick={() => {
+            form
+              .validateFields()
+              .then((values) => {
+                console.log("🚀 ~ .then ~ values:", values);
+                // dispatch(
+                //   startAddCostSheet(
+                //     values.administrativeExpenses,
+                //     values.approvedBy,
+                //     values.artisticTalent,
+                //     values.category,
+                //     values.createdBy,
+                //     values.description,
+                //     values.directSalaries,
+                //     values.financialExpenses,
+                //     values.nomenclatorId,
+                //     values.otherDirectExpenses,
+                //     values.payMethod,
+                //     values.productionRelatedExpenses,
+                //     values.rawMaterials,
+                //     values.rawMaterialsByClient,
+                //     values.representationCost,
+                //     values.taskName,
+                //     values.taxExpenses,
+                //     values.transportationExpenses,
+                //     values.USDValue,
+                //     values.valuePerUnitMeasure,
+                //     values.workersAmount
+                //   )
+                // );
+                form.resetFields();
+                // router.push("/dashboard/costSheets");
+              })
+              .catch((error) => {
+                console.log("Validate Failed:", error);
+              });
+          }}
         >
           Crear
         </button>
       </Form.Item>
-      <AddRawMaterialModal open={addRawMaterialModal} onCancel={() => setAddRawMaterialModal(false)} onCreate={onAddRawMaterial} />;
+      <AddRawMaterialModal open={addRawMaterialModal} onCancel={() => setAddRawMaterialModal(false)} onCreate={onAddRawMaterial} />
+      <AddTaskListModal open={addTaskListModal} onCancel={() => setAddTaskListModal(false)} onCreate={onAddTaskList} />
     </Form>
   );
 };
