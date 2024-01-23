@@ -259,6 +259,52 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
             </div>
           </article>
         </section>
+
+        <section className="grid gap-3">
+          <label className="font-bold text-md">Coeficientes de Mantenimiento de Equipos: </label>
+          <article>
+            <div className="flex gap-2 pr-[13rem]">
+              <Form.Item
+                className="mb-3 flex-1"
+                label={<span className=" font-bold text-md">Plotter de Impresión y Corte</span>}
+                name="plotterMaintenance"
+                rules={[{ required: true, message: "Campo requerido" }]}
+              >
+                <InputNumber />
+              </Form.Item>
+            </div>
+            <div className="flex gap-2 pr-[13rem]">
+              <Form.Item className="mb-3 flex-1" label={<span className=" font-bold text-md">Router</span>} name="routerMaintenance" rules={[{ required: true, message: "Campo requerido" }]}>
+                <InputNumber />
+              </Form.Item>
+            </div>
+          </article>
+        </section>
+        <section className="grid gap-3">
+          <label className="font-bold text-md">Coeficientes de Gastos de Transportación: </label>
+          <article>
+            <div className="flex gap-2 pr-[13rem]">
+              <Form.Item
+                className="mb-3 flex-1"
+                label={<span className=" font-bold text-md">Transportación</span>}
+                name="transportationExpensesCoefficient"
+                rules={[{ required: true, message: "Campo requerido" }]}
+              >
+                <InputNumber />
+              </Form.Item>
+            </div>
+            <div className="flex gap-2 pr-[13rem]">
+              <Form.Item
+                className="mb-3 flex-1"
+                label={<span className=" font-bold text-md">Distribución y Venta</span>}
+                name="salesAndDistributionExpensesCoefficient"
+                rules={[{ required: true, message: "Campo requerido" }]}
+              >
+                <InputNumber />
+              </Form.Item>
+            </div>
+          </article>
+        </section>
       </section>
 
       <Form.Item>

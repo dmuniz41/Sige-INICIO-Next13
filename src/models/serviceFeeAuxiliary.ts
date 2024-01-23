@@ -14,6 +14,8 @@ export interface IServiceFeeAuxiliary {
   mermaCoefficient: number;
   currencyChange: number;
   officialCurrencyChangeCoefficient: number;
+  transportationExpensesCoefficient: number;
+  salesAndDistributionExpensesCoefficient: number;
   informalCurrencyChange: number;
   currency: ["USD", "CUP"];
   administrativeExpensesCoefficients: {
@@ -80,6 +82,12 @@ const ServiceFeeAuxiliarySchema = new Schema<IServiceFeeAuxiliary, Model<IServic
   equipmentMaintenanceCoefficients: {
     plotter: Number,
     router: Number,
+  },
+  transportationExpensesCoefficient: {
+    type: Number,
+  },
+  salesAndDistributionExpensesCoefficient: {
+    type: Number,
   },
 });
 

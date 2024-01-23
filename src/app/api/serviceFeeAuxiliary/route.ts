@@ -52,6 +52,8 @@ export async function POST(request: Request) {
       administrativeExpensesCoefficients: serviceFeeAuxiliary.administrativeExpensesCoefficients,
       equipmentDepreciationCoefficients: serviceFeeAuxiliary.equipmentDepreciationCoefficients,
       equipmentMaintenanceCoefficients: serviceFeeAuxiliary.equipmentMaintenanceCoefficients,
+      transportationExpensesCoefficient: serviceFeeAuxiliary.transportationExpensesCoefficient,
+      salesAndDistributionExpensesCoefficient: serviceFeeAuxiliary.salesAndDistributionExpensesCoefficient,
     });
 
     await newServiceFeeAuxiliary.save();
@@ -159,16 +161,18 @@ export async function PUT(request: Request) {
     const updatedServiceFeeAuxiliary = await ServiceFeeAuxiliary.findByIdAndUpdate(
       { _id: serviceFeeAuxiliary._id },
       {
-      calculationCoefficient: serviceFeeAuxiliary.calculationCoefficient,
-      mermaCoefficient: serviceFeeAuxiliary.mermaCoefficient,
-      currencyChange: serviceFeeAuxiliary.currencyChange,
-      officialCurrencyChangeCoefficient: serviceFeeAuxiliary.officialCurrencyChangeCoefficient,
-      informalCurrencyChange: serviceFeeAuxiliary.informalCurrencyChange,
-      currency: serviceFeeAuxiliary.currency,
-      payMethod: serviceFeeAuxiliary.payMethod,
-      administrativeExpensesCoefficients: serviceFeeAuxiliary.administrativeExpensesCoefficients,
-      equipmentDepreciationCoefficients: serviceFeeAuxiliary.equipmentDepreciationCoefficients,
-      equipmentMaintenanceCoefficients: serviceFeeAuxiliary.equipmentMaintenanceCoefficients,
+        calculationCoefficient: serviceFeeAuxiliary.calculationCoefficient,
+        mermaCoefficient: serviceFeeAuxiliary.mermaCoefficient,
+        currencyChange: serviceFeeAuxiliary.currencyChange,
+        officialCurrencyChangeCoefficient: serviceFeeAuxiliary.officialCurrencyChangeCoefficient,
+        informalCurrencyChange: serviceFeeAuxiliary.informalCurrencyChange,
+        currency: serviceFeeAuxiliary.currency,
+        payMethod: serviceFeeAuxiliary.payMethod,
+        administrativeExpensesCoefficients: serviceFeeAuxiliary.administrativeExpensesCoefficients,
+        equipmentDepreciationCoefficients: serviceFeeAuxiliary.equipmentDepreciationCoefficients,
+        equipmentMaintenanceCoefficients: serviceFeeAuxiliary.equipmentMaintenanceCoefficients,
+        transportationExpensesCoefficient: serviceFeeAuxiliary.transportationExpensesCoefficient,
+        salesAndDistributionExpensesCoefficient: serviceFeeAuxiliary.salesAndDistributionExpensesCoefficient,
       },
       { new: true }
     );
