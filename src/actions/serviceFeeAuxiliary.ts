@@ -22,6 +22,8 @@ export const startUpdateServiceFeeAuxiliary = ({ ...serviceFeeAuxiliary }): any 
           administrativeExpensesCoefficients: serviceFeeAuxiliary.administrativeExpensesCoefficients,
           equipmentDepreciationCoefficients: serviceFeeAuxiliary.equipmentDepreciationCoefficients,
           equipmentMaintenanceCoefficients: serviceFeeAuxiliary.equipmentMaintenanceCoefficients,
+          transportationExpensesCoefficient: serviceFeeAuxiliary.transportationExpensesCoefficient,
+          salesAndDistributionExpensesCoefficient: serviceFeeAuxiliary.salesAndDistributionExpensesCoefficient,
         },
         { headers: { accessToken: token } }
       )
@@ -72,6 +74,8 @@ const updateServiceFeeAuxiliary = ({ ...serviceFeeAuxiliary }) => ({
     administrativeExpensesCoefficients: serviceFeeAuxiliary.administrativeExpensesCoefficients,
     equipmentDepreciationCoefficients: serviceFeeAuxiliary.equipmentDepreciationCoefficients,
     equipmentMaintenanceCoefficients: serviceFeeAuxiliary.equipmentMaintenanceCoefficients,
+    transportationExpensesCoefficient: serviceFeeAuxiliary.transportationExpensesCoefficient,
+    salesAndDistributionExpensesCoefficient: serviceFeeAuxiliary.salesAndDistributionExpensesCoefficient,
   },
 });
 

@@ -54,6 +54,8 @@ export const AuxiliaryView = () => {
           plotter: values.plotterMaintenance,
           router: values.routerMaintenance,
         },
+        transportationExpensesCoefficient: values.transportationExpensesCoefficient,
+        salesAndDistributionExpensesCoefficient: values.salesAndDistributionExpensesCoefficient,
       })
     );
     setEditing(false);
@@ -164,6 +166,17 @@ export const AuxiliaryView = () => {
               <li key="routerMaintenance" className="flex gap-1">
                 <label className="font-bold ">Router: </label>
                 <label>{serviceFeeAuxiliary[0]?.equipmentMaintenanceCoefficients.router}</label>
+              </li>
+            </ul>
+            <label className="font-bold text-md">Coeficientes de gastos de transportación:</label>
+            <ul>
+              <li key="transportationExpensesCoefficient" className="flex gap-1">
+                <label className="font-bold ">Transportación: </label>
+                <label>{serviceFeeAuxiliary[0]?.transportationExpensesCoefficient}</label>
+              </li>
+              <li key="salesAndDistributionExpensesCoefficient" className="flex gap-1">
+                <label className="font-bold ">Distribución y venta: </label>
+                <label>{serviceFeeAuxiliary[0]?.salesAndDistributionExpensesCoefficient}</label>
               </li>
             </ul>
           </article>
