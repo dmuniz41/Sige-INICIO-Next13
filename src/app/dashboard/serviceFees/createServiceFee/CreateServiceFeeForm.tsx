@@ -15,6 +15,7 @@ import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import { AddTransportationExpensesModal } from "./AddTransportationExpenses";
+import { AddHiredPersonalExpensesModal } from "./AddHiredPersonalExpenses";
 
 export const CreateServiceFeeForm = () => {
   const dispatch = useAppDispatch();
@@ -22,18 +23,22 @@ export const CreateServiceFeeForm = () => {
   const serviceFeeCategory: string[] | undefined = [];
   const valuePerUM: string[] | undefined = [];
   const payMethods: IRepresentationCoefficients[] | undefined = [];
+
   const [addRawMaterialModal, setAddRawMaterialModal] = useState(false);
   const [addTaskListModal, setAddTaskListModal] = useState(false);
   const [addEquipmentDepreciationModal, setAddEquipmentDepreciationModal] = useState(false);
   const [addEquipmentMaintenanceModal, setAddEquipmentMaintenanceModal] = useState(false);
   const [addAdministrativeExpensesModal, setAddAdministrativeExpensesModal] = useState(false);
   const [addTransportationExpensesModal, setAddTransportationExpensesModal] = useState(false);
+  const [addHiredPersonalExpensesModal, setAddHiredPersonalExpensesModal] = useState(false);
+
   const [rawMaterialsValues, setRawMaterialsValues]: any = useState([]);
   const [taskListValues, setTaskListValues]: any = useState([]);
   const [equipmentDepreciationValues, setEquipmentDepreciationValues]: any = useState([]);
   const [equipmentMaintenanceValues, setEquipmentMaintenanceValues]: any = useState([]);
   const [administrativeExpensesValues, setAdministrativeExpensesValues]: any = useState([]);
   const [transportationExpensesValues, setTransportationExpensesValues]: any = useState([]);
+  const [hiredPersonalExpensesValues, setHiredPersonalExpensesValues]: any = useState([]);
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
@@ -56,7 +61,6 @@ export const CreateServiceFeeForm = () => {
       value: `${serviceFeeCategory}`,
     };
   });
-
   const valuePerUMOptions: SelectProps["options"] = valuePerUM.map((valuePerUM) => {
     return {
       label: `${valuePerUM}`,
@@ -69,7 +73,6 @@ export const CreateServiceFeeForm = () => {
       value: payMethod.coefficientValue,
     };
   });
-
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
@@ -227,6 +230,42 @@ export const CreateServiceFeeForm = () => {
       },
     ]);
     setAddTransportationExpensesModal(false);
+  };
+  const onAddHiredPersonalExpenses = (values: any) => {
+    console.log("🚀 ~ onAddHiredPersonalExpenses ~ values:", values);
+    setHiredPersonalExpensesValues([
+      {
+        description: "Gasto de salarios indirectos",
+        price: values.indirectSalariesPrice,
+        unitMeasure: " ",
+        amount: values.indirectSalariesAmount,
+        value: values.indirectSalariesValue,
+      },
+      {
+        description: "Subcontratación",
+        price: values.subcontractPrice,
+        unitMeasure: " ",
+        amount: values.subcontractAmount,
+        value: values.subcontractExpensesValue,
+      },
+    ]);
+    form.setFieldValue("hiredPersonalExpenses", [
+      {
+        description: "Gasto de salarios indirectos",
+        price: values.indirectSalariesPrice,
+        unitMeasure: " ",
+        amount: values.indirectSalariesAmount,
+        value: values.indirectSalariesValue,
+      },
+      {
+        description: "Subcontratación",
+        price: values.subcontractPrice,
+        unitMeasure: " ",
+        amount: values.subcontractAmount,
+        value: values.subcontractExpensesValue,
+      },
+    ]);
+    setAddHiredPersonalExpensesModal(false);
   };
 
   return (
@@ -570,6 +609,51 @@ export const CreateServiceFeeForm = () => {
           )}
         </Form.List>
       </section>
+      {/* seccion para introducir los gastos de personal contratado */}
+      <section className=" flex flex-col w-full mb-0">
+        <div className="flex gap-1 ">
+          <label className="text-md font-bold mb-3">Gastos de Personal Contratado</label>
+        </div>
+        <Form.List name="hiredPersonalExpenses">
+          {(fields, { add, remove }) => (
+            <div className="flex flex-col w-full">
+              {fields.map(({ key, name, ...restField }) => (
+                <div key={key} className="w-full">
+                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
+                      <Input placeholder="Descripción" className="w-full" />
+                    </Form.Item>
+                    <Form.Item {...restField} className="w-[20%]" name={[name, "unitMeasure"]} rules={[{ required: true }]}>
+                      <InputNumber className="w-full" placeholder="Unidad de Medida" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
+                      <InputNumber placeholder="Cantidad" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
+                      <InputNumber placeholder="Precio" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
+                      <InputNumber disabled />
+                    </Form.Item>
+                    <MinusCircleOutlined
+                      className="mb-auto"
+                      onClick={() => {
+                        remove(name);
+                        setHiredPersonalExpensesValues(form.getFieldValue("transportationExpenses"));
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+              <Form.Item className="mb-2 w-full ">
+                <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddHiredPersonalExpensesModal(true)} block icon={<PlusOutlined />}>
+                  Añadir Gastos de Personal Contratado
+                </Button>
+              </Form.Item>
+            </div>
+          )}
+        </Form.List>
+      </section>
       <Form.Item>
         <button
           type="submit"
@@ -621,6 +705,7 @@ export const CreateServiceFeeForm = () => {
       <AddEquipmentMaintenanceModal open={addEquipmentMaintenanceModal} onCancel={() => setAddEquipmentMaintenanceModal(false)} onCreate={onAddEquipmentMaintenance} />
       <AddAdministrativeExpensesModal open={addAdministrativeExpensesModal} onCancel={() => setAddAdministrativeExpensesModal(false)} onCreate={onAddAdministrativeExpenses} />
       <AddTransportationExpensesModal open={addTransportationExpensesModal} onCancel={() => setAddTransportationExpensesModal(false)} onCreate={onAddTransportationExpenses} />
+      <AddHiredPersonalExpensesModal open={addHiredPersonalExpensesModal} onCancel={() => setAddHiredPersonalExpensesModal(false)} onCreate={onAddHiredPersonalExpenses} />
     </Form>
   );
 };

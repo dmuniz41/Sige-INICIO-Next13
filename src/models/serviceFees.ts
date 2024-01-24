@@ -8,12 +8,6 @@ export interface IServiceFeeSubItem {
   price: number;
   value: number;
 }
-// export interface IServiceFeeSubItemCoefficient {
-//   description: string;
-//   amount: number;
-//   coefficient: number;
-//   value: number;
-// }
 export interface IServiceFee {
   _id: string;
   category: string;
