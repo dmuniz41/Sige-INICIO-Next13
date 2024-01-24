@@ -37,18 +37,13 @@ export interface IServiceFee {
   equipmentMaintenance: IServiceFeeSubItem[];
   equipmentMaintenanceSubtotal: number;
   //*GASTOS ADMINISTRATIVOS
-  electricityExpense: IServiceFeeSubItem;
-  fuelExpense: IServiceFeeSubItem;
-  feedingExpense: IServiceFeeSubItem;
-  phoneExpense: IServiceFeeSubItem;
-  leaseExpense: IServiceFeeSubItem;
+  administrativeExpenses: IServiceFeeSubItem[];
   administrativeExpensesSubtotal: number;
   //*GASTOS DE TRANSPORTE
-  rawMaterialsTransportationExpenses: IServiceFeeSubItem;
-  salesAndDistributionExpenses: IServiceFeeSubItem;
+  transportationExpenses: IServiceFeeSubItem[];
   transportationExpensesSubtotal: number;
   //*GASTO DE PERSONAL CONTRATADO
-  indirectSalaries: IServiceFeeSubItem
+  indirectSalaries: IServiceFeeSubItem;
   subcontractExpenses: IServiceFeeSubItem;
   subcontractExpensesSubtotal: number;
   //*OTROS
@@ -59,8 +54,6 @@ export interface IServiceFee {
   salePrice: number;
   salePriceUSD: number;
   rawMaterialsByClient: number;
-  // createdBy: string;
-  // currencyChange: number;
 }
 
 const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
@@ -88,9 +81,6 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
   currencyChange: {
     type: Number,
   },
-  // createdBy: {
-  //   type: String,
-  // },
   valuePerUnitMeasure: {
     type: String,
   },
@@ -144,58 +134,27 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
   equipmentMaintenanceSubtotal: {
     type: Number,
   },
-  fuelExpense: {
-    description: String,
-    unitMeasure: String,
-    amount: Number,
-    price: Number,
-    value: Number,
-  },
-  feedingExpense: {
-    description: String,
-    unitMeasure: String,
-    amount: Number,
-    price: Number,
-    value: Number,
-  },
-  electricityExpense: {
-    description: String,
-    unitMeasure: String,
-    amount: Number,
-    price: Number,
-    value: Number,
-  },
-  leaseExpense: {
-    description: String,
-    unitMeasure: String,
-    amount: Number,
-    price: Number,
-    value: Number,
-  },
-  phoneExpense: {
-    description: String,
-    unitMeasure: String,
-    amount: Number,
-    price: Number,
-    value: Number,
-  },
+  administrativeExpenses: [
+    {
+      description: String,
+      unitMeasure: String,
+      amount: Number,
+      price: Number,
+      value: Number,
+    },
+  ],
   administrativeExpensesSubtotal: {
     type: Number,
   },
-  rawMaterialsTransportationExpenses: {
-    description: String,
-    unitMeasure: String,
-    amount: Number,
-    price: Number,
-    value: Number,
-  },
-  salesAndDistributionExpenses: {
-    description: String,
-    unitMeasure: String,
-    amount: Number,
-    price: Number,
-    value: Number,
-  },
+  transportationExpenses: [
+    {
+      description: String,
+      unitMeasure: String,
+      amount: Number,
+      price: Number,
+      value: Number,
+    },
+  ],
   transportationExpensesSubtotal: {
     type: Number,
   },

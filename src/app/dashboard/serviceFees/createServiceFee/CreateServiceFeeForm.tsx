@@ -78,6 +78,30 @@ export const CreateServiceFeeForm = () => {
     form.setFieldValue("rawMaterials", [...rawMaterialsValues, values]);
     setAddRawMaterialModal(false);
   };
+  const onAddTaskList = (values: any) => {
+    console.log("🚀 ~ onAddTaskList ~ values:", values);
+    setTaskListValues([
+      {
+        description: values.description,
+        unitMeasure: values.unitMeasure,
+        amount: values.amount,
+        price: values.price,
+        value: values.value,
+      },
+      ...taskListValues,
+    ]);
+    form.setFieldValue("taskList", [
+      ...taskListValues,
+      {
+        description: values.description,
+        unitMeasure: values.unitMeasure,
+        amount: values.amount,
+        price: values.price,
+        value: values.value,
+      },
+    ]);
+    setAddTaskListModal(false);
+  };
   const onAddEquipmentDepreciation = (values: any) => {
     console.log("🚀 ~ onAddEquipmentDepreciation ~ values:", values);
     setEquipmentDepreciationValues([values, ...equipmentDepreciationValues]);
@@ -89,42 +113,6 @@ export const CreateServiceFeeForm = () => {
     setEquipmentMaintenanceValues([values, ...equipmentMaintenanceValues]);
     form.setFieldValue("equipmentMaintenance", [...equipmentMaintenanceValues, values]);
     setAddEquipmentMaintenanceModal(false);
-  };
-  const onAddTransportationExpenses = (values: any) => {
-    console.log("🚀 ~ onAddTransportationExpenses ~ values:", values);
-    setTransportationExpensesValues([
-      {
-        description: "Transportación",
-        price: values.transportationExpenseCoef,
-        unitMeasure: "$/u",
-        amount: values.transportationAmount,
-        value: values.transportationExpenseValue,
-      },
-      {
-        description: "Distribución y Venta",
-        price: values.salesAndDistributionExpenseCoef,
-        unitMeasure: "$/u",
-        amount: values.salesAndDistributionAmount,
-        value: values.salesAndDistributionExpenseValue,
-      },
-    ]);
-    form.setFieldValue("transportationExpenses", [
-      {
-        description: "Transportación",
-        price: values.transportationExpenseCoef,
-        unitMeasure: "$/u",
-        amount: values.transportationAmount,
-        value: values.transportationExpenseValue,
-      },
-      {
-        description: "Distribución y Venta",
-        price: values.salesAndDistributionExpenseCoef,
-        unitMeasure: "$/u",
-        amount: values.salesAndDistributionAmount,
-        value: values.salesAndDistributionExpenseValue,
-      },
-    ]);
-    setAddTransportationExpensesModal(false);
   };
   const onAddAdministrativeExpenses = (values: any) => {
     console.log("🚀 ~ onAddAdministrativeExpenses ~ values:", values);
@@ -204,31 +192,43 @@ export const CreateServiceFeeForm = () => {
     ]);
     setAddAdministrativeExpensesModal(false);
   };
-
-  const onAddTaskList = (values: any) => {
-    console.log("🚀 ~ onAddTaskList ~ values:", values);
-    setTaskListValues([
+  const onAddTransportationExpenses = (values: any) => {
+    console.log("🚀 ~ onAddTransportationExpenses ~ values:", values);
+    setTransportationExpensesValues([
       {
-        description: values.description,
-        unitMeasure: values.unitMeasure,
-        amount: values.amount,
-        price: values.price,
-        value: values.value,
+        description: "Transportación",
+        price: values.transportationExpenseCoef,
+        unitMeasure: "$/u",
+        amount: values.transportationAmount,
+        value: values.transportationExpenseValue,
       },
-      ...taskListValues,
-    ]);
-    form.setFieldValue("taskList", [
-      ...taskListValues,
       {
-        description: values.description,
-        unitMeasure: values.unitMeasure,
-        amount: values.amount,
-        price: values.price,
-        value: values.value,
+        description: "Distribución y Venta",
+        price: values.salesAndDistributionExpenseCoef,
+        unitMeasure: "$/u",
+        amount: values.salesAndDistributionAmount,
+        value: values.salesAndDistributionExpenseValue,
       },
     ]);
-    setAddTaskListModal(false);
+    form.setFieldValue("transportationExpenses", [
+      {
+        description: "Transportación",
+        price: values.transportationExpenseCoef,
+        unitMeasure: "$/u",
+        amount: values.transportationAmount,
+        value: values.transportationExpenseValue,
+      },
+      {
+        description: "Distribución y Venta",
+        price: values.salesAndDistributionExpenseCoef,
+        unitMeasure: "$/u",
+        amount: values.salesAndDistributionAmount,
+        value: values.salesAndDistributionExpenseValue,
+      },
+    ]);
+    setAddTransportationExpensesModal(false);
   };
+
   return (
     <Form
       form={form}
