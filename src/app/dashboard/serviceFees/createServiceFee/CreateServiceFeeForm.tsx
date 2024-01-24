@@ -14,6 +14,7 @@ import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
+import { AddTransportationExpensesModal } from "./AddTransportationExpenses";
 
 export const CreateServiceFeeForm = () => {
   const dispatch = useAppDispatch();
@@ -26,11 +27,13 @@ export const CreateServiceFeeForm = () => {
   const [addEquipmentDepreciationModal, setAddEquipmentDepreciationModal] = useState(false);
   const [addEquipmentMaintenanceModal, setAddEquipmentMaintenanceModal] = useState(false);
   const [addAdministrativeExpensesModal, setAddAdministrativeExpensesModal] = useState(false);
+  const [addTransportationExpensesModal, setAddTransportationExpensesModal] = useState(false);
   const [rawMaterialsValues, setRawMaterialsValues]: any = useState([]);
   const [taskListValues, setTaskListValues]: any = useState([]);
   const [equipmentDepreciationValues, setEquipmentDepreciationValues]: any = useState([]);
   const [equipmentMaintenanceValues, setEquipmentMaintenanceValues]: any = useState([]);
   const [administrativeExpensesValues, setAdministrativeExpensesValues]: any = useState([]);
+  const [transportationExpensesValues, setTransportationExpensesValues]: any = useState([]);
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
@@ -38,8 +41,8 @@ export const CreateServiceFeeForm = () => {
   }, [dispatch]);
 
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-  const { currencyChange }: any = useAppSelector((state: RootState) => state?.costSheet);
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary[] } = useAppSelector((state: RootState) => state?.serviceFee);
+  console.log("🚀 ~ CreateServiceFeeForm ~ serviceFeeAuxiliary:", serviceFeeAuxiliary);
   serviceFeeAuxiliary[0]?.payMethod.map((payMethod) => payMethods.push(payMethod));
 
   nomenclators.map((nomenclator: INomenclator) => {
@@ -70,7 +73,6 @@ export const CreateServiceFeeForm = () => {
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
-
   const onAddRawMaterial = (values: any) => {
     setRawMaterialsValues([values, ...rawMaterialsValues]);
     form.setFieldValue("rawMaterials", [...rawMaterialsValues, values]);
@@ -87,6 +89,42 @@ export const CreateServiceFeeForm = () => {
     setEquipmentMaintenanceValues([values, ...equipmentMaintenanceValues]);
     form.setFieldValue("equipmentMaintenance", [...equipmentMaintenanceValues, values]);
     setAddEquipmentMaintenanceModal(false);
+  };
+  const onAddTransportationExpenses = (values: any) => {
+    console.log("🚀 ~ onAddTransportationExpenses ~ values:", values);
+    setTransportationExpensesValues([
+      {
+        description: "Transportación",
+        price: values.transportationExpenseCoef,
+        unitMeasure: "$/u",
+        amount: values.transportationAmount,
+        value: values.transportationExpenseValue,
+      },
+      {
+        description: "Distribución y Venta",
+        price: values.salesAndDistributionExpenseCoef,
+        unitMeasure: "$/u",
+        amount: values.salesAndDistributionAmount,
+        value: values.salesAndDistributionExpenseValue,
+      },
+    ]);
+    form.setFieldValue("transportationExpenses", [
+      {
+        description: "Transportación",
+        price: values.transportationExpenseCoef,
+        unitMeasure: "$/u",
+        amount: values.transportationAmount,
+        value: values.transportationExpenseValue,
+      },
+      {
+        description: "Distribución y Venta",
+        price: values.salesAndDistributionExpenseCoef,
+        unitMeasure: "$/u",
+        amount: values.salesAndDistributionAmount,
+        value: values.salesAndDistributionExpenseValue,
+      },
+    ]);
+    setAddTransportationExpensesModal(false);
   };
   const onAddAdministrativeExpenses = (values: any) => {
     console.log("🚀 ~ onAddAdministrativeExpenses ~ values:", values);
@@ -206,7 +244,7 @@ export const CreateServiceFeeForm = () => {
       fields={[
         {
           name: "currencyChange",
-          value: currencyChange,
+          value: serviceFeeAuxiliary[0]?.currencyChange,
         },
       ]}
     >
@@ -273,7 +311,7 @@ export const CreateServiceFeeForm = () => {
               {fields.map(({ key, name, ...restField }) => (
                 <div key={key} className="w-full">
                   <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true, message: "Introduzca la descripción" }]}>
+                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
                       <Input placeholder="Descripción" className="w-full" />
                     </Form.Item>
                     <Form.Item {...restField} className="w-[20%]" name={[name, "unitMeasure"]} rules={[{ required: true }]}>
@@ -363,7 +401,7 @@ export const CreateServiceFeeForm = () => {
               {fields.map(({ key, name, ...restField }) => (
                 <div key={key} className="w-full">
                   <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true, message: "Introduzca la descripción" }]}>
+                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
                       <Input placeholder="Descripción" className="w-full" />
                     </Form.Item>
                     <Form.Item {...restField} className="w-[20%]" name={[name, "unitMeasure"]} rules={[{ required: true }]}>
@@ -408,7 +446,7 @@ export const CreateServiceFeeForm = () => {
               {fields.map(({ key, name, ...restField }) => (
                 <div key={key} className="w-full">
                   <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true, message: "Introduzca la descripción" }]}>
+                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
                       <Input placeholder="Descripción" className="w-full" />
                     </Form.Item>
                     <Form.Item {...restField} className="w-[20%]" name={[name, "unitMeasure"]} rules={[{ required: true }]}>
@@ -442,6 +480,7 @@ export const CreateServiceFeeForm = () => {
           )}
         </Form.List>
       </section>
+      {/* seccion para introducir los gastos administrativos */}
       <section className=" flex flex-col w-full mb-0">
         <div className="flex gap-1 ">
           <label className="text-md font-bold mb-3">Gastos Administrativos</label>
@@ -452,7 +491,7 @@ export const CreateServiceFeeForm = () => {
               {fields.map(({ key, name, ...restField }) => (
                 <div key={key} className="w-full">
                   <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true, message: "Introduzca la descripción" }]}>
+                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
                       <Input placeholder="Descripción" className="w-full" />
                     </Form.Item>
                     <Form.Item {...restField} className="w-[20%]" name={[name, "unitMeasure"]} rules={[{ required: true }]}>
@@ -480,6 +519,51 @@ export const CreateServiceFeeForm = () => {
               <Form.Item className="mb-2 w-full ">
                 <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddAdministrativeExpensesModal(true)} block icon={<PlusOutlined />}>
                   Gastos Administrativos
+                </Button>
+              </Form.Item>
+            </div>
+          )}
+        </Form.List>
+      </section>
+      {/* seccion para introducir los gastos de transportacion */}
+      <section className=" flex flex-col w-full mb-0">
+        <div className="flex gap-1 ">
+          <label className="text-md font-bold mb-3">Gastos de Transportación</label>
+        </div>
+        <Form.List name="transportationExpenses">
+          {(fields, { add, remove }) => (
+            <div className="flex flex-col w-full">
+              {fields.map(({ key, name, ...restField }) => (
+                <div key={key} className="w-full">
+                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
+                      <Input placeholder="Descripción" className="w-full" />
+                    </Form.Item>
+                    <Form.Item {...restField} className="w-[20%]" name={[name, "unitMeasure"]} rules={[{ required: true }]}>
+                      <InputNumber className="w-full" placeholder="Unidad de Medida" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
+                      <InputNumber placeholder="Cantidad" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
+                      <InputNumber placeholder="Precio" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
+                      <InputNumber disabled />
+                    </Form.Item>
+                    <MinusCircleOutlined
+                      className="mb-auto"
+                      onClick={() => {
+                        remove(name);
+                        setTransportationExpensesValues(form.getFieldValue("transportationExpenses"));
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+              <Form.Item className="mb-2 w-full ">
+                <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddTransportationExpensesModal(true)} block icon={<PlusOutlined />}>
+                  Añadir Gastos de Transportación
                 </Button>
               </Form.Item>
             </div>
@@ -536,6 +620,7 @@ export const CreateServiceFeeForm = () => {
       <AddEquipmentDepreciationModal open={addEquipmentDepreciationModal} onCancel={() => setAddEquipmentDepreciationModal(false)} onCreate={onAddEquipmentDepreciation} />
       <AddEquipmentMaintenanceModal open={addEquipmentMaintenanceModal} onCancel={() => setAddEquipmentMaintenanceModal(false)} onCreate={onAddEquipmentMaintenance} />
       <AddAdministrativeExpensesModal open={addAdministrativeExpensesModal} onCancel={() => setAddAdministrativeExpensesModal(false)} onCreate={onAddAdministrativeExpenses} />
+      <AddTransportationExpensesModal open={addTransportationExpensesModal} onCancel={() => setAddTransportationExpensesModal(false)} onCreate={onAddTransportationExpenses} />
     </Form>
   );
 };
