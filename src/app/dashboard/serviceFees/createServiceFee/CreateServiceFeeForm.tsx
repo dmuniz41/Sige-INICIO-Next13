@@ -15,6 +15,9 @@ import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import { AddTransportationExpensesModal } from "./AddTransportationExpenses";
+import { AddHiredPersonalExpensesModal } from "./AddHiredPersonalExpenses";
+import { IServiceFeeSubItem } from "@/models/serviceFees";
+import { startAddServiceFee } from "@/actions/serviceFee";
 
 export const CreateServiceFeeForm = () => {
   const dispatch = useAppDispatch();
@@ -22,18 +25,22 @@ export const CreateServiceFeeForm = () => {
   const serviceFeeCategory: string[] | undefined = [];
   const valuePerUM: string[] | undefined = [];
   const payMethods: IRepresentationCoefficients[] | undefined = [];
+
   const [addRawMaterialModal, setAddRawMaterialModal] = useState(false);
   const [addTaskListModal, setAddTaskListModal] = useState(false);
   const [addEquipmentDepreciationModal, setAddEquipmentDepreciationModal] = useState(false);
   const [addEquipmentMaintenanceModal, setAddEquipmentMaintenanceModal] = useState(false);
   const [addAdministrativeExpensesModal, setAddAdministrativeExpensesModal] = useState(false);
   const [addTransportationExpensesModal, setAddTransportationExpensesModal] = useState(false);
+  const [addHiredPersonalExpensesModal, setAddHiredPersonalExpensesModal] = useState(false);
+
   const [rawMaterialsValues, setRawMaterialsValues]: any = useState([]);
   const [taskListValues, setTaskListValues]: any = useState([]);
   const [equipmentDepreciationValues, setEquipmentDepreciationValues]: any = useState([]);
   const [equipmentMaintenanceValues, setEquipmentMaintenanceValues]: any = useState([]);
   const [administrativeExpensesValues, setAdministrativeExpensesValues]: any = useState([]);
   const [transportationExpensesValues, setTransportationExpensesValues]: any = useState([]);
+  const [hiredPersonalExpensesValues, setHiredPersonalExpensesValues]: any = useState([]);
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
@@ -56,7 +63,6 @@ export const CreateServiceFeeForm = () => {
       value: `${serviceFeeCategory}`,
     };
   });
-
   const valuePerUMOptions: SelectProps["options"] = valuePerUM.map((valuePerUM) => {
     return {
       label: `${valuePerUM}`,
@@ -69,14 +75,38 @@ export const CreateServiceFeeForm = () => {
       value: payMethod.coefficientValue,
     };
   });
-
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
   const onAddRawMaterial = (values: any) => {
+    console.log("🚀 ~ onAddRawMaterial ~ values:", values);
     setRawMaterialsValues([values, ...rawMaterialsValues]);
     form.setFieldValue("rawMaterials", [...rawMaterialsValues, values]);
     setAddRawMaterialModal(false);
+  };
+  const onAddTaskList = (values: any) => {
+    console.log("🚀 ~ onAddTaskList ~ values:", values);
+    setTaskListValues([
+      {
+        description: values.description,
+        unitMeasure: values.unitMeasure,
+        amount: values.amount,
+        price: values.price,
+        value: values.value,
+      },
+      ...taskListValues,
+    ]);
+    form.setFieldValue("taskList", [
+      ...taskListValues,
+      {
+        description: values.description,
+        unitMeasure: values.unitMeasure,
+        amount: values.amount,
+        price: values.price,
+        value: values.value,
+      },
+    ]);
+    setAddTaskListModal(false);
   };
   const onAddEquipmentDepreciation = (values: any) => {
     console.log("🚀 ~ onAddEquipmentDepreciation ~ values:", values);
@@ -89,42 +119,6 @@ export const CreateServiceFeeForm = () => {
     setEquipmentMaintenanceValues([values, ...equipmentMaintenanceValues]);
     form.setFieldValue("equipmentMaintenance", [...equipmentMaintenanceValues, values]);
     setAddEquipmentMaintenanceModal(false);
-  };
-  const onAddTransportationExpenses = (values: any) => {
-    console.log("🚀 ~ onAddTransportationExpenses ~ values:", values);
-    setTransportationExpensesValues([
-      {
-        description: "Transportación",
-        price: values.transportationExpenseCoef,
-        unitMeasure: "$/u",
-        amount: values.transportationAmount,
-        value: values.transportationExpenseValue,
-      },
-      {
-        description: "Distribución y Venta",
-        price: values.salesAndDistributionExpenseCoef,
-        unitMeasure: "$/u",
-        amount: values.salesAndDistributionAmount,
-        value: values.salesAndDistributionExpenseValue,
-      },
-    ]);
-    form.setFieldValue("transportationExpenses", [
-      {
-        description: "Transportación",
-        price: values.transportationExpenseCoef,
-        unitMeasure: "$/u",
-        amount: values.transportationAmount,
-        value: values.transportationExpenseValue,
-      },
-      {
-        description: "Distribución y Venta",
-        price: values.salesAndDistributionExpenseCoef,
-        unitMeasure: "$/u",
-        amount: values.salesAndDistributionAmount,
-        value: values.salesAndDistributionExpenseValue,
-      },
-    ]);
-    setAddTransportationExpensesModal(false);
   };
   const onAddAdministrativeExpenses = (values: any) => {
     console.log("🚀 ~ onAddAdministrativeExpenses ~ values:", values);
@@ -204,31 +198,79 @@ export const CreateServiceFeeForm = () => {
     ]);
     setAddAdministrativeExpensesModal(false);
   };
-
-  const onAddTaskList = (values: any) => {
-    console.log("🚀 ~ onAddTaskList ~ values:", values);
-    setTaskListValues([
+  const onAddTransportationExpenses = (values: any) => {
+    console.log("🚀 ~ onAddTransportationExpenses ~ values:", values);
+    setTransportationExpensesValues([
       {
-        description: values.description,
-        unitMeasure: values.unitMeasure,
-        amount: values.amount,
-        price: values.price,
-        value: values.value,
+        description: "Transportación",
+        price: values.transportationExpenseCoef,
+        unitMeasure: "$/u",
+        amount: values.transportationAmount,
+        value: values.transportationExpenseValue,
       },
-      ...taskListValues,
-    ]);
-    form.setFieldValue("taskList", [
-      ...taskListValues,
       {
-        description: values.description,
-        unitMeasure: values.unitMeasure,
-        amount: values.amount,
-        price: values.price,
-        value: values.value,
+        description: "Distribución y Venta",
+        price: values.salesAndDistributionExpenseCoef,
+        unitMeasure: "$/u",
+        amount: values.salesAndDistributionAmount,
+        value: values.salesAndDistributionExpenseValue,
       },
     ]);
-    setAddTaskListModal(false);
+    form.setFieldValue("transportationExpenses", [
+      {
+        description: "Transportación",
+        price: values.transportationExpenseCoef,
+        unitMeasure: "$/u",
+        amount: values.transportationAmount,
+        value: values.transportationExpenseValue,
+      },
+      {
+        description: "Distribución y Venta",
+        price: values.salesAndDistributionExpenseCoef,
+        unitMeasure: "$/u",
+        amount: values.salesAndDistributionAmount,
+        value: values.salesAndDistributionExpenseValue,
+      },
+    ]);
+    setAddTransportationExpensesModal(false);
   };
+  const onAddHiredPersonalExpenses = (values: any) => {
+    console.log("🚀 ~ onAddHiredPersonalExpenses ~ values:", values);
+    setHiredPersonalExpensesValues([
+      {
+        description: "Gasto de salarios indirectos",
+        price: values.indirectSalariesPrice,
+        unitMeasure: " ",
+        amount: values.indirectSalariesAmount,
+        value: values.indirectSalariesValue,
+      },
+      {
+        description: "Subcontratación",
+        price: values.subcontractPrice,
+        unitMeasure: " ",
+        amount: values.subcontractAmount,
+        value: values.subcontractExpensesValue,
+      },
+    ]);
+    form.setFieldValue("hiredPersonalExpenses", [
+      {
+        description: "Gasto de salarios indirectos",
+        price: values.indirectSalariesPrice,
+        unitMeasure: " ",
+        amount: values.indirectSalariesAmount,
+        value: values.indirectSalariesValue,
+      },
+      {
+        description: "Subcontratación",
+        price: values.subcontractPrice,
+        unitMeasure: " ",
+        amount: values.subcontractAmount,
+        value: values.subcontractExpensesValue,
+      },
+    ]);
+    setAddHiredPersonalExpensesModal(false);
+  };
+
   return (
     <Form
       form={form}
@@ -336,6 +378,10 @@ export const CreateServiceFeeForm = () => {
                   </div>
                 </div>
               ))}
+              {/* <div className="flex w-full h-[32px] items-center border rounded-md pl-2 border-border_light mb-4 justify-between gap-2">
+                <span className="font-bold flex-1 justify-end flex">Subtotal: </span>
+                <span className="mr-[5rem]">$ {rawMaterialsSubtotal.toFixed(2)}</span>
+              </div> */}
               <Form.Item className="mb-2 w-full">
                 <Button className="flex flex-row  justify-center items-center" type="dashed" onClick={() => setAddRawMaterialModal(true)} block icon={<PlusOutlined />}>
                   Añadir Materia Prima
@@ -570,6 +616,73 @@ export const CreateServiceFeeForm = () => {
           )}
         </Form.List>
       </section>
+      {/* seccion para introducir los gastos de personal contratado */}
+      <section className=" flex flex-col w-full mb-0">
+        <div className="flex gap-1 ">
+          <label className="text-md font-bold mb-3">Gastos de Personal Contratado</label>
+        </div>
+        <Form.List name="hiredPersonalExpenses">
+          {(fields, { add, remove }) => (
+            <div className="flex flex-col w-full">
+              {fields.map(({ key, name, ...restField }) => (
+                <div key={key} className="w-full">
+                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
+                      <Input placeholder="Descripción" className="w-full" />
+                    </Form.Item>
+                    <Form.Item {...restField} className="w-[20%]" name={[name, "unitMeasure"]} rules={[{ required: true }]}>
+                      <InputNumber className="w-full" placeholder="Unidad de Medida" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
+                      <InputNumber placeholder="Cantidad" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
+                      <InputNumber placeholder="Precio" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
+                      <InputNumber disabled />
+                    </Form.Item>
+                    <MinusCircleOutlined
+                      className="mb-auto"
+                      onClick={() => {
+                        remove(name);
+                        setHiredPersonalExpensesValues(form.getFieldValue("transportationExpenses"));
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+              <Form.Item className="mb-2 w-full ">
+                <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddHiredPersonalExpensesModal(true)} block icon={<PlusOutlined />}>
+                  Añadir Gastos de Personal Contratado
+                </Button>
+              </Form.Item>
+            </div>
+          )}
+        </Form.List>
+      </section>
+      <section className="flex gap-4 mt-2">
+        {/* ONAT */}
+        <Form.Item className="mb-3 " label={<span className="font-bold text-md">ONAT</span>} name="ONAT" rules={[{ required: true, message: "Campo requerido" }]}>
+          <InputNumber />
+        </Form.Item>
+        {/* commercialMargin */}
+        <Form.Item className="mb-3 " label={<span className="font-bold text-md">Margen Comercial</span>} name="commercialMargin" rules={[{ required: true, message: "Campo requerido" }]}>
+          <InputNumber />
+        </Form.Item>
+        {/* rawMaterialsByClient */}
+        <Form.Item
+          className="mb-3 "
+          label={<span className="font-bold text-md">Materias Primas Aportadas por el Cliente</span>}
+          name="rawMaterialsByClient"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
+          <InputNumber />
+        </Form.Item>
+        <Form.Item className="mb-3 " label={<span className="font-bold text-md">Talento Artístico</span>} name="artisticTalentValue" rules={[{ required: true, message: "Campo requerido" }]}>
+          <InputNumber />
+        </Form.Item>
+      </section>
       <Form.Item>
         <button
           type="submit"
@@ -579,31 +692,28 @@ export const CreateServiceFeeForm = () => {
               .validateFields()
               .then((values) => {
                 console.log("🚀 ~ .then ~ values:", values);
-                // dispatch(
-                //   startAddCostSheet(
-                //     values.administrativeExpenses,
-                //     values.approvedBy,
-                //     values.artisticTalent,
-                //     values.category,
-                //     values.createdBy,
-                //     values.description,
-                //     values.directSalaries,
-                //     values.financialExpenses,
-                //     values.nomenclatorId,
-                //     values.otherDirectExpenses,
-                //     values.payMethod,
-                //     values.productionRelatedExpenses,
-                //     values.rawMaterials,
-                //     values.rawMaterialsByClient,
-                //     values.representationCost,
-                //     values.taskName,
-                //     values.taxExpenses,
-                //     values.transportationExpenses,
-                //     values.USDValue,
-                //     values.valuePerUnitMeasure,
-                //     values.workersAmount
-                //   )
-                // );
+                dispatch(
+                  startAddServiceFee({
+                    administrativeExpenses: values.administrativeExpenses,
+                    artisticTalentValue: values.artisticTalentValue,
+                    category: values.category,
+                    commercialMargin: values.commercialMargin,
+                    currencyChange: values.currencyChange,
+                    equipmentDepreciation: values.equipmentDepreciation,
+                    equipmentMaintenance: values.equipmentMaintenance,
+                    hiredPersonalExpenses: values.hiredPersonalExpenses,
+                    nomenclatorId: values.nomenclatorId,
+                    ONAT: values.ONAT,
+                    payMethodCoef: values.payMethodCoef,
+                    rawMaterials: values.rawMaterials,
+                    rawMaterialsByClient: values.rawMaterialsByClient,
+                    taskList: values.taskList,
+                    taskName: values.taskName,
+                    transportationExpenses: values.transportationExpenses,
+                    valuePerUnitMeasure: values.valuePerUnitMeasure,
+                    workersAmount: values.workersAmount,
+                  })
+                );
                 // form.resetFields();
                 // router.push("/dashboard/costSheets");
               })
@@ -621,6 +731,7 @@ export const CreateServiceFeeForm = () => {
       <AddEquipmentMaintenanceModal open={addEquipmentMaintenanceModal} onCancel={() => setAddEquipmentMaintenanceModal(false)} onCreate={onAddEquipmentMaintenance} />
       <AddAdministrativeExpensesModal open={addAdministrativeExpensesModal} onCancel={() => setAddAdministrativeExpensesModal(false)} onCreate={onAddAdministrativeExpenses} />
       <AddTransportationExpensesModal open={addTransportationExpensesModal} onCancel={() => setAddTransportationExpensesModal(false)} onCreate={onAddTransportationExpenses} />
+      <AddHiredPersonalExpensesModal open={addHiredPersonalExpensesModal} onCancel={() => setAddHiredPersonalExpensesModal(false)} onCreate={onAddHiredPersonalExpenses} />
     </Form>
   );
 };

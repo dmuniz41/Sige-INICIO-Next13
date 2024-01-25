@@ -1,7 +1,6 @@
 "use client";
 
-import { Form, Input, InputNumber, Modal, } from "antd";
-import { RootState, useAppSelector } from "@/store/store";
+import { Form, Input, InputNumber, Modal } from "antd";
 import { IServiceFeeSubItem } from "@/models/serviceFees";
 import { useState } from "react";
 
@@ -11,11 +10,9 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
-  const { serviceFeeAuxiliary }: any = useAppSelector((state: RootState) => state?.serviceFee);
-
-  const [transportationExpenseValue, setTransportationExpenseValue] = useState(0);
-  const [salesAndDistributionExpenseValue, setSalesAndDistributionExpenseValue] = useState(0);
+export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+  const [indirectSalariesValue, setIndirectSalariesValue] = useState(0);
+  const [subcontractExpensesValue, setSubcontractExpensesValue] = useState(0);
 
   const [form] = Form.useForm();
   return (
@@ -24,7 +21,7 @@ export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps>
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Gastos de Transportación</span>
+          <span className="font-black text-lg">Gastos de Personal Contratado</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -51,10 +48,10 @@ export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps>
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate({ ...values, transportationExpenseValue, salesAndDistributionExpenseValue });
+                  onCreate({ ...values, indirectSalariesValue, subcontractExpensesValue });
                   form.resetFields();
-                  setTransportationExpenseValue(0);
-                  setSalesAndDistributionExpenseValue(0);
+                  setIndirectSalariesValue(0);
+                  setSubcontractExpensesValue(0);
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -73,73 +70,71 @@ export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps>
         size="middle"
         fields={[
           {
+            name: "indirectSalariesDescription",
+            value: "Salarios Indirectos",
+          },
+          {
+            name: "subcontractExpenseDescription",
+            value: "Subcontratación",
+          },
+          {
             name: "unitMeasure",
-            value: "$/u",
-          },
-          {
-            name: "transportationExpenseCoef",
-            value: serviceFeeAuxiliary[0]?.transportationExpensesCoefficient,
-          },
-          {
-            name: "salesAndDistributionExpenseCoef",
-            value: serviceFeeAuxiliary[0]?.salesAndDistributionExpensesCoefficient,
-          },
-
-          {
-            name: "transportationExpenseDescription",
-            value: "Transportación",
-          },
-          {
-            name: "salesAndDistributionExpenseDescription",
-            value: "Distribución y Venta",
+            value: "",
           },
         ]}
       >
-        {/* Transportacion */}
+        {/* Salarios Indirectos */}
         <section className="flex flex-1 gap-2">
-          <Form.Item name="transportationExpenseDescription" className="w-[10rem]" label="Descripción">
+          <Form.Item name="indirectSalariesDescription" className="w-[10rem]" label="Descripción">
             <Input style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item name="unitMeasure" className="w-[10rem]" label="Unidad de Medida">
             <Input />
           </Form.Item>
-          <Form.Item name="transportationAmount" label="Cantidad" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item name="indirectSalariesAmount" label="Cantidad" rules={[{ required: true, message: "Campo requerido" }]}>
             <InputNumber
               onChange={() => {
                 let values = form.getFieldsValue();
-                setTransportationExpenseValue(values.transportationAmount * values.transportationExpenseCoef);
+                setIndirectSalariesValue(values.indirectSalariesAmount * values.indirectSalariesPrice);
               }}
             />
           </Form.Item>
-          <Form.Item name="transportationExpenseCoef" label="Precio/UM">
-            <InputNumber />
+          <Form.Item name="indirectSalariesPrice" label="Precio/UM">
+            <InputNumber onChange={() => {
+                let values = form.getFieldsValue();
+                console.log("🚀 ~ values:", values)
+                setIndirectSalariesValue(values.indirectSalariesAmount * values.indirectSalariesPrice);
+              }}/>
           </Form.Item>
           <div className=" flex flex-col w-[4rem]">
             <span className="font-bold h-[22px] mb-2">Importe</span>
-            <span className="h-[30px] pt-1.5">$ {!transportationExpenseValue ? 0 : transportationExpenseValue?.toFixed(2)}</span>
+            <span className="h-[30px] pt-1.5">$ {!indirectSalariesValue ? 0 : indirectSalariesValue?.toFixed(2)}</span>
           </div>
         </section>
-        {/* Distribucion y venta */}
+        {/* Subcontratación */}
         <section className="flex flex-1 gap-2">
-          <Form.Item name="salesAndDistributionExpenseDescription" className="w-[10rem]">
+          <Form.Item name="subcontractExpenseDescription" className="w-[10rem]">
             <Input style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item name="unitMeasure" className="w-[10rem]">
             <Input />
           </Form.Item>
-          <Form.Item name="salesAndDistributionAmount" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item name="subcontractAmount" rules={[{ required: true, message: "Campo requerido" }]}>
             <InputNumber
               onChange={() => {
                 let values = form.getFieldsValue();
-                setSalesAndDistributionExpenseValue(values.salesAndDistributionAmount * values.salesAndDistributionExpenseCoef);
+                setSubcontractExpensesValue(values.subcontractAmount * values.subcontractPrice);
               }}
             />
           </Form.Item>
-          <Form.Item name="salesAndDistributionExpenseCoef">
-            <InputNumber />
+          <Form.Item name="subcontractPrice">
+            <InputNumber  onChange={() => {
+                let values = form.getFieldsValue();
+                setSubcontractExpensesValue(values.subcontractAmount * values.subcontractPrice);
+              }}/>
           </Form.Item>
           <div className=" flex flex-col w-[4rem]">
-            <span className="pt-1.5 h-[30px]">$ {!salesAndDistributionExpenseValue ? 0 : salesAndDistributionExpenseValue?.toFixed(2)}</span>
+            <span className="pt-1.5 h-[30px]">$ {!subcontractExpensesValue ? 0 : subcontractExpensesValue?.toFixed(2)}</span>
           </div>
         </section>
       </Form>

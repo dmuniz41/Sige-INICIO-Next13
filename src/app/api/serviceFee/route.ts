@@ -38,47 +38,38 @@ export async function POST(request: Request) {
     //* Calcula el valor de cada subitem en cada seccion de la ficha de costo
 
     // * El valor de cada material se calcula (Cantidad(m2 o Unidades) * Costo Unitario(Se define por el precio mas alto de ese material en el almacén) * Coeficiente de Merma(Si se considera material gastable))
-    serviceFee.rawMaterials.map((material) => {
-      material.value = material.amount * material.price;
-    });
+    // serviceFee.rawMaterials.map((material) => {
+    //   material.value = material.amount * material.price;
+    // });
     // * El valor de cada operacion se calcula (Cantidad * Coeficiente de Complejidad), la descripcion de la tarea se debe entrar previamente como nomenclador
-    serviceFee.taskList.map((task) => {
-      task.value = task.amount * task.price;
-    });
+    // serviceFee.taskList.map((task) => {
+    //   task.value = task.amount * task.price;
+    // });
     // * El valor de la depreciacion de cada equipo se calcula (Cantidad * un coeficiente definido para cada equipo(Este coeficiente tiene una formula independiente para cada equipo que se debe definir en la seccion de auxiliares))
-    serviceFee.equipmentDepreciation.map((equipment) => {
-      equipment.value = equipment.amount * equipment.price;
-    });
+    // serviceFee.equipmentDepreciation.map((equipment) => {
+    //   equipment.value = equipment.amount * equipment.price;
+    // });
     // * El valor del mantenimiento de cada equipo se calcula (Cantidad * un coeficiente definido para cada equipo(Este coeficiente tiene una formula independiente para cada equipo que se debe definir en la seccion de auxiliares))
-    serviceFee.equipmentMaintenance.map((equipment) => {
-      equipment.value = equipment.amount * equipment.price;
-    });
+    // serviceFee.equipmentMaintenance.map((equipment) => {
+    //   equipment.value = equipment.amount * equipment.price;
+    // });
+    // * Los gastos administrativos son fijos(Combustible, Arrendamiento, Telefono, Alimentacion y Electricidad), cada uno se calcula (Cantidad de horas * coeficiente)
+    // serviceFee.administrativeExpenses.map((administrativeExpense) => {
+    //   administrativeExpense.value = administrativeExpense.amount * administrativeExpense.price;
+    // });
+    //* Los gastos de transportacion son fijos(Transportacion y Distribucion y venta)  cada uno se calcula (Cantidad de unidades * coeficiente)
+    // serviceFee.transportationExpenses.map((transportationExpense) => {
+    //   transportationExpense.value = transportationExpense.amount * transportationExpense.price;
+    // });
 
     //* Calcula el valor de cada subtotal en cada seccion de la ficha de costo
     const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
     const taskListSubtotal: number = serviceFee.taskList.reduce((total, currentValue) => total + currentValue.value, 0);
     const equipmentDepreciationSubtotal: number = serviceFee.equipmentDepreciation.reduce((total, currentValue) => total + currentValue.value, 0);
     const equipmentMaintenanceSubtotal: number = serviceFee.equipmentMaintenance.reduce((total, currentValue) => total + currentValue.value, 0);
-
-    // * Calcula el valor de cada item en los gastos administrativos
-    serviceFee.electricityExpense.value = serviceFee.electricityExpense.amount * serviceFee.electricityExpense.price;
-    serviceFee.fuelExpense.value = serviceFee.fuelExpense.amount * serviceFee.fuelExpense.price;
-    serviceFee.feedingExpense.value = serviceFee.feedingExpense.amount * serviceFee.feedingExpense.price;
-    serviceFee.phoneExpense.value = serviceFee.phoneExpense.amount * serviceFee.phoneExpense.price;
-    serviceFee.leaseExpense.value = serviceFee.leaseExpense.amount * serviceFee.leaseExpense.price;
-    const administrativeExpensesSubtotal: number =
-      serviceFee.electricityExpense.value + serviceFee.fuelExpense.value + serviceFee.feedingExpense.value + serviceFee.phoneExpense.value + serviceFee.leaseExpense.value;
-
-    //* Calcula el valor de cada gasto de transportacion
-    serviceFee.rawMaterialsTransportationExpenses.value = serviceFee.rawMaterialsTransportationExpenses.amount * serviceFee.rawMaterialsTransportationExpenses.price;
-    serviceFee.salesAndDistributionExpenses.value = serviceFee.salesAndDistributionExpenses.amount * serviceFee.salesAndDistributionExpenses.price;
-    const transportationExpensesSubtotal: number = serviceFee.rawMaterialsTransportationExpenses.value + serviceFee.salesAndDistributionExpenses.value;
-
-    //* Calcula el valor de cada gasto de personal contratado
-    serviceFee.indirectSalaries.value = serviceFee.indirectSalaries.price * taskListSubtotal;
-    serviceFee.subcontractExpenses.value = serviceFee.subcontractExpenses.price * serviceFee.subcontractExpenses.amount;
-    const subcontractExpensesSubtotal: number = serviceFee.subcontractExpenses.value + serviceFee.indirectSalaries.value;
-    console.log("🚀 ~ PUT ~ subcontractExpensesSubtotal:", subcontractExpensesSubtotal);
+    const administrativeExpensesSubtotal: number = serviceFee.administrativeExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+    const transportationExpensesSubtotal: number = serviceFee.transportationExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+    const hiredPersonalExpensesSubtotal: number = serviceFee.hiredPersonalExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
 
     const expensesTotalValue: number =
       rawMaterialsSubtotal +
@@ -87,7 +78,7 @@ export async function POST(request: Request) {
       equipmentMaintenanceSubtotal +
       transportationExpensesSubtotal +
       administrativeExpensesSubtotal +
-      subcontractExpensesSubtotal;
+      hiredPersonalExpensesSubtotal;
 
     const newKey = generateRandomString(26);
 
@@ -117,25 +108,19 @@ export async function POST(request: Request) {
       equipmentDepreciationSubtotal,
       equipmentMaintenance: serviceFee.equipmentMaintenance,
       equipmentMaintenanceSubtotal,
-      electricityExpense: serviceFee.electricityExpense,
-      fuelExpense: serviceFee.fuelExpense,
-      feedingExpense: serviceFee.feedingExpense,
-      phoneExpense: serviceFee.phoneExpense,
-      leaseExpense: serviceFee.leaseExpense,
+      administrativeExpenses: serviceFee.administrativeExpenses,
       administrativeExpensesSubtotal,
-      rawMaterialsTransportationExpenses: serviceFee.rawMaterialsTransportationExpenses,
-      salesAndDistributionExpenses: serviceFee.salesAndDistributionExpenses,
+      transportationExpenses: serviceFee.transportationExpenses,
       transportationExpensesSubtotal,
-      indirectSalaries: serviceFee.indirectSalaries,
-      subcontractExpenses: serviceFee.subcontractExpenses,
-      subcontractExpensesSubtotal,
+      hiredPersonalExpenses: serviceFee.hiredPersonalExpenses,
+      hiredPersonalExpensesSubtotal,
       expensesTotalValue,
       ONAT: serviceFee.ONAT,
       commercialMargin: serviceFee.commercialMargin,
       artisticTalentValue: serviceFee.artisticTalentValue,
       rawMaterialsByClient: serviceFee.rawMaterialsByClient,
       salePrice: expensesTotalValue + serviceFee.ONAT + serviceFee.artisticTalentValue + serviceFee.rawMaterialsByClient,
-      salePriceUSD: (expensesTotalValue + serviceFee.ONAT + serviceFee.artisticTalentValue + serviceFee.rawMaterialsByClient) / serviceFee.currencyChange,
+      salePriceUSD: (expensesTotalValue + serviceFee?.ONAT + serviceFee?.artisticTalentValue + serviceFee?.rawMaterialsByClient) / serviceFee?.currencyChange
     });
 
     await newServiceFee.save();
@@ -202,47 +187,39 @@ export async function PUT(request: Request) {
     //* Calcula el valor de cada subitem en cada seccion de la ficha de costo
 
     // * El valor de cada material se calcula (Cantidad(m2 o Unidades) * Costo Unitario(Se define por el precio mas alto de ese material en el almacén) * Coeficiente de Merma(Si se considera material gastable))
-    serviceFee.rawMaterials.map((material) => {
-      material.value = material.amount * material.price;
-    });
-    // * El valor de cada operacion se calcula (Cantidad * Coeficiente de Complejidad), la descripcion de la tarea se debe entrar previamente como nomenclador
-    serviceFee.taskList.map((task) => {
-      task.value = task.amount * task.price;
-    });
-    // * El valor de la depreciacion de cada equipo se calcula (Cantidad * un coeficiente definido para cada equipo(Este coeficiente tiene una formula independiente para cada equipo que se debe definir en la seccion de auxiliares))
-    serviceFee.equipmentDepreciation.map((equipment) => {
-      equipment.value = equipment.amount * equipment.price;
-    });
-    // * El valor del mantenimiento de cada equipo se calcula (Cantidad * un coeficiente definido para cada equipo(Este coeficiente tiene una formula independiente para cada equipo que se debe definir en la seccion de auxiliares))
-    serviceFee.equipmentMaintenance.map((equipment) => {
-      equipment.value = equipment.amount * equipment.price;
-    });
+    // serviceFee.rawMaterials.map((material) => {
+    //   material.value = material.amount * material.price;
+    // });
+    // // * El valor de cada operacion se calcula (Cantidad * Coeficiente de Complejidad), la descripcion de la tarea se debe entrar previamente como nomenclador
+    // serviceFee.taskList.map((task) => {
+    //   task.value = task.amount * task.price;
+    // });
+    // // * El valor de la depreciacion de cada equipo se calcula (Cantidad * un coeficiente definido para cada equipo(Este coeficiente tiene una formula independiente para cada equipo que se debe definir en la seccion de auxiliares))
+    // serviceFee.equipmentDepreciation.map((equipment) => {
+    //   equipment.value = equipment.amount * equipment.price;
+    // });
+    // // * El valor del mantenimiento de cada equipo se calcula (Cantidad * un coeficiente definido para cada equipo(Este coeficiente tiene una formula independiente para cada equipo que se debe definir en la seccion de auxiliares))
+    // serviceFee.equipmentMaintenance.map((equipment) => {
+    //   equipment.value = equipment.amount * equipment.price;
+    // });
+
+    // // * Los gastos administrativos son fijos(Combustible, Arrendamiento, Telefono, Alimentacion y Electricidad), cada uno se calcula (Cantidad de horas * coeficiente)
+    // serviceFee.administrativeExpenses.map((administrativeExpense) => {
+    //   administrativeExpense.value = administrativeExpense.amount * administrativeExpense.price;
+    // });
+    // //* Los gastos de transportacion son fijos(Transportacion y Distribucion y venta)  cada uno se calcula (Cantidad de unidades * coeficiente)
+    // serviceFee.transportationExpenses.map((transportationExpense) => {
+    //   transportationExpense.value = transportationExpense.amount * transportationExpense.price;
+    // });
 
     //* Calcula el valor de cada subtotal en cada seccion de la ficha de costo
     const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
     const taskListSubtotal: number = serviceFee.taskList.reduce((total, currentValue) => total + currentValue.value, 0);
     const equipmentDepreciationSubtotal: number = serviceFee.equipmentDepreciation.reduce((total, currentValue) => total + currentValue.value, 0);
     const equipmentMaintenanceSubtotal: number = serviceFee.equipmentMaintenance.reduce((total, currentValue) => total + currentValue.value, 0);
-
-    // * Calcula el valor de cada item en los gastos administrativos
-    serviceFee.electricityExpense.value = serviceFee.electricityExpense.amount * serviceFee.electricityExpense.price;
-    serviceFee.fuelExpense.value = serviceFee.fuelExpense.amount * serviceFee.fuelExpense.price;
-    serviceFee.feedingExpense.value = serviceFee.feedingExpense.amount * serviceFee.feedingExpense.price;
-    serviceFee.phoneExpense.value = serviceFee.phoneExpense.amount * serviceFee.phoneExpense.price;
-    serviceFee.leaseExpense.value = serviceFee.leaseExpense.amount * serviceFee.leaseExpense.price;
-    const administrativeExpensesSubtotal: number =
-      serviceFee.electricityExpense.value + serviceFee.fuelExpense.value + serviceFee.feedingExpense.value + serviceFee.phoneExpense.value + serviceFee.leaseExpense.value;
-
-    //* Calcula el valor de cada gasto de transportacion
-    serviceFee.rawMaterialsTransportationExpenses.value = serviceFee.rawMaterialsTransportationExpenses.amount * serviceFee.rawMaterialsTransportationExpenses.price;
-    serviceFee.salesAndDistributionExpenses.value = serviceFee.salesAndDistributionExpenses.amount * serviceFee.salesAndDistributionExpenses.price;
-    const transportationExpensesSubtotal: number = serviceFee.rawMaterialsTransportationExpenses.value + serviceFee.salesAndDistributionExpenses.value;
-
-    //* Calcula el valor de cada gasto de personal contratado
-    serviceFee.indirectSalaries.value = serviceFee.indirectSalaries.price * taskListSubtotal;
-    serviceFee.subcontractExpenses.value = serviceFee.subcontractExpenses.price * serviceFee.subcontractExpenses.amount;
-    const subcontractExpensesSubtotal: number = serviceFee.subcontractExpenses.value + serviceFee.indirectSalaries.value;
-    console.log("🚀 ~ PUT ~ subcontractExpensesSubtotal:", subcontractExpensesSubtotal);
+    const administrativeExpensesSubtotal: number = serviceFee.administrativeExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+    const transportationExpensesSubtotal: number = serviceFee.transportationExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+    const hiredPersonalExpensesSubtotal: number = serviceFee.hiredPersonalExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
 
     const expensesTotalValue: number =
       rawMaterialsSubtotal +
@@ -251,7 +228,7 @@ export async function PUT(request: Request) {
       equipmentMaintenanceSubtotal +
       transportationExpensesSubtotal +
       administrativeExpensesSubtotal +
-      subcontractExpensesSubtotal;
+      hiredPersonalExpensesSubtotal;
 
     const BDNomenclator = await Nomenclator.findOne({ category: "Tarifa de Servicio", code: serviceFee.nomenclatorId });
 
@@ -282,25 +259,19 @@ export async function PUT(request: Request) {
         equipmentDepreciationSubtotal,
         equipmentMaintenance: serviceFee.equipmentMaintenance,
         equipmentMaintenanceSubtotal,
-        electricityExpense: serviceFee.electricityExpense,
-        fuelExpense: serviceFee.fuelExpense,
-        feedingExpense: serviceFee.feedingExpense,
-        phoneExpense: serviceFee.phoneExpense,
-        leaseExpense: serviceFee.leaseExpense,
+        administrativeExpenses: serviceFee.administrativeExpenses,
         administrativeExpensesSubtotal,
-        rawMaterialsTransportationExpenses: serviceFee.rawMaterialsTransportationExpenses,
-        salesAndDistributionExpenses: serviceFee.salesAndDistributionExpenses,
+        transportationExpenses: serviceFee.transportationExpenses,
         transportationExpensesSubtotal,
-        indirectSalaries: serviceFee.indirectSalaries,
-        subcontractExpenses: serviceFee.subcontractExpenses,
-        subcontractExpensesSubtotal,
+        hiredPersonalExpenses: serviceFee.hiredPersonalExpenses,
+        hiredPersonalExpensesSubtotal,
         expensesTotalValue,
         ONAT: serviceFee.ONAT,
         commercialMargin: serviceFee.commercialMargin,
         artisticTalentValue: serviceFee.artisticTalentValue,
         rawMaterialsByClient: serviceFee.rawMaterialsByClient,
         salePrice: expensesTotalValue + serviceFee.ONAT + serviceFee.artisticTalentValue + serviceFee.rawMaterialsByClient,
-        salePriceUSD: (expensesTotalValue + serviceFee.ONAT + serviceFee.artisticTalentValue + serviceFee.rawMaterialsByClient) / serviceFee.currencyChange,
+        salePriceUSD: (expensesTotalValue + serviceFee?.ONAT + serviceFee?.artisticTalentValue + serviceFee?.rawMaterialsByClient) / serviceFee?.currencyChange,
       },
       { new: true }
     );
