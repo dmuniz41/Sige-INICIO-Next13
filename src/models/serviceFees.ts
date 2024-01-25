@@ -37,9 +37,8 @@ export interface IServiceFee {
   transportationExpenses: IServiceFeeSubItem[];
   transportationExpensesSubtotal: number;
   //*GASTO DE PERSONAL CONTRATADO
-  indirectSalaries: IServiceFeeSubItem;
-  subcontractExpenses: IServiceFeeSubItem;
-  subcontractExpensesSubtotal: number;
+  hiredPersonalExpenses: IServiceFeeSubItem[];
+  hiredPersonalExpensesSubtotal: number;
   //*OTROS
   expensesTotalValue: number;
   artisticTalentValue: number;
@@ -152,21 +151,16 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
   transportationExpensesSubtotal: {
     type: Number,
   },
-  indirectSalaries: {
-    description: String,
-    unitMeasure: String,
-    amount: Number,
-    price: Number,
-    value: Number,
-  },
-  subcontractExpenses: {
-    description: String,
-    unitMeasure: String,
-    amount: Number,
-    price: Number,
-    value: Number,
-  },
-  subcontractExpensesSubtotal: {
+  hiredPersonalExpenses: [
+    {
+      description: String,
+      unitMeasure: String,
+      amount: Number,
+      price: Number,
+      value: Number,
+    },
+  ],
+  hiredPersonalExpensesSubtotal: {
     type: Number,
   },
   expensesTotalValue: {

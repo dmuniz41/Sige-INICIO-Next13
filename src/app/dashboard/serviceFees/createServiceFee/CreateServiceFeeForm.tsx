@@ -16,6 +16,8 @@ import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import { AddTransportationExpensesModal } from "./AddTransportationExpenses";
 import { AddHiredPersonalExpensesModal } from "./AddHiredPersonalExpenses";
+import { IServiceFeeSubItem } from "@/models/serviceFees";
+import { startAddServiceFee } from "@/actions/serviceFee";
 
 export const CreateServiceFeeForm = () => {
   const dispatch = useAppDispatch();
@@ -77,6 +79,7 @@ export const CreateServiceFeeForm = () => {
     console.log("Failed:", errorInfo);
   };
   const onAddRawMaterial = (values: any) => {
+    console.log("🚀 ~ onAddRawMaterial ~ values:", values);
     setRawMaterialsValues([values, ...rawMaterialsValues]);
     form.setFieldValue("rawMaterials", [...rawMaterialsValues, values]);
     setAddRawMaterialModal(false);
@@ -375,6 +378,10 @@ export const CreateServiceFeeForm = () => {
                   </div>
                 </div>
               ))}
+              {/* <div className="flex w-full h-[32px] items-center border rounded-md pl-2 border-border_light mb-4 justify-between gap-2">
+                <span className="font-bold flex-1 justify-end flex">Subtotal: </span>
+                <span className="mr-[5rem]">$ {rawMaterialsSubtotal.toFixed(2)}</span>
+              </div> */}
               <Form.Item className="mb-2 w-full">
                 <Button className="flex flex-row  justify-center items-center" type="dashed" onClick={() => setAddRawMaterialModal(true)} block icon={<PlusOutlined />}>
                   Añadir Materia Prima
@@ -654,6 +661,28 @@ export const CreateServiceFeeForm = () => {
           )}
         </Form.List>
       </section>
+      <section className="flex gap-4 mt-2">
+        {/* ONAT */}
+        <Form.Item className="mb-3 " label={<span className="font-bold text-md">ONAT</span>} name="ONAT" rules={[{ required: true, message: "Campo requerido" }]}>
+          <InputNumber />
+        </Form.Item>
+        {/* commercialMargin */}
+        <Form.Item className="mb-3 " label={<span className="font-bold text-md">Margen Comercial</span>} name="commercialMargin" rules={[{ required: true, message: "Campo requerido" }]}>
+          <InputNumber />
+        </Form.Item>
+        {/* rawMaterialsByClient */}
+        <Form.Item
+          className="mb-3 "
+          label={<span className="font-bold text-md">Materias Primas Aportadas por el Cliente</span>}
+          name="rawMaterialsByClient"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
+          <InputNumber />
+        </Form.Item>
+        <Form.Item className="mb-3 " label={<span className="font-bold text-md">Talento Artístico</span>} name="artisticTalentValue" rules={[{ required: true, message: "Campo requerido" }]}>
+          <InputNumber />
+        </Form.Item>
+      </section>
       <Form.Item>
         <button
           type="submit"
@@ -663,31 +692,28 @@ export const CreateServiceFeeForm = () => {
               .validateFields()
               .then((values) => {
                 console.log("🚀 ~ .then ~ values:", values);
-                // dispatch(
-                //   startAddCostSheet(
-                //     values.administrativeExpenses,
-                //     values.approvedBy,
-                //     values.artisticTalent,
-                //     values.category,
-                //     values.createdBy,
-                //     values.description,
-                //     values.directSalaries,
-                //     values.financialExpenses,
-                //     values.nomenclatorId,
-                //     values.otherDirectExpenses,
-                //     values.payMethod,
-                //     values.productionRelatedExpenses,
-                //     values.rawMaterials,
-                //     values.rawMaterialsByClient,
-                //     values.representationCost,
-                //     values.taskName,
-                //     values.taxExpenses,
-                //     values.transportationExpenses,
-                //     values.USDValue,
-                //     values.valuePerUnitMeasure,
-                //     values.workersAmount
-                //   )
-                // );
+                dispatch(
+                  startAddServiceFee({
+                    administrativeExpenses: values.administrativeExpenses,
+                    artisticTalentValue: values.artisticTalentValue,
+                    category: values.category,
+                    commercialMargin: values.commercialMargin,
+                    currencyChange: values.currencyChange,
+                    equipmentDepreciation: values.equipmentDepreciation,
+                    equipmentMaintenance: values.equipmentMaintenance,
+                    hiredPersonalExpenses: values.hiredPersonalExpenses,
+                    nomenclatorId: values.nomenclatorId,
+                    ONAT: values.ONAT,
+                    payMethodCoef: values.payMethodCoef,
+                    rawMaterials: values.rawMaterials,
+                    rawMaterialsByClient: values.rawMaterialsByClient,
+                    taskList: values.taskList,
+                    taskName: values.taskName,
+                    transportationExpenses: values.transportationExpenses,
+                    valuePerUnitMeasure: values.valuePerUnitMeasure,
+                    workersAmount: values.workersAmount,
+                  })
+                );
                 // form.resetFields();
                 // router.push("/dashboard/costSheets");
               })
