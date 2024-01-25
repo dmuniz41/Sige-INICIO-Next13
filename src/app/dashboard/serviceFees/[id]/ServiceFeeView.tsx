@@ -1,22 +1,19 @@
 "use client";
 
 import { RootState, useAppSelector } from "@/store/store";
-import React, { useEffect, useMemo } from "react";
+import { Tooltip } from "antd";
 import { useAppDispatch } from "@/hooks/hooks";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { Tooltip } from "antd";
 import dynamic from "next/dynamic";
+import React, { useEffect, useMemo } from "react";
 
-import { ICostSheet } from "@/models/costSheet";
-import { loadSelectedCostSheet } from "@/actions/costSheet";
-import { ICostSheetSubitem } from "../../../../models/costSheet";
-import { PDFSvg } from "@/app/global/PDFSvg";
 import { EditSvg } from "@/app/global/EditSvg";
-import CostSheetPDFReport from "@/helpers/CostSheetPDFReport";
-import { loadSelectedServiceFee } from "@/actions/serviceFee";
 import { IServiceFee, IServiceFeeSubItem } from "@/models/serviceFees";
+import { loadSelectedServiceFee } from "@/actions/serviceFee";
+import { PDFSvg } from "@/app/global/PDFSvg";
 import { ServiceFeeViewSection } from "./ServiceFeeViewSection";
+import CostSheetPDFReport from "@/helpers/CostSheetPDFReport";
 
 const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
   ssr: false,
@@ -38,15 +35,9 @@ export const ServiceFeeView = () => {
   let taskList: IServiceFeeSubItem[] = useMemo(() => selectedServiceFee.taskList, [selectedServiceFee]);
   let equipmentDepreciation: IServiceFeeSubItem[] = useMemo(() => selectedServiceFee.equipmentDepreciation, [selectedServiceFee]);
   let equipmentMaintenance: IServiceFeeSubItem[] = useMemo(() => selectedServiceFee.equipmentMaintenance, [selectedServiceFee]);
-  let administrativeExpenses: IServiceFeeSubItem[] = [
-    selectedServiceFee.fuelExpense,
-    selectedServiceFee.electricityExpense,
-    selectedServiceFee.leaseExpense,
-    selectedServiceFee.feedingExpense,
-    selectedServiceFee.phoneExpense,
-  ];
-  let transportationExpenses: IServiceFeeSubItem[] = [selectedServiceFee.rawMaterialsTransportationExpenses, selectedServiceFee.salesAndDistributionExpenses];
-  let subcontractExpenses: IServiceFeeSubItem[] = [selectedServiceFee.indirectSalaries, selectedServiceFee.subcontractExpenses];
+  let administrativeExpenses: IServiceFeeSubItem[] = selectedServiceFee.administrativeExpenses;
+  let transportationExpenses: IServiceFeeSubItem[] = selectedServiceFee.transportationExpenses
+  let hiredPersonalExpenses: IServiceFeeSubItem[] = selectedServiceFee.hiredPersonalExpenses
 
   // const fields: any = [
   //   {
@@ -83,7 +74,7 @@ export const ServiceFeeView = () => {
   // const PDFReportData: ICostSheet = selectedCostSheet;
 
   const handleEdit = (): void => {
-    router.push(`/dashboard/costSheets/editCostSheet`);
+    router.push(`/dashboard/serviceFees/editServiceFee`);
   };
 
   return (
@@ -147,7 +138,7 @@ export const ServiceFeeView = () => {
           <ServiceFeeViewSection name="Mantenimiento de Equipos" data={equipmentMaintenance} subtotal={selectedServiceFee?.equipmentMaintenanceSubtotal} />
           <ServiceFeeViewSection name="Gastos Administrativos" data={administrativeExpenses} subtotal={selectedServiceFee?.administrativeExpensesSubtotal} />
           <ServiceFeeViewSection name="Gastos de Transporte" data={transportationExpenses} subtotal={selectedServiceFee?.transportationExpensesSubtotal} />
-          <ServiceFeeViewSection name="Gastos de Personal Contratado" data={subcontractExpenses} subtotal={selectedServiceFee?.subcontractExpensesSubtotal} />
+          <ServiceFeeViewSection name="Gastos de Personal Contratado" data={hiredPersonalExpenses} subtotal={selectedServiceFee?.hiredPersonalExpensesSubtotal} />
         </article>
         <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
             <div className="flex w-[90%] justify-end pr-4 font-bold">

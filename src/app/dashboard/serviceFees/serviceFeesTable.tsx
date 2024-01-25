@@ -257,7 +257,7 @@ const ServiceFeeTable: React.FC = () => {
       title: "Nomenclador",
       dataIndex: "nomenclatorId",
       key: "nomenclatorId",
-      width: "10%",
+      width: "15%",
       filters: costSheetNomenclatorFilter,
       onFilter: (value: any, record: any) => record.nomenclatorId.startsWith(value),
       filterSearch: true,
@@ -267,7 +267,7 @@ const ServiceFeeTable: React.FC = () => {
       title: "Categoría",
       dataIndex: "category",
       key: "category",
-      width: "15%",
+      width: "20%",
       filterSearch: true,
     },
 
@@ -275,7 +275,7 @@ const ServiceFeeTable: React.FC = () => {
       title: "Precio",
       dataIndex: "salePrice",
       key: "salePrice",
-      width: "20%",
+      width: "10%",
       render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
       sorter: {
         compare: (a, b) => a.salePrice - b.salePrice,
@@ -285,7 +285,7 @@ const ServiceFeeTable: React.FC = () => {
       title: "Precio USD",
       dataIndex: "salePriceUSD",
       key: "salePriceUSD",
-      width: "30%",
+      width: "10%",
       render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
       sorter: {
         compare: (a, b) => a.salePriceUSD - b.salePriceUSD,

@@ -62,6 +62,7 @@ export const startUpdateServiceFee = ({ ...serviceFee }): any => {
           artisticTalentValue: serviceFee.artisticTalentValue,
           category: serviceFee.category,
           commercialMargin: serviceFee.commercialMargin,
+          currencyChange: serviceFee.currencyChange,
           equipmentDepreciation: serviceFee.equipmentDepreciation,
           equipmentMaintenance: serviceFee.equipmentMaintenance,
           hiredPersonalExpenses: serviceFee.hiredPersonalExpenses,

@@ -120,7 +120,7 @@ export async function POST(request: Request) {
       artisticTalentValue: serviceFee.artisticTalentValue,
       rawMaterialsByClient: serviceFee.rawMaterialsByClient,
       salePrice: expensesTotalValue + serviceFee.ONAT + serviceFee.artisticTalentValue + serviceFee.rawMaterialsByClient,
-      salePriceUSD: (expensesTotalValue + serviceFee?.ONAT + serviceFee?.artisticTalentValue + serviceFee?.rawMaterialsByClient) / serviceFee?.currencyChange
+      salePriceUSD: (expensesTotalValue + serviceFee?.ONAT + serviceFee?.artisticTalentValue + serviceFee?.rawMaterialsByClient) / serviceFee?.currencyChange,
     });
 
     await newServiceFee.save();
@@ -154,7 +154,7 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   const { ...serviceFee }: IServiceFee = await request.json();
-  console.log("🚀 ~ POST ~ serviceFee:", serviceFee);
+  console.log("🚀 ~ PUT ~ serviceFee:", serviceFee._id);
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -246,7 +246,6 @@ export async function PUT(request: Request) {
       {
         category: serviceFee.category,
         nomenclatorId: serviceFee.nomenclatorId,
-        key: serviceFee.key,
         workersAmount: serviceFee.workersAmount,
         taskName: serviceFee.taskName,
         payMethodCoef: serviceFee.payMethodCoef,

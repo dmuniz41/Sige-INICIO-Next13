@@ -3,27 +3,45 @@ import { Button, Form, Input, InputNumber, Select, SelectProps } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 
-import { AddAdministrativeExpensesModal } from "./AddAdministrativeExpenses";
-import { AddEquipmentDepreciationModal } from "./AddEquipmentDepreciation";
-import { AddEquipmentMaintenanceModal } from "./AddEquipmentMaintenance";
-import { AddHiredPersonalExpensesModal } from "./AddHiredPersonalExpenses";
-import { AddRawMaterialModal } from "./AddRawMaterial";
-import { AddTaskListModal } from "./AddTaskList";
-import { AddTransportationExpensesModal } from "./AddTransportationExpenses";
+import { AddAdministrativeExpensesModal } from "../createServiceFee/AddAdministrativeExpenses";
+import { AddEquipmentDepreciationModal } from "../createServiceFee/AddEquipmentDepreciation";
+import { AddEquipmentMaintenanceModal } from "../createServiceFee/AddEquipmentMaintenance";
+import { AddHiredPersonalExpensesModal } from "../createServiceFee/AddHiredPersonalExpenses";
+import { AddRawMaterialModal } from "../createServiceFee/AddRawMaterial";
+import { AddTaskListModal } from "../createServiceFee/AddTaskList";
+import { AddTransportationExpensesModal } from "../createServiceFee/AddTransportationExpenses";
 import { INomenclator } from "@/models/nomenclator";
 import { IRepresentationCoefficients, IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
+import { IServiceFee } from "@/models/serviceFees";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
-import { startAddServiceFee } from "@/actions/serviceFee";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
+import { startUpdateServiceFee } from "@/actions/serviceFee";
 import { useAppDispatch } from "@/hooks/hooks";
+import { useRouter } from "next/navigation";
 
-export const CreateServiceFeeForm = () => {
+export const EditServiceFeeForm = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const serviceFeeCategory: string[] | undefined = [];
   const valuePerUM: string[] | undefined = [];
   const payMethods: IRepresentationCoefficients[] | undefined = [];
+  const router = useRouter();
+
+  useEffect(() => {
+    dispatch(nomenclatorsStartLoading());
+    dispatch(startLoadServiceFeeAuxiliary());
+  }, [dispatch]);
+
+  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary[] } = useAppSelector((state: RootState) => state?.serviceFee);
+  const { selectedServiceFee }: { selectedServiceFee: IServiceFee } = useAppSelector((state: RootState) => state?.serviceFee);
+  serviceFeeAuxiliary[0]?.payMethod.map((payMethod) => payMethods.push(payMethod));
+
+  nomenclators.map((nomenclator: INomenclator) => {
+    if (nomenclator.category === "Categoría de ficha de costo") serviceFeeCategory.push(nomenclator.code);
+    if (nomenclator.category === "Precio/UM en ficha de costo") valuePerUM.push(nomenclator.code);
+  });
 
   const [addRawMaterialModal, setAddRawMaterialModal] = useState(false);
   const [addTaskListModal, setAddTaskListModal] = useState(false);
@@ -33,27 +51,14 @@ export const CreateServiceFeeForm = () => {
   const [addTransportationExpensesModal, setAddTransportationExpensesModal] = useState(false);
   const [addHiredPersonalExpensesModal, setAddHiredPersonalExpensesModal] = useState(false);
 
-  const [rawMaterialsValues, setRawMaterialsValues]: any = useState([]);
-  const [taskListValues, setTaskListValues]: any = useState([]);
-  const [equipmentDepreciationValues, setEquipmentDepreciationValues]: any = useState([]);
-  const [equipmentMaintenanceValues, setEquipmentMaintenanceValues]: any = useState([]);
-  const [administrativeExpensesValues, setAdministrativeExpensesValues]: any = useState([]);
-  const [transportationExpensesValues, setTransportationExpensesValues]: any = useState([]);
-  const [hiredPersonalExpensesValues, setHiredPersonalExpensesValues]: any = useState([]);
+  const [rawMaterialsValues, setRawMaterialsValues]: any = useState(selectedServiceFee.rawMaterials);
+  const [taskListValues, setTaskListValues]: any = useState(selectedServiceFee.taskList);
+  const [equipmentDepreciationValues, setEquipmentDepreciationValues]: any = useState(selectedServiceFee.equipmentDepreciation);
+  const [equipmentMaintenanceValues, setEquipmentMaintenanceValues]: any = useState(selectedServiceFee.equipmentMaintenance);
+  const [administrativeExpensesValues, setAdministrativeExpensesValues]: any = useState(selectedServiceFee.administrativeExpenses);
+  const [transportationExpensesValues, setTransportationExpensesValues]: any = useState(selectedServiceFee.transportationExpenses);
+  const [hiredPersonalExpensesValues, setHiredPersonalExpensesValues]: any = useState(selectedServiceFee.hiredPersonalExpenses);
 
-  useEffect(() => {
-    dispatch(nomenclatorsStartLoading());
-    dispatch(startLoadServiceFeeAuxiliary());
-  }, [dispatch]);
-
-  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary[] } = useAppSelector((state: RootState) => state?.serviceFee);
-  serviceFeeAuxiliary[0]?.payMethod.map((payMethod) => payMethods.push(payMethod));
-
-  nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Categoría de ficha de costo") serviceFeeCategory.push(nomenclator.code);
-    if (nomenclator.category === "Precio/UM en ficha de costo") valuePerUM.push(nomenclator.code);
-  });
 
   const categoriesOptions: SelectProps["options"] = serviceFeeCategory.map((serviceFeeCategory) => {
     return {
@@ -272,7 +277,7 @@ export const CreateServiceFeeForm = () => {
   return (
     <Form
       form={form}
-      name="createCostSheetForm"
+      name="editCostSheetForm"
       labelCol={{ span: 0 }}
       wrapperCol={{ span: 0 }}
       className="w-full flex flex-col gap-0"
@@ -283,8 +288,76 @@ export const CreateServiceFeeForm = () => {
       size="middle"
       fields={[
         {
+          name: "taskName",
+          value: selectedServiceFee.taskName,
+        },
+        {
+          name: "nomenclatorId",
+          value: selectedServiceFee.nomenclatorId,
+        },
+        {
+          name: "category",
+          value: selectedServiceFee.category,
+        },
+        {
+          name: "workersAmount",
+          value: selectedServiceFee.workersAmount,
+        },
+        {
+          name: "valuePerUnitMeasure",
+          value: selectedServiceFee.valuePerUnitMeasure,
+        },
+        {
           name: "currencyChange",
           value: serviceFeeAuxiliary[0]?.currencyChange,
+        },
+        {
+          name: "payMethodCoef",
+          value: selectedServiceFee.payMethodCoef,
+        },
+        {
+          name: "rawMaterials",
+          value: rawMaterialsValues,
+        },
+        {
+          name: "taskList",
+          value: taskListValues,
+        },
+        {
+          name: "equipmentDepreciation",
+          value: equipmentDepreciationValues,
+        },
+        {
+          name: "equipmentMaintenance",
+          value: equipmentDepreciationValues,
+        },
+        {
+          name: "administrativeExpenses",
+          value: administrativeExpensesValues,
+        },
+        {
+          name: "transportationExpenses",
+          value: transportationExpensesValues,
+        },
+        {
+          name: "hiredPersonalExpenses",
+          value: hiredPersonalExpensesValues,
+        },
+        {
+          name: "ONAT",
+          value: selectedServiceFee.ONAT,
+        },
+        {
+          name: "commercialMargin",
+          value: selectedServiceFee.commercialMargin,
+        },
+        {
+          name: "rawMaterialsByClient",
+          value: selectedServiceFee.rawMaterialsByClient,
+        },
+        {
+          name: "artisticTalentValue",
+          value: selectedServiceFee.artisticTalentValue,
         },
       ]}
     >
@@ -691,7 +764,8 @@ export const CreateServiceFeeForm = () => {
               .then((values) => {
                 console.log("🚀 ~ .then ~ values:", values);
                 dispatch(
-                  startAddServiceFee({
+                  startUpdateServiceFee({
+                    _id: selectedServiceFee._id,
                     administrativeExpenses: values.administrativeExpenses,
                     artisticTalentValue: values.artisticTalentValue,
                     category: values.category,
@@ -712,15 +786,15 @@ export const CreateServiceFeeForm = () => {
                     workersAmount: values.workersAmount,
                   })
                 );
-                // form.resetFields();
-                // router.push("/dashboard/costSheets");
+                form.resetFields();
+                router.push(`/dashboard/serviceFees/${selectedServiceFee?._id}`);
               })
               .catch((error) => {
                 console.log("Validate Failed:", error);
               });
           }}
         >
-          Crear
+          Editar
         </button>
       </Form.Item>
       <AddRawMaterialModal open={addRawMaterialModal} onCancel={() => setAddRawMaterialModal(false)} onCreate={onAddRawMaterial} />
