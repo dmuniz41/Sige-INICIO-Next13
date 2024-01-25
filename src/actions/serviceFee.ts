@@ -6,7 +6,6 @@ import { Toast } from "@/helpers/customAlert";
 import { types } from "@/types/types";
 
 export const startAddServiceFee = ({ ...serviceFee }): any => {
-  console.log("🚀 ~ startAddServiceFee ~ serviceFee.CurrencyChange:", serviceFee)
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios

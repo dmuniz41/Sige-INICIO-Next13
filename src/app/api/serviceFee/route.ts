@@ -122,11 +122,6 @@ export async function POST(request: Request) {
       salePrice: expensesTotalValue + serviceFee.ONAT + serviceFee.artisticTalentValue + serviceFee.rawMaterialsByClient,
       salePriceUSD: (expensesTotalValue + serviceFee?.ONAT + serviceFee?.artisticTalentValue + serviceFee?.rawMaterialsByClient) / serviceFee?.currencyChange
     });
-      console.log("🚀 ~ POST ~ serviceFee?.currencyChange:", serviceFee?.currencyChange)
-      console.log("🚀 ~ POST ~ serviceFee?.rawMaterialsByClient:", serviceFee?.rawMaterialsByClient)
-      console.log("🚀 ~ POST ~ serviceFee?.artisticTalentValue:", serviceFee?.artisticTalentValue)
-      console.log("🚀 ~ POST ~ serviceFee?.ONAT:", serviceFee?.ONAT)
-      console.log("🚀 ~ POST ~ expensesTotalValue:", expensesTotalValue)
 
     await newServiceFee.save();
 
