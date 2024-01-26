@@ -36,6 +36,7 @@ export const CreateServiceFeeForm = () => {
   const [addHiredPersonalExpensesModal, setAddHiredPersonalExpensesModal] = useState(false);
 
   const [rawMaterialsValues, setRawMaterialsValues]: any = useState([]);
+  console.log("🚀 ~ CreateServiceFeeForm ~ rawMaterialsValues:", rawMaterialsValues.length);
   const [taskListValues, setTaskListValues]: any = useState([]);
   const [equipmentDepreciationValues, setEquipmentDepreciationValues]: any = useState([]);
   const [equipmentMaintenanceValues, setEquipmentMaintenanceValues]: any = useState([]);
@@ -290,7 +291,7 @@ export const CreateServiceFeeForm = () => {
         },
       ]}
     >
-      <section className=" flex-col ">
+      <section className=" flex-col mb-4">
         <div className="flex flex-row gap-4">
           <Form.Item className="mb-3 w-[35%]" name="taskName" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
             <Input />
@@ -343,325 +344,486 @@ export const CreateServiceFeeForm = () => {
         </div>
       </section>
       {/* Seccion para introducir las materias primas */}
-      <section className=" flex flex-col w-full mb-0">
-        <div className="flex gap-1 ">
-          <label className="text-md font-bold mb-3">Materias Primas</label>
+      <section className=" flex w-full mb-0">
+        <div className="flex w-[15%] justify-center items-center text-center gap-1 ">
+          <span className="text-base font-bold mb-3">Materias Primas</span>
         </div>
-        <Form.List name="rawMaterials">
-          {(fields, { add, remove }) => (
-            <div className="flex flex-col w-full">
-              {fields.map(({ key, name, ...restField }) => (
-                <div key={key} className="w-full">
-                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
-                      <Input placeholder="Descripción" className="w-full" />
-                    </Form.Item>
-                    <Form.Item {...restField} className="w-[20%]" name={[name, "unitMeasure"]} rules={[{ required: true }]}>
-                      <InputNumber className="w-full" placeholder="Unidad de Medida" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
-                      <InputNumber placeholder="Cantidad" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
-                      <InputNumber placeholder="Precio" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
-                      <InputNumber disabled />
-                    </Form.Item>
-                    <MinusCircleOutlined
-                      className="mb-auto"
-                      onClick={() => {
-                        remove(name);
-                        setRawMaterialsValues(form.getFieldValue("rawMaterials"));
-                      }}
-                    />
+        <div className="flex pl-2 w-full flex-col">
+          {rawMaterialsValues.length == 0 ? (
+            <div></div>
+          ) : (
+            <div className="flex flex-1 mb-4 pr-4 font-bold">
+              <div className="flex-1">
+                <span>Descripción</span>
+              </div>
+              <div className="w-[200px]">
+                <span>Unidad de Medida</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Cantidad</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Precio/UM</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Importe</span>
+              </div>
+            </div>
+          )}
+          <Form.List name="rawMaterials">
+            {(fields, { add, remove }) => (
+              <div className="flex flex-col w-full">
+                {fields.map(({ key, name, ...restField }) => (
+                  <div key={key} className="w-full">
+                    <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                      <Form.Item className="flex-1" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
+                        <Input placeholder="Descripción" className="w-full" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "unitMeasure"]} rules={[{ required: true }]}>
+                        <InputNumber className="w-full" placeholder="Unidad de Medida" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
+                        <InputNumber placeholder="Cantidad" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
+                        <InputNumber placeholder="Precio" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
+                        <InputNumber disabled />
+                      </Form.Item>
+                      <MinusCircleOutlined
+                        className="mb-auto"
+                        onClick={() => {
+                          remove(name);
+                          setRawMaterialsValues(form.getFieldValue("rawMaterials"));
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
-              {/* <div className="flex w-full h-[32px] items-center border rounded-md pl-2 border-border_light mb-4 justify-between gap-2">
+                ))}
+                {/* <div className="flex w-full h-[32px] items-center border rounded-md pl-2 border-border_light mb-4 justify-between gap-2">
                 <span className="font-bold flex-1 justify-end flex">Subtotal: </span>
                 <span className="mr-[5rem]">$ {rawMaterialsSubtotal.toFixed(2)}</span>
               </div> */}
-              <Form.Item className="mb-2 w-full">
-                <Button className="flex flex-row  justify-center items-center" type="dashed" onClick={() => setAddRawMaterialModal(true)} block icon={<PlusOutlined />}>
-                  Añadir Materia Prima
-                </Button>
-              </Form.Item>
-            </div>
-          )}
-        </Form.List>
+                <Form.Item className="mb-2 w-full">
+                  <Button className="flex flex-row  justify-center items-center" type="dashed" onClick={() => setAddRawMaterialModal(true)} block icon={<PlusOutlined />}>
+                    Añadir Materia Prima
+                  </Button>
+                </Form.Item>
+              </div>
+            )}
+          </Form.List>
+        </div>
       </section>
       {/* Seccion para introducir la lista de tareas */}
-      <section className=" flex flex-col w-full mb-0">
-        <div className="flex gap-1 ">
-          <label className="text-md font-bold mb-3">Actividades a Ejecutar</label>
+      <section className=" flex w-full mb-0">
+        <div className="flex w-[15%] justify-center items-center text-center gap-1 ">
+          <span className="text-base font-bold mb-3">Actividades a Ejecutar</span>
         </div>
-        <Form.List name="taskList">
-          {(fields, { add, remove }) => (
-            <div className="flex flex-col w-full">
-              {fields.map(({ key, name, ...restField }) => (
-                <div key={key} className="w-full">
-                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
-                      <Input placeholder="Descripción" className="w-full" />
-                    </Form.Item>
-                    <Form.Item className="w-[20%]" {...restField} name={[name, "unitMeasure"]} rules={[{ required: true }]}>
-                      <InputNumber className="w-full" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
-                      <InputNumber />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
-                      <InputNumber />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
-                      <InputNumber disabled />
-                    </Form.Item>
-                    <MinusCircleOutlined
-                      className="mb-auto"
-                      onClick={() => {
-                        remove(name);
-                        setTaskListValues(form.getFieldValue("taskList"));
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-              <Form.Item className="mb-2 w-full">
-                <Button className="flex flex-row  justify-center items-center" type="dashed" onClick={() => setAddTaskListModal(true)} block icon={<PlusOutlined />}>
-                  Añadir Actividad
-                </Button>
-              </Form.Item>
+        <div className="flex pl-2 w-full flex-col">
+          {taskListValues.length == 0 ? (
+            <div></div>
+          ) : (
+            <div className="flex flex-1 mb-4 pr-4 font-bold">
+              <div className="flex-1">
+                <span>Descripción</span>
+              </div>
+              <div className="w-[200px]">
+                <span>Unidad de Medida</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Cantidad</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Precio/UM</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Importe</span>
+              </div>
             </div>
           )}
-        </Form.List>
+          <Form.List name="taskList">
+            {(fields, { add, remove }) => (
+              <div className="flex flex-col w-full">
+                {fields.map(({ key, name, ...restField }) => (
+                  <div key={key} className="w-full">
+                    <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                      <Form.Item className="flex-1" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
+                        <Input placeholder="Descripción" className="w-full" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "unitMeasure"]} rules={[{ required: true }]}>
+                        <InputNumber className="w-full" placeholder="Unidad de Medida" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
+                        <InputNumber placeholder="Cantidad" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
+                        <InputNumber placeholder="Precio" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
+                        <InputNumber disabled />
+                      </Form.Item>
+                      <MinusCircleOutlined
+                        className="mb-auto"
+                        onClick={() => {
+                          remove(name);
+                          setTaskListValues(form.getFieldValue("taskList"));
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+                <Form.Item className="mb-2 w-full">
+                  <Button className="flex flex-row  justify-center items-center" type="dashed" onClick={() => setAddTaskListModal(true)} block icon={<PlusOutlined />}>
+                    Añadir Actividad
+                  </Button>
+                </Form.Item>
+              </div>
+            )}
+          </Form.List>
+        </div>
       </section>
       {/* Seccion para introducir la depreciacion de equipos */}
-      <section className=" flex flex-col w-full mb-0">
-        <div className="flex gap-1 ">
-          <label className="text-md font-bold mb-3">Depreciación de Equipos</label>
+      <section className=" flex w-full mb-0">
+        <div className="flex w-[15%] justify-center items-center text-center gap-1 ">
+          <span className="text-base font-bold mb-3">Depreciación de Equipos</span>
         </div>
-        <Form.List name="equipmentDepreciation">
-          {(fields, { add, remove }) => (
-            <div className="flex flex-col w-full">
-              {fields.map(({ key, name, ...restField }) => (
-                <div key={key} className="w-full">
-                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
-                      <Input placeholder="Descripción" className="w-full" />
-                    </Form.Item>
-                    <Form.Item {...restField} className="w-[20%]" name={[name, "unitMeasure"]} rules={[{ required: true }]}>
-                      <InputNumber className="w-full" placeholder="Unidad de Medida" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
-                      <InputNumber placeholder="Cantidad" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
-                      <InputNumber placeholder="Precio" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
-                      <InputNumber disabled />
-                    </Form.Item>
-                    <MinusCircleOutlined
-                      className="mb-auto"
-                      onClick={() => {
-                        remove(name);
-                        setEquipmentDepreciationValues(form.getFieldValue("equipmentDepreciation"));
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-              <Form.Item className="mb-2 w-full ">
-                <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddEquipmentDepreciationModal(true)} block icon={<PlusOutlined />}>
-                  Añadir Depreciación de Equipos
-                </Button>
-              </Form.Item>
+        <div className="flex pl-2 w-full flex-col">
+          {equipmentDepreciationValues.length == 0 ? (
+            <div></div>
+          ) : (
+            <div className="flex flex-1 mb-4 pr-4 font-bold">
+              <div className="flex-1">
+                <span>Descripción</span>
+              </div>
+              <div className="w-[200px]">
+                <span>Unidad de Medida</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Cantidad</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Precio/UM</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Importe</span>
+              </div>
             </div>
           )}
-        </Form.List>
+          <Form.List name="equipmentDepreciation">
+            {(fields, { add, remove }) => (
+              <div className="flex flex-col w-full">
+                {fields.map(({ key, name, ...restField }) => (
+                  <div key={key} className="w-full">
+                    <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                      <Form.Item className="flex-1" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
+                        <Input placeholder="Descripción" className="w-full" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "unitMeasure"]} rules={[{ required: true }]}>
+                        <InputNumber className="w-full" placeholder="Unidad de Medida" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
+                        <InputNumber placeholder="Cantidad" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
+                        <InputNumber placeholder="Precio" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
+                        <InputNumber disabled />
+                      </Form.Item>
+                      <MinusCircleOutlined
+                        className="mb-auto"
+                        onClick={() => {
+                          remove(name);
+                          setEquipmentDepreciationValues(form.getFieldValue("equipmentDepreciation"));
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+                <Form.Item className="mb-2 w-full ">
+                  <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddEquipmentDepreciationModal(true)} block icon={<PlusOutlined />}>
+                    Añadir Depreciación de Equipos
+                  </Button>
+                </Form.Item>
+              </div>
+            )}
+          </Form.List>
+        </div>
       </section>
       {/* seccion para introducir el mantenimiento de equipos */}
-      <section className=" flex flex-col w-full mb-0">
-        <div className="flex gap-1 ">
-          <label className="text-md font-bold mb-3">Mantenimiento de Equipos</label>
+      <section className=" flex w-full mb-0">
+        <div className="flex w-[15%] justify-center items-center text-center gap-1 ">
+          <span className="text-base font-bold mb-3">Mantenimiento de Equipos</span>
         </div>
-        <Form.List name="equipmentMaintenance">
-          {(fields, { add, remove }) => (
-            <div className="flex flex-col w-full">
-              {fields.map(({ key, name, ...restField }) => (
-                <div key={key} className="w-full">
-                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
-                      <Input placeholder="Descripción" className="w-full" />
-                    </Form.Item>
-                    <Form.Item {...restField} className="w-[20%]" name={[name, "unitMeasure"]} rules={[{ required: true }]}>
-                      <InputNumber className="w-full" placeholder="Unidad de Medida" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
-                      <InputNumber placeholder="Cantidad" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
-                      <InputNumber placeholder="Precio" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
-                      <InputNumber disabled />
-                    </Form.Item>
-                    <MinusCircleOutlined
-                      className="mb-auto"
-                      onClick={() => {
-                        remove(name);
-                        setEquipmentMaintenanceValues(form.getFieldValue("equipmentMaintenance"));
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-              <Form.Item className="mb-2 w-full ">
-                <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddEquipmentMaintenanceModal(true)} block icon={<PlusOutlined />}>
-                  Añadir Mantenimiento de Equipos
-                </Button>
-              </Form.Item>
+        <div className="flex pl-2 w-full flex-col">
+          {equipmentMaintenanceValues.length == 0 ? (
+            <div></div>
+          ) : (
+            <div className="flex flex-1 mb-4 pr-4 font-bold">
+              <div className="flex-1">
+                <span>Descripción</span>
+              </div>
+              <div className="w-[200px]">
+                <span>Unidad de Medida</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Cantidad</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Precio/UM</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Importe</span>
+              </div>
             </div>
           )}
-        </Form.List>
+          <Form.List name="equipmentMaintenance">
+            {(fields, { add, remove }) => (
+              <div className="flex flex-col w-full">
+                {fields.map(({ key, name, ...restField }) => (
+                  <div key={key} className="w-full">
+                    <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                      <Form.Item className="flex-1" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
+                        <Input placeholder="Descripción" className="w-full" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "unitMeasure"]} rules={[{ required: true }]}>
+                        <InputNumber className="w-full" placeholder="Unidad de Medida" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
+                        <InputNumber placeholder="Cantidad" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
+                        <InputNumber placeholder="Precio" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
+                        <InputNumber disabled />
+                      </Form.Item>
+                      <MinusCircleOutlined
+                        className="mb-auto"
+                        onClick={() => {
+                          remove(name);
+                          setEquipmentMaintenanceValues(form.getFieldValue("equipmentMaintenance"));
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+                <Form.Item className="mb-2 w-full ">
+                  <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddEquipmentMaintenanceModal(true)} block icon={<PlusOutlined />}>
+                    Añadir Mantenimiento de Equipos
+                  </Button>
+                </Form.Item>
+              </div>
+            )}
+          </Form.List>
+        </div>
       </section>
       {/* seccion para introducir los gastos administrativos */}
-      <section className=" flex flex-col w-full mb-0">
-        <div className="flex gap-1 ">
-          <label className="text-md font-bold mb-3">Gastos Administrativos</label>
+      <section className=" flex w-full mb-0">
+        <div className="flex w-[15%] justify-center items-center text-center gap-1 ">
+          <span className="text-base font-bold mb-3">Gastos Administrativos</span>
         </div>
-        <Form.List name="administrativeExpenses">
-          {(fields, { add, remove }) => (
-            <div className="flex flex-col w-full">
-              {fields.map(({ key, name, ...restField }) => (
-                <div key={key} className="w-full">
-                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
-                      <Input placeholder="Descripción" className="w-full" />
-                    </Form.Item>
-                    <Form.Item {...restField} className="w-[20%]" name={[name, "unitMeasure"]} rules={[{ required: true }]}>
-                      <InputNumber className="w-full" placeholder="Unidad de Medida" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
-                      <InputNumber placeholder="Cantidad" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
-                      <InputNumber placeholder="Precio" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
-                      <InputNumber disabled />
-                    </Form.Item>
-                    <MinusCircleOutlined
-                      className="mb-auto"
-                      onClick={() => {
-                        remove(name);
-                        setAdministrativeExpensesValues(form.getFieldValue("administrativeExpenses"));
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-              <Form.Item className="mb-2 w-full ">
-                <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddAdministrativeExpensesModal(true)} block icon={<PlusOutlined />}>
-                  Gastos Administrativos
-                </Button>
-              </Form.Item>
+        <div className="flex pl-2 w-full flex-col">
+          {administrativeExpensesValues.length == 0 ? (
+            <div></div>
+          ) : (
+            <div className="flex flex-1 mb-4 pr-4 font-bold">
+              <div className="flex-1">
+                <span>Descripción</span>
+              </div>
+              <div className="w-[200px]">
+                <span>Unidad de Medida</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Cantidad</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Precio/UM</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Importe</span>
+              </div>
             </div>
           )}
-        </Form.List>
+          <Form.List name="administrativeExpenses">
+            {(fields, { add, remove }) => (
+              <div className="flex flex-col w-full">
+                {fields.map(({ key, name, ...restField }) => (
+                  <div key={key} className="w-full">
+                    <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                      <Form.Item className="flex-1" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
+                        <Input placeholder="Descripción" className="w-full" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "unitMeasure"]} rules={[{ required: true }]}>
+                        <InputNumber className="w-full" placeholder="Unidad de Medida" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
+                        <InputNumber placeholder="Cantidad" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
+                        <InputNumber placeholder="Precio" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
+                        <InputNumber disabled />
+                      </Form.Item>
+                      <MinusCircleOutlined
+                        className="mb-auto"
+                        onClick={() => {
+                          remove(name);
+                          setAdministrativeExpensesValues(form.getFieldValue("administrativeExpenses"));
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+                <Form.Item className="mb-2 w-full ">
+                  <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddAdministrativeExpensesModal(true)} block icon={<PlusOutlined />}>
+                    Gastos Administrativos
+                  </Button>
+                </Form.Item>
+              </div>
+            )}
+          </Form.List>
+        </div>
       </section>
       {/* seccion para introducir los gastos de transportacion */}
-      <section className=" flex flex-col w-full mb-0">
-        <div className="flex gap-1 ">
-          <label className="text-md font-bold mb-3">Gastos de Transportación</label>
+      <section className=" flex w-full mb-0">
+        <div className="flex w-[15%] justify-center items-center text-center gap-1 ">
+          <span className="text-base font-bold mb-3">Gastos de Transportación</span>
         </div>
-        <Form.List name="transportationExpenses">
-          {(fields, { add, remove }) => (
-            <div className="flex flex-col w-full">
-              {fields.map(({ key, name, ...restField }) => (
-                <div key={key} className="w-full">
-                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
-                      <Input placeholder="Descripción" className="w-full" />
-                    </Form.Item>
-                    <Form.Item {...restField} className="w-[20%]" name={[name, "unitMeasure"]} rules={[{ required: true }]}>
-                      <InputNumber className="w-full" placeholder="Unidad de Medida" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
-                      <InputNumber placeholder="Cantidad" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
-                      <InputNumber placeholder="Precio" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
-                      <InputNumber disabled />
-                    </Form.Item>
-                    <MinusCircleOutlined
-                      className="mb-auto"
-                      onClick={() => {
-                        remove(name);
-                        setTransportationExpensesValues(form.getFieldValue("transportationExpenses"));
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-              <Form.Item className="mb-2 w-full ">
-                <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddTransportationExpensesModal(true)} block icon={<PlusOutlined />}>
-                  Añadir Gastos de Transportación
-                </Button>
-              </Form.Item>
+        <div className="flex pl-2 w-full flex-col">
+          {transportationExpensesValues.length == 0 ? (
+            <div></div>
+          ) : (
+            <div className="flex flex-1 mb-4 pr-4 font-bold">
+              <div className="flex-1">
+                <span>Descripción</span>
+              </div>
+              <div className="w-[200px]">
+                <span>Unidad de Medida</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Cantidad</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Precio/UM</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Importe</span>
+              </div>
             </div>
           )}
-        </Form.List>
+          <Form.List name="transportationExpenses">
+            {(fields, { add, remove }) => (
+              <div className="flex flex-col w-full">
+                {fields.map(({ key, name, ...restField }) => (
+                  <div key={key} className="w-full">
+                    <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                      <Form.Item className="flex-1" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
+                        <Input placeholder="Descripción" className="w-full" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "unitMeasure"]} rules={[{ required: true }]}>
+                        <InputNumber className="w-full" placeholder="Unidad de Medida" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
+                        <InputNumber placeholder="Cantidad" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
+                        <InputNumber placeholder="Precio" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
+                        <InputNumber disabled />
+                      </Form.Item>
+                      <MinusCircleOutlined
+                        className="mb-auto"
+                        onClick={() => {
+                          remove(name);
+                          setTransportationExpensesValues(form.getFieldValue("transportationExpenses"));
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+                <Form.Item className="mb-2 w-full ">
+                  <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddTransportationExpensesModal(true)} block icon={<PlusOutlined />}>
+                    Añadir Gastos de Transportación
+                  </Button>
+                </Form.Item>
+              </div>
+            )}
+          </Form.List>
+        </div>
       </section>
       {/* seccion para introducir los gastos de personal contratado */}
-      <section className=" flex flex-col w-full mb-0">
-        <div className="flex gap-1 ">
-          <label className="text-md font-bold mb-3">Gastos de Personal Contratado</label>
+      <section className=" flex w-full mb-0">
+        <div className="flex w-[15%] justify-center items-center text-center gap-1 ">
+          <span className="text-base font-bold mb-3">Gastos de Personal Contratado</span>
         </div>
-        <Form.List name="hiredPersonalExpenses">
-          {(fields, { add, remove }) => (
-            <div className="flex flex-col w-full">
-              {fields.map(({ key, name, ...restField }) => (
-                <div key={key} className="w-full">
-                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[60%]" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
-                      <Input placeholder="Descripción" className="w-full" />
-                    </Form.Item>
-                    <Form.Item {...restField} className="w-[20%]" name={[name, "unitMeasure"]} rules={[{ required: true }]}>
-                      <InputNumber className="w-full" placeholder="Unidad de Medida" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
-                      <InputNumber placeholder="Cantidad" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
-                      <InputNumber placeholder="Precio" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
-                      <InputNumber disabled />
-                    </Form.Item>
-                    <MinusCircleOutlined
-                      className="mb-auto"
-                      onClick={() => {
-                        remove(name);
-                        setHiredPersonalExpensesValues(form.getFieldValue("transportationExpenses"));
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-              <Form.Item className="mb-2 w-full ">
-                <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddHiredPersonalExpensesModal(true)} block icon={<PlusOutlined />}>
-                  Añadir Gastos de Personal Contratado
-                </Button>
-              </Form.Item>
+        <div className="flex pl-2 w-full flex-col">
+          {hiredPersonalExpensesValues.length == 0 ? (
+            <div></div>
+          ) : (
+            <div className="flex flex-1 mb-4 pr-4 font-bold">
+              <div className="flex-1">
+                <span>Descripción</span>
+              </div>
+              <div className="w-[200px]">
+                <span>Unidad de Medida</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Cantidad</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Precio/UM</span>
+              </div>
+              <div className="w-[88px]">
+                <span>Importe</span>
+              </div>
             </div>
           )}
-        </Form.List>
+          <Form.List name="hiredPersonalExpenses">
+            {(fields, { add, remove }) => (
+              <div className="flex flex-col w-full">
+                {fields.map(({ key, name, ...restField }) => (
+                  <div key={key} className="w-full">
+                    <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                      <Form.Item className="flex-1" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
+                        <Input placeholder="Descripción" className="w-full" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "unitMeasure"]} rules={[{ required: true }]}>
+                        <InputNumber className="w-full" placeholder="Unidad de Medida" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
+                        <InputNumber placeholder="Cantidad" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
+                        <InputNumber placeholder="Precio" />
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
+                        <InputNumber disabled />
+                      </Form.Item>
+                      <MinusCircleOutlined
+                        className="mb-auto"
+                        onClick={() => {
+                          remove(name);
+                          setHiredPersonalExpensesValues(form.getFieldValue("transportationExpenses"));
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+                <Form.Item className="mb-2 w-full ">
+                  <Button className="flex flex-row h-full justify-center items-center" type="dashed" onClick={() => setAddHiredPersonalExpensesModal(true)} block icon={<PlusOutlined />}>
+                    Añadir Gastos de Personal Contratado
+                  </Button>
+                </Form.Item>
+              </div>
+            )}
+          </Form.List>
+        </div>
       </section>
-      <section className="flex gap-4 mt-2">
+      <section className="flex gap-4 mt-4">
         {/* ONAT */}
         <Form.Item className="mb-3 " label={<span className="font-bold text-md">ONAT</span>} name="ONAT" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber />
