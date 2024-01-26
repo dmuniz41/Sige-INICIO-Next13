@@ -186,7 +186,7 @@ export const ServiceFeeView = () => {
             <div className="flex w-[90%] justify-end pr-4 font-bold">
               <h2>MATERIAS PRIMAS Y MATERIALES APORTADOS POR EL CLIENTE: </h2>
             </div>
-            <div className="flex w-[9.5%] pl-2">$ {selectedServiceFee?.rawMaterialsByClient.toFixed(2)}</div>
+            <div className="flex w-[9.5%] pl-2">$ {selectedServiceFee?.rawMaterialsByClient?.toFixed(2)}</div>
         </article>
         <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
             <div className="flex w-[90%] justify-end pr-4 font-bold">
