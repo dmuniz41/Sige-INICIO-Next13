@@ -1,31 +1,50 @@
 "use client";
 import { Button, Form, Input, InputNumber, Select, SelectProps } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
-import { AddAdministrativeExpensesModal } from "./AddAdministrativeExpenses";
-import { AddEquipmentDepreciationModal } from "./AddEquipmentDepreciation";
-import { AddEquipmentMaintenanceModal } from "./AddEquipmentMaintenance";
-import { AddHiredPersonalExpensesModal } from "./AddHiredPersonalExpenses";
-import { AddRawMaterialModal } from "./AddRawMaterial";
-import { AddTaskListModal } from "./AddTaskList";
-import { AddTransportationExpensesModal } from "./AddTransportationExpenses";
+import { AddAdministrativeExpensesModal } from "../createServiceFee/AddAdministrativeExpenses";
+import { AddEquipmentDepreciationModal } from "../createServiceFee/AddEquipmentDepreciation";
+import { AddEquipmentMaintenanceModal } from "../createServiceFee/AddEquipmentMaintenance";
+import { AddHiredPersonalExpensesModal } from "../createServiceFee/AddHiredPersonalExpenses";
+import { AddRawMaterialModal } from "../createServiceFee/AddRawMaterial";
+import { AddTaskListModal } from "../createServiceFee/AddTaskList";
+import { AddTransportationExpensesModal } from "../createServiceFee/AddTransportationExpenses";
 import { INomenclator } from "@/models/nomenclator";
 import { IRepresentationCoefficients, IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
+import { IServiceFee } from "@/models/serviceFees";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
-import { startAddServiceFee } from "@/actions/serviceFee";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
+import { startUpdateServiceFee } from "@/actions/serviceFee";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useRouter } from "next/navigation";
 
-export const CreateServiceFeeForm = () => {
+export const EditServiceFeeForm = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const serviceFeeCategory: string[] | undefined = [];
   const valuePerUM: string[] | undefined = [];
   const payMethods: IRepresentationCoefficients[] | undefined = [];
   const router = useRouter();
+
+  useEffect(() => {
+    dispatch(nomenclatorsStartLoading());
+    dispatch(startLoadServiceFeeAuxiliary());
+  }, [dispatch]);
+
+  console.log("render");
+
+  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary[] } = useAppSelector((state: RootState) => state?.serviceFee);
+  const { selectedServiceFee }: { selectedServiceFee: IServiceFee } = useAppSelector((state: RootState) => state?.serviceFee);
+
+  serviceFeeAuxiliary[0]?.payMethod.map((payMethod) => payMethods.push(payMethod));
+
+  nomenclators.map((nomenclator: INomenclator) => {
+    if (nomenclator.category === "Categoría de ficha de costo") serviceFeeCategory.push(nomenclator.code);
+    if (nomenclator.category === "Precio/UM en ficha de costo") valuePerUM.push(nomenclator.code);
+  });
 
   const [addRawMaterialModal, setAddRawMaterialModal] = useState(false);
   const [addTaskListModal, setAddTaskListModal] = useState(false);
@@ -35,27 +54,24 @@ export const CreateServiceFeeForm = () => {
   const [addTransportationExpensesModal, setAddTransportationExpensesModal] = useState(false);
   const [addHiredPersonalExpensesModal, setAddHiredPersonalExpensesModal] = useState(false);
 
-  const [rawMaterialsValues, setRawMaterialsValues]: any = useState([]);
-  const [taskListValues, setTaskListValues]: any = useState([]);
-  const [equipmentDepreciationValues, setEquipmentDepreciationValues]: any = useState([]);
-  const [equipmentMaintenanceValues, setEquipmentMaintenanceValues]: any = useState([]);
-  const [administrativeExpensesValues, setAdministrativeExpensesValues]: any = useState([]);
-  const [transportationExpensesValues, setTransportationExpensesValues]: any = useState([]);
-  const [hiredPersonalExpensesValues, setHiredPersonalExpensesValues]: any = useState([]);
+  const [taskName, setTaskName] = useState(selectedServiceFee.taskName);
+  const [nomenclatorId, setNomenclatorId] = useState(selectedServiceFee.nomenclatorId);
+  const [workersAmount, setWorkersAmount] = useState(selectedServiceFee.workersAmount);
+  const [category, setCategory] = useState(selectedServiceFee.category);
+  const [valuePerUnitMeasure, setValuePerUnitMeasure] = useState(selectedServiceFee.valuePerUnitMeasure);
+  const [payMethodCoef, setPayMethodCoef] = useState(selectedServiceFee.payMethodCoef);
+  const [ONAT, setONAT] = useState(selectedServiceFee.ONAT);
+  const [commercialMargin, setCommercialMargin] = useState(selectedServiceFee.commercialMargin);
+  const [rawMaterialsByClient, setRawMaterialsByClient] = useState(selectedServiceFee.rawMaterialsByClient);
+  const [artisticTalentValue, setArtisticTalentValue] = useState(selectedServiceFee.artisticTalentValue);
 
-  useEffect(() => {
-    dispatch(nomenclatorsStartLoading());
-    dispatch(startLoadServiceFeeAuxiliary());
-  }, [dispatch]);
-
-  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary[] } = useAppSelector((state: RootState) => state?.serviceFee);
-  serviceFeeAuxiliary[0]?.payMethod.map((payMethod) => payMethods.push(payMethod));
-
-  nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Categoría de ficha de costo") serviceFeeCategory.push(nomenclator.code);
-    if (nomenclator.category === "Precio/UM en ficha de costo") valuePerUM.push(nomenclator.code);
-  });
+  const [rawMaterialsValues, setRawMaterialsValues]: any = useState(selectedServiceFee.rawMaterials);
+  const [taskListValues, setTaskListValues]: any = useState(selectedServiceFee.taskList);
+  const [equipmentDepreciationValues, setEquipmentDepreciationValues]: any = useState(selectedServiceFee.equipmentDepreciation);
+  const [equipmentMaintenanceValues, setEquipmentMaintenanceValues]: any = useState(selectedServiceFee.equipmentMaintenance);
+  const [administrativeExpensesValues, setAdministrativeExpensesValues]: any = useState(selectedServiceFee.administrativeExpenses);
+  const [transportationExpensesValues, setTransportationExpensesValues]: any = useState(selectedServiceFee.transportationExpenses);
+  const [hiredPersonalExpensesValues, setHiredPersonalExpensesValues]: any = useState(selectedServiceFee.hiredPersonalExpenses);
 
   const categoriesOptions: SelectProps["options"] = serviceFeeCategory.map((serviceFeeCategory) => {
     return {
@@ -274,7 +290,7 @@ export const CreateServiceFeeForm = () => {
   return (
     <Form
       form={form}
-      name="createCostSheetForm"
+      name="editServiceFee"
       labelCol={{ span: 0 }}
       wrapperCol={{ span: 0 }}
       className="w-full flex flex-col gap-0"
@@ -285,19 +301,95 @@ export const CreateServiceFeeForm = () => {
       size="middle"
       fields={[
         {
+          name: "taskName",
+          value: taskName,
+        },
+        {
+          name: "nomenclatorId",
+          value: nomenclatorId,
+        },
+        {
+          name: "category",
+          value: category,
+        },
+        {
+          name: "workersAmount",
+          value: workersAmount,
+        },
+        {
+          name: "valuePerUnitMeasure",
+          value: valuePerUnitMeasure,
+        },
+        {
           name: "currencyChange",
           value: serviceFeeAuxiliary[0]?.currencyChange,
+        },
+        {
+          name: "payMethodCoef",
+          value: payMethodCoef,
+        },
+        {
+          name: "rawMaterials",
+          value: rawMaterialsValues,
+        },
+        {
+          name: "taskList",
+          value: taskListValues,
+        },
+        {
+          name: "equipmentDepreciation",
+          value: equipmentDepreciationValues,
+        },
+        {
+          name: "equipmentMaintenance",
+          value: equipmentMaintenanceValues,
+        },
+        {
+          name: "administrativeExpenses",
+          value: administrativeExpensesValues,
+        },
+        {
+          name: "transportationExpenses",
+          value: transportationExpensesValues,
+        },
+        {
+          name: "hiredPersonalExpenses",
+          value: hiredPersonalExpensesValues,
+        },
+        {
+          name: "ONAT",
+          value: ONAT,
+        },
+        {
+          name: "commercialMargin",
+          value: commercialMargin,
+        },
+        {
+          name: "rawMaterialsByClient",
+          value: rawMaterialsByClient,
+        },
+        {
+          name: "artisticTalentValue",
+          value: artisticTalentValue,
         },
       ]}
     >
       <section className=" flex-col ">
         <div className="flex flex-row gap-4">
           <Form.Item className="mb-3 w-[35%]" name="taskName" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
-            <Input />
+            <Input
+              onChange={() => {
+                setTaskName(form.getFieldValue("taskName"));
+              }}
+            />
           </Form.Item>
           <article className="flex flex-col w-[300px]">
             <Form.Item className="mb-3" label={<span className="font-bold text-md">Nomenclador</span>} name="nomenclatorId" rules={[{ required: true, message: "Campo requerido" }]}>
-              <Input />
+              <Input
+                onChange={() => {
+                  setNomenclatorId(form.getFieldValue("nomenclatorId"));
+                }}
+              />
             </Form.Item>
             <Form.Item className="mb-3" label={<span className="font-bold text-md">Categoría</span>} name="category" rules={[{ required: true, message: "Campo requerido" }]}>
               <Select
@@ -307,12 +399,20 @@ export const CreateServiceFeeForm = () => {
                 optionFilterProp="children"
                 filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                onSelect={() => {
+                  setCategory(form.getFieldValue("category"));
+                }}
               />
             </Form.Item>
           </article>
           <article className="flex flex-col w-[300px]">
             <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cantidad de empleados</span>} name="workersAmount" rules={[{ required: true, message: "Campo requerido" }]}>
-              <InputNumber className="w-full" />
+              <InputNumber
+                className="w-full"
+                onChange={() => {
+                  setWorkersAmount(form.getFieldValue("workersAmount"));
+                }}
+              />
             </Form.Item>
             <Form.Item className="mb-3" label={<span className="font-bold text-md">Precio/UM</span>} name="valuePerUnitMeasure" rules={[{ required: true, message: "Campo requerido" }]}>
               <Select
@@ -322,6 +422,9 @@ export const CreateServiceFeeForm = () => {
                 optionFilterProp="children"
                 filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                onSelect={() => {
+                  setValuePerUnitMeasure(form.getFieldValue("valuePerUnitMeasure"));
+                }}
               />
             </Form.Item>
           </article>
@@ -337,6 +440,9 @@ export const CreateServiceFeeForm = () => {
                 optionFilterProp="children"
                 filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                onSelect={() => {
+                  setPayMethodCoef(form.getFieldValue("payMethodCoef"));
+                }}
               />
             </Form.Item>
           </article>
@@ -664,11 +770,19 @@ export const CreateServiceFeeForm = () => {
       <section className="flex gap-4 mt-2">
         {/* ONAT */}
         <Form.Item className="mb-3 " label={<span className="font-bold text-md">ONAT</span>} name="ONAT" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber />
+          <InputNumber
+            onChange={() => {
+              setONAT(form.getFieldValue("ONAT"));
+            }}
+          />
         </Form.Item>
         {/* commercialMargin */}
         <Form.Item className="mb-3 " label={<span className="font-bold text-md">Margen Comercial</span>} name="commercialMargin" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber />
+          <InputNumber
+            onChange={() => {
+              setCommercialMargin(form.getFieldValue("commercialMargin"));
+            }}
+          />
         </Form.Item>
         {/* rawMaterialsByClient */}
         <Form.Item
@@ -677,10 +791,18 @@ export const CreateServiceFeeForm = () => {
           name="rawMaterialsByClient"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <InputNumber />
+          <InputNumber
+            onChange={() => {
+              setRawMaterialsByClient(form.getFieldValue("rawMaterialsByClient"));
+            }}
+          />
         </Form.Item>
         <Form.Item className="mb-3 " label={<span className="font-bold text-md">Talento Artístico</span>} name="artisticTalentValue" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber />
+          <InputNumber
+            onChange={() => {
+              setArtisticTalentValue(form.getFieldValue("artisticTalentValue"));
+            }}
+          />
         </Form.Item>
       </section>
       <Form.Item>
@@ -693,7 +815,8 @@ export const CreateServiceFeeForm = () => {
               .then((values) => {
                 console.log("🚀 ~ .then ~ values:", values);
                 dispatch(
-                  startAddServiceFee({
+                  startUpdateServiceFee({
+                    _id: selectedServiceFee._id,
                     administrativeExpenses: values.administrativeExpenses,
                     artisticTalentValue: values.artisticTalentValue,
                     category: values.category,
@@ -714,15 +837,15 @@ export const CreateServiceFeeForm = () => {
                     workersAmount: values.workersAmount,
                   })
                 );
-                // form.resetFields();
-                router.push("/dashboard/serviceFees");
+                form.resetFields();
+                router.push(`/dashboard/serviceFees/${selectedServiceFee?._id}`);
               })
               .catch((error) => {
                 console.log("Validate Failed:", error);
               });
           }}
         >
-          Crear
+          Editar
         </button>
       </Form.Item>
       <AddRawMaterialModal open={addRawMaterialModal} onCancel={() => setAddRawMaterialModal(false)} onCreate={onAddRawMaterial} />
