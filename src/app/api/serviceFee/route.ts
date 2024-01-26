@@ -232,8 +232,9 @@ export async function PUT(request: Request) {
     const BDNomenclator = await Nomenclator.findOne({ category: "Tarifa de Servicio", code: serviceFee.nomenclatorId });
 
     if (!BDNomenclator) {
+      const newKey = generateRandomString(26);
       const newNomenclator = new Nomenclator({
-        key: serviceFee.key,
+        key: newKey,
         category: "Tarifa de Servicio",
         code: serviceFee.nomenclatorId,
       });
