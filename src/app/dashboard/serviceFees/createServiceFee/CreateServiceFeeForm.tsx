@@ -17,6 +17,7 @@ import { RootState, useAppSelector } from "@/store/store";
 import { startAddServiceFee } from "@/actions/serviceFee";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
+import { useRouter } from "next/navigation";
 
 export const CreateServiceFeeForm = () => {
   const dispatch = useAppDispatch();
@@ -24,6 +25,7 @@ export const CreateServiceFeeForm = () => {
   const serviceFeeCategory: string[] | undefined = [];
   const valuePerUM: string[] | undefined = [];
   const payMethods: IRepresentationCoefficients[] | undefined = [];
+  const router = useRouter();
 
   const [addRawMaterialModal, setAddRawMaterialModal] = useState(false);
   const [addTaskListModal, setAddTaskListModal] = useState(false);
@@ -713,7 +715,7 @@ export const CreateServiceFeeForm = () => {
                   })
                 );
                 // form.resetFields();
-                // router.push("/dashboard/costSheets");
+                router.push("/dashboard/serviceFees");
               })
               .catch((error) => {
                 console.log("Validate Failed:", error);

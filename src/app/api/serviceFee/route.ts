@@ -154,7 +154,6 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   const { ...serviceFee }: IServiceFee = await request.json();
-  console.log("🚀 ~ PUT ~ serviceFee:", serviceFee._id);
 
   const accessToken = request.headers.get("accessToken");
   try {

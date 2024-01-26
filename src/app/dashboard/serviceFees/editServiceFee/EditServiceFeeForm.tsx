@@ -1,7 +1,7 @@
 "use client";
 import { Button, Form, Input, InputNumber, Select, SelectProps } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { AddAdministrativeExpensesModal } from "../createServiceFee/AddAdministrativeExpenses";
 import { AddEquipmentDepreciationModal } from "../createServiceFee/AddEquipmentDepreciation";
@@ -33,9 +33,12 @@ export const EditServiceFeeForm = () => {
     dispatch(startLoadServiceFeeAuxiliary());
   }, [dispatch]);
 
+  console.log("render");
+
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary[] } = useAppSelector((state: RootState) => state?.serviceFee);
   const { selectedServiceFee }: { selectedServiceFee: IServiceFee } = useAppSelector((state: RootState) => state?.serviceFee);
+
   serviceFeeAuxiliary[0]?.payMethod.map((payMethod) => payMethods.push(payMethod));
 
   nomenclators.map((nomenclator: INomenclator) => {
@@ -51,6 +54,17 @@ export const EditServiceFeeForm = () => {
   const [addTransportationExpensesModal, setAddTransportationExpensesModal] = useState(false);
   const [addHiredPersonalExpensesModal, setAddHiredPersonalExpensesModal] = useState(false);
 
+  const [taskName, setTaskName] = useState(selectedServiceFee.taskName);
+  const [nomenclatorId, setNomenclatorId] = useState(selectedServiceFee.nomenclatorId);
+  const [workersAmount, setWorkersAmount] = useState(selectedServiceFee.workersAmount);
+  const [category, setCategory] = useState(selectedServiceFee.category);
+  const [valuePerUnitMeasure, setValuePerUnitMeasure] = useState(selectedServiceFee.valuePerUnitMeasure);
+  const [payMethodCoef, setPayMethodCoef] = useState(selectedServiceFee.payMethodCoef);
+  const [ONAT, setONAT] = useState(selectedServiceFee.ONAT);
+  const [commercialMargin, setCommercialMargin] = useState(selectedServiceFee.commercialMargin);
+  const [rawMaterialsByClient, setRawMaterialsByClient] = useState(selectedServiceFee.rawMaterialsByClient);
+  const [artisticTalentValue, setArtisticTalentValue] = useState(selectedServiceFee.artisticTalentValue);
+
   const [rawMaterialsValues, setRawMaterialsValues]: any = useState(selectedServiceFee.rawMaterials);
   const [taskListValues, setTaskListValues]: any = useState(selectedServiceFee.taskList);
   const [equipmentDepreciationValues, setEquipmentDepreciationValues]: any = useState(selectedServiceFee.equipmentDepreciation);
@@ -58,7 +72,6 @@ export const EditServiceFeeForm = () => {
   const [administrativeExpensesValues, setAdministrativeExpensesValues]: any = useState(selectedServiceFee.administrativeExpenses);
   const [transportationExpensesValues, setTransportationExpensesValues]: any = useState(selectedServiceFee.transportationExpenses);
   const [hiredPersonalExpensesValues, setHiredPersonalExpensesValues]: any = useState(selectedServiceFee.hiredPersonalExpenses);
-
 
   const categoriesOptions: SelectProps["options"] = serviceFeeCategory.map((serviceFeeCategory) => {
     return {
@@ -277,7 +290,7 @@ export const EditServiceFeeForm = () => {
   return (
     <Form
       form={form}
-      name="editCostSheetForm"
+      name="editServiceFee"
       labelCol={{ span: 0 }}
       wrapperCol={{ span: 0 }}
       className="w-full flex flex-col gap-0"
@@ -289,23 +302,23 @@ export const EditServiceFeeForm = () => {
       fields={[
         {
           name: "taskName",
-          value: selectedServiceFee.taskName,
+          value: taskName,
         },
         {
           name: "nomenclatorId",
-          value: selectedServiceFee.nomenclatorId,
+          value: nomenclatorId,
         },
         {
           name: "category",
-          value: selectedServiceFee.category,
+          value: category,
         },
         {
           name: "workersAmount",
-          value: selectedServiceFee.workersAmount,
+          value: workersAmount,
         },
         {
           name: "valuePerUnitMeasure",
-          value: selectedServiceFee.valuePerUnitMeasure,
+          value: valuePerUnitMeasure,
         },
         {
           name: "currencyChange",
@@ -313,7 +326,7 @@ export const EditServiceFeeForm = () => {
         },
         {
           name: "payMethodCoef",
-          value: selectedServiceFee.payMethodCoef,
+          value: payMethodCoef,
         },
         {
           name: "rawMaterials",
@@ -329,7 +342,7 @@ export const EditServiceFeeForm = () => {
         },
         {
           name: "equipmentMaintenance",
-          value: equipmentDepreciationValues,
+          value: equipmentMaintenanceValues,
         },
         {
           name: "administrativeExpenses",
@@ -345,30 +358,38 @@ export const EditServiceFeeForm = () => {
         },
         {
           name: "ONAT",
-          value: selectedServiceFee.ONAT,
+          value: ONAT,
         },
         {
           name: "commercialMargin",
-          value: selectedServiceFee.commercialMargin,
+          value: commercialMargin,
         },
         {
           name: "rawMaterialsByClient",
-          value: selectedServiceFee.rawMaterialsByClient,
+          value: rawMaterialsByClient,
         },
         {
           name: "artisticTalentValue",
-          value: selectedServiceFee.artisticTalentValue,
+          value: artisticTalentValue,
         },
       ]}
     >
       <section className=" flex-col ">
         <div className="flex flex-row gap-4">
           <Form.Item className="mb-3 w-[35%]" name="taskName" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
-            <Input />
+            <Input
+              onChange={() => {
+                setTaskName(form.getFieldValue("taskName"));
+              }}
+            />
           </Form.Item>
           <article className="flex flex-col w-[300px]">
             <Form.Item className="mb-3" label={<span className="font-bold text-md">Nomenclador</span>} name="nomenclatorId" rules={[{ required: true, message: "Campo requerido" }]}>
-              <Input />
+              <Input
+                onChange={() => {
+                  setNomenclatorId(form.getFieldValue("nomenclatorId"));
+                }}
+              />
             </Form.Item>
             <Form.Item className="mb-3" label={<span className="font-bold text-md">Categoría</span>} name="category" rules={[{ required: true, message: "Campo requerido" }]}>
               <Select
@@ -378,12 +399,20 @@ export const EditServiceFeeForm = () => {
                 optionFilterProp="children"
                 filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                onSelect={() => {
+                  setCategory(form.getFieldValue("category"));
+                }}
               />
             </Form.Item>
           </article>
           <article className="flex flex-col w-[300px]">
             <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cantidad de empleados</span>} name="workersAmount" rules={[{ required: true, message: "Campo requerido" }]}>
-              <InputNumber className="w-full" />
+              <InputNumber
+                className="w-full"
+                onChange={() => {
+                  setWorkersAmount(form.getFieldValue("workersAmount"));
+                }}
+              />
             </Form.Item>
             <Form.Item className="mb-3" label={<span className="font-bold text-md">Precio/UM</span>} name="valuePerUnitMeasure" rules={[{ required: true, message: "Campo requerido" }]}>
               <Select
@@ -393,6 +422,9 @@ export const EditServiceFeeForm = () => {
                 optionFilterProp="children"
                 filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                onSelect={() => {
+                  setValuePerUnitMeasure(form.getFieldValue("valuePerUnitMeasure"));
+                }}
               />
             </Form.Item>
           </article>
@@ -408,6 +440,9 @@ export const EditServiceFeeForm = () => {
                 optionFilterProp="children"
                 filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                onSelect={() => {
+                  setPayMethodCoef(form.getFieldValue("payMethodCoef"));
+                }}
               />
             </Form.Item>
           </article>
@@ -735,11 +770,19 @@ export const EditServiceFeeForm = () => {
       <section className="flex gap-4 mt-2">
         {/* ONAT */}
         <Form.Item className="mb-3 " label={<span className="font-bold text-md">ONAT</span>} name="ONAT" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber />
+          <InputNumber
+            onChange={() => {
+              setONAT(form.getFieldValue("ONAT"));
+            }}
+          />
         </Form.Item>
         {/* commercialMargin */}
         <Form.Item className="mb-3 " label={<span className="font-bold text-md">Margen Comercial</span>} name="commercialMargin" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber />
+          <InputNumber
+            onChange={() => {
+              setCommercialMargin(form.getFieldValue("commercialMargin"));
+            }}
+          />
         </Form.Item>
         {/* rawMaterialsByClient */}
         <Form.Item
@@ -748,10 +791,18 @@ export const EditServiceFeeForm = () => {
           name="rawMaterialsByClient"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <InputNumber />
+          <InputNumber
+            onChange={() => {
+              setRawMaterialsByClient(form.getFieldValue("rawMaterialsByClient"));
+            }}
+          />
         </Form.Item>
         <Form.Item className="mb-3 " label={<span className="font-bold text-md">Talento Artístico</span>} name="artisticTalentValue" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber />
+          <InputNumber
+            onChange={() => {
+              setArtisticTalentValue(form.getFieldValue("artisticTalentValue"));
+            }}
+          />
         </Form.Item>
       </section>
       <Form.Item>
