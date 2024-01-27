@@ -1,18 +1,13 @@
 "use client";
 
+import { INomenclator } from "@/models/nomenclator";
 import { Form, Input, Modal, Select, SelectProps } from "antd";
 
-interface Values {
-  _id: string;
-  key: string;
-  code: string;
-  category: number;
-}
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: Values) => void;
+  onCreate: (values: INomenclator) => void;
   onCancel: () => void;
-  defaultValues?: Values;
+  defaultValues?: INomenclator;
 }
 
 const category: SelectProps["options"] = [

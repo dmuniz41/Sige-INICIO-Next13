@@ -1,35 +1,29 @@
 "use client";
 
+import { Button, Input, Space, Table, Tooltip } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, Tooltip } from "antd";
-import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
+import type { InputRef } from "antd";
 
-import { useAppDispatch } from "@/hooks/hooks";
-import { RootState, useAppSelector } from "@/store/store";
-import { Toast } from "@/helpers/customAlert";
-import { selectedWarehouse } from "@/actions/warehouse";
-import Swal from "sweetalert2";
-import { nomenclatorsStartLoading, startAddNomenclator, startDeleteNomenclator, startUpdateNomenclator } from "@/actions/nomenclator";
 import { CreateNomenclatorForm } from "./CreateNomenclatorForm";
-import { EditNomenclatorForm } from "./EditNomenclatorForm";
-import { useSession } from "next-auth/react";
-import { EditSvg } from "@/app/global/EditSvg";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
+import { EditNomenclatorForm } from "./EditNomenclatorForm";
+import { EditSvg } from "@/app/global/EditSvg";
+import { nomenclatorsStartLoading, startAddNomenclator, startDeleteNomenclator, startUpdateNomenclator } from "@/actions/nomenclator";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
+import { RootState, useAppSelector } from "@/store/store";
+import { selectedWarehouse } from "@/actions/warehouse";
+import { Toast } from "@/helpers/customAlert";
+import { useAppDispatch } from "@/hooks/hooks";
+import { useSession } from "next-auth/react";
+import Swal from "sweetalert2";
+import { INomenclator } from "../../../models/nomenclator";
 
-interface DataType {
-  _id: string;
-  key: string;
-  code: string;
-  category: number;
-}
-
-type DataIndex = keyof DataType;
+type DataIndex = keyof INomenclator;
 
 const NomenclatorsTable: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -37,7 +31,7 @@ const NomenclatorsTable: React.FC = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const [selectedRow, setSelectedRow] = useState<DataType>();
+  const [selectedRow, setSelectedRow] = useState<INomenclator>();
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
 
@@ -50,8 +44,8 @@ const NomenclatorsTable: React.FC = () => {
     dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
-  const { nomenclators } = useAppSelector((state: RootState) => state?.nomenclator);
-  let data: DataType[] = useMemo(() => nomenclators, [nomenclators]);
+  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
+  let data: INomenclator[] = useMemo(() => nomenclators, [nomenclators]);
   if (!canList) {
     data = [];
   }
@@ -117,15 +111,15 @@ const NomenclatorsTable: React.FC = () => {
     setSearchText("");
   };
 
-  const rowSelection: TableRowSelection<DataType> = {
-    onChange: async (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+  const rowSelection: TableRowSelection<INomenclator> = {
+    onChange: async (selectedRowKeys: React.Key[], selectedRows: INomenclator[]) => {
       setSelectedRow(selectedRows[0]);
       dispatch(selectedWarehouse(selectedRows[0]._id));
       console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows);
     },
   };
 
-  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<INomenclator> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
@@ -174,7 +168,7 @@ const NomenclatorsTable: React.FC = () => {
       </div>
     ),
     filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
-    onFilter: (value, record) =>
+    onFilter: (value, record: any) =>
       record[dataIndex]
         .toString()
         .toLowerCase()
@@ -192,7 +186,7 @@ const NomenclatorsTable: React.FC = () => {
       ),
   });
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<INomenclator> = [
     {
       title: "Categoría",
       dataIndex: "category",
@@ -240,8 +234,16 @@ const NomenclatorsTable: React.FC = () => {
       title: "Código",
       dataIndex: "code",
       key: "code",
-      width: "50%",
+      width: "40%",
       ...getColumnSearchProps("code"),
+    },
+    {
+      title: "Valor",
+      dataIndex: "value",
+      key: "value",
+      width: "35%",
+      render: (text) => text && <span>$ {parseFloat(text).toFixed(2)}</span>,
+      // ...getColumnSearchProps("value"),
     },
   ];
 

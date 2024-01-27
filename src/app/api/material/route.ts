@@ -288,8 +288,12 @@ export async function PUT(request: Request) {
 
     const updatedMaterial = (await Material.findOneAndUpdate({ code }, { materialName, minimumExistence, description }, { new: true })) as IMaterial;
 
-    // * Verifica si exsite un nomenclador con esa categoría y material en la BD, si no existe crea uno nuevo
+    // * Calcula el mayor valor dentro de un grupo de materiales con igual categoria y nombre
+    const materialList: IMaterial[] = await Material.find({ category: updatedMaterial.category, materialName: updatedMaterial.materialName });
+    const prices: number[] = materialList.map((material) => material.costPerUnit);
+    const maxPrice: number = Math.max(...prices);
 
+    // * Verifica si exsite un nomenclador con esa categoría y material en la BD, si no existe crea uno nuevo
     const BDNomenclator = (await Nomenclator.findOne({ category: "Material", code: `${updatedMaterial.category} ${updatedMaterial.materialName}` })) as INomenclator;
 
     if (!BDNomenclator) {
@@ -297,10 +301,12 @@ export async function PUT(request: Request) {
         key: updatedMaterial.category + materialName + updatedMaterial.costPerUnit + updatedMaterial.description,
         category: "Material",
         code: `${updatedMaterial.category} ${updatedMaterial.materialName}`,
+        value: maxPrice,
       });
       await newNomenclator.save();
+    } else {
+      await Nomenclator.findOneAndUpdate({ category: "Material", code: `${updatedMaterial.category} ${updatedMaterial.materialName}` }, { value: maxPrice }, { new: true });
     }
-
     return new NextResponse(
       JSON.stringify({
         ok: true,
@@ -346,7 +352,7 @@ export async function PATCH(request: Request) {
       );
     }
     await connectDB();
-    const materialToDelete = await Material.findOne({ code });
+    const materialToDelete: IMaterial = (await Material.findOne({ code })) as IMaterial;
 
     if (!materialToDelete) {
       return NextResponse.json({
@@ -356,11 +362,20 @@ export async function PATCH(request: Request) {
     }
 
     //* Actualiza el valor total del almacén si se elimina un material
-
     const deletedMaterial = await Material.findOneAndDelete({ code });
     const DBWarehouse = await Warehouse.findById(warehouse);
     let newWarehouseValue = DBWarehouse.totalValue - deletedMaterial.materialTotalValue;
     await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
+
+    // * Al borrar el material re-calcula el valor del nomenclador de ese material
+    const BDNomenclator = (await Nomenclator.findOne({ category: "Material", code: `${materialToDelete.category} ${materialToDelete.materialName}` })) as INomenclator;
+
+    // * Calcula el mayor valor dentro de un grupo de materiales con igual categoria y nombre
+    const materialList: IMaterial[] = await Material.find({ category: materialToDelete.category, materialName: materialToDelete.materialName });
+    const prices: number[] = materialList.map((material) => material.costPerUnit);
+    const maxPrice: number = Math.max(...prices);
+
+    await Nomenclator.findOneAndUpdate({ category: "Material", code: `${materialToDelete.category} ${materialToDelete.materialName}` }, { value: maxPrice }, { new: true });
 
     return new NextResponse(
       JSON.stringify({
