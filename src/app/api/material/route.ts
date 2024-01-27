@@ -160,8 +160,19 @@ export async function POST(request: Request) {
 
       newMaterial.operations.push(newOperation);
 
-      // * Crea un nuevo nomenclador asociado a ese material
+      //* Actualiza el valor total del almacén
+      const DBWarehouse = await Warehouse.findById(warehouse);
+      let newWarehouseValue = DBWarehouse.totalValue + operation?.amount * costPerUnit;
+      await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
 
+      await newMaterial.save();
+
+      // * Calcula el mayor valor dentro de un grupo de materiales con igual categoria y nombre
+      const materialList: IMaterial[] = await Material.find({ category: category, materialName: materialName });
+      const prices: number[] = materialList.map((material) => material.costPerUnit);
+      const maxPrice: number = Math.max(...prices);
+
+      // * Crea un nuevo nomenclador asociado a ese material
       const BDNomenclator = (await Nomenclator.findOne({ category: "Material", code: `${category} ${materialName}` })) as INomenclator;
 
       if (!BDNomenclator) {
@@ -169,17 +180,13 @@ export async function POST(request: Request) {
           key: category + materialName + costPerUnit + description,
           category: "Material",
           code: `${category} ${materialName}`,
+          value: maxPrice,
         });
         await newNomenclator.save();
+      } else {
+        await Nomenclator.findOneAndUpdate({ category: "Material", code: `${category} ${materialName}` }, { value: maxPrice }, { new: true });
       }
 
-      //* Actualiza el valor total del almacén
-
-      const DBWarehouse = await Warehouse.findById(warehouse);
-      let newWarehouseValue = DBWarehouse.totalValue + operation?.amount * costPerUnit;
-      await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
-
-      await newMaterial.save();
       return new NextResponse(
         JSON.stringify({
           ok: true,
