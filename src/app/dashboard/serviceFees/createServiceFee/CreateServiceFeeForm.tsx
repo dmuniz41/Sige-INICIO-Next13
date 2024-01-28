@@ -18,6 +18,7 @@ import { startAddServiceFee } from "@/actions/serviceFee";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useRouter } from "next/navigation";
+import { materialsStartLoading } from "@/actions/material";
 
 export const CreateServiceFeeForm = () => {
   const dispatch = useAppDispatch();
@@ -36,7 +37,6 @@ export const CreateServiceFeeForm = () => {
   const [addHiredPersonalExpensesModal, setAddHiredPersonalExpensesModal] = useState(false);
 
   const [rawMaterialsValues, setRawMaterialsValues]: any = useState([]);
-  console.log("🚀 ~ CreateServiceFeeForm ~ rawMaterialsValues:", rawMaterialsValues.length);
   const [taskListValues, setTaskListValues]: any = useState([]);
   const [equipmentDepreciationValues, setEquipmentDepreciationValues]: any = useState([]);
   const [equipmentMaintenanceValues, setEquipmentMaintenanceValues]: any = useState([]);
@@ -47,6 +47,7 @@ export const CreateServiceFeeForm = () => {
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
     dispatch(startLoadServiceFeeAuxiliary());
+    dispatch(materialsStartLoading('653957480a9e16fed4c1bbd5'));
   }, [dispatch]);
 
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);

@@ -5,6 +5,7 @@ import { INomenclator } from "@/models/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
 import { IServiceFeeSubItem } from "@/models/serviceFees";
 import { useState } from "react";
+import { IMaterial } from "@/models/material";
 
 interface CollectionCreateFormProps {
   open: boolean;
@@ -13,16 +14,19 @@ interface CollectionCreateFormProps {
 }
 
 export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
-  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
+  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
+  const { materials }: { materials: IMaterial[] } = useAppSelector((state: RootState) => state?.material);
   const DBMaterials: INomenclator[] = [];
-  const [rawMaterialValue, setRawMaterialValue] = useState(0);
+  const [rawMaterialValue, setRawMaterialValue] = useState<number>(0);
+  const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>("");
+  const [currentPrice, setCurrentPrice] = useState<number>(0);
 
   nomenclators.map((nomenclator: INomenclator) => {
     if (nomenclator.category === "Material") {
       DBMaterials.push(nomenclator);
     }
   });
-  const materials: SelectProps["options"] = DBMaterials.map((material) => {
+  const listOfMaterials: SelectProps["options"] = DBMaterials.map((material) => {
     return {
       label: `${material.code}`,
       value: `${material.value}`,
@@ -62,7 +66,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate({ ...values, value: rawMaterialValue });
+                  onCreate({ ...values, description: values.description.label, unitMeasure: currentUnitMeasure, price: currentPrice, value: rawMaterialValue });
                   form.resetFields();
                   setRawMaterialValue(0);
                 })
@@ -80,12 +84,18 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
         <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select
             allowClear
+            labelInValue
             style={{ width: "100%" }}
-            options={materials}
-            onSelect={() => {
+            options={listOfMaterials}
+            onSelect={(value) => {
+              let selectedMaterial = materials.find((material) => `${material.category} ${material.materialName}` === value.label);
+              setCurrentUnitMeasure(selectedMaterial?.unitMeasure!);
+              setCurrentPrice(selectedMaterial?.costPerUnit!);
+              console.log(selectedMaterial?.costPerUnit);
+
               form.setFieldsValue({
-                unitMeasure: "m2",
-                price: form.getFieldValue("description"),
+                unitMeasure: selectedMaterial?.unitMeasure,
+                price: form.getFieldValue("description")?.value,
               });
             }}
             showSearch
@@ -94,21 +104,23 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
             filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
           />
         </Form.Item>
-        <Form.Item name="unitMeasure" label="Unidad de Medida" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input />
-        </Form.Item>
         <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input
             onChange={() => {
-              let values = form.getFieldsValue();
-              setRawMaterialValue(values.amount * values.price);
+              let amount: number = form.getFieldValue("amount");
+              setRawMaterialValue(amount * currentPrice);
             }}
           />
         </Form.Item>
-        <Form.Item name="price" label="Precio" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input />
-        </Form.Item>
-        <div className=" flex gap-2 pl-2">
+        <div className=" flex gap-2 pl-2 mb-4">
+          <span className="font-bold">Unidad de Medida:</span>
+          <span>{currentUnitMeasure}</span>
+        </div>
+        <div className=" flex gap-2 pl-2 mb-4">
+          <span className="font-bold">Precio:</span>
+          <span>${currentPrice?.toFixed(2)}</span>
+        </div>
+        <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Importe:</span>
           <span>${rawMaterialValue?.toFixed(2)}</span>
         </div>
