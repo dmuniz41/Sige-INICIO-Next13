@@ -92,10 +92,7 @@ export async function POST(request: Request) {
           let deletedMaterial: IMaterial = (await Material.findOneAndDelete({ code })) as IMaterial;
 
           const materialList: IMaterial[] = await Material.find({ category: deletedMaterial.category, materialName: deletedMaterial.materialName });
-          console.log("🚀 ~ POST ~ materialList:", materialList)
           if (materialList.length == 0) {
-            console.log('borrar');
-            
             await await Nomenclator.findOneAndDelete({ category: "Material", code: `${deletedMaterial.category} ${deletedMaterial.materialName}` });
           }
           const prices = materialList.map((material) => material.costPerUnit);
@@ -407,16 +404,17 @@ export async function PATCH(request: Request) {
     let newWarehouseValue = DBWarehouse.totalValue - deletedMaterial.materialTotalValue;
     await Warehouse.findByIdAndUpdate(warehouse, { totalValue: newWarehouseValue });
 
-    // * Al borrar el material re-calcula el valor del nomenclador de ese material
-    const BDNomenclator = (await Nomenclator.findOne({ category: "Material", code: `${materialToDelete.category} ${materialToDelete.materialName}` })) as INomenclator;
-
     // * Calcula el mayor valor dentro de un grupo de materiales con igual categoria y nombre
-    const materialList: IMaterial[] = await Material.find({ category: materialToDelete.category, materialName: materialToDelete.materialName });
-    const prices: number[] = materialList.map((material) => material.costPerUnit);
-    const maxPrice: number = Math.max(...prices);
+    const materialList: IMaterial[] = await Material.find({ category: deletedMaterial.category, materialName: deletedMaterial.materialName });
+    if (materialList.length == 0) {
+      await await Nomenclator.findOneAndDelete({ category: "Material", code: `${deletedMaterial.category} ${deletedMaterial.materialName}` });
+    } else {
+      const prices: number[] = materialList.map((material) => material.costPerUnit);
+      const maxPrice: number = Math.max(...prices);
 
-    await Nomenclator.findOneAndUpdate({ category: "Material", code: `${materialToDelete.category} ${materialToDelete.materialName}` }, { value: maxPrice }, { new: true });
-
+      // * Verifica si exsite un nomenclador con esa categoría y material en la BD, si no existe crea uno nuevo
+      await Nomenclator.findOneAndUpdate({ category: "Material", code: `${deletedMaterial.category} ${deletedMaterial.materialName}` }, { value: maxPrice }, { new: true });
+    }
     return new NextResponse(
       JSON.stringify({
         ok: true,
