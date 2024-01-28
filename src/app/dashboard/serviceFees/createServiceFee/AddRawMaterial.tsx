@@ -14,18 +14,18 @@ interface CollectionCreateFormProps {
 
 export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-  const materialNames: string[] | undefined = [];
+  const DBMaterials: INomenclator[] = [];
   const [rawMaterialValue, setRawMaterialValue] = useState(0);
 
   nomenclators.map((nomenclator: INomenclator) => {
     if (nomenclator.category === "Material") {
-      materialNames.push(nomenclator.code);
+      DBMaterials.push(nomenclator);
     }
   });
-  const materials: SelectProps["options"] = materialNames.map((name) => {
+  const materials: SelectProps["options"] = DBMaterials.map((material) => {
     return {
-      label: `${name}`,
-      value: `${name}`,
+      label: `${material.code}`,
+      value: `${material.value}`,
     };
   });
 
@@ -82,10 +82,10 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
             allowClear
             style={{ width: "100%" }}
             options={materials}
-            onChange={() => {
+            onSelect={() => {
               form.setFieldsValue({
                 unitMeasure: "m2",
-                price: 10,
+                price: form.getFieldValue("description"),
               });
             }}
             showSearch
