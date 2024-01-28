@@ -251,19 +251,20 @@ const MaterialsTable: React.FC = () => {
       tipo: "Añadir",
       amount: values.unitsTotal,
     };
+
     dispatch(
-      startAddMaterial(
-        values.category,
-        values.costPerUnit,
-        values.description,
-        values.enterDate.format("MM/DD/YYYY"),
-        values.materialName,
-        values.minimumExistence,
-        operation,
-        values.provider,
-        values.unitMeasure,
-        selectedWarehouse,
-      )
+      startAddMaterial({
+        category: values.category,
+        costPerUnit: values.costPerUnit,
+        description: values.description,
+        currentDate: values.enterDate.format("MM/DD/YYYY"),
+        materialName: values.materialName,
+        minimumExistence: values.minimumExistence,
+        operation: operation,
+        provider: values.provider,
+        unitMeasure: values.unitMeasure,
+        warehouse: selectedWarehouse,
+      })
     );
     setCreateNewModal(false);
   };
@@ -276,18 +277,18 @@ const MaterialsTable: React.FC = () => {
       amount: values.unitsTotal,
     };
     dispatch(
-      startAddMaterial(
-        values.category,
-        values.costPerUnit,
-        values.description,
-        currentDate,
-        values.materialName,
-        values.minimumExistence,
-        operation,
-        values.provider,
-        values.unitMeasure,
-        selectedWarehouse
-      )
+      startAddMaterial({
+        category: values.category,
+        costPerUnit: values.costPerUnit,
+        description: values.description,
+        currentDate: currentDate,
+        materialName: values.materialName,
+        minimumExistence: values.minimumExistence,
+        operation: operation,
+        provider: values.provider,
+        unitMeasure: values.unitMeasure,
+        warehouse: selectedWarehouse,
+      })
     );
     setAddModal(false);
   };
@@ -298,29 +299,25 @@ const MaterialsTable: React.FC = () => {
       tipo: "Sustraer",
       amount: values.unitsTotal,
     };
-    dispatch(startAddMaterial(
-      values.category,
-      values.costPerUnit,
-      values.description,
-      currentDate,
-      values.materialName,
-      values.minimumExistence,
-      operation,
-      values.provider,
-      values.unitMeasure,
-      selectedWarehouse
-      ));
+    dispatch(
+      startAddMaterial({
+        category: values.category,
+        costPerUnit: values.costPerUnit,
+        description: values.description,
+        currentDate: currentDate,
+        materialName: values.materialName,
+        minimumExistence: values.minimumExistence,
+        operation: operation,
+        provider: values.provider,
+        unitMeasure: values.unitMeasure,
+        warehouse: selectedWarehouse,
+      })
+    );
     setMinusModal(false);
   };
 
-  const onEditMaterial = (values: any): void => {
-    dispatch(editMaterial(
-      values.code, 
-      values.description,
-      values.materialName, 
-      values.minimumExistence, 
-      selectedWarehouse
-      ));
+  const onEditMaterial = (values: any): void => {    
+    dispatch(editMaterial(selectedRow?.category!, values.code, values.description, values.materialName, values.minimumExistence, selectedWarehouse));
     setEditMaterialModal(false);
   };
 

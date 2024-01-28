@@ -5,6 +5,7 @@ export interface INomenclator {
   key: string;
   category: string;
   code: string;
+  value?: number;
 }
 
 const NomenclatorSchema = new Schema<INomenclator, Model<INomenclator>>({
@@ -19,6 +20,10 @@ const NomenclatorSchema = new Schema<INomenclator, Model<INomenclator>>({
   code: {
     type: String,
     required: [true, "El nombre es requerido"],
+  },
+  value: {
+    type: Number,
+    required: false,
   },
 });
 
