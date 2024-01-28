@@ -4,33 +4,34 @@ import axios, { AxiosError } from "axios";
 import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
 import { IOperation } from "@/models/operation";
-import { startAddNomenclator } from "./nomenclator";
+import { IMaterial } from "@/models/material";
 
-export const startAddMaterial = (
-  category: string,
-  costPerUnit: number,
-  description: string,
-  enterDate: string,
-  materialName: string,
-  minimumExistence: number,
-  operation: IOperation,
-  provider: string,
-  unitMeasure: string,
-  warehouse: string
-): any => {
+export const startAddMaterial = ({ ...material }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/material`,
-        { operation, description, warehouse, category, materialName, unitMeasure, costPerUnit, minimumExistence, provider, enterDate },
+        {
+          category: material.category,
+          costPerUnit: material.costPerUnit,
+          description: material.description,
+          enterDate: material.enterDate,
+          materialName: material.materialName,
+          minimumExistence: material.minimumExistence,
+          operation: material.operation,
+          provider: material.provider,
+          unitMeasure: material.unitMeasure,
+          warehouse: material.warehouse,
+        },
+
         { headers: { accessToken: token } }
       )
       .then(() => {
-        dispatch(addMaterial(category, costPerUnit, description, enterDate, materialName, minimumExistence, provider, unitMeasure));
-        dispatch(materialsStartLoading(warehouse));
+        dispatch(addMaterial(material));
+        dispatch(materialsStartLoading(material?.warehouse));
 
-        if (operation.tipo === "Sustraer") {
+        if (material.operation.tipo === "Sustraer") {
           Toast.fire({
             icon: "success",
             title: "Material Sustraído",
@@ -105,17 +106,19 @@ export const editMaterial = (code: string, description: string, materialName: st
   };
 };
 
-const addMaterial = (category: string, costPerUnit: number, description: string, enterDate: string, materialName: string, minimumExistence: number, provider: string, unitMeasure: string) => ({
+const addMaterial = ({ ...material }) => ({
   type: types.addWarehouse,
   payload: {
-    category,
-    costPerUnit,
-    description,
-    enterDate,
-    materialName,
-    minimumExistence,
-    provider,
-    unitMeasure,
+    category: material.category,
+    costPerUnit: material.costPerUnit,
+    description: material.description,
+    enterDate: material.enterDate,
+    materialName: material.materialName,
+    minimumExistence: material.minimumExistence,
+    operation: material.operation,
+    provider: material.provider,
+    unitMeasure: material.unitMeasure,
+    warehouse: material.warehouse,
   },
 });
 
