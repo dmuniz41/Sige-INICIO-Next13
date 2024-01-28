@@ -86,11 +86,11 @@ export const startDeleteMaterial = (code: string, warehouse: string): any => {
   };
 };
 
-export const editMaterial = (code: string, description: string, materialName: string, minimumExistence: number, warehouse: string): any => {
+export const editMaterial = (category: string, code: string, description: string, materialName: string, minimumExistence: number, warehouse: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/material`, { minimumExistence, code, warehouse, materialName, description }, { headers: { accessToken: token } })
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/material`, { category, minimumExistence, code, warehouse, materialName, description }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(updateMaterial(code, minimumExistence, materialName, description));
         dispatch(materialsStartLoading(warehouse));

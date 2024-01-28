@@ -316,8 +316,8 @@ const MaterialsTable: React.FC = () => {
     setMinusModal(false);
   };
 
-  const onEditMaterial = (values: any): void => {
-    dispatch(editMaterial(values.code, values.description, values.materialName, values.minimumExistence, selectedWarehouse));
+  const onEditMaterial = (values: any): void => {    
+    dispatch(editMaterial(selectedRow?.category!, values.code, values.description, values.materialName, values.minimumExistence, selectedWarehouse));
     setEditMaterialModal(false);
   };
 
