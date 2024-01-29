@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
+import { Form, Input, InputNumber, Modal, Select, SelectProps, Tag } from "antd";
 import { INomenclator } from "@/models/nomenclator";
 import { IServiceFeeTask } from "@/models/serviceFeeTask";
 import { RootState, useAppSelector } from "@/store/store";
@@ -52,52 +52,51 @@ export const ServiceFeeTaskView: React.FC<CollectionCreateFormProps> = ({ open, 
       okType="default"
       okText="Crear"
       cancelText="Cancelar"
-      footer={[
-        <div key="footer" className="flex gap-2 w-full justify-end">
-          <button
-            key="2"
-            className="bg-danger-500 cursor-pointer hover:bg-danger-600 ease-in-out duration-300 w-[5rem] h-[2rem] flex items-center p-1 text-sm font-bold text-white-100  justify-center gap-2 rounded-md"
-            onClick={onCancel}
-          >
-            Cancelar
-          </button>
-        </div>,
-      ]}
+      footer={<></>}
     >
-      <div className="flex gap-2">
-        <label className="font-bold text-md">Descripción: </label>
-        <label>{defaultValues?.description}</label>
-      </div>
-      <div className="flex gap-2">
-        <label className="font-bold text-md">Categoría: </label>
-        <label>{defaultValues?.category}</label>
-      </div>
-      <div className="flex gap-2">
-        <label className="font-bold text-md">Unidad de Medida: </label>
-        <label>{defaultValues?.unitMeasure}</label>
-      </div>
-      <div className="flex gap-2">
-        <label className="font-bold text-md">Cantidad: </label>
-        <label>{defaultValues?.amount}</label>
-      </div>
-      <div className="flex gap-2">
-        <label className="font-bold text-md">Precio: </label>
-        <label>{defaultValues?.price}</label>
-      </div>
-      <section className="grid">
-        <span className="text-md font-bold">Coeficientes de Complejidad</span>
-
+      <section className="grid gap-2">
         <div className="flex gap-2">
-          <label className="font-bold text-md">Alta: </label>
-          <label>{defaultValues?.complexityLevels[0].coefficient}</label>
+          <label className="font-bold text-md">Descripción: </label>
+          <label>{defaultValues?.description}</label>
         </div>
         <div className="flex gap-2">
-          <label className="font-bold text-md">Media: </label>
-          <label>{defaultValues?.complexityLevels[1].coefficient}</label>
+          <label className="font-bold text-md">Categoría: </label>
+          <label>{defaultValues?.category}</label>
         </div>
         <div className="flex gap-2">
-          <label className="font-bold text-md">Baja: </label>
-          <label>{defaultValues?.complexityLevels[2].coefficient}</label>
+          <label className="font-bold text-md">Unidad de Medida: </label>
+          <label>{defaultValues?.unitMeasure}</label>
+        </div>
+        <div className="flex gap-2">
+          <label className="font-bold text-md">Cantidad: </label>
+          <label>{defaultValues?.amount.toFixed(2)}</label>
+        </div>
+        <div className="flex gap-2">
+          <label className="font-bold text-md">Precio: </label>
+          <label>${defaultValues?.price.toFixed(2)}</label>
+        </div>
+      </section>
+      <section className="grid gap-2 mt-2">
+        <span className="text-md font-bold">Coeficientes de Complejidad:</span>
+        <div className="grid gap-2">
+          <div className="flex gap-2">
+            <Tag color="red" className="font-bold text-md">
+              Alta
+            </Tag>
+            :<label>{defaultValues?.complexityLevels[0]?.coefficient?.toFixed(2)}</label>
+          </div>
+          <div className="flex gap-2">
+            <Tag color="orange" className="font-bold text-md">
+              Media
+            </Tag>
+            :<label>{defaultValues?.complexityLevels[1]?.coefficient?.toFixed(2)}</label>
+          </div>
+          <div className="flex gap-2">
+            <Tag color="green" className="font-bold text-md">
+              Baja
+            </Tag>
+            :<label>{defaultValues?.complexityLevels[2]?.coefficient?.toFixed(2)}</label>
+          </div>
         </div>
       </section>
     </Modal>
