@@ -1,6 +1,6 @@
 "use client";
 
-import {  Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
+import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
 import { INomenclator } from "@/models/nomenclator";
 import { IServiceFeeTask } from "@/models/serviceFeeTask";
 import { RootState, useAppSelector } from "@/store/store";
@@ -9,9 +9,10 @@ interface CollectionCreateFormProps {
   open: boolean;
   onCreate: (values: IServiceFeeTask) => void;
   onCancel: () => void;
+  defaultValues: IServiceFeeTask;
 }
 
-export const CreateServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
   const categories: string[] | undefined = [];
   const unitMeasures: string[] | undefined = [];
@@ -97,7 +98,46 @@ export const CreateServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ 
         </div>,
       ]}
     >
-      <Form form={form} layout="horizontal" name="createUserForm" size="middle">
+      <Form
+        form={form}
+        layout="horizontal"
+        name="createUserForm"
+        size="middle"
+        fields={[
+          {
+            name: "description",
+            value: defaultValues?.description,
+          },
+          {
+            name: "category",
+            value: defaultValues?.category,
+          },
+          {
+            name: "unitMeasure",
+            value: defaultValues?.unitMeasure,
+          },
+          {
+            name: "amount",
+            value: defaultValues?.amount,
+          },
+          {
+            name: "price",
+            value: defaultValues?.price,
+          },
+          {
+            name: "high",
+            value: defaultValues?.complexityLevels[0]?.coefficient,
+          },
+          {
+            name: "medium",
+            value: defaultValues?.complexityLevels[1]?.coefficient,
+          },
+          {
+            name: "low",
+            value: defaultValues?.complexityLevels[2]?.coefficient,
+          },
+        ]}
+      >
         <Form.Item name="category" label="Categoría" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select allowClear style={{ width: "100%" }} options={categoryOptions} />
         </Form.Item>
