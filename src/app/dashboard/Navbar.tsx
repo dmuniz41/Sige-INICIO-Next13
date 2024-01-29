@@ -72,6 +72,9 @@ export const Navbar = () => {
     case "serviceFeesAuxiliary":
       secondaryPath = "Auxiliares";
       break;
+    case "serviceFeesTasks":
+      secondaryPath = "Tareas para Tarifas de Servicio";
+      break;
 
     default:
       break;
