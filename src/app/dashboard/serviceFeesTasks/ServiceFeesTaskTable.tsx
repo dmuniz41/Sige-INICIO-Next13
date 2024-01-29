@@ -20,17 +20,19 @@ import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { SeeSvg } from "@/app/global/SeeSvg";
-import { startDeleteServiceFeeTask, startLoadServiceFeesTasks } from "@/actions/serviceFeeTask";
+import { startAddServiceFeeTask, startDeleteServiceFeeTask, startLoadServiceFeesTasks } from "@/actions/serviceFeeTask";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { CreateServiceFeeTaskForm } from "./CreateServiceFeeTask";
 
 type DataIndex = keyof IServiceFeeTask;
 
 const ServiceFeeTaskTable: React.FC = () => {
   const dispatch = useAppDispatch();
+  const [createTaskModal, setCreateTaskModal] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRow, setSelectedRow] = useState<IServiceFeeTask>();
@@ -157,6 +159,22 @@ const ServiceFeeTaskTable: React.FC = () => {
     setSearchText("");
   };
 
+
+  const onCreate = (values: any): void => {
+    console.log("🚀 ~ onCreate ~ values:", values)
+    dispatch(startAddServiceFeeTask(
+      {
+        description: values.description,
+        category: values.category,
+        amount: values.amount,
+        price: values.price,
+        unitMeasure: values.unitMeasure,
+        complexityLevels: values.complexityLevels
+      }
+    ));
+    setCreateTaskModal(false);
+  };
+
   // const onChange: TableProps<IServiceFeeTask>["onChange"] = (pagination, filters, sorter, extra) => {
   //   setFilteredData(extra.currentDataSource);
   //   console.log(filteredData);
@@ -237,18 +255,18 @@ const ServiceFeeTaskTable: React.FC = () => {
 
   const columns: ColumnsType<IServiceFeeTask> = [
     {
+      title: "Descripción",
+      dataIndex: "description",
+      key: "description",
+      width: "45%",
+    },
+    {
       title: "Categoría",
       dataIndex: "category",
       key: "category",
       width: "20%",
       sorter: (a: any, b: any) => a.category.localeCompare(b.category),
       ...getColumnSearchProps("category"),
-    },
-    {
-      title: "Descripción",
-      dataIndex: "description",
-      key: "description",
-      width: "45%",
     },
     {
       title: "Cantidad",
@@ -283,7 +301,7 @@ const ServiceFeeTaskTable: React.FC = () => {
         <div className="flex gap-2">
           <button
             disabled={!canCreate}
-            onClick={() => router.push("/dashboard/serviceFees/createServiceFee")}
+            onClick={() => setCreateTaskModal(true)}
             className={`${
               canCreate ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"
             } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
@@ -324,6 +342,8 @@ const ServiceFeeTaskTable: React.FC = () => {
           </Tooltip>
         </div>
       </div>
+
+      <CreateServiceFeeTaskForm open={createTaskModal} onCancel={() => setCreateTaskModal(false)} onCreate={onCreate} />
 
       <Table
         size="small"

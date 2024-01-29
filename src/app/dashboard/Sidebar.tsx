@@ -172,7 +172,7 @@ const items: MenuProps["items"] = [
             Tareas
           </Link>
         ),
-        key: "serviceFeesAuxiliary",
+        key: "serviceFeesTasks",
       },
     ],
     icon: (
