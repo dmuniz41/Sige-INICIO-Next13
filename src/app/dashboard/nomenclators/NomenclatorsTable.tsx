@@ -49,11 +49,6 @@ const NomenclatorsTable: React.FC = () => {
   if (!canList) {
     data = [];
   }
-
-  const handleNew = (): void => {
-    setCreateNewModal(true);
-  };
-
   const handleEdit = (): void => {
     if (selectedRow) {
       setEditModal(true);
@@ -253,7 +248,9 @@ const NomenclatorsTable: React.FC = () => {
         <div className="flex gap-2">
           <button
             disabled={!canCreate}
-            onClick={handleNew}
+            onClick={() => {
+              setCreateNewModal(true);
+            }}
             className={`${
               canCreate ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"
             } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}

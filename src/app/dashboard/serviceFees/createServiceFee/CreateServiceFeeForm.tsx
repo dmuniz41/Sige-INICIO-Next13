@@ -19,6 +19,7 @@ import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useRouter } from "next/navigation";
 import { materialsStartLoading } from "@/actions/material";
+import { startAddServiceFeeTask, startLoadServiceFeesTasks } from "@/actions/serviceFeeTask";
 
 export const CreateServiceFeeForm = () => {
   const dispatch = useAppDispatch();
@@ -47,6 +48,7 @@ export const CreateServiceFeeForm = () => {
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
     dispatch(startLoadServiceFeeAuxiliary());
+    dispatch(startLoadServiceFeesTasks())
     dispatch(materialsStartLoading('653957480a9e16fed4c1bbd5'));
   }, [dispatch]);
 

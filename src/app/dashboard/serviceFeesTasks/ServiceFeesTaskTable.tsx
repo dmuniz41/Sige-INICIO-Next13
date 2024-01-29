@@ -20,17 +20,24 @@ import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { SeeSvg } from "@/app/global/SeeSvg";
-import { startDeleteServiceFeeTask, startLoadServiceFeesTasks } from "@/actions/serviceFeeTask";
+import { startAddServiceFeeTask, startDeleteServiceFeeTask, startLoadServiceFeesTasks, startUpdateServiceFeeTask } from "@/actions/serviceFeeTask";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { CreateServiceFeeTaskForm } from "./CreateServiceFeeTask";
+import { EditServiceFeeTaskForm } from "./EditServiceFeeTask";
+import { EditSvg } from "@/app/global/EditSvg";
+import { ServiceFeeTaskView } from "./ServiceFeeTaskView";
 
 type DataIndex = keyof IServiceFeeTask;
 
 const ServiceFeeTaskTable: React.FC = () => {
   const dispatch = useAppDispatch();
+  const [createTaskModal, setCreateTaskModal] = useState(false);
+  const [editTaskModal, setEditTaskModal] = useState(false);
+  const [viewTaskModal, setViewTaskModal] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRow, setSelectedRow] = useState<IServiceFeeTask>();
@@ -82,7 +89,7 @@ const ServiceFeeTaskTable: React.FC = () => {
     dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
-  const { serviceFeeTasks }: {serviceFeeTasks: IServiceFeeTask[]} = useAppSelector((state: RootState) => state?.serviceFee);
+  const { serviceFeeTasks }: { serviceFeeTasks: IServiceFeeTask[] } = useAppSelector((state: RootState) => state?.serviceFee);
   let data: IServiceFeeTask[] = useMemo(() => serviceFeeTasks, [serviceFeeTasks]);
   if (!canList) {
     data = [];
@@ -157,6 +164,46 @@ const ServiceFeeTaskTable: React.FC = () => {
     setSearchText("");
   };
 
+  const onCreate = (values: any): void => {
+    dispatch(
+      startAddServiceFeeTask({
+        description: values.description,
+        category: values.category,
+        amount: values.amount,
+        price: values.price,
+        unitMeasure: values.unitMeasure,
+        complexityLevels: values.complexityLevels,
+      })
+    );
+    setCreateTaskModal(false);
+  };
+
+  const onEdit = (values: any): void => {
+    dispatch(
+      startUpdateServiceFeeTask({
+        _id: selectedRow?._id,
+        description: values.description,
+        category: values.category,
+        amount: values.amount,
+        price: values.price,
+        unitMeasure: values.unitMeasure,
+        complexityLevels: values.complexityLevels,
+      })
+    );
+    setEditTaskModal(false);
+  };
+
+  const handleEdit = (): void => {
+    if (selectedRow) {
+      setEditTaskModal(true);
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "Seleccione una tarea a editar",
+      });
+    }
+  };
+
   // const onChange: TableProps<IServiceFeeTask>["onChange"] = (pagination, filters, sorter, extra) => {
   //   setFilteredData(extra.currentDataSource);
   //   console.log(filteredData);
@@ -164,6 +211,7 @@ const ServiceFeeTaskTable: React.FC = () => {
 
   const rowSelection: TableRowSelection<IServiceFeeTask> = {
     onChange: async (selectedRowKeys: React.Key[], selectedRows: IServiceFeeTask[]) => {
+      console.log("🚀 ~ onChange: ~ selectedRows:", selectedRows);
       setSelectedRow(selectedRows[0]);
     },
   };
@@ -237,18 +285,18 @@ const ServiceFeeTaskTable: React.FC = () => {
 
   const columns: ColumnsType<IServiceFeeTask> = [
     {
+      title: "Descripción",
+      dataIndex: "description",
+      key: "description",
+      width: "45%",
+    },
+    {
       title: "Categoría",
       dataIndex: "category",
       key: "category",
       width: "20%",
       sorter: (a: any, b: any) => a.category.localeCompare(b.category),
       ...getColumnSearchProps("category"),
-    },
-    {
-      title: "Descripción",
-      dataIndex: "description",
-      key: "description",
-      width: "45%",
     },
     {
       title: "Cantidad",
@@ -283,7 +331,7 @@ const ServiceFeeTaskTable: React.FC = () => {
         <div className="flex gap-2">
           <button
             disabled={!canCreate}
-            onClick={() => router.push("/dashboard/serviceFees/createServiceFee")}
+            onClick={() => setCreateTaskModal(true)}
             className={`${
               canCreate ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"
             } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
@@ -291,6 +339,16 @@ const ServiceFeeTaskTable: React.FC = () => {
             <PlusSvg />
             Nuevo
           </button>
+          <button
+              disabled={!canList}
+              onClick={()=>{setViewTaskModal(true)}}
+              className={`${
+                canList ? "bg-secondary-500 cursor-pointer hover:bg-secondary-600 ease-in-out duration-300" : "bg-secondary-200"
+              } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
+            >
+              <SeeSvg />
+              Ver
+            </button>
         </div>
         <div className="flex">
           {/* <PDFDownloadLink document={<CostSheetTablePDFReport fields={fields} data={PDFReportData} title={`Fichas de costo`} />} fileName={`Listado de fichas de costo `}>
@@ -300,6 +358,17 @@ const ServiceFeeTaskTable: React.FC = () => {
               </button>
             )}
           </PDFDownloadLink> */}
+          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+            <button
+              disabled={!canEdit}
+              className={`${
+                canEdit ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+              onClick={handleEdit}
+            >
+              <EditSvg />
+            </button>
+          </Tooltip>
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canDelete}
@@ -324,6 +393,10 @@ const ServiceFeeTaskTable: React.FC = () => {
           </Tooltip>
         </div>
       </div>
+
+      <CreateServiceFeeTaskForm open={createTaskModal} onCancel={() => setCreateTaskModal(false)} onCreate={onCreate} />
+      <EditServiceFeeTaskForm open={editTaskModal} onCancel={() => setEditTaskModal(false)} onCreate={onEdit} defaultValues={selectedRow!} />
+      <ServiceFeeTaskView open={viewTaskModal} onCancel={() => setViewTaskModal(false)} defaultValues={selectedRow!} />
 
       <Table
         size="small"
