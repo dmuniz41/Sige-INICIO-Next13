@@ -29,6 +29,7 @@ import { useSession } from "next-auth/react";
 import { CreateServiceFeeTaskForm } from "./CreateServiceFeeTask";
 import { EditServiceFeeTaskForm } from "./EditServiceFeeTask";
 import { EditSvg } from "@/app/global/EditSvg";
+import { ServiceFeeTaskView } from "./ServiceFeeTaskView";
 
 type DataIndex = keyof IServiceFeeTask;
 
@@ -36,6 +37,7 @@ const ServiceFeeTaskTable: React.FC = () => {
   const dispatch = useAppDispatch();
   const [createTaskModal, setCreateTaskModal] = useState(false);
   const [editTaskModal, setEditTaskModal] = useState(false);
+  const [viewTaskModal, setViewTaskModal] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRow, setSelectedRow] = useState<IServiceFeeTask>();
@@ -337,6 +339,16 @@ const ServiceFeeTaskTable: React.FC = () => {
             <PlusSvg />
             Nuevo
           </button>
+          <button
+              disabled={!canList}
+              onClick={()=>{setViewTaskModal(true)}}
+              className={`${
+                canList ? "bg-secondary-500 cursor-pointer hover:bg-secondary-600 ease-in-out duration-300" : "bg-secondary-200"
+              } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
+            >
+              <SeeSvg />
+              Ver
+            </button>
         </div>
         <div className="flex">
           {/* <PDFDownloadLink document={<CostSheetTablePDFReport fields={fields} data={PDFReportData} title={`Fichas de costo`} />} fileName={`Listado de fichas de costo `}>
@@ -384,6 +396,7 @@ const ServiceFeeTaskTable: React.FC = () => {
 
       <CreateServiceFeeTaskForm open={createTaskModal} onCancel={() => setCreateTaskModal(false)} onCreate={onCreate} />
       <EditServiceFeeTaskForm open={editTaskModal} onCancel={() => setEditTaskModal(false)} onCreate={onEdit} defaultValues={selectedRow!} />
+      <ServiceFeeTaskView open={viewTaskModal} onCancel={() => setViewTaskModal(false)} defaultValues={selectedRow!} />
 
       <Table
         size="small"
