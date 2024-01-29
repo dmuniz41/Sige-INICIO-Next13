@@ -4,6 +4,7 @@ const initialState = {
   serviceFees: [],
   serviceFeeAuxiliary: {},
   selectedServiceFee: {},
+  serviceFeeTasks: [],
 };
 
 export const serviceFeeReducer = (state = initialState, action: any) => {
@@ -38,6 +39,23 @@ export const serviceFeeReducer = (state = initialState, action: any) => {
       return {
         ...state,
         selectedServiceFee: action.payload,
+      };
+    case types.addServiceFeeTask:
+      return {
+        ...state,
+      };
+    case types.deleteServiceFeeTask:
+      return {
+        ...state,
+      };
+    case types.updateServiceFeeTask:
+      return {
+        ...state,
+      };
+    case types.serviceFeesTasksLoaded:
+      return {
+        ...state,
+        serviceFeeTasks: [...action.payload],
       };
 
     default:

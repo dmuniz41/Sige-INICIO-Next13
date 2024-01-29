@@ -35,33 +35,6 @@ export async function POST(request: Request) {
         }
       );
     }
-    //* Calcula el valor de cada subitem en cada seccion de la ficha de costo
-
-    // * El valor de cada material se calcula (Cantidad(m2 o Unidades) * Costo Unitario(Se define por el precio mas alto de ese material en el almacén) * Coeficiente de Merma(Si se considera material gastable))
-    // serviceFee.rawMaterials.map((material) => {
-    //   material.value = material.amount * material.price;
-    // });
-    // * El valor de cada operacion se calcula (Cantidad * Coeficiente de Complejidad), la descripcion de la tarea se debe entrar previamente como nomenclador
-    // serviceFee.taskList.map((task) => {
-    //   task.value = task.amount * task.price;
-    // });
-    // * El valor de la depreciacion de cada equipo se calcula (Cantidad * un coeficiente definido para cada equipo(Este coeficiente tiene una formula independiente para cada equipo que se debe definir en la seccion de auxiliares))
-    // serviceFee.equipmentDepreciation.map((equipment) => {
-    //   equipment.value = equipment.amount * equipment.price;
-    // });
-    // * El valor del mantenimiento de cada equipo se calcula (Cantidad * un coeficiente definido para cada equipo(Este coeficiente tiene una formula independiente para cada equipo que se debe definir en la seccion de auxiliares))
-    // serviceFee.equipmentMaintenance.map((equipment) => {
-    //   equipment.value = equipment.amount * equipment.price;
-    // });
-    // * Los gastos administrativos son fijos(Combustible, Arrendamiento, Telefono, Alimentacion y Electricidad), cada uno se calcula (Cantidad de horas * coeficiente)
-    // serviceFee.administrativeExpenses.map((administrativeExpense) => {
-    //   administrativeExpense.value = administrativeExpense.amount * administrativeExpense.price;
-    // });
-    //* Los gastos de transportacion son fijos(Transportacion y Distribucion y venta)  cada uno se calcula (Cantidad de unidades * coeficiente)
-    // serviceFee.transportationExpenses.map((transportationExpense) => {
-    //   transportationExpense.value = transportationExpense.amount * transportationExpense.price;
-    // });
-
     //* Calcula el valor de cada subtotal en cada seccion de la ficha de costo
     const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
     const taskListSubtotal: number = serviceFee.taskList.reduce((total, currentValue) => total + currentValue.value, 0);
@@ -182,34 +155,6 @@ export async function PUT(request: Request) {
         }
       );
     }
-
-    //* Calcula el valor de cada subitem en cada seccion de la ficha de costo
-
-    // * El valor de cada material se calcula (Cantidad(m2 o Unidades) * Costo Unitario(Se define por el precio mas alto de ese material en el almacén) * Coeficiente de Merma(Si se considera material gastable))
-    // serviceFee.rawMaterials.map((material) => {
-    //   material.value = material.amount * material.price;
-    // });
-    // // * El valor de cada operacion se calcula (Cantidad * Coeficiente de Complejidad), la descripcion de la tarea se debe entrar previamente como nomenclador
-    // serviceFee.taskList.map((task) => {
-    //   task.value = task.amount * task.price;
-    // });
-    // // * El valor de la depreciacion de cada equipo se calcula (Cantidad * un coeficiente definido para cada equipo(Este coeficiente tiene una formula independiente para cada equipo que se debe definir en la seccion de auxiliares))
-    // serviceFee.equipmentDepreciation.map((equipment) => {
-    //   equipment.value = equipment.amount * equipment.price;
-    // });
-    // // * El valor del mantenimiento de cada equipo se calcula (Cantidad * un coeficiente definido para cada equipo(Este coeficiente tiene una formula independiente para cada equipo que se debe definir en la seccion de auxiliares))
-    // serviceFee.equipmentMaintenance.map((equipment) => {
-    //   equipment.value = equipment.amount * equipment.price;
-    // });
-
-    // // * Los gastos administrativos son fijos(Combustible, Arrendamiento, Telefono, Alimentacion y Electricidad), cada uno se calcula (Cantidad de horas * coeficiente)
-    // serviceFee.administrativeExpenses.map((administrativeExpense) => {
-    //   administrativeExpense.value = administrativeExpense.amount * administrativeExpense.price;
-    // });
-    // //* Los gastos de transportacion son fijos(Transportacion y Distribucion y venta)  cada uno se calcula (Cantidad de unidades * coeficiente)
-    // serviceFee.transportationExpenses.map((transportationExpense) => {
-    //   transportationExpense.value = transportationExpense.amount * transportationExpense.price;
-    // });
 
     //* Calcula el valor de cada subtotal en cada seccion de la ficha de costo
     const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);

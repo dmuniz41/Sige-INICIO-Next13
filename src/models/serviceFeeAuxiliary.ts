@@ -7,6 +7,7 @@ export interface IRepresentationCoefficients {
   representative: string;
   coefficientValue: number;
 }
+
 export interface IServiceFeeAuxiliary {
   _id: string;
   key: string;
