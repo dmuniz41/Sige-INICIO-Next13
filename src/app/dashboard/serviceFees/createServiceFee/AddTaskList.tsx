@@ -96,7 +96,7 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
         </div>,
       ]}
     >
-      <Form form={form} layout="horizontal" name="addRawMaterial" size="middle">
+      <Form form={form} layout="horizontal" name="addRawMaterial" size="middle" fields={[{name: 'amount', value: 1}]}>
         <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select
             allowClear

@@ -69,6 +69,8 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
                   onCreate({ ...values, description: values.description.label, unitMeasure: currentUnitMeasure, price: currentPrice, value: rawMaterialValue });
                   form.resetFields();
                   setRawMaterialValue(0);
+                  setCurrentPrice(0)
+                  setCurrentUnitMeasure("")
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -83,6 +85,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
       <Form form={form} layout="horizontal" name="addRawMaterial" size="middle">
         <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select
+            autoFocus
             allowClear
             labelInValue
             style={{ width: "100%" }}

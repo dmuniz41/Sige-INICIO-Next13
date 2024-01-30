@@ -36,13 +36,13 @@ export async function POST(request: Request) {
       );
     }
     //* Calcula el valor de cada subtotal en cada seccion de la ficha de costo
-    const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
-    const taskListSubtotal: number = serviceFee.taskList.reduce((total, currentValue) => total + currentValue.value, 0);
-    const equipmentDepreciationSubtotal: number = serviceFee.equipmentDepreciation.reduce((total, currentValue) => total + currentValue.value, 0);
-    const equipmentMaintenanceSubtotal: number = serviceFee.equipmentMaintenance.reduce((total, currentValue) => total + currentValue.value, 0);
-    const administrativeExpensesSubtotal: number = serviceFee.administrativeExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const transportationExpensesSubtotal: number = serviceFee.transportationExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const hiredPersonalExpensesSubtotal: number = serviceFee.hiredPersonalExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+    const rawMaterialsSubtotal: number = serviceFee?.rawMaterials?.reduce((total, currentValue) => total + currentValue.value, 0);
+    const taskListSubtotal: number = serviceFee?.taskList?.reduce((total, currentValue) => total + currentValue.value, 0);
+    const equipmentDepreciationSubtotal: number = serviceFee?.equipmentDepreciation?.reduce((total, currentValue) => total + currentValue.value, 0);
+    const equipmentMaintenanceSubtotal: number = serviceFee?.equipmentMaintenance?.reduce((total, currentValue) => total + currentValue.value, 0);
+    const administrativeExpensesSubtotal: number = serviceFee?.administrativeExpenses?.reduce((total, currentValue) => total + currentValue.value, 0);
+    const transportationExpensesSubtotal: number = serviceFee?.transportationExpenses?.reduce((total, currentValue) => total + currentValue.value, 0);
+    const hiredPersonalExpensesSubtotal: number = serviceFee?.hiredPersonalExpenses?.reduce((total, currentValue) => total + currentValue.value, 0);
 
     const expensesTotalValue: number =
       rawMaterialsSubtotal +

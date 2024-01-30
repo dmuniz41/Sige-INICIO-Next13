@@ -98,12 +98,12 @@ export const EditMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, on
           <Input disabled />
         </Form.Item>
         <Form.Item name="materialName" label="Nombre del material">
-          <Input className="w-full"/>
+          <Input className="w-full" />
         </Form.Item>
         <Form.Item name="description" label="Descripción">
-          <Input className="w-full"/>
+          <Input className="w-full" />
         </Form.Item>
-        <Form.Item  className="w-full" name="minimumExistence" label="Existencias mínimas">
+        <Form.Item className="w-full" name="minimumExistence" label="Existencias mínimas">
           <InputNumber />
         </Form.Item>
       </Form>

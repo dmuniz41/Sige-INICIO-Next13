@@ -1,6 +1,6 @@
 "use client";
 
-import {  Form, Input, InputNumber, Modal, Select, SelectProps, Tag } from "antd";
+import { Form, Input, InputNumber, Modal, Select, SelectProps, Tag } from "antd";
 import { INomenclator } from "@/models/nomenclator";
 import { IServiceFeeTask } from "@/models/serviceFeeTask";
 import { RootState, useAppSelector } from "@/store/store";
@@ -99,13 +99,29 @@ export const CreateServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ 
     >
       <Form form={form} layout="horizontal" name="createUserForm" size="middle">
         <Form.Item name="category" label="Categoría" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Select allowClear style={{ width: "100%" }} options={categoryOptions} />
+          <Select
+            allowClear
+            style={{ width: "100%" }}
+            options={categoryOptions}
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
+            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+          />
         </Form.Item>
         <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
         <Form.Item name="unitMeasure" label="Unidad de Medida" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Select allowClear style={{ width: "100%" }} options={unitMeasureOptions} />
+          <Select
+            allowClear
+            style={{ width: "100%" }}
+            options={unitMeasureOptions}
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
+            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+          />
         </Form.Item>
         <Form.Item name="amount" label="Cantidad" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber />
