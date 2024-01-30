@@ -292,6 +292,11 @@ export const CreateServiceFeeForm = () => {
           name: "currencyChange",
           value: serviceFeeAuxiliary[0]?.currencyChange,
         },
+
+        {
+          name: "ONAT",
+          value: 25,
+        },
       ]}
     >
       <section className=" flex-col mb-4">
@@ -308,6 +313,9 @@ export const CreateServiceFeeForm = () => {
                 allowClear
                 options={categoriesOptions}
                 showSearch
+                onSelect={(value) => {
+                  value === "Trabajo Pladur" ? form.setFieldValue("commercialMargin", 1.2) : form.setFieldValue("commercialMargin", 1.5);
+                }}
                 optionFilterProp="children"
                 filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
@@ -828,8 +836,8 @@ export const CreateServiceFeeForm = () => {
       </section>
       <section className="flex gap-4 mt-4">
         {/* ONAT */}
-        <Form.Item className="mb-3 " label={<span className="font-bold text-md">ONAT</span>} name="ONAT" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber />
+        <Form.Item className="mb-3 " label={<span className="font-bold text-md">ONAT (%)</span>} name="ONAT" rules={[{ required: true, message: "Campo requerido" }]}>
+          <InputNumber disabled />
         </Form.Item>
         {/* commercialMargin */}
         <Form.Item className="mb-3 " label={<span className="font-bold text-md">Margen Comercial</span>} name="commercialMargin" rules={[{ required: true, message: "Campo requerido" }]}>
@@ -880,7 +888,7 @@ export const CreateServiceFeeForm = () => {
                   })
                 );
                 // form.resetFields();
-                router.push("/dashboard/serviceFees");
+                // router.push("/dashboard/serviceFees");
               })
               .catch((error) => {
                 console.log("Validate Failed:", error);
