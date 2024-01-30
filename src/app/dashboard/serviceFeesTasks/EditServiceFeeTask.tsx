@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
+import { Form, Input, InputNumber, Modal, Select, SelectProps, Tag } from "antd";
 import { INomenclator } from "@/models/nomenclator";
 import { IServiceFeeTask } from "@/models/serviceFeeTask";
 import { RootState, useAppSelector } from "@/store/store";
@@ -93,7 +93,7 @@ export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ op
                 });
             }}
           >
-            Crear
+            Editar
           </button>
         </div>,
       ]}
@@ -170,14 +170,14 @@ export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ op
           <InputNumber />
         </Form.Item>
         <section className="grid">
-          <span className="font-bold">Coeficientes de Complejidad</span>
-          <Form.Item name="high" label="Alta" rules={[{ required: true, message: "Campo requerido" }]}>
+          <span className="font-bold mb-4">Coeficientes de Complejidad</span>
+          <Form.Item name="high" label={<Tag color="red">Alta</Tag>} rules={[{ required: true, message: "Campo requerido" }]}>
             <InputNumber />
           </Form.Item>
-          <Form.Item name="medium" label="Media" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item name="medium" label={<Tag color="orange">Media</Tag>} rules={[{ required: true, message: "Campo requerido" }]}>
             <InputNumber />
           </Form.Item>
-          <Form.Item name="low" label="Baja" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item name="low" label={<Tag color="green">Baja</Tag>} rules={[{ required: true, message: "Campo requerido" }]}>
             <InputNumber />
           </Form.Item>
         </section>
