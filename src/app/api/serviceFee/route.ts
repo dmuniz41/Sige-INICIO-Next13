@@ -1,12 +1,15 @@
+import { connectDB } from "@/libs/mongodb";
+import { NextResponse } from "next/server";
+
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
-import { connectDB } from "@/libs/mongodb";
 import Nomenclator, { INomenclator } from "@/models/nomenclator";
 import ServiceFee, { IServiceFee } from "@/models/serviceFees";
-import { NextResponse } from "next/server";
+import ServiceFeeAuxiliary, { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 
 export async function POST(request: Request) {
   const { ...serviceFee }: IServiceFee = await request.json();
+  console.log("🚀 ~ POST ~ serviceFee:", serviceFee);
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -55,12 +58,17 @@ export async function POST(request: Request) {
 
     const newKey = generateRandomString(26);
 
-    const BDNomenclator = (await Nomenclator.findOne({ category: "Tarifa de Servicio", code: serviceFee.nomenclatorId })) as INomenclator;
+    const BDNomenclator = (await Nomenclator.findOne({ category: "Tarifa de Servicio", code: serviceFee?.nomenclatorId })) as INomenclator;
+
+    // * El precio final se calcula (Suma de el valor de todos los gastos * margen comercial(50%) + el impuesto de la ONAT(25%))
+    const comercialMarginValue = expensesTotalValue * serviceFee?.commercialMargin;
+    const ONATValue = comercialMarginValue * (serviceFee.ONAT / 100);
+    const salePrice = comercialMarginValue + ONATValue;
 
     if (!BDNomenclator) {
       const newNomenclator = new Nomenclator({
         key: newKey,
-        code: serviceFee.nomenclatorId,
+        code: serviceFee?.nomenclatorId,
         category: "Tarifa de Servicio",
       });
       await newNomenclator.save();
@@ -88,12 +96,12 @@ export async function POST(request: Request) {
       hiredPersonalExpenses: serviceFee.hiredPersonalExpenses,
       hiredPersonalExpensesSubtotal,
       expensesTotalValue,
-      ONAT: serviceFee.ONAT,
-      commercialMargin: serviceFee.commercialMargin,
-      artisticTalentValue: serviceFee.artisticTalentValue,
+      ONAT: ONATValue,
+      commercialMargin: comercialMarginValue,
+      artisticTalentValue: salePrice - ONATValue,
       rawMaterialsByClient: serviceFee.rawMaterialsByClient,
-      salePrice: expensesTotalValue + serviceFee.ONAT + serviceFee.artisticTalentValue + serviceFee.rawMaterialsByClient,
-      salePriceUSD: (expensesTotalValue + serviceFee?.ONAT + serviceFee?.artisticTalentValue + serviceFee?.rawMaterialsByClient) / serviceFee?.currencyChange,
+      salePrice: salePrice,
+      salePriceUSD: salePrice / serviceFee?.currencyChange,
     });
 
     await newServiceFee.save();
@@ -176,6 +184,13 @@ export async function PUT(request: Request) {
 
     const BDNomenclator = await Nomenclator.findOne({ category: "Tarifa de Servicio", code: serviceFee.nomenclatorId });
 
+    const BDAuxiliary = (await ServiceFeeAuxiliary.findOne()) as IServiceFeeAuxiliary;
+
+    // * El precio final se calcula (Suma de el valor de todos los gastos * margen comercial(50%) + el impuesto de la ONAT(25%))
+    const comercialMarginValue = expensesTotalValue * serviceFee?.commercialMargin;
+    const ONATValue = comercialMarginValue * (serviceFee.ONAT / 100);
+    const salePrice = comercialMarginValue + ONATValue;
+
     if (!BDNomenclator) {
       const newKey = generateRandomString(26);
       const newNomenclator = new Nomenclator({
@@ -210,12 +225,12 @@ export async function PUT(request: Request) {
         hiredPersonalExpenses: serviceFee.hiredPersonalExpenses,
         hiredPersonalExpensesSubtotal,
         expensesTotalValue,
-        ONAT: serviceFee.ONAT,
-        commercialMargin: serviceFee.commercialMargin,
-        artisticTalentValue: serviceFee.artisticTalentValue,
+        ONAT: ONATValue,
+        commercialMargin: comercialMarginValue,
+        artisticTalentValue: salePrice - ONATValue,
         rawMaterialsByClient: serviceFee.rawMaterialsByClient,
-        salePrice: expensesTotalValue + serviceFee.ONAT + serviceFee.artisticTalentValue + serviceFee.rawMaterialsByClient,
-        salePriceUSD: (expensesTotalValue + serviceFee?.ONAT + serviceFee?.artisticTalentValue + serviceFee?.rawMaterialsByClient) / serviceFee?.currencyChange,
+        salePrice: salePrice,
+        salePriceUSD: salePrice / serviceFee?.currencyChange,
       },
       { new: true }
     );

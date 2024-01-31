@@ -33,8 +33,6 @@ export const EditServiceFeeForm = () => {
     dispatch(startLoadServiceFeeAuxiliary());
   }, [dispatch]);
 
-  console.log("render");
-
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary[] } = useAppSelector((state: RootState) => state?.serviceFee);
   const { selectedServiceFee }: { selectedServiceFee: IServiceFee } = useAppSelector((state: RootState) => state?.serviceFee);
@@ -358,11 +356,11 @@ export const EditServiceFeeForm = () => {
         },
         {
           name: "ONAT",
-          value: ONAT,
+          value: 25,
         },
         {
           name: "commercialMargin",
-          value: commercialMargin,
+          value: 15,
         },
         {
           name: "rawMaterialsByClient",
@@ -370,7 +368,7 @@ export const EditServiceFeeForm = () => {
         },
         {
           name: "artisticTalentValue",
-          value: artisticTalentValue,
+          value: 1,
         },
       ]}
     >
