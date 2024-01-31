@@ -49,7 +49,6 @@ export const CreateServiceFeeForm = () => {
     dispatch(nomenclatorsStartLoading());
     dispatch(startLoadServiceFeeAuxiliary());
     dispatch(startLoadServiceFeesTasks());
-    dispatch(materialsStartLoading("653957480a9e16fed4c1bbd5"));
   }, [dispatch]);
 
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);

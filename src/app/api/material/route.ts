@@ -6,6 +6,7 @@ import Operation from "@/models/operation";
 import { verifyJWT } from "@/libs/jwt";
 import Warehouse from "@/models/warehouse";
 import Nomenclator, { INomenclator } from "@/models/nomenclator";
+import { generateRandomString } from "@/helpers/randomStrings";
 
 export async function POST(request: Request) {
   const {
@@ -186,9 +187,11 @@ export async function POST(request: Request) {
       // * Crea un nuevo nomenclador asociado a ese material
       const BDNomenclator = (await Nomenclator.findOne({ category: "Material", code: `${category} ${materialName}` })) as INomenclator;
 
+      const key = generateRandomString(26)
+
       if (!BDNomenclator) {
         const newNomenclator = new Nomenclator({
-          key: category + materialName + costPerUnit + description,
+          key: key,
           category: "Material",
           code: `${category} ${materialName}`,
           value: maxPrice,
@@ -274,6 +277,7 @@ export async function GET(request: Request) {
 export async function PUT(request: Request) {
   const { category = "", code = "", description = "", materialName = "", minimumExistence = 1 } = await request.json();
   const accessToken = request.headers.get("accessToken");
+  const key = generateRandomString(26)
 
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -310,7 +314,7 @@ export async function PUT(request: Request) {
 
     if (!updatedMaterialNomenclator) {
       const newNomenclator = new Nomenclator({
-        key: updatedMaterial.category + materialName + updatedMaterial.costPerUnit + updatedMaterial.description,
+        key: key,
         category: "Material",
         code: `${updatedMaterial.category} ${updatedMaterial.materialName}`,
         value: auxMaxPrice,
@@ -333,7 +337,7 @@ export async function PUT(request: Request) {
 
       if (!BDNomenclator) {
         const newNomenclator = new Nomenclator({
-          key: materialToUpdate.category + materialName + materialToUpdate.costPerUnit + materialToUpdate.description,
+          key: key,
           category: "Material",
           code: `${materialToUpdate.category} ${materialToUpdate.materialName}`,
           value: maxPrice,
