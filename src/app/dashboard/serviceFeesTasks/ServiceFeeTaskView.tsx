@@ -76,29 +76,6 @@ export const ServiceFeeTaskView: React.FC<CollectionCreateFormProps> = ({ open, 
           <label>${defaultValues?.price.toFixed(2)}</label>
         </div>
       </section>
-      <section className="grid gap-2 mt-2">
-        <span className="text-md font-bold">Coeficientes de Complejidad:</span>
-        <div className="grid gap-2">
-          <div className="flex gap-2">
-            <Tag color="red" className="font-bold text-md">
-              Alta
-            </Tag>
-            :<label>{defaultValues?.complexityLevels[0]?.coefficient?.toFixed(2)}</label>
-          </div>
-          <div className="flex gap-2">
-            <Tag color="orange" className="font-bold text-md">
-              Media
-            </Tag>
-            :<label>{defaultValues?.complexityLevels[1]?.coefficient?.toFixed(2)}</label>
-          </div>
-          <div className="flex gap-2">
-            <Tag color="green" className="font-bold text-md">
-              Baja
-            </Tag>
-            :<label>{defaultValues?.complexityLevels[2]?.coefficient?.toFixed(2)}</label>
-          </div>
-        </div>
-      </section>
     </Modal>
   );
 };

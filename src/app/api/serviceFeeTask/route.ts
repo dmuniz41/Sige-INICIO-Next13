@@ -2,7 +2,6 @@ import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { NextResponse } from "next/server";
 import { verifyJWT } from "@/libs/jwt";
-import ServiceFeeAuxiliary from "@/models/serviceFeeAuxiliary";
 import ServiceFeeTask, { IServiceFeeTask } from "@/models/serviceFeeTask";
 
 export async function POST(request: Request) {
@@ -46,7 +45,6 @@ export async function POST(request: Request) {
       description: serviceFeeTask.description,
       price: serviceFeeTask.price,
       unitMeasure: serviceFeeTask.unitMeasure,
-      complexityLevels: serviceFeeTask.complexityLevels,
       key: newKey
     });
 
@@ -160,7 +158,6 @@ export async function PUT(request: Request) {
         description: serviceFeeTask.description,
         price: serviceFeeTask.price,
         unitMeasure: serviceFeeTask.unitMeasure,
-        complexityLevels: serviceFeeTask.complexityLevels,
       },
       { new: true }
     );

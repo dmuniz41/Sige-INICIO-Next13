@@ -8,21 +8,6 @@ export interface IServiceFeeTask {
   price: number;
   unitMeasure: string;
   key?: string;
-
-  complexityLevels: [
-    {
-      name: "Alta";
-      coefficient: number;
-    },
-    {
-      name: "Media";
-      coefficient: number;
-    },
-    {
-      name: "Baja";
-      coefficient: number;
-    }
-  ];
 }
 
 export const ServiceFeeTaskSchema = new Schema<IServiceFeeTask, Model<IServiceFeeTask>>({
@@ -46,20 +31,6 @@ export const ServiceFeeTaskSchema = new Schema<IServiceFeeTask, Model<IServiceFe
   unitMeasure: {
     type: String,
   },
-  complexityLevels: [
-    {
-      name: String,
-      coefficient: Number,
-    },
-    {
-      name: String,
-      coefficient: Number,
-    },
-    {
-      name: String,
-      coefficient: Number,
-    },
-  ],
 });
 
 const ServiceFeeTask = models.ServiceFeeTask || model("ServiceFeeTask", ServiceFeeTaskSchema);

@@ -13,16 +13,9 @@ interface CollectionCreateFormProps {
 }
 
 export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
-  const [complexityCoefficient, setComplexityCoefficient] = useState(0);
   const [taskValue, setTaskValue] = useState(0);
   const [unitMeasure, setUnitMeasure] = useState("");
   const [price, setPrice] = useState(0);
-  const [complexityCoefficients, setComplexityCoefficients] = useState([
-    { name: "Alta", coefficient: 0 },
-    { name: "Media", coefficient: 0 },
-    { name: "Baja", coefficient: 0 },
-  ]);
-
   const { serviceFeeTasks }: { serviceFeeTasks: IServiceFeeTask[] } = useAppSelector((state: RootState) => state?.serviceFee);
 
   const tasks: SelectProps["options"] = serviceFeeTasks.map((serviceFeeTask) => {
@@ -31,22 +24,6 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
       value: `${serviceFeeTask.description}`,
     };
   });
-
-  const complexityOptions: SelectProps["options"] = [
-    {
-      label: "Alta",
-      value: "Alta",
-    },
-    {
-      label: "Media",
-      value: "Media",
-    },
-    {
-      label: "Baja",
-      value: "Baja",
-    },
-  ];
-
   const [form] = Form.useForm();
   return (
     <Modal
@@ -82,7 +59,6 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
                 .then((values: any) => {
                   onCreate({ ...values, unitMeasure: unitMeasure, price: price, value: taskValue });
                   form.resetFields();
-                  setComplexityCoefficient(0);
                   setTaskValue(0);
                 })
                 .catch((error) => {
@@ -104,9 +80,7 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
               let selectedTask: string = form.getFieldValue("description") ?? "";
               let complexityCoef: number = form.getFieldValue("complexity") ?? 1;
               let task = serviceFeeTasks.find((serviceFeeTask) => serviceFeeTask.description === selectedTask);
-              form.setFieldValue("complexity", task?.complexityLevels);
               setUnitMeasure(task?.unitMeasure!);
-              setComplexityCoefficients(task?.complexityLevels!);
               setPrice(task?.price!);
               setTaskValue(task?.amount! * task?.price! * complexityCoef);
             }}
@@ -117,30 +91,11 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
           />
         </Form.Item>
 
-        <div className="flex gap-2">
-          <Form.Item name="complexity" label="Complejidad" className="w-[15rem]" rules={[{ required: true, message: "Campo requerido" }]}>
-            <Select
-              allowClear
-              options={complexityOptions}
-              onSelect={(value: any) => {
-                let complexityCoef = complexityCoefficients.find(co => co.name === value)
-                setComplexityCoefficient(complexityCoef?.coefficient!);
-                let values = form.getFieldsValue();
-                setTaskValue(values.amount * price * complexityCoef?.coefficient!);
-              }}
-              showSearch
-              optionFilterProp="children"
-              filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-              filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
-            />
-          </Form.Item>
-          <div className="mt-1"><span>: {!complexityCoefficient ? 0 : complexityCoefficient?.toFixed(2)}</span></div>
-        </div>
         <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber
             onChange={() => {
               let values = form.getFieldsValue();
-              setTaskValue(values.amount * price * complexityCoefficient);
+              setTaskValue(values.amount * price );
             }}
           />
         </Form.Item>

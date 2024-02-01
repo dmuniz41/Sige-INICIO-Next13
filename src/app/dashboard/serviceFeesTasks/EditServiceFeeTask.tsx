@@ -124,18 +124,6 @@ export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ op
             name: "price",
             value: defaultValues?.price,
           },
-          {
-            name: "high",
-            value: defaultValues?.complexityLevels[0]?.coefficient,
-          },
-          {
-            name: "medium",
-            value: defaultValues?.complexityLevels[1]?.coefficient,
-          },
-          {
-            name: "low",
-            value: defaultValues?.complexityLevels[2]?.coefficient,
-          },
         ]}
       >
         <Form.Item name="category" label="Categoría" rules={[{ required: true, message: "Campo requerido" }]}>
@@ -169,18 +157,6 @@ export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ op
         <Form.Item name="price" label="Precio" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber />
         </Form.Item>
-        <section className="grid">
-          <span className="font-bold mb-4">Coeficientes de Complejidad</span>
-          <Form.Item name="high" label={<Tag color="red">Alta</Tag>} rules={[{ required: true, message: "Campo requerido" }]}>
-            <InputNumber />
-          </Form.Item>
-          <Form.Item name="medium" label={<Tag color="orange">Media</Tag>} rules={[{ required: true, message: "Campo requerido" }]}>
-            <InputNumber />
-          </Form.Item>
-          <Form.Item name="low" label={<Tag color="green">Baja</Tag>} rules={[{ required: true, message: "Campo requerido" }]}>
-            <InputNumber />
-          </Form.Item>
-        </section>
       </Form>
     </Modal>
   );
