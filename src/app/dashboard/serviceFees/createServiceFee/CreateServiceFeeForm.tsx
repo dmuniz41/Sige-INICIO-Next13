@@ -125,80 +125,8 @@ export const CreateServiceFeeForm = () => {
   };
   const onAddAdministrativeExpenses = (values: any) => {
     console.log("🚀 ~ onAddAdministrativeExpenses ~ values:", values);
-    setAdministrativeExpensesValues([
-      {
-        description: "Combustible",
-        price: values.fuelExpenseCoef,
-        unitMeasure: "$/h",
-        amount: values.fuelAmount,
-        value: values.fuelExpenseValue,
-      },
-      {
-        description: "Electricidad",
-        price: values.electricityExpenseCoef,
-        unitMeasure: "$/h",
-        amount: values.electricityAmount,
-        value: values.electricityExpenseValue,
-      },
-      {
-        description: "Alimentacion",
-        price: values.feedingExpenseCoef,
-        unitMeasure: "$/h",
-        amount: values.feedingAmount,
-        value: values.feedingExpenseValue,
-      },
-      {
-        description: "Arrendamiento",
-        price: values.leaseExpenseCoef,
-        unitMeasure: "$/h",
-        amount: values.leaseAmount,
-        value: values.leaseExpenseValue,
-      },
-      {
-        description: "Telefono",
-        price: values.phoneExpenseCoef,
-        unitMeasure: "$/h",
-        amount: values.phoneAmount,
-        value: values.phoneExpenseValue,
-      },
-    ]);
-    form.setFieldValue("administrativeExpenses", [
-      {
-        description: "Combustible",
-        price: values.fuelExpenseCoef,
-        unitMeasure: "$/h",
-        amount: values.fuelAmount,
-        value: values.fuelExpenseValue,
-      },
-      {
-        description: "Electricidad",
-        price: values.electricityExpenseCoef,
-        unitMeasure: "$/h",
-        amount: values.electricityAmount,
-        value: values.electricityExpenseValue,
-      },
-      {
-        description: "Alimentacion",
-        price: values.feedingExpenseCoef,
-        unitMeasure: "$/h",
-        amount: values.feedingAmount,
-        value: values.feedingExpenseValue,
-      },
-      {
-        description: "Arrendamiento",
-        price: values.leaseExpenseCoef,
-        unitMeasure: "$/h",
-        amount: values.leaseAmount,
-        value: values.leaseExpenseValue,
-      },
-      {
-        description: "Telefono",
-        price: values.phoneExpenseCoef,
-        unitMeasure: "$/h",
-        amount: values.phoneAmount,
-        value: values.phoneExpenseValue,
-      },
-    ]);
+    setAdministrativeExpensesValues([values, ...administrativeExpensesValues]);
+    form.setFieldValue("administrativeExpenses", [...administrativeExpensesValues, values]);
     setAddAdministrativeExpensesModal(false);
   };
   const onAddTransportationExpenses = (values: any) => {
