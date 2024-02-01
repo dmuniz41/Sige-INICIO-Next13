@@ -1,9 +1,10 @@
-import { verifyJWT } from "@/libs/jwt";
-import { connectDB } from "@/libs/mongodb";
-import ServiceFeeAuxiliary from "@/models/serviceFeeAuxiliary";
 import { NextResponse } from "next/server";
-import { IServiceFeeAuxiliary } from "../../../models/serviceFeeAuxiliary";
+
+import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
+import { IServiceFeeAuxiliary } from "../../../models/serviceFeeAuxiliary";
+import { verifyJWT } from "@/libs/jwt";
+import ServiceFeeAuxiliary from "@/models/serviceFeeAuxiliary";
 
 export async function POST(request: Request) {
   const { ...serviceFeeAuxiliary }: IServiceFeeAuxiliary = await request.json();
@@ -100,11 +101,12 @@ export async function GET(request: Request) {
       );
     }
     await connectDB();
-    const BDserviceFeeAuxiliary = await ServiceFeeAuxiliary.find();
+    const BDserviceFeeAuxiliary = await ServiceFeeAuxiliary.findOne();
+    console.log("🚀 ~ GET ~ BDserviceFeeAuxiliary:", BDserviceFeeAuxiliary)
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        BDserviceFeeAuxiliary,
+        BDserviceFeeAuxiliary
       }),
       {
         headers: {

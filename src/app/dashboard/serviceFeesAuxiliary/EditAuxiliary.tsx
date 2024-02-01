@@ -33,67 +33,43 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
       fields={[
         {
           name: "calculationCoefficient",
-          value: defaultValues[0]?.calculationCoefficient,
+          value: defaultValues?.calculationCoefficient,
         },
         {
           name: "officialCurrencyChangeCoefficient",
-          value: defaultValues[0]?.officialCurrencyChangeCoefficient,
+          value: defaultValues?.officialCurrencyChangeCoefficient,
         },
         {
           name: "informalCurrencyChange",
-          value: defaultValues[0]?.informalCurrencyChange,
+          value: defaultValues?.informalCurrencyChange,
         },
         {
           name: "mermaCoefficient",
-          value: defaultValues[0]?.mermaCoefficient,
+          value: defaultValues?.mermaCoefficient,
         },
         {
           name: "payMethod",
-          value: defaultValues[0]?.payMethod,
+          value: defaultValues?.payMethod,
         },
         {
-          name: "fuelExpense",
-          value: defaultValues[0]?.administrativeExpensesCoefficients.fuelExpense,
+          name: "administrativeExpenses",
+          value: defaultValues?.administrativeExpensesCoefficients,
         },
         {
-          name: "electricityExpense",
-          value: defaultValues[0]?.administrativeExpensesCoefficients.electricityExpense,
+          name: "equipmentDepreciation",
+          value: defaultValues?.equipmentDepreciationCoefficients,
         },
         {
-          name: "leaseExpense",
-          value: defaultValues[0]?.administrativeExpensesCoefficients.leaseExpense,
+          name: "equipmentMaintenance",
+          value: defaultValues?.equipmentMaintenanceCoefficients,
         },
         {
-          name: "feedingExpense",
-          value: defaultValues[0]?.administrativeExpensesCoefficients.feedingExpense,
+          name: "transportationExpensesCoefficient",
+          value: defaultValues?.transportationExpensesCoefficient,
         },
         {
-          name: "phoneExpense",
-          value: defaultValues[0]?.administrativeExpensesCoefficients.phoneExpense,
-        },
-        {
-          name: "plotterDepreciation",
-          value: defaultValues[0]?.equipmentDepreciationCoefficients.plotter,
-        },
-        {
-          name: "routerDepreciation",
-          value: defaultValues[0]?.equipmentDepreciationCoefficients.router,
-        },
-        {
-          name: "bendingMachine",
-          value: defaultValues[0]?.equipmentDepreciationCoefficients.bendingMachine,
-        },
-        {
-          name: "manualTools",
-          value: defaultValues[0]?.equipmentDepreciationCoefficients.manualTools,
-        },
-        {
-          name: "plotterMaintenance",
-          value: defaultValues[0]?.equipmentMaintenanceCoefficients.plotter,
-        },
-        {
-          name: "routerMaintenance",
-          value: defaultValues[0]?.equipmentMaintenanceCoefficients.router,
+          name: "salesAndDistributionExpensesCoefficient",
+          value: defaultValues?.salesAndDistributionExpensesCoefficient,
         },
       ]}
     >
@@ -136,7 +112,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
               {fields.map(({ key, name, ...restField }) => (
                 <div key={key} className="w-full">
                   <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[70%]" {...restField} name={[name, "representative"]} rules={[{ required: true, message: "Introduzca el método de pago" }]}>
+                    <Form.Item className="w-[70%]" {...restField} name={[name, "representative"]} rules={[{ required: true, message: "Campo requerido" }]}>
                       <Input placeholder="Descripción" className="w-full" />
                     </Form.Item>
                     <Form.Item {...restField} name={[name, "coefficientValue"]} rules={[{ required: true, message: "Campo requerido" }]}>
@@ -154,111 +130,84 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
             </div>
           )}
         </Form.List>
-        <section className="grid gap-3">
-          <label className="font-bold text-md">Coeficientes de Gastos Administrativos: </label>
-          <article>
-            <div className="flex gap-2 pr-[13rem]">
-              <Form.Item
-                className="mb-3 flex-1"
-                label={<span className=" w-[6rem] text-start font-bold text-md">Combustible</span>}
-                name="fuelExpense"
-                rules={[{ required: true, message: "Campo requerido" }]}
-              >
-                <InputNumber />
+        {/* Listado de Coeficientes de Gastos Administrativos */}
+        <label className="font-bold text-md">Coeficientes de Gastos Administrativos: </label>
+        <Form.List name="administrativeExpenses">
+          {(fields, { add, remove }) => (
+            <div className="flex flex-col w-full mt-5">
+              {fields.map(({ key, name, ...restField }) => (
+                <div key={key} className="w-full">
+                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                    <Form.Item className="w-[70%]" {...restField} name={[name, "name"]} rules={[{ required: true, message: "Campo requerido" }]}>
+                      <Input placeholder="Descripción" className="w-full" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true, message: "Campo requerido" }]}>
+                      <InputNumber placeholder="Coeficiente" />
+                    </Form.Item>
+                    <MinusCircleOutlined className="mb-auto" onClick={() => remove(name)} />
+                  </div>
+                </div>
+              ))}
+              <Form.Item className="mb-2">
+                <Button className="flex flex-row justify-center items-center" type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                  Añadir gasto administrativo
+                </Button>
               </Form.Item>
             </div>
-            <div className="flex gap-2 pr-[13rem]">
-              <Form.Item
-                className="mb-3 flex-1"
-                label={<span className=" w-[6rem] text-start font-bold text-md">Electricidad</span>}
-                name="electricityExpense"
-                rules={[{ required: true, message: "Campo requerido" }]}
-              >
-                <InputNumber />
+          )}
+        </Form.List>
+        {/* Listado de Coeficientes de Depreciacion de Equipos */}
+        <label className="font-bold text-md">Coeficientes de Depreciación de Equipos: </label>
+        <Form.List name="equipmentDepreciation">
+          {(fields, { add, remove }) => (
+            <div className="flex flex-col w-full mt-5">
+              {fields.map(({ key, name, ...restField }) => (
+                <div key={key} className="w-full">
+                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                    <Form.Item className="w-[70%]" {...restField} name={[name, "name"]} rules={[{ required: true, message: "Campo requerido" }]}>
+                      <Input placeholder="Descripción" className="w-full" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true, message: "Campo requerido" }]}>
+                      <InputNumber placeholder="Coeficiente" />
+                    </Form.Item>
+                    <MinusCircleOutlined className="mb-auto" onClick={() => remove(name)} />
+                  </div>
+                </div>
+              ))}
+              <Form.Item className="mb-2">
+                <Button className="flex flex-row justify-center items-center" type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                  Añadir Coeficiente de Depreciación
+                </Button>
               </Form.Item>
             </div>
-            <div className="flex gap-2 pr-[13rem]">
-              <Form.Item
-                className="mb-3 flex-1"
-                label={<span className=" w-[6rem] text-start font-bold text-md">Arrendamiento</span>}
-                name="leaseExpense"
-                rules={[{ required: true, message: "Campo requerido" }]}
-              >
-                <InputNumber />
-              </Form.Item>
-            </div>
-            <div className="flex gap-2 pr-[13rem]">
-              <Form.Item
-                className="mb-3 flex-1"
-                label={<span className=" w-[6rem] text-start font-bold text-md">Alimentación</span>}
-                name="feedingExpense"
-                rules={[{ required: true, message: "Campo requerido" }]}
-              >
-                <InputNumber />
-              </Form.Item>
-            </div>
-            <div className="flex gap-2 pr-[13rem]">
-              <Form.Item
-                className="mb-3 flex-1"
-                label={<span className=" w-[6rem] text-start font-bold text-md">Teléfono</span>}
-                name="phoneExpense"
-                rules={[{ required: true, message: "Campo requerido" }]}
-              >
-                <InputNumber />
-              </Form.Item>
-            </div>
-          </article>
-        </section>
-        <section className="grid gap-3">
-          <label className="font-bold text-md">Coeficientes de Depreciación de Equipos: </label>
-          <article>
-            <div className="flex gap-2  pr-[13rem]">
-              <Form.Item
-                className="mb-3 flex-1"
-                label={<span className=" font-bold text-md">Plotter de Impresión y Corte</span>}
-                name="plotterDepreciation"
-                rules={[{ required: true, message: "Campo requerido" }]}
-              >
-                <InputNumber />
-              </Form.Item>
-            </div>
-            <div className="flex gap-2 pr-[13rem]">
-              <Form.Item className="mb-3 flex-1" label={<span className=" font-bold text-md">Router</span>} name="routerDepreciation" rules={[{ required: true, message: "Campo requerido" }]}>
-                <InputNumber />
-              </Form.Item>
-            </div>
-            <div className="flex gap-2 pr-[13rem]">
-              <Form.Item className="mb-3 flex-1" label={<span className=" font-bold text-md">Dobladora</span>} name="bendingMachine" rules={[{ required: true, message: "Campo requerido" }]}>
-                <InputNumber />
-              </Form.Item>
-            </div>
-            <div className="flex gap-2 pr-[13rem]">
-              <Form.Item className="mb-3 flex-1" label={<span className=" font-bold text-md">Herramientas Manuales</span>} name="manualTools" rules={[{ required: true, message: "Campo requerido" }]}>
-                <InputNumber />
-              </Form.Item>
-            </div>
-          </article>
-        </section>
-        <section className="grid gap-3">
+          )}
+        </Form.List>
+        {/* Listado de Coeficientes de Mantenimiento de Equipos */}
           <label className="font-bold text-md">Coeficientes de Mantenimiento de Equipos: </label>
-          <article>
-            <div className="flex gap-2 pr-[13rem]">
-              <Form.Item
-                className="mb-3 flex-1"
-                label={<span className=" font-bold text-md">Plotter de Impresión y Corte</span>}
-                name="plotterMaintenance"
-                rules={[{ required: true, message: "Campo requerido" }]}
-              >
-                <InputNumber />
+          <Form.List name="equipmentMaintenance">
+          {(fields, { add, remove }) => (
+            <div className="flex flex-col w-full mt-5">
+              {fields.map(({ key, name, ...restField }) => (
+                <div key={key} className="w-full">
+                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
+                    <Form.Item className="w-[70%]" {...restField} name={[name, "name"]} rules={[{ required: true, message: "Campo requerido" }]}>
+                      <Input placeholder="Descripción" className="w-full" />
+                    </Form.Item>
+                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true, message: "Campo requerido" }]}>
+                      <InputNumber placeholder="Coeficiente" />
+                    </Form.Item>
+                    <MinusCircleOutlined className="mb-auto" onClick={() => remove(name)} />
+                  </div>
+                </div>
+              ))}
+              <Form.Item className="mb-2">
+                <Button className="flex flex-row justify-center items-center" type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                  Añadir Coeficiente de Mantenimiento
+                </Button>
               </Form.Item>
             </div>
-            <div className="flex gap-2 pr-[13rem]">
-              <Form.Item className="mb-3 flex-1" label={<span className=" font-bold text-md">Router</span>} name="routerMaintenance" rules={[{ required: true, message: "Campo requerido" }]}>
-                <InputNumber />
-              </Form.Item>
-            </div>
-          </article>
-        </section>
+          )}
+        </Form.List>
         <section className="grid gap-3">
           <label className="font-bold text-md">Coeficientes de Gastos de Transportación: </label>
           <article>
