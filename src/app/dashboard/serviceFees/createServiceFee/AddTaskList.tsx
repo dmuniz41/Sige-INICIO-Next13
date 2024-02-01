@@ -24,7 +24,6 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
   ]);
 
   const { serviceFeeTasks }: { serviceFeeTasks: IServiceFeeTask[] } = useAppSelector((state: RootState) => state?.serviceFee);
-  console.log("🚀 ~ serviceFeeTasks:", serviceFeeTasks);
 
   const tasks: SelectProps["options"] = serviceFeeTasks.map((serviceFeeTask) => {
     return {
@@ -35,16 +34,16 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
 
   const complexityOptions: SelectProps["options"] = [
     {
-      label: `Alta`,
-      value: complexityCoefficients[0]?.coefficient,
+      label: "Alta",
+      value: "Alta",
     },
     {
-      label: `Media`,
-      value: complexityCoefficients[1]?.coefficient,
+      label: "Media",
+      value: "Media",
     },
     {
-      label: `Baja`,
-      value: complexityCoefficients[2]?.coefficient,
+      label: "Baja",
+      value: "Baja",
     },
   ];
 
@@ -96,7 +95,7 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
         </div>,
       ]}
     >
-      <Form form={form} layout="horizontal" name="addRawMaterial" size="middle" fields={[{name: 'amount', value: 1}]}>
+      <Form form={form} layout="horizontal" name="addRawMaterial" size="middle">
         <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select
             allowClear
@@ -105,8 +104,9 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
               let selectedTask: string = form.getFieldValue("description") ?? "";
               let complexityCoef: number = form.getFieldValue("complexity") ?? 1;
               let task = serviceFeeTasks.find((serviceFeeTask) => serviceFeeTask.description === selectedTask);
-              setComplexityCoefficients(task?.complexityLevels!);
+              form.setFieldValue("complexity", task?.complexityLevels);
               setUnitMeasure(task?.unitMeasure!);
+              setComplexityCoefficients(task?.complexityLevels!);
               setPrice(task?.price!);
               setTaskValue(task?.amount! * task?.price! * complexityCoef);
             }}
@@ -122,10 +122,11 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
             <Select
               allowClear
               options={complexityOptions}
-              onChange={() => {
+              onSelect={(value: any) => {
+                let complexityCoef = complexityCoefficients.find(co => co.name === value)
+                setComplexityCoefficient(complexityCoef?.coefficient!);
                 let values = form.getFieldsValue();
-                setComplexityCoefficient(values.complexity);
-                setTaskValue(values.amount * price * values.complexity);
+                setTaskValue(values.amount * price * complexityCoef?.coefficient!);
               }}
               showSearch
               optionFilterProp="children"
@@ -133,15 +134,13 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
               filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
             />
           </Form.Item>
-          <div className="mt-1">
-            <span>: {complexityCoefficient?.toFixed(2)}</span>
-          </div>
+          <div className="mt-1"><span>: {!complexityCoefficient ? 0 : complexityCoefficient?.toFixed(2)}</span></div>
         </div>
         <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber
             onChange={() => {
               let values = form.getFieldsValue();
-              setTaskValue(values.amount * price * values.complexity);
+              setTaskValue(values.amount * price * complexityCoefficient);
             }}
           />
         </Form.Item>

@@ -19,23 +19,24 @@ export interface IServiceFeeAuxiliary {
   salesAndDistributionExpensesCoefficient: number;
   informalCurrencyChange: number;
   currency: ["USD", "CUP"];
-  administrativeExpensesCoefficients: {
-    electricityExpense: number;
-    fuelExpense: number;
-    feedingExpense: number;
-    phoneExpense: number;
-    leaseExpense: number;
-  };
-  equipmentDepreciationCoefficients: {
-    plotter: number;
-    router: number;
-    bendingMachine: number;
-    manualTools: number;
-  };
-  equipmentMaintenanceCoefficients: {
-    plotter: number;
-    router: number;
-  };
+  administrativeExpensesCoefficients: [
+    {
+      name: string;
+      value: number;
+    }
+  ];
+  equipmentDepreciationCoefficients: [
+    {
+      name: string;
+      value: number;
+    }
+  ];
+  equipmentMaintenanceCoefficients: [
+    {
+      name: string;
+      value: number;
+    }
+  ];
   payMethod: IRepresentationCoefficients[];
 }
 
@@ -67,23 +68,24 @@ const ServiceFeeAuxiliarySchema = new Schema<IServiceFeeAuxiliary, Model<IServic
       coefficientValue: Number,
     },
   ],
-  administrativeExpensesCoefficients: {
-    electricityExpense: Number,
-    fuelExpense: Number,
-    feedingExpense: Number,
-    phoneExpense: Number,
-    leaseExpense: Number,
-  },
-  equipmentDepreciationCoefficients: {
-    plotter: Number,
-    router: Number,
-    bendingMachine: Number,
-    manualTools: Number,
-  },
-  equipmentMaintenanceCoefficients: {
-    plotter: Number,
-    router: Number,
-  },
+  administrativeExpensesCoefficients: [
+    {
+      name: String,
+      value: Number,
+    },
+  ],
+  equipmentDepreciationCoefficients: [
+    {
+      name: String,
+      value: Number,
+    },
+  ],
+  equipmentMaintenanceCoefficients: [
+    {
+      name: String,
+      value: Number,
+    },
+  ],
   transportationExpensesCoefficient: {
     type: Number,
   },

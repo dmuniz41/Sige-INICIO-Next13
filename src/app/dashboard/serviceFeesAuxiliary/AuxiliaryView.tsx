@@ -19,7 +19,7 @@ export const AuxiliaryView = () => {
     dispatch(startLoadServiceFeeAuxiliary());
   }, [dispatch]);
 
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary[] } = useAppSelector((state: RootState) => state?.serviceFee);
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
 
   const handleEdit = () => {
     setEditing(true);
@@ -28,32 +28,18 @@ export const AuxiliaryView = () => {
   const onCreate = (values: any) => {
     dispatch(
       startUpdateServiceFeeAuxiliary({
-        _id: serviceFeeAuxiliary[0]?._id,
+        _id: serviceFeeAuxiliary?._id,
         calculationCoefficient: values.calculationCoefficient,
-        currency: serviceFeeAuxiliary[0]?.currency,
-        currencyChange: serviceFeeAuxiliary[0]?.currencyChange,
+        currency: serviceFeeAuxiliary?.currency,
+        currencyChange: serviceFeeAuxiliary?.currencyChange,
         informalCurrencyChange: values.informalCurrencyChange,
-        key: serviceFeeAuxiliary[0]?.key,
+        key: serviceFeeAuxiliary?.key,
         mermaCoefficient: values.mermaCoefficient,
         officialCurrencyChangeCoefficient: values.officialCurrencyChangeCoefficient,
         payMethod: values.payMethod,
-        administrativeExpensesCoefficients: {
-          electricityExpense: values.electricityExpense,
-          fuelExpense: values.fuelExpense,
-          feedingExpense: values.feedingExpense,
-          phoneExpense: values.phoneExpense,
-          leaseExpense: values.leaseExpense,
-        },
-        equipmentDepreciationCoefficients: {
-          plotter: values.plotterDepreciation,
-          router: values.routerDepreciation,
-          bendingMachine: values.bendingMachine,
-          manualTools: values.manualTools,
-        },
-        equipmentMaintenanceCoefficients: {
-          plotter: values.plotterMaintenance,
-          router: values.routerMaintenance,
-        },
+        administrativeExpensesCoefficients: values.administrativeExpenses,
+        equipmentDepreciationCoefficients: values. equipmentDepreciation,
+        equipmentMaintenanceCoefficients: values. equipmentMaintenance,
         transportationExpensesCoefficient: values.transportationExpensesCoefficient,
         salesAndDistributionExpensesCoefficient: values.salesAndDistributionExpensesCoefficient,
       })
@@ -80,12 +66,12 @@ export const AuxiliaryView = () => {
           <article className=" flex flex-col items-start gap-3 max-w-[25%] bg-background_light p-4 rounded-md shadow-lg animate-fade animate-once animate-duration-200">
             <div className="flex gap-1">
               <label className="font-bold text-md">Cambio de Moneda: </label>
-              <label>{serviceFeeAuxiliary[0]?.currencyChange}</label>
+              <label>{serviceFeeAuxiliary?.currencyChange}</label>
             </div>
             <div className="grid gap-1">
               <label className="font-bold text-md">Coeficientes de Representación:</label>
               <ul>
-                {serviceFeeAuxiliary[0]?.payMethod.map((payMethod) => (
+                {serviceFeeAuxiliary?.payMethod?.map((payMethod) => (
                   <li key={payMethod.representative} className="flex w-20 gap-1">
                     <label className="font-bold ">{payMethod.representative}: </label>
                     <label>{payMethod.coefficientValue}</label>
@@ -95,88 +81,62 @@ export const AuxiliaryView = () => {
             </div>
             <div className="flex gap-2">
               <label className="font-bold text-md">Monedas: </label>
-              {serviceFeeAuxiliary[0]?.currency.map((currency) => (
+              {serviceFeeAuxiliary?.currency?.map((currency) => (
                 <label key={currency}>{currency}</label>
               ))}
             </div>
             <div className="flex gap-2">
               <label className="font-bold text-md">Coeficiente de Cálculo: </label>
-              <label>{serviceFeeAuxiliary[0]?.calculationCoefficient}</label>
+              <label>{serviceFeeAuxiliary?.calculationCoefficient}</label>
             </div>
             <div className="flex gap-2">
               <label className="font-bold text-md">Coef de Cambio Monetario Oficial: </label>
-              <label>{serviceFeeAuxiliary[0]?.officialCurrencyChangeCoefficient}</label>
+              <label>{serviceFeeAuxiliary?.officialCurrencyChangeCoefficient}</label>
             </div>
             <div className="flex gap-2">
               <label className="font-bold text-md">Cambio Informal: </label>
-              <label>{serviceFeeAuxiliary[0]?.informalCurrencyChange}</label>
+              <label>{serviceFeeAuxiliary?.informalCurrencyChange}</label>
             </div>
             <div className="flex gap-2">
               <label className="font-bold text-md">Coeficiente de Merma: </label>
-              <label>{serviceFeeAuxiliary[0]?.mermaCoefficient}</label>
+              <label>{serviceFeeAuxiliary?.mermaCoefficient}</label>
             </div>
             <label className="font-bold text-md">Coeficientes de Gastos Administrativos:</label>
             <ul>
-              <li key="fuel" className="flex gap-1">
-                <label className="font-bold ">Combustible: </label>
-                <label>{serviceFeeAuxiliary[0]?.administrativeExpensesCoefficients.fuelExpense}</label>
-              </li>
-              <li key="electricity" className="flex gap-1">
-                <label className="font-bold ">Electricidad: </label>
-                <label>{serviceFeeAuxiliary[0]?.administrativeExpensesCoefficients.electricityExpense}</label>
-              </li>
-              <li key="lease" className="flex gap-1">
-                <label className="font-bold ">Arrendamiento: </label>
-                <label>{serviceFeeAuxiliary[0]?.administrativeExpensesCoefficients.leaseExpense}</label>
-              </li>
-              <li key="feeding" className="flex gap-1">
-                <label className="font-bold ">Alimentación: </label>
-                <label>{serviceFeeAuxiliary[0]?.administrativeExpensesCoefficients.feedingExpense}</label>
-              </li>
-              <li key="phone" className="flex gap-1">
-                <label className="font-bold ">Telefonía: </label>
-                <label>{serviceFeeAuxiliary[0]?.administrativeExpensesCoefficients.phoneExpense}</label>
-              </li>
+              {serviceFeeAuxiliary.administrativeExpensesCoefficients?.map((administrativeExpense) => (
+                <li key={administrativeExpense.name} className="flex gap-1">
+                  <label className="font-bold ">{administrativeExpense.name}: </label>
+                  <label>{administrativeExpense.value.toFixed(2)}</label>
+                </li>
+              ))}
             </ul>
             <label className="font-bold text-md">Coeficientes de Depreciación de equipos:</label>
             <ul>
-              <li key="plotterDepreciation" className="flex gap-1">
-                <label className="font-bold ">Plotter de Impresión y Corte: </label>
-                <label>{serviceFeeAuxiliary[0]?.equipmentDepreciationCoefficients.plotter}</label>
-              </li>
-              <li key="routerDepreciation" className="flex gap-1">
-                <label className="font-bold ">Router: </label>
-                <label>{serviceFeeAuxiliary[0]?.equipmentDepreciationCoefficients.router}</label>
-              </li>
-              <li key="bendingMachine" className="flex gap-1">
-                <label className="font-bold ">Dobladora: </label>
-                <label>{serviceFeeAuxiliary[0]?.equipmentDepreciationCoefficients.bendingMachine}</label>
-              </li>
-              <li key="manualTools" className="flex gap-1">
-                <label className="font-bold ">Herramientas Manuales: </label>
-                <label>{serviceFeeAuxiliary[0]?.equipmentDepreciationCoefficients.manualTools}</label>
-              </li>
+              {serviceFeeAuxiliary.equipmentDepreciationCoefficients?.map((equipmentDepreciation) => (
+                <li key={equipmentDepreciation.name} className="flex gap-1">
+                  <label className="font-bold ">{equipmentDepreciation.name}: </label>
+                  <label>{equipmentDepreciation.value.toFixed(2)}</label>
+                </li>
+              ))}
             </ul>
             <label className="font-bold text-md">Coeficientes de Mantenimiento de equipos:</label>
             <ul>
-              <li key="plotterMaintenance" className="flex gap-1">
-                <label className="font-bold ">Plotter de Impresión y Corte: </label>
-                <label>{serviceFeeAuxiliary[0]?.equipmentMaintenanceCoefficients.plotter}</label>
-              </li>
-              <li key="routerMaintenance" className="flex gap-1">
-                <label className="font-bold ">Router: </label>
-                <label>{serviceFeeAuxiliary[0]?.equipmentMaintenanceCoefficients.router}</label>
-              </li>
+              {serviceFeeAuxiliary.equipmentMaintenanceCoefficients?.map((equipmentMaintenance) => (
+                <li key={equipmentMaintenance.name} className="flex gap-1">
+                  <label className="font-bold ">{equipmentMaintenance.name}: </label>
+                  <label>{equipmentMaintenance.value.toFixed(2)}</label>
+                </li>
+              ))}
             </ul>
             <label className="font-bold text-md">Coeficientes de gastos de transportación:</label>
             <ul>
               <li key="transportationExpensesCoefficient" className="flex gap-1">
                 <label className="font-bold ">Transportación: </label>
-                <label>{serviceFeeAuxiliary[0]?.transportationExpensesCoefficient}</label>
+                <label>{serviceFeeAuxiliary?.transportationExpensesCoefficient}</label>
               </li>
               <li key="salesAndDistributionExpensesCoefficient" className="flex gap-1">
                 <label className="font-bold ">Distribución y venta: </label>
-                <label>{serviceFeeAuxiliary[0]?.salesAndDistributionExpensesCoefficient}</label>
+                <label>{serviceFeeAuxiliary?.salesAndDistributionExpensesCoefficient}</label>
               </li>
             </ul>
           </article>
