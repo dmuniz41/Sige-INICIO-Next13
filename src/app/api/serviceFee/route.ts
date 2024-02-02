@@ -9,7 +9,6 @@ import ServiceFeeAuxiliary, { IServiceFeeAuxiliary } from "@/models/serviceFeeAu
 
 export async function POST(request: Request) {
   const { ...serviceFee }: IServiceFee = await request.json();
-  console.log("🚀 ~ POST ~ serviceFee:", serviceFee);
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -60,10 +59,10 @@ export async function POST(request: Request) {
 
     const BDNomenclator = (await Nomenclator.findOne({ category: "Tarifa de Servicio", code: serviceFee?.nomenclatorId })) as INomenclator;
 
-    // * El precio final se calcula (Suma de el valor de todos los gastos * margen comercial(50%) + el impuesto de la ONAT(25%))
-    const comercialMarginValue = expensesTotalValue * serviceFee?.commercialMargin;
-    const ONATValue = comercialMarginValue * (serviceFee.ONAT / 100);
-    const salePrice = comercialMarginValue + ONATValue;
+    // * El precio final se calcula (Suma de el valor de todos los gastos + valor del margen comercial() + valor del impuesto de la ONAT())
+    const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
+    const ONATValue = expensesTotalValue * (serviceFee.ONAT / 100);
+    const salePrice = expensesTotalValue + comercialMarginValue + ONATValue;
 
     if (!BDNomenclator) {
       const newNomenclator = new Nomenclator({
@@ -186,10 +185,10 @@ export async function PUT(request: Request) {
 
     const BDAuxiliary = (await ServiceFeeAuxiliary.findOne()) as IServiceFeeAuxiliary;
 
-    // * El precio final se calcula (Suma de el valor de todos los gastos * margen comercial(50%) + el impuesto de la ONAT(25%))
-    const comercialMarginValue = expensesTotalValue * serviceFee?.commercialMargin;
-    const ONATValue = comercialMarginValue * (serviceFee.ONAT / 100);
-    const salePrice = comercialMarginValue + ONATValue;
+    // * El precio final se calcula (Suma de el valor de todos los gastos + valor del margen comercial + el valor del impuesto de la ONAT)
+    const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
+    const ONATValue = expensesTotalValue * (serviceFee.ONAT / 100);
+    const salePrice = expensesTotalValue + comercialMarginValue + ONATValue;
 
     if (!BDNomenclator) {
       const newKey = generateRandomString(26);

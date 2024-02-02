@@ -1,9 +1,10 @@
-import { IServiceFeeSubItem } from "@/models/serviceFees";
-import { Table } from "antd";
 import { ColumnsType } from "antd/es/table";
+import { Table } from "antd";
 import React from "react";
 
-export const ServiceFeeViewSection = (props: any) => {
+import { IServiceFeeSubItem } from "@/models/serviceFees";
+
+export const ServiceFeeViewTableSection = (props: any) => {
   const { data, subtotal, name } = props;
 
   const columns: ColumnsType<IServiceFeeSubItem> = [
@@ -42,7 +43,7 @@ export const ServiceFeeViewSection = (props: any) => {
   ];
   return (
     <section className="flex flex-1 mt-2">
-      <article className="flex justify-center items-center w-[15rem] p-4">
+      <article className="flex items-center w-[15rem] p-4">
         <h2 className="text-lg font-bold">{name}</h2>
       </article>
       <Table
