@@ -4,6 +4,7 @@ import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
 import { RootState, useAppSelector } from "@/store/store";
 import { IServiceFeeSubItem } from "@/models/serviceFees";
 import { useState } from "react";
+import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 
 interface CollectionCreateFormProps {
   open: boolean;
@@ -12,23 +13,17 @@ interface CollectionCreateFormProps {
 }
 
 export const AddEquipmentMaintenanceModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
-  const { serviceFeeAuxiliary }: any = useAppSelector((state: RootState) => state?.serviceFee);
-  const equipmentNames = [
-    {
-      name: "Plotter de Impresión y corte",
-      coefficient: serviceFeeAuxiliary[0]?.equipmentMaintenanceCoefficients.plotter,
-    },
-    {
-      name: "Router",
-      coefficient: serviceFeeAuxiliary[0]?.equipmentMaintenanceCoefficients.router,
-    },
-  ];
-  const [equipmentMaintenanceValue, setEquipmentMaintenanceValue] = useState(0);
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
+  const [currentPrice, setCurrentPrice] = useState(0);
+  const [currentEquipmentMaintenance, setCurrentEquipmentMaintenance] = useState<{ name: string; value: number }>({
+    name: "",
+    value: 0,
+  });
 
-  const equipments: SelectProps["options"] = equipmentNames.map((equipment) => {
+  const listOfEquipmentMaintenance: SelectProps["options"] = serviceFeeAuxiliary?.equipmentMaintenanceCoefficients?.map((equipmentMaintenance) => {
     return {
-      label: `${equipment.name}`,
-      value: `${equipment.name}`,
+      label: `${equipmentMaintenance.name}`,
+      value: `${equipmentMaintenance.name}`,
     };
   });
 
@@ -65,9 +60,16 @@ export const AddEquipmentMaintenanceModal: React.FC<CollectionCreateFormProps> =
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate({ ...values, value: equipmentMaintenanceValue });
+                  onCreate({
+                    description: values.description,
+                    amount: values.amount,
+                    unitMeasure: "$/h",
+                    price: currentEquipmentMaintenance.value,
+                    value: currentPrice,
+                  });
                   form.resetFields();
-                  setEquipmentMaintenanceValue(0);
+                  setCurrentEquipmentMaintenance({ name: "", value: 0 });
+                  setCurrentPrice(0);
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -83,42 +85,41 @@ export const AddEquipmentMaintenanceModal: React.FC<CollectionCreateFormProps> =
         <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select
             allowClear
-            onSelect={() => {
-              let values = form.getFieldsValue();
-              equipmentNames.map((equipment) => {
-                if (values.description === equipment.name)
-                  form.setFieldsValue({
-                    unitMeasure: "m2",
-                    price: equipment.coefficient,
-                  });
-              });
-              setEquipmentMaintenanceValue(values.amount * values.price);
-            }}
+            options={listOfEquipmentMaintenance}
             style={{ width: "100%" }}
-            options={equipments}
+            onSelect={(value: any) => {
+              const selectedEquipmentMaintenance = serviceFeeAuxiliary?.equipmentMaintenanceCoefficients?.find((equipmentMaintenance) => equipmentMaintenance.name === value);
+              setCurrentEquipmentMaintenance(selectedEquipmentMaintenance!);
+              form.setFieldsValue({
+                unitMeasure: "$/m2",
+                price: form.getFieldValue("amount") * selectedEquipmentMaintenance?.value!,
+              });
+              setCurrentPrice(form.getFieldValue("amount") * selectedEquipmentMaintenance?.value!);
+            }}
             showSearch
             optionFilterProp="children"
             filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
             filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
           />
         </Form.Item>
-        <Form.Item name="unitMeasure" label="Unidad de Medida" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input />
-        </Form.Item>
         <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber
-            onChange={() => {
-              let values = form.getFieldsValue();
-              setEquipmentMaintenanceValue(values.amount * values.price);
+            onChange={(value: any) => {
+              setCurrentPrice(value * currentEquipmentMaintenance?.value!);
             }}
           />
         </Form.Item>
-        <Form.Item name="price" label="Precio" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber />
-        </Form.Item>
-        <div className=" flex gap-2 pl-2">
+        <div className=" flex gap-2 pl-2 mb-4">
+          <span className="font-bold">Unidad de Medida:</span>
+          <span>$/m2</span>
+        </div>
+        <div className=" flex gap-2 pl-2 mb-4">
+          <span className="font-bold">Precio/UM:</span>
+          <span>${currentEquipmentMaintenance?.value?.toFixed(2)}</span>
+        </div>
+        <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Importe:</span>
-          <span>${!equipmentMaintenanceValue ? 0 : equipmentMaintenanceValue?.toFixed(2)}</span>
+          <span>${!currentPrice ? 0 : currentPrice?.toFixed(2)}</span>
         </div>
       </Form>
     </Modal>

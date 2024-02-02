@@ -5,6 +5,7 @@ import { IServiceFeeSubItem } from "@/models/serviceFees";
 import { useState } from "react";
 import { RootState, useAppSelector } from "@/store/store";
 import { IServiceFeeTask } from "@/models/serviceFeeTask";
+import { set } from "mongoose";
 
 interface CollectionCreateFormProps {
   open: boolean;
@@ -60,6 +61,7 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
                   onCreate({ ...values, unitMeasure: unitMeasure, price: price, value: taskValue });
                   form.resetFields();
                   setTaskValue(0);
+                  setPrice(0)
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);

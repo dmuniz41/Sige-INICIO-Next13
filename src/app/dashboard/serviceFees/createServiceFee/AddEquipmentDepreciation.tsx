@@ -15,7 +15,6 @@ interface CollectionCreateFormProps {
 
 export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
-  console.log("🚀 ~ serviceFeeAuxiliary:", serviceFeeAuxiliary.equipmentDepreciationCoefficients);
   const [currentPrice, setCurrentPrice] = useState(0);
   const [currentEquipmentDepreciation, setCurrentEquipmentDepreciation] = useState<{ name: string; value: number }>({
     name: "",
