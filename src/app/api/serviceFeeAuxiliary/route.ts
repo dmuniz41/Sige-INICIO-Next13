@@ -102,7 +102,6 @@ export async function GET(request: Request) {
     }
     await connectDB();
     const BDserviceFeeAuxiliary = await ServiceFeeAuxiliary.findOne();
-    console.log("🚀 ~ GET ~ BDserviceFeeAuxiliary:", BDserviceFeeAuxiliary)
     return new NextResponse(
       JSON.stringify({
         ok: true,

@@ -52,8 +52,8 @@ export const CreateServiceFeeForm = () => {
   }, [dispatch]);
 
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary[] } = useAppSelector((state: RootState) => state?.serviceFee);
-  serviceFeeAuxiliary[0]?.payMethod.map((payMethod) => payMethods.push(payMethod));
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary} = useAppSelector((state: RootState) => state?.serviceFee);
+  serviceFeeAuxiliary?.payMethod?.map((payMethod) => payMethods.push(payMethod));
 
   nomenclators.map((nomenclator: INomenclator) => {
     if (nomenclator.category === "Categoría de ficha de costo") serviceFeeCategory.push(nomenclator.code);
@@ -217,7 +217,7 @@ export const CreateServiceFeeForm = () => {
       fields={[
         {
           name: "currencyChange",
-          value: serviceFeeAuxiliary[0]?.currencyChange,
+          value: serviceFeeAuxiliary?.currencyChange,
         },
 
         {
@@ -268,7 +268,7 @@ export const CreateServiceFeeForm = () => {
             <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cambio $ </span>} name="currencyChange" rules={[{ required: true, message: "Campo requerido" }]}>
               <InputNumber disabled className="w-full" />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Método de pago: </span>} name="payMethodCoef" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item className="mb-3" label={<span className="font-bold text-md">Método de pago </span>} name="payMethodCoef" rules={[{ required: true, message: "Campo requerido" }]}>
               <Select
                 allowClear
                 options={payMethodOptions}

@@ -15,20 +15,19 @@ interface CollectionCreateFormProps {
 
 export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
-
+  const [currentPrice, setCurrentPrice] = useState(0);
   const [currentAdministrativeExpense, setCurrentAdministrativeExpense] = useState<{ name: string; value: number }>({
     name: "",
     value: 0,
   });
-  const [currentPrice, setCurrentPrice] = useState(0);
 
-  const listOfAdministrativeExpenses: SelectProps["options"] = serviceFeeAuxiliary?.administrativeExpensesCoefficients?.map((ae) => {
+  const listOfAdministrativeExpenses: SelectProps["options"] = serviceFeeAuxiliary?.administrativeExpensesCoefficients?.map((administrativeExpense) => {
     return {
-      label: `${ae.name}`,
-      value: `${ae.name}`,
+      label: `${administrativeExpense.name}`,
+      value: `${administrativeExpense.name}`,
     };
   });
-
+  
   const [form] = Form.useForm();
   return (
     <Modal
@@ -64,7 +63,7 @@ export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps>
                 .validateFields()
                 .then((values) => {
                   onCreate({
-                    description: values.description.label,
+                    description: values.description,
                     amount: values.amount,
                     unitMeasure: "$/h",
                     price: currentAdministrativeExpense.value,
@@ -89,18 +88,16 @@ export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps>
           <Select
             autoFocus
             allowClear
-            labelInValue
             style={{ width: "100%" }}
             options={listOfAdministrativeExpenses}
             onSelect={(value: any) => {
-              const selectedAdministrativeExpense = serviceFeeAuxiliary.administrativeExpensesCoefficients.find((ae) => ae.name === value.label);
+              const selectedAdministrativeExpense = serviceFeeAuxiliary?.administrativeExpensesCoefficients?.find((administrativeExpense) => administrativeExpense.name === value);
               setCurrentAdministrativeExpense(selectedAdministrativeExpense!);
               form.setFieldsValue({
                 unitMeasure: "$/h",
                 price: form.getFieldValue("amount") * selectedAdministrativeExpense?.value!,
               });
               setCurrentPrice(form.getFieldValue("amount") * selectedAdministrativeExpense?.value!);
-              // setSelectedAdministrativeExpense(selectedAdministrativeExpense);
             }}
             showSearch
             optionFilterProp="children"
