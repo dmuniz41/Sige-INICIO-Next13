@@ -1,9 +1,11 @@
 "use client";
 
 import { Form, Input, InputNumber, Modal, } from "antd";
-import { RootState, useAppSelector } from "@/store/store";
-import { IServiceFeeSubItem } from "@/models/serviceFees";
 import { useState } from "react";
+
+import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
+import { IServiceFeeSubItem } from "@/models/serviceFees";
+import { RootState, useAppSelector } from "@/store/store";
 
 interface CollectionCreateFormProps {
   open: boolean;
@@ -12,7 +14,7 @@ interface CollectionCreateFormProps {
 }
 
 export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
-  const { serviceFeeAuxiliary }: any = useAppSelector((state: RootState) => state?.serviceFee);
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
 
   const [transportationExpenseValue, setTransportationExpenseValue] = useState(0);
   const [salesAndDistributionExpenseValue, setSalesAndDistributionExpenseValue] = useState(0);
@@ -78,11 +80,11 @@ export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps>
           },
           {
             name: "transportationExpenseCoef",
-            value: serviceFeeAuxiliary[0]?.transportationExpensesCoefficient,
+            value: serviceFeeAuxiliary?.transportationExpensesCoefficient,
           },
           {
             name: "salesAndDistributionExpenseCoef",
-            value: serviceFeeAuxiliary[0]?.salesAndDistributionExpensesCoefficient,
+            value: serviceFeeAuxiliary?.salesAndDistributionExpensesCoefficient,
           },
 
           {

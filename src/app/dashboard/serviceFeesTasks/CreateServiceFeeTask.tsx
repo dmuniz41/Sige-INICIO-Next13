@@ -17,7 +17,7 @@ export const CreateServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ 
   const unitMeasures: string[] | undefined = [];
 
   nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Categoría de tareas") categories.push(nomenclator.code);
+    if (nomenclator.category === "Categoría de tarea") categories.push(nomenclator.code);
     if (nomenclator.category === "Unidad de medida") unitMeasures.push(nomenclator.code);
   });
 
@@ -129,18 +129,6 @@ export const CreateServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ 
         <Form.Item name="price" label="Precio" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber />
         </Form.Item>
-        <section className="grid">
-          <span className=" mb-2 font-bold">Coeficientes de Complejidad</span>
-          <Form.Item name="high" label={<Tag color="red">Alta</Tag>} rules={[{ required: true, message: "Campo requerido" }]}>
-            <InputNumber />
-          </Form.Item>
-          <Form.Item name="medium" label={<Tag color="orange">Media</Tag>} rules={[{ required: true, message: "Campo requerido" }]}>
-            <InputNumber />
-          </Form.Item>
-          <Form.Item name="low" label={<Tag color="green">Baja</Tag>} rules={[{ required: true, message: "Campo requerido" }]}>
-            <InputNumber />
-          </Form.Item>
-        </section>
       </Form>
     </Modal>
   );

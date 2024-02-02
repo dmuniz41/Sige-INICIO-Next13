@@ -12,7 +12,7 @@ import { EditSvg } from "@/app/global/EditSvg";
 import { IServiceFee, IServiceFeeSubItem } from "@/models/serviceFees";
 import { loadSelectedServiceFee } from "@/actions/serviceFee";
 import { PDFSvg } from "@/app/global/PDFSvg";
-import { ServiceFeeViewSection } from "./ServiceFeeViewSection";
+import { ServiceFeeViewTableSection } from "./ServiceFeeViewSection";
 import CostSheetPDFReport from "@/helpers/CostSheetPDFReport";
 
 const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
@@ -36,8 +36,8 @@ export const ServiceFeeView = () => {
   let equipmentDepreciation: IServiceFeeSubItem[] = useMemo(() => selectedServiceFee.equipmentDepreciation, [selectedServiceFee]);
   let equipmentMaintenance: IServiceFeeSubItem[] = useMemo(() => selectedServiceFee.equipmentMaintenance, [selectedServiceFee]);
   let administrativeExpenses: IServiceFeeSubItem[] = selectedServiceFee.administrativeExpenses;
-  let transportationExpenses: IServiceFeeSubItem[] = selectedServiceFee.transportationExpenses
-  let hiredPersonalExpenses: IServiceFeeSubItem[] = selectedServiceFee.hiredPersonalExpenses
+  let transportationExpenses: IServiceFeeSubItem[] = selectedServiceFee.transportationExpenses;
+  let hiredPersonalExpenses: IServiceFeeSubItem[] = selectedServiceFee.hiredPersonalExpenses;
 
   // const fields: any = [
   //   {
@@ -132,69 +132,36 @@ export const ServiceFeeView = () => {
           </div>
         </article>
         <article className=" flex flex-1 flex-col">
-          <ServiceFeeViewSection name="Materias Primas" data={rawMaterials} subtotal={selectedServiceFee?.rawMaterialsSubtotal} />
-          <ServiceFeeViewSection name="Actividades a Ejecutar" data={taskList} subtotal={selectedServiceFee?.taskListSubtotal} />
-          <ServiceFeeViewSection name="Depreciación de Equipos" data={equipmentDepreciation} subtotal={selectedServiceFee?.equipmentDepreciationSubtotal} />
-          <ServiceFeeViewSection name="Mantenimiento de Equipos" data={equipmentMaintenance} subtotal={selectedServiceFee?.equipmentMaintenanceSubtotal} />
-          <ServiceFeeViewSection name="Gastos Administrativos" data={administrativeExpenses} subtotal={selectedServiceFee?.administrativeExpensesSubtotal} />
-          <ServiceFeeViewSection name="Gastos de Transporte" data={transportationExpenses} subtotal={selectedServiceFee?.transportationExpensesSubtotal} />
-          <ServiceFeeViewSection name="Gastos de Personal Contratado" data={hiredPersonalExpenses} subtotal={selectedServiceFee?.hiredPersonalExpensesSubtotal} />
+          <ServiceFeeViewTableSection name="Materias Primas" data={rawMaterials} subtotal={selectedServiceFee?.rawMaterialsSubtotal} />
+          <ServiceFeeViewTableSection name="Actividades a Ejecutar" data={taskList} subtotal={selectedServiceFee?.taskListSubtotal} />
+          <ServiceFeeViewTableSection name="Depreciación de Equipos" data={equipmentDepreciation} subtotal={selectedServiceFee?.equipmentDepreciationSubtotal} />
+          <ServiceFeeViewTableSection name="Mantenimiento de Equipos" data={equipmentMaintenance} subtotal={selectedServiceFee?.equipmentMaintenanceSubtotal} />
+          <ServiceFeeViewTableSection name="Gastos Administrativos" data={administrativeExpenses} subtotal={selectedServiceFee?.administrativeExpensesSubtotal} />
+          <ServiceFeeViewTableSection name="Gastos de Transporte" data={transportationExpenses} subtotal={selectedServiceFee?.transportationExpensesSubtotal} />
+          <ServiceFeeViewTableSection name="Gastos de Personal Contratado" data={hiredPersonalExpenses} subtotal={selectedServiceFee?.hiredPersonalExpensesSubtotal} />
         </article>
-        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
-            <div className="flex w-[90%] justify-end pr-4 font-bold">
-              <h2>IMPORTE TOTAL DE GASTOS: </h2>
-            </div>
-            <div className="flex w-[9.5%] pl-2">$ {selectedServiceFee?.expensesTotalValue?.toFixed(2)}</div>
-        </article>
-        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
-            <div className="flex w-[90%] justify-end pr-4 font-bold">
-              <h2>TALENTO ARTISTICO (UTILIDAD): </h2>
-            </div>
-            <div className="flex w-[9.5%] pl-2">$ {Math.abs((selectedServiceFee?.artisticTalentValue - selectedServiceFee?.expensesTotalValue))?.toFixed(2)}</div>
-        </article>
-        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
-            <div className="flex w-[90%] justify-end pr-4 font-bold">
-              <h2>PRECIO ARTISTICO: </h2>
-            </div>
-            <div className="flex w-[9.5%] pl-2">$ {selectedServiceFee?.artisticTalentValue?.toFixed(2)}</div>
-        </article>
-        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
-            <div className="flex w-[90%] justify-end pr-4 font-bold">
-              <h2>ONAT (25%): </h2>
-            </div>
-            <div className="flex w-[9.5%] pl-2">$ {selectedServiceFee?.ONAT?.toFixed(2)}</div>
-        </article>
-        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
-            <div className="flex w-[90%] justify-end pr-4 font-bold">
-              <h2>MARGEN COMERCIAL APLICADO (0%): </h2>
-            </div>
-            <div className="flex w-[9.5%] pl-2">$ {selectedServiceFee?.commercialMargin?.toFixed(2)}</div>
-        </article>
-        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
-            <div className="flex w-[90%] justify-end pr-4 font-bold">
-              <h2>PRECIO DE VENTA (MN): </h2>
-            </div>
-            <div className="flex w-[9.5%] pl-2">$ {selectedServiceFee?.salePrice?.toFixed(2)}</div>
-        </article>
-        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
-            <div className="flex w-[90%] justify-end pr-4 font-bold">
-              <h2>PRECIO DE VENTA (USD): </h2>
-            </div>
-            <div className="flex w-[9.5%] pl-2">$ {selectedServiceFee?.salePriceUSD?.toFixed(2)}</div>
-        </article>
-        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
-            <div className="flex w-[90%] justify-end pr-4 font-bold">
-              <h2>MATERIAS PRIMAS Y MATERIALES APORTADOS POR EL CLIENTE: </h2>
-            </div>
-            <div className="flex w-[9.5%] pl-2">$ {selectedServiceFee?.rawMaterialsByClient?.toFixed(2)}</div>
-        </article>
-        <article className="flex ml-[210px]  pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
-            <div className="flex w-[90%] justify-end pr-4 font-bold">
-              <h2>PRECIO DE VENTA MAYORISTA MAXIMO: </h2>
-            </div>
-            <div className="flex w-[9.5%] pl-2">$ {selectedServiceFee?.salePrice?.toFixed(2)}</div>
-        </article>
+        <ServiceFeeViewSeccion name="IMPORTE TOTAL DE GASTOS" value={selectedServiceFee?.expensesTotalValue} />
+        <ServiceFeeViewSeccion name="TALENTO ARTISTICO (UTILIDAD)" value={selectedServiceFee?.artisticTalentValue} />
+        <ServiceFeeViewSeccion name="PRECIO ARTISTICO" value={selectedServiceFee?.artisticTalentValue} />
+        <ServiceFeeViewSeccion name="ONAT (25%)" value={selectedServiceFee?.ONAT} />
+        <ServiceFeeViewSeccion name="MARGEN COMERCIAL APLICADO (0%)" value={selectedServiceFee?.commercialMargin} />
+        <ServiceFeeViewSeccion name="PRECIO DE VENTA (MN)" value={selectedServiceFee?.salePrice} />
+        <ServiceFeeViewSeccion name="PRECIO DE VENTA (USD)" value={selectedServiceFee?.salePriceUSD} />
+        <ServiceFeeViewSeccion name="MATERIAS PRIMAS Y MATERIALES APORTADOS POR EL CLIENTE" value={selectedServiceFee?.rawMaterialsByClient} />
+        <ServiceFeeViewSeccion name="PRECIO DE VENTA MAYORISTA MAXIMO" value={selectedServiceFee?.salePrice} />
       </section>
     </>
+  );
+};
+
+export const ServiceFeeViewSeccion = (props: any) => {
+  const { name, value } = props;
+  return (
+    <article className="flex ml-[210px] pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+      <div className="flex w-[90%] justify-end pr-4 font-bold">
+        <h2>{name}: </h2>
+      </div>
+      <div className="flex w-[9.5%] pl-2">$ {value?.toFixed(2)}</div>
+    </article>
   );
 };

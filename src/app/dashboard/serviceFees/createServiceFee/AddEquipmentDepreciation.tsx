@@ -1,9 +1,11 @@
 "use client";
 
-import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
-import { RootState, useAppSelector } from "@/store/store";
-import { IServiceFeeSubItem } from "@/models/serviceFees";
+import { Form, InputNumber, Modal, Select, SelectProps } from "antd";
 import { useState } from "react";
+
+import { IServiceFeeSubItem } from "@/models/serviceFees";
+import { RootState, useAppSelector } from "@/store/store";
+import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 
 interface CollectionCreateFormProps {
   open: boolean;
@@ -12,28 +14,14 @@ interface CollectionCreateFormProps {
 }
 
 export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
-  const { serviceFeeAuxiliary }: any = useAppSelector((state: RootState) => state?.serviceFee);
-  const equipmentNames = [
-    {
-      name: "Plotter de Impresión y corte",
-      coefficient: serviceFeeAuxiliary[0]?.equipmentDepreciationCoefficients.plotter,
-    },
-    {
-      name: "Router",
-      coefficient: serviceFeeAuxiliary[0]?.equipmentDepreciationCoefficients.router,
-    },
-    {
-      name: "Dobladora",
-      coefficient: serviceFeeAuxiliary[0]?.equipmentDepreciationCoefficients.bendingMachine,
-    },
-    {
-      name: "Herramientas manuales",
-      coefficient: serviceFeeAuxiliary[0]?.equipmentDepreciationCoefficients.manualTools,
-    },
-  ];
-  const [equipmentDepreciationValue, setEquipmentDepreciationValue] = useState(0);
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
+  const [currentPrice, setCurrentPrice] = useState(0);
+  const [currentEquipmentDepreciation, setCurrentEquipmentDepreciation] = useState<{ name: string; value: number }>({
+    name: "",
+    value: 0,
+  });
 
-  const equipments: SelectProps["options"] = equipmentNames.map((equipmentDepreciation) => {
+  const listOfEquipmentDepreciation: SelectProps["options"] = serviceFeeAuxiliary?.equipmentDepreciationCoefficients?.map((equipmentDepreciation) => {
     return {
       label: `${equipmentDepreciation.name}`,
       value: `${equipmentDepreciation.name}`,
@@ -73,9 +61,16 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate({ ...values, value: equipmentDepreciationValue });
+                  onCreate({
+                    description: values.description,
+                    amount: values.amount,
+                    unitMeasure: "$/h",
+                    price: currentEquipmentDepreciation.value,
+                    value: currentPrice,
+                  });
                   form.resetFields();
-                  setEquipmentDepreciationValue(0);
+                  setCurrentEquipmentDepreciation({ name: "", value: 0 });
+                  setCurrentPrice(0);
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -91,42 +86,41 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
         <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select
             allowClear
-            onSelect={() => {
-              let values = form.getFieldsValue();
-              equipmentNames.map((equipmentName) => {
-                if (values.description === equipmentName.name)
-                  form.setFieldsValue({
-                    unitMeasure: "m2",
-                    price: equipmentName.coefficient,
-                  });
-              });
-              setEquipmentDepreciationValue(values.amount * values.price);
-            }}
+            options={listOfEquipmentDepreciation}
             style={{ width: "100%" }}
-            options={equipments}
+            onSelect={(value: any) => {
+              const selectedEquipmentDepreciation = serviceFeeAuxiliary?.equipmentDepreciationCoefficients?.find((equipmentDepreciation) => equipmentDepreciation.name === value);
+              setCurrentEquipmentDepreciation(selectedEquipmentDepreciation!);
+              form.setFieldsValue({
+                unitMeasure: "$/m2",
+                price: form.getFieldValue("amount") * selectedEquipmentDepreciation?.value!,
+              });
+              setCurrentPrice(form.getFieldValue("amount") * selectedEquipmentDepreciation?.value!);
+            }}
             showSearch
             optionFilterProp="children"
             filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
             filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
           />
         </Form.Item>
-        <Form.Item name="unitMeasure" label="Unidad de Medida" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input />
-        </Form.Item>
         <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber
             onChange={() => {
-              let values = form.getFieldsValue();
-              setEquipmentDepreciationValue(values.amount * values.price);
+              setCurrentPrice(form.getFieldValue("amount") * currentEquipmentDepreciation?.value);
             }}
           />
         </Form.Item>
-        <Form.Item name="price" label="Precio" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber />
-        </Form.Item>
-        <div className=" flex gap-2 pl-2">
+        <div className=" flex gap-2 pl-2 mb-4">
+          <span className="font-bold">Unidad de Medida:</span>
+          <span>$/m2</span>
+        </div>
+        <div className=" flex gap-2 pl-2 mb-4">
+          <span className="font-bold">Precio/UM:</span>
+          <span>${currentEquipmentDepreciation?.value?.toFixed(2)}</span>
+        </div>
+        <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Importe:</span>
-          <span>${!equipmentDepreciationValue ? 0 : equipmentDepreciationValue?.toFixed(2)}</span>
+          <span>${!currentPrice ? 0 : currentPrice?.toFixed(2)}</span>
         </div>
       </Form>
     </Modal>

@@ -219,6 +219,10 @@ const NomenclatorsTable: React.FC = () => {
           text: "Ficha de costo",
           value: "Ficha de costo",
         },
+        {
+          text: "Categoría de tarea",
+          value: "Categoría de tarea",
+        },
       ],
       onFilter: (value: any, record: any) => record.category.startsWith(value),
       filterSearch: true,
@@ -238,7 +242,6 @@ const NomenclatorsTable: React.FC = () => {
       key: "value",
       width: "35%",
       render: (text) => text && <span>$ {parseFloat(text).toFixed(2)}</span>,
-      // ...getColumnSearchProps("value"),
     },
   ];
 

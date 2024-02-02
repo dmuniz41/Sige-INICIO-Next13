@@ -19,8 +19,6 @@ export const startAddServiceFeeTask = ({ ...serviceFeeTask }): any => {
           description: serviceFeeTask.description,
           price: serviceFeeTask.price,
           unitMeasure: serviceFeeTask.unitMeasure,
-          complexityLevels: serviceFeeTask.complexityLevels,
-
         },
         { headers: { accessToken: token } }
       )
@@ -54,8 +52,6 @@ export const startUpdateServiceFeeTask = ({ ...serviceFeeTask }): any => {
           description: serviceFeeTask.description,
           price: serviceFeeTask.price,
           unitMeasure: serviceFeeTask.unitMeasure,
-          complexityLevels: serviceFeeTask.complexityLevels,
-
         },
         { headers: { accessToken: token } }
       )
@@ -121,7 +117,6 @@ const addServiceFeeTask = ({ ...serviceFeeTask }) => ({
     description: serviceFeeTask.description,
     price: serviceFeeTask.price,
     unitMeasure: serviceFeeTask.unitMeasure,
-    complexityLevels: serviceFeeTask.complexityLevels,
   },
 });
 
@@ -135,8 +130,6 @@ const updateServiceFeeTask = ({ ...serviceFeeTask }) => ({
     description: serviceFeeTask.description,
     price: serviceFeeTask.price,
     unitMeasure: serviceFeeTask.unitMeasure,
-    complexityLevels: serviceFeeTask.complexityLevels,
-
   },
 });
 
