@@ -103,7 +103,7 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
         </Form.Item>
         <div className=" flex gap-2 pl-2">
           <span className="font-bold">Unidad de Medida:</span>
-          <span>{!unitMeasure ? 0 : unitMeasure}</span>
+          <span>{!unitMeasure ? "" : unitMeasure}</span>
         </div>
         <div className=" flex gap-2 pl-2">
           <span className="font-bold">Precio:</span>

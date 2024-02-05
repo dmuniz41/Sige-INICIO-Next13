@@ -219,11 +219,6 @@ export const CreateServiceFeeForm = () => {
           name: "currencyChange",
           value: serviceFeeAuxiliary?.currencyChange,
         },
-
-        {
-          name: "ONAT",
-          value: 25,
-        },
       ]}
     >
       <section className=" flex-col mb-4">
@@ -348,7 +343,7 @@ export const CreateServiceFeeForm = () => {
       <section className="flex gap-4 mt-4">
         {/* ONAT */}
         <Form.Item className="mb-3 " label={<span className="font-bold text-md">ONAT (%)</span>} name="ONAT" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber disabled />
+          <InputNumber />
         </Form.Item>
         {/* commercialMargin */}
         <Form.Item className="mb-3 " label={<span className="font-bold text-md">Margen Comercial (%)</span>} name="commercialMargin" rules={[{ required: true, message: "Campo requerido" }]}>
@@ -379,14 +374,17 @@ export const CreateServiceFeeForm = () => {
                 dispatch(
                   startAddServiceFee({
                     administrativeExpenses: values.administrativeExpenses,
+                    // PORCIENTO
                     artisticTalentValue: values.artisticTalentValue,
                     category: values.category,
+                    // PORCIENTO
                     commercialMargin: values.commercialMargin,
                     currencyChange: values.currencyChange,
                     equipmentDepreciation: values.equipmentDepreciation,
                     equipmentMaintenance: values.equipmentMaintenance,
                     hiredPersonalExpenses: values.hiredPersonalExpenses,
                     nomenclatorId: values.nomenclatorId,
+                    // PORCIENTO
                     ONAT: values.ONAT,
                     payMethodCoef: values.payMethodCoef,
                     rawMaterials: values.rawMaterials,

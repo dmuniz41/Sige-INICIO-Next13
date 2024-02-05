@@ -13,7 +13,7 @@ export const startAddServiceFee = ({ ...serviceFee }): any => {
         `${process.env.NEXT_PUBLIC_API_URL}/serviceFee`,
         {
           administrativeExpenses: serviceFee.administrativeExpenses ?? [],
-          artisticTalentValue: serviceFee.artisticTalentValue,
+          artisticTalent: serviceFee.artisticTalentValue,
           category: serviceFee.category,
           commercialMargin: serviceFee.commercialMargin,
           currencyChange: serviceFee.currencyChange,
@@ -59,7 +59,7 @@ export const startUpdateServiceFee = ({ ...serviceFee }): any => {
         {
           _id: serviceFee._id,
           administrativeExpenses: serviceFee.administrativeExpenses ?? [],
-          artisticTalentValue: serviceFee.artisticTalentValue,
+          artisticTalent: serviceFee.artisticTalentValue,
           category: serviceFee.category,
           commercialMargin: serviceFee.commercialMargin,
           currencyChange: serviceFee.currencyChange,
@@ -154,7 +154,7 @@ const addServiceFee = ({ ...serviceFee }) => ({
   type: types.addServiceFee,
   payload: {
     administrativeExpenses: serviceFee.administrativeExpenses,
-    artisticTalentValue: serviceFee.artisticTalentValue,
+    artisticTalent: serviceFee.artisticTalent,
     category: serviceFee.category,
     commercialMargin: serviceFee.commercialMargin,
     equipmentDepreciation: serviceFee.equipmentDepreciation,
@@ -177,7 +177,7 @@ const updateServiceFee = ({ ...serviceFee }) => ({
   type: types.updateServiceFee,
   payload: {
     administrativeExpenses: serviceFee.administrativeExpenses,
-    artisticTalentValue: serviceFee.artisticTalentValue,
+    artisticTalent: serviceFee.artisticTalent,
     category: serviceFee.category,
     commercialMargin: serviceFee.commercialMargin,
     equipmentDepreciation: serviceFee.equipmentDepreciation,

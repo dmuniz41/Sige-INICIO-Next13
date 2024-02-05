@@ -142,9 +142,9 @@ export const ServiceFeeView = () => {
         </article>
         <ServiceFeeViewSeccion name="IMPORTE TOTAL DE GASTOS" value={selectedServiceFee?.expensesTotalValue} />
         <ServiceFeeViewSeccion name="TALENTO ARTISTICO (UTILIDAD)" value={selectedServiceFee?.artisticTalentValue} />
-        <ServiceFeeViewSeccion name="PRECIO ARTISTICO" value={selectedServiceFee?.artisticTalentValue} />
-        <ServiceFeeViewSeccion name="ONAT (25%)" value={selectedServiceFee?.ONAT} />
-        <ServiceFeeViewSeccion name="MARGEN COMERCIAL APLICADO (0%)" value={selectedServiceFee?.commercialMargin} />
+        <ServiceFeeViewSeccion name={`PRECIO ARTISTICO(${selectedServiceFee?.artisticTalent}%)`} value={selectedServiceFee?.artisticTalentValue} />
+        <ServiceFeeViewSeccion name={`ONAT(${selectedServiceFee.ONAT}%)`} value={selectedServiceFee?.ONATValue} />
+        <ServiceFeeViewSeccion name={`MARGEN COMERCIAL APLICADO (${selectedServiceFee?.commercialMargin}%)`} value={selectedServiceFee?.commercialMarginValue} />
         <ServiceFeeViewSeccion name="PRECIO DE VENTA (MN)" value={selectedServiceFee?.salePrice} />
         <ServiceFeeViewSeccion name="PRECIO DE VENTA (USD)" value={selectedServiceFee?.salePriceUSD} />
         <ServiceFeeViewSeccion name="MATERIAS PRIMAS Y MATERIALES APORTADOS POR EL CLIENTE" value={selectedServiceFee?.rawMaterialsByClient} />

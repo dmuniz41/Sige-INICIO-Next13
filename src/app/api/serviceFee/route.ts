@@ -5,7 +5,6 @@ import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
 import Nomenclator, { INomenclator } from "@/models/nomenclator";
 import ServiceFee, { IServiceFee } from "@/models/serviceFees";
-import ServiceFeeAuxiliary, { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 
 export async function POST(request: Request) {
   const { ...serviceFee }: IServiceFee = await request.json();
@@ -62,13 +61,15 @@ export async function POST(request: Request) {
     // * El precio final se calcula (Suma de el valor de todos los gastos + valor del margen comercial() + valor del impuesto de la ONAT())
     const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
     const ONATValue = expensesTotalValue * (serviceFee.ONAT / 100);
-    const salePrice = expensesTotalValue + comercialMarginValue + ONATValue;
+    const artisticTalentValue = expensesTotalValue * (serviceFee.artisticTalent / 100);
+    const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
 
     if (!BDNomenclator) {
       const newNomenclator = new Nomenclator({
         key: newKey,
         code: serviceFee?.nomenclatorId,
         category: "Tarifa de Servicio",
+        value: salePrice,
       });
       await newNomenclator.save();
     }
@@ -95,9 +96,12 @@ export async function POST(request: Request) {
       hiredPersonalExpenses: serviceFee.hiredPersonalExpenses,
       hiredPersonalExpensesSubtotal,
       expensesTotalValue,
-      ONAT: ONATValue,
-      commercialMargin: comercialMarginValue,
-      artisticTalentValue: salePrice - ONATValue,
+      ONAT: serviceFee.ONAT,
+      ONATValue: ONATValue,
+      commercialMargin: serviceFee.commercialMargin,
+      commercialMarginValue: comercialMarginValue,
+      artisticTalent: serviceFee.artisticTalent,
+      artisticTalentValue: artisticTalentValue,
       rawMaterialsByClient: serviceFee.rawMaterialsByClient,
       salePrice: salePrice,
       salePriceUSD: salePrice / serviceFee?.currencyChange,
@@ -131,7 +135,6 @@ export async function POST(request: Request) {
     }
   }
 }
-
 export async function PUT(request: Request) {
   const { ...serviceFee }: IServiceFee = await request.json();
 
@@ -183,21 +186,32 @@ export async function PUT(request: Request) {
 
     const BDNomenclator = await Nomenclator.findOne({ category: "Tarifa de Servicio", code: serviceFee.nomenclatorId });
 
-    const BDAuxiliary = (await ServiceFeeAuxiliary.findOne()) as IServiceFeeAuxiliary;
-
     // * El precio final se calcula (Suma de el valor de todos los gastos + valor del margen comercial + el valor del impuesto de la ONAT)
     const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
     const ONATValue = expensesTotalValue * (serviceFee.ONAT / 100);
-    const salePrice = expensesTotalValue + comercialMarginValue + ONATValue;
+    const artisticTalentValue = expensesTotalValue * (serviceFee.artisticTalent / 100);
+    const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
 
+    //* Si se modifica el valor de una tarifa se modifica tambien el valor del nomenclador asociado
     if (!BDNomenclator) {
       const newKey = generateRandomString(26);
       const newNomenclator = new Nomenclator({
         key: newKey,
-        category: "Tarifa de Servicio",
         code: serviceFee.nomenclatorId,
+        category: "Tarifa de Servicio",
+        value: salePrice,
       });
       await newNomenclator.save();
+    } else {
+      await Nomenclator.findOneAndUpdate(
+        { category: "Tarifa de Servicio", code: serviceFee.nomenclatorId },
+        {
+          category: "Tarifa de Servicio",
+          code: serviceFee.nomenclatorId,
+          value: salePrice,
+        },
+        { new: true }
+      );
     }
 
     const updatedServiceFee = await ServiceFee.findByIdAndUpdate(
@@ -224,9 +238,12 @@ export async function PUT(request: Request) {
         hiredPersonalExpenses: serviceFee.hiredPersonalExpenses,
         hiredPersonalExpensesSubtotal,
         expensesTotalValue,
-        ONAT: ONATValue,
-        commercialMargin: comercialMarginValue,
-        artisticTalentValue: salePrice - ONATValue,
+        ONAT: serviceFee.ONAT,
+        ONATValue: ONATValue,
+        commercialMargin: serviceFee.commercialMargin,
+        commercialMarginValue: comercialMarginValue,
+        artisticTalent: serviceFee.artisticTalent,
+        artisticTalentValue: artisticTalentValue,
         rawMaterialsByClient: serviceFee.rawMaterialsByClient,
         salePrice: salePrice,
         salePriceUSD: salePrice / serviceFee?.currencyChange,
@@ -261,7 +278,6 @@ export async function PUT(request: Request) {
     }
   }
 }
-
 export async function GET(request: Request) {
   const accessToken = request.headers.get("accessToken");
   try {
@@ -323,12 +339,17 @@ export async function PATCH(request: Request) {
     }
     await connectDB();
     const serviceFeeToDelete = await ServiceFee.findByIdAndDelete(id);
+    const BDNomenclator = await Nomenclator.findOne({ category: "Tarifa de Servicio", code: serviceFeeToDelete.nomenclatorId });
 
     if (!serviceFeeToDelete) {
       return NextResponse.json({
         ok: true,
         message: "La tarifa de servicio  a borrar no existe",
       });
+    }
+
+    if (BDNomenclator) {
+      await Nomenclator.findOneAndDelete({ category: "Tarifa de Servicio", code: serviceFeeToDelete.nomenclatorId });
     }
     return new NextResponse(
       JSON.stringify({

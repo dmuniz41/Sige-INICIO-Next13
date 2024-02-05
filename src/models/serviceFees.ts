@@ -41,9 +41,12 @@ export interface IServiceFee {
   hiredPersonalExpensesSubtotal: number;
   //*OTROS
   expensesTotalValue: number;
+  artisticTalent: number;
   artisticTalentValue: number;
   ONAT: number;
+  ONATValue: number;
   commercialMargin: number;
+  commercialMarginValue: number;
   salePrice: number;
   salePriceUSD: number;
   rawMaterialsByClient: number;
@@ -169,13 +172,22 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
   artisticTalentValue: {
     type: Number,
   },
+  artisticTalent: {
+    type: Number,
+  },
   ONAT: {
+    type: Number,
+  },
+  ONATValue: {
     type: Number,
   },
   rawMaterialsByClient: {
     type: Number,
   },
   commercialMargin: {
+    type: Number,
+  },
+  commercialMarginValue: {
     type: Number,
   },
   salePrice: {
