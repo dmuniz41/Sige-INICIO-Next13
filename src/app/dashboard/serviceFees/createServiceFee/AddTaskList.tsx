@@ -96,8 +96,7 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
         <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber
             onChange={() => {
-              let values = form.getFieldsValue();
-              setTaskValue(values.amount * price );
+              setTaskValue(form.getFieldValue('amount') * price );
             }}
           />
         </Form.Item>

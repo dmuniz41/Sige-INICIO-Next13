@@ -145,10 +145,12 @@ export const ServiceFeeView = () => {
         <ServiceFeeViewSeccion name={`PRECIO ARTISTICO(${selectedServiceFee?.artisticTalent}%)`} value={selectedServiceFee?.artisticTalentValue} />
         <ServiceFeeViewSeccion name={`ONAT(${selectedServiceFee.ONAT}%)`} value={selectedServiceFee?.ONATValue} />
         <ServiceFeeViewSeccion name={`MARGEN COMERCIAL APLICADO (${selectedServiceFee?.commercialMargin}%)`} value={selectedServiceFee?.commercialMarginValue} />
-        <ServiceFeeViewSeccion name="PRECIO DE VENTA (MN)" value={selectedServiceFee?.salePrice} />
-        <ServiceFeeViewSeccion name="PRECIO DE VENTA (USD)" value={selectedServiceFee?.salePriceUSD} />
         <ServiceFeeViewSeccion name="MATERIAS PRIMAS Y MATERIALES APORTADOS POR EL CLIENTE" value={selectedServiceFee?.rawMaterialsByClient} />
-        <ServiceFeeViewSeccion name="PRECIO DE VENTA MAYORISTA MAXIMO" value={selectedServiceFee?.salePrice} />
+        <ServiceFeeViewSeccion name="PRECIO DE VENTA (USD)" value={selectedServiceFee?.salePriceUSD} />
+        <ServiceFeeViewSeccion name="PRECIO DE VENTA (MN)" value={selectedServiceFee?.salePrice} />
+        <ServiceFeeViewSeccion name="PRECIO DE VENTA (COMPLEJIDAD ALTA)" value={selectedServiceFee?.complexity[0].value} />
+        <ServiceFeeViewSeccion name="PRECIO DE VENTA (COMPLEJIDAD MEDIA)" value={selectedServiceFee?.complexity[1].value} />
+        <ServiceFeeViewSeccion name="PRECIO DE VENTA (COMPLEJIDAD BAJA)" value={selectedServiceFee?.complexity[2].value} />
       </section>
     </>
   );
