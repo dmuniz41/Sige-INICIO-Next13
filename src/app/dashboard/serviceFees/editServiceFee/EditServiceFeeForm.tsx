@@ -280,11 +280,11 @@ export const EditServiceFeeForm = () => {
         },
         {
           name: "ONAT",
-          value: 25,
+          value: selectedServiceFee?.ONAT,
         },
         {
           name: "commercialMargin",
-          value: 50,
+          value: selectedServiceFee?.commercialMargin,
         },
         {
           name: "rawMaterialsByClient",
@@ -292,19 +292,19 @@ export const EditServiceFeeForm = () => {
         },
         {
           name: "artisticTalentValue",
-          value: 1,
+          value: selectedServiceFee?.artisticTalent,
         },
         {
           name: "highComplexity",
-          value: selectedServiceFee.complexity[0].coefficient,
+          value: selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Alta")?.coefficient,
         },
         {
           name: "mediumComplexity",
-          value: selectedServiceFee.complexity[1].coefficient,
+          value: selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Media")?.coefficient,
         },
         {
           name: "lowComplexity",
-          value: selectedServiceFee.complexity[2].coefficient,
+          value: selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Baja")?.coefficient,
         },
       ]}
     >
@@ -483,6 +483,20 @@ export const EditServiceFeeForm = () => {
                     category: values.category,
                     // PORCIENTO
                     commercialMargin: values.commercialMargin,
+                    complexity: [
+                      {
+                        name: "Alta",
+                        coefficient: values.highComplexity,
+                      },
+                      {
+                        name: "Media",
+                        coefficient: values.mediumComplexity,
+                      },
+                      {
+                        name: "Baja",
+                        coefficient: values.lowComplexity,
+                      },
+                    ],
                     currencyChange: values.currencyChange,
                     equipmentDepreciation: values.equipmentDepreciation,
                     equipmentMaintenance: values.equipmentMaintenance,

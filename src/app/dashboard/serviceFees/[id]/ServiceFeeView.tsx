@@ -14,7 +14,6 @@ import { loadSelectedServiceFee } from "@/actions/serviceFee";
 import { PDFSvg } from "@/app/global/PDFSvg";
 import { ServiceFeeViewTableSection } from "./ServiceFeeViewSection";
 import CostSheetPDFReport from "@/helpers/CostSheetPDFReport";
-import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 
 const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
   ssr: false,
@@ -32,7 +31,6 @@ export const ServiceFeeView = () => {
   }, [dispatch, selectedServiceFeeId]);
 
   const { selectedServiceFee }: { selectedServiceFee: IServiceFee } = useAppSelector((state: RootState) => state?.serviceFee);
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
   let rawMaterials: IServiceFeeSubItem[] = useMemo(() => selectedServiceFee.rawMaterials, [selectedServiceFee]);
   let taskList: IServiceFeeSubItem[] = useMemo(() => selectedServiceFee.taskList, [selectedServiceFee]);
   let equipmentDepreciation: IServiceFeeSubItem[] = useMemo(() => selectedServiceFee.equipmentDepreciation, [selectedServiceFee]);
@@ -150,10 +148,17 @@ export const ServiceFeeView = () => {
           <Divider type="vertical" />
           <div className="flex w-[150px] font-bold pl-2">USD</div>
         </article>
-        <SalePriceViewSeccion name="PRECIO DE VENTA" value={selectedServiceFee?.salePrice} USDValue={selectedServiceFee?.salePriceUSD} currencyChange={serviceFeeAuxiliary.currencyChange} />
-        <SalePriceViewSeccion name="PRECIO DE VENTA COMPLEJIDAD ALTA " value={selectedServiceFee?.complexity[0]?.value} USDValue={selectedServiceFee?.complexity[0]?.USDValue} />
-        <SalePriceViewSeccion name="PRECIO DE VENTA COMPLEJIDAD MEDIA" value={selectedServiceFee?.complexity[1]?.value} USDValue={selectedServiceFee?.complexity[1]?.USDValue} />
-        <SalePriceViewSeccion name="PRECIO DE VENTA COMPLEJIDAD BAJA " value={selectedServiceFee?.complexity[2]?.value} USDValue={selectedServiceFee?.complexity[2]?.USDValue} />
+        <article className="flex ml-[210px] pl-4 pr-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+          <div className="flex flex-grow justify-end pr-4 font-bold">
+            <h2>PRECIO DE VENTA </h2>
+          </div>
+          <div className="flex w-[150px] pl-2">$ {selectedServiceFee?.salePrice?.toFixed(2)}</div>
+          <Divider type="vertical" />
+          <div className="flex w-[150px] pl-2">$ {selectedServiceFee?.salePriceUSD?.toFixed(2)}</div>
+        </article>
+        <SalePriceViewSeccion name="PRECIO DE VENTA COMPLEJIDAD ALTA " value={selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Alta")} />
+        <SalePriceViewSeccion name="PRECIO DE VENTA COMPLEJIDAD MEDIA" value={selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Media")} />
+        <SalePriceViewSeccion name="PRECIO DE VENTA COMPLEJIDAD BAJA " value={selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Baja")} />
       </section>
     </>
   );
@@ -172,15 +177,15 @@ export const ServiceFeeViewSeccion = (props: any) => {
 };
 
 export const SalePriceViewSeccion = (props: any) => {
-  const { name, value, USDValue } = props;
+  const { name, value } = props;
   return (
     <article className="flex ml-[210px] pl-4 pr-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
       <div className="flex flex-grow justify-end pr-4 font-bold">
         <h2>{name}: </h2>
       </div>
-      <div className="flex w-[150px] pl-2">$ {value?.toFixed(2)}</div>
+      <div className="flex w-[150px] pl-2">$ {value?.value?.toFixed(2)}</div>
       <Divider type="vertical" />
-      <div className="flex w-[150px] pl-2">$ {USDValue?.toFixed(2)}</div>
+      <div className="flex w-[150px] pl-2">$ {value?.USDValue?.toFixed(2)}</div>
     </article>
   );
 };
