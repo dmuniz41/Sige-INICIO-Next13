@@ -1,7 +1,7 @@
 "use client";
 
 import { RootState, useAppSelector } from "@/store/store";
-import { Tooltip } from "antd";
+import { Divider, Tooltip } from "antd";
 import { useAppDispatch } from "@/hooks/hooks";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -126,9 +126,6 @@ export const ServiceFeeView = () => {
             <label className="font-bold">
               Precio/UM: <span className="font-normal">{selectedServiceFee.valuePerUnitMeasure}</span>
             </label>
-            <label className="font-bold">
-              Cliente: <span className="font-normal">Cliente</span>
-            </label>
           </div>
         </article>
         <article className=" flex flex-1 flex-col">
@@ -145,10 +142,23 @@ export const ServiceFeeView = () => {
         <ServiceFeeViewSeccion name={`PRECIO ARTISTICO(${selectedServiceFee?.artisticTalent}%)`} value={selectedServiceFee?.artisticTalentValue} />
         <ServiceFeeViewSeccion name={`ONAT(${selectedServiceFee.ONAT}%)`} value={selectedServiceFee?.ONATValue} />
         <ServiceFeeViewSeccion name={`MARGEN COMERCIAL APLICADO (${selectedServiceFee?.commercialMargin}%)`} value={selectedServiceFee?.commercialMarginValue} />
-        <ServiceFeeViewSeccion name="PRECIO DE VENTA (MN)" value={selectedServiceFee?.salePrice} />
-        <ServiceFeeViewSeccion name="PRECIO DE VENTA (USD)" value={selectedServiceFee?.salePriceUSD} />
         <ServiceFeeViewSeccion name="MATERIAS PRIMAS Y MATERIALES APORTADOS POR EL CLIENTE" value={selectedServiceFee?.rawMaterialsByClient} />
-        <ServiceFeeViewSeccion name="PRECIO DE VENTA MAYORISTA MAXIMO" value={selectedServiceFee?.salePrice} />
+        <article className="flex ml-[210px] justify-end pl-4 pr-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+          <div className="flex w-[150px] font-bold pl-2">MN</div>
+          <Divider type="vertical" />
+          <div className="flex w-[150px] font-bold pl-2">USD</div>
+        </article>
+        <article className="flex ml-[210px] pl-4 pr-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+          <div className="flex flex-grow justify-end pr-4 font-bold">
+            <h2>PRECIO DE VENTA </h2>
+          </div>
+          <div className="flex w-[150px] pl-2">$ {selectedServiceFee?.salePrice?.toFixed(2)}</div>
+          <Divider type="vertical" />
+          <div className="flex w-[150px] pl-2">$ {selectedServiceFee?.salePriceUSD?.toFixed(2)}</div>
+        </article>
+        <SalePriceViewSeccion name="PRECIO DE VENTA COMPLEJIDAD ALTA " value={selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Alta")} />
+        <SalePriceViewSeccion name="PRECIO DE VENTA COMPLEJIDAD MEDIA" value={selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Media")} />
+        <SalePriceViewSeccion name="PRECIO DE VENTA COMPLEJIDAD BAJA " value={selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Baja")} />
       </section>
     </>
   );
@@ -161,7 +171,21 @@ export const ServiceFeeViewSeccion = (props: any) => {
       <div className="flex w-[90%] justify-end pr-4 font-bold">
         <h2>{name}: </h2>
       </div>
-      <div className="flex w-[9.5%] pl-2">$ {value?.toFixed(2)}</div>
+      <div className="flex w-[150px] pl-2">$ {value?.toFixed(2)}</div>
+    </article>
+  );
+};
+
+export const SalePriceViewSeccion = (props: any) => {
+  const { name, value } = props;
+  return (
+    <article className="flex ml-[210px] pl-4 pr-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+      <div className="flex flex-grow justify-end pr-4 font-bold">
+        <h2>{name}: </h2>
+      </div>
+      <div className="flex w-[150px] pl-2">$ {value?.value?.toFixed(2)}</div>
+      <Divider type="vertical" />
+      <div className="flex w-[150px] pl-2">$ {value?.USDValue?.toFixed(2)}</div>
     </article>
   );
 };

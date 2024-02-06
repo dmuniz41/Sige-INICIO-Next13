@@ -1,11 +1,11 @@
 "use client";
 
-import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
-import { IServiceFeeSubItem } from "@/models/serviceFees";
+import { Form, InputNumber, Modal, Select, SelectProps } from "antd";
 import { useState } from "react";
+
+import { IServiceFeeSubItem } from "@/models/serviceFees";
 import { RootState, useAppSelector } from "@/store/store";
 import { IServiceFeeTask } from "@/models/serviceFeeTask";
-import { set } from "mongoose";
 
 interface CollectionCreateFormProps {
   open: boolean;
@@ -96,8 +96,7 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
         <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber
             onChange={() => {
-              let values = form.getFieldsValue();
-              setTaskValue(values.amount * price );
+              setTaskValue(form.getFieldValue('amount') * price );
             }}
           />
         </Form.Item>

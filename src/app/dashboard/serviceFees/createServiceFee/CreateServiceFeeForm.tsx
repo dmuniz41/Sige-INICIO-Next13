@@ -340,6 +340,22 @@ export const CreateServiceFeeForm = () => {
         buttonText="Añadir Gastos de Personal Contratado"
         form={form}
       />
+      <article className="flex gap-2">
+        <div className="font-bold text-base items-center flex">
+          <span>Coeficientes de Complejidad</span>
+        </div>
+        <div className="flex gap-2 pt-3 items-center">
+          <Form.Item className="mb-3" label={<span className="font-bold text-md">Alta</span>} name="highComplexity" rules={[{ required: true, message: "Campo requerido" }]}>
+            <InputNumber />
+          </Form.Item>
+          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Media</span>} name="mediumComplexity" rules={[{ required: true, message: "Campo requerido" }]}>
+            <InputNumber />
+          </Form.Item>
+          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Baja</span>} name="lowComplexity" rules={[{ required: true, message: "Campo requerido" }]}>
+            <InputNumber />
+          </Form.Item>
+        </div>
+      </article>
       <section className="flex gap-4 mt-4">
         {/* ONAT */}
         <Form.Item className="mb-3 " label={<span className="font-bold text-md">ONAT (%)</span>} name="ONAT" rules={[{ required: true, message: "Campo requerido" }]}>
@@ -379,6 +395,20 @@ export const CreateServiceFeeForm = () => {
                     category: values.category,
                     // PORCIENTO
                     commercialMargin: values.commercialMargin,
+                    complexity: [
+                      {
+                        name: "Alta",
+                        coefficient: values.highComplexity,
+                      },
+                      {
+                        name: "Media",
+                        coefficient: values.mediumComplexity,
+                      },
+                      {
+                        name: "Baja",
+                        coefficient: values.lowComplexity,
+                      },
+                    ],
                     currencyChange: values.currencyChange,
                     equipmentDepreciation: values.equipmentDepreciation,
                     equipmentMaintenance: values.equipmentMaintenance,

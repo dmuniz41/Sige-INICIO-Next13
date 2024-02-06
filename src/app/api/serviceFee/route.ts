@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
 import Nomenclator, { INomenclator } from "@/models/nomenclator";
-import ServiceFee, { IServiceFee } from "@/models/serviceFees";
+import ServiceFee, { IServiceFee, IServiceFeeComplexityItem } from "@/models/serviceFees";
 
 export async function POST(request: Request) {
   const { ...serviceFee }: IServiceFee = await request.json();
@@ -64,6 +64,16 @@ export async function POST(request: Request) {
     const artisticTalentValue = expensesTotalValue * (serviceFee.artisticTalent / 100);
     const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
 
+    // * Calcula el valor de los 3 niveles de complejidad en dependencia del coeficiente asignado
+    const complexityValues = serviceFee?.complexity?.map((complexity) => {
+      return {
+        name: complexity.name,
+        coefficient: complexity.coefficient,
+        value: salePrice * complexity.coefficient,
+        USDValue: (salePrice * complexity.coefficient) / serviceFee.currencyChange,
+      };
+    });
+
     if (!BDNomenclator) {
       const newNomenclator = new Nomenclator({
         key: newKey,
@@ -95,6 +105,7 @@ export async function POST(request: Request) {
       transportationExpensesSubtotal,
       hiredPersonalExpenses: serviceFee.hiredPersonalExpenses,
       hiredPersonalExpensesSubtotal,
+      complexity: complexityValues,
       expensesTotalValue,
       ONAT: serviceFee.ONAT,
       ONATValue: ONATValue,
@@ -192,6 +203,16 @@ export async function PUT(request: Request) {
     const artisticTalentValue = expensesTotalValue * (serviceFee.artisticTalent / 100);
     const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
 
+    // * Calcula el valor de los 3 niveles de complejidad en dependencia del coeficiente asignado
+    const complexityValues = serviceFee?.complexity?.map((complexity) => {
+      return {
+        name: complexity.name,
+        coefficient: complexity.coefficient,
+        value: salePrice * complexity.coefficient,
+        USDValue: (salePrice * complexity.coefficient) / serviceFee.currencyChange,
+      };
+    });
+
     //* Si se modifica el valor de una tarifa se modifica tambien el valor del nomenclador asociado
     if (!BDNomenclator) {
       const newKey = generateRandomString(26);
@@ -237,6 +258,7 @@ export async function PUT(request: Request) {
         transportationExpensesSubtotal,
         hiredPersonalExpenses: serviceFee.hiredPersonalExpenses,
         hiredPersonalExpensesSubtotal,
+        complexity: complexityValues,
         expensesTotalValue,
         ONAT: serviceFee.ONAT,
         ONATValue: ONATValue,
