@@ -70,6 +70,7 @@ export async function POST(request: Request) {
         name: complexity.name,
         coefficient: complexity.coefficient,
         value: salePrice * complexity.coefficient,
+        USDValue: (salePrice * complexity.coefficient) / serviceFee.currencyChange,
       };
     });
 
@@ -208,6 +209,7 @@ export async function PUT(request: Request) {
         name: complexity.name,
         coefficient: complexity.coefficient,
         value: salePrice * complexity.coefficient,
+        USDValue: (salePrice * complexity.coefficient) / serviceFee.currencyChange,
       };
     });
 

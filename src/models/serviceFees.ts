@@ -12,6 +12,7 @@ export interface IServiceFeeComplexityItem {
   name: "Alta" | "Media" | "Baja";
   coefficient: number;
   value: number;
+  USDValue: number
 }
 export interface IServiceFee {
   _id: string;
@@ -178,6 +179,7 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
       name: String,
       coefficient: Number,
       value: Number,
+      USDValue: Number,
     },
   ],
   expensesTotalValue: {

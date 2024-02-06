@@ -284,7 +284,7 @@ export const EditServiceFeeForm = () => {
         },
         {
           name: "commercialMargin",
-          value: 15,
+          value: 50,
         },
         {
           name: "rawMaterialsByClient",
@@ -293,6 +293,18 @@ export const EditServiceFeeForm = () => {
         {
           name: "artisticTalentValue",
           value: 1,
+        },
+        {
+          name: "highComplexity",
+          value: selectedServiceFee.complexity[0].coefficient,
+        },
+        {
+          name: "mediumComplexity",
+          value: selectedServiceFee.complexity[1].coefficient,
+        },
+        {
+          name: "lowComplexity",
+          value: selectedServiceFee.complexity[2].coefficient,
         },
       ]}
     >
@@ -311,7 +323,7 @@ export const EditServiceFeeForm = () => {
                 options={categoriesOptions}
                 showSearch
                 onSelect={(value) => {
-                  value === "Trabajo Pladur" ? form.setFieldValue("commercialMargin", 12) : form.setFieldValue("commercialMargin", 15);
+                  value === "Trabajo Pladur" ? form.setFieldValue("commercialMargin", 20) : form.setFieldValue("commercialMargin", 50);
                 }}
                 optionFilterProp="children"
                 filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
@@ -415,13 +427,29 @@ export const EditServiceFeeForm = () => {
         buttonText="Añadir Gastos de Personal Contratado"
         form={form}
       />
+      <article className="flex gap-2">
+        <div className="font-bold text-base items-center flex">
+          <span>Coeficientes de Complejidad</span>
+        </div>
+        <div className="flex gap-2 pt-3 items-center">
+          <Form.Item className="mb-3" label={<span className="font-bold text-md">Alta</span>} name="highComplexity" rules={[{ required: true, message: "Campo requerido" }]}>
+            <InputNumber />
+          </Form.Item>
+          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Media</span>} name="mediumComplexity" rules={[{ required: true, message: "Campo requerido" }]}>
+            <InputNumber />
+          </Form.Item>
+          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Baja</span>} name="lowComplexity" rules={[{ required: true, message: "Campo requerido" }]}>
+            <InputNumber />
+          </Form.Item>
+        </div>
+      </article>
       <section className="flex gap-4 mt-4">
         {/* ONAT */}
         <Form.Item className="mb-3 " label={<span className="font-bold text-md">ONAT (%)</span>} name="ONAT" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber />
         </Form.Item>
         {/* commercialMargin */}
-        <Form.Item className="mb-3 " label={<span className="font-bold text-md">Margen Comercial</span>} name="commercialMargin" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item className="mb-3 " label={<span className="font-bold text-md">Margen Comercial (%)</span>} name="commercialMargin" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber />
         </Form.Item>
         {/* rawMaterialsByClient */}

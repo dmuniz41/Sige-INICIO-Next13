@@ -1,7 +1,7 @@
 "use client";
 
 import { RootState, useAppSelector } from "@/store/store";
-import { Tooltip } from "antd";
+import { Divider, Tooltip } from "antd";
 import { useAppDispatch } from "@/hooks/hooks";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -14,6 +14,7 @@ import { loadSelectedServiceFee } from "@/actions/serviceFee";
 import { PDFSvg } from "@/app/global/PDFSvg";
 import { ServiceFeeViewTableSection } from "./ServiceFeeViewSection";
 import CostSheetPDFReport from "@/helpers/CostSheetPDFReport";
+import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 
 const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
   ssr: false,
@@ -31,6 +32,7 @@ export const ServiceFeeView = () => {
   }, [dispatch, selectedServiceFeeId]);
 
   const { selectedServiceFee }: { selectedServiceFee: IServiceFee } = useAppSelector((state: RootState) => state?.serviceFee);
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
   let rawMaterials: IServiceFeeSubItem[] = useMemo(() => selectedServiceFee.rawMaterials, [selectedServiceFee]);
   let taskList: IServiceFeeSubItem[] = useMemo(() => selectedServiceFee.taskList, [selectedServiceFee]);
   let equipmentDepreciation: IServiceFeeSubItem[] = useMemo(() => selectedServiceFee.equipmentDepreciation, [selectedServiceFee]);
@@ -126,9 +128,6 @@ export const ServiceFeeView = () => {
             <label className="font-bold">
               Precio/UM: <span className="font-normal">{selectedServiceFee.valuePerUnitMeasure}</span>
             </label>
-            <label className="font-bold">
-              Cliente: <span className="font-normal">Cliente</span>
-            </label>
           </div>
         </article>
         <article className=" flex flex-1 flex-col">
@@ -146,11 +145,15 @@ export const ServiceFeeView = () => {
         <ServiceFeeViewSeccion name={`ONAT(${selectedServiceFee.ONAT}%)`} value={selectedServiceFee?.ONATValue} />
         <ServiceFeeViewSeccion name={`MARGEN COMERCIAL APLICADO (${selectedServiceFee?.commercialMargin}%)`} value={selectedServiceFee?.commercialMarginValue} />
         <ServiceFeeViewSeccion name="MATERIAS PRIMAS Y MATERIALES APORTADOS POR EL CLIENTE" value={selectedServiceFee?.rawMaterialsByClient} />
-        <ServiceFeeViewSeccion name="PRECIO DE VENTA (USD)" value={selectedServiceFee?.salePriceUSD} />
-        <ServiceFeeViewSeccion name="PRECIO DE VENTA (MN)" value={selectedServiceFee?.salePrice} />
-        <ServiceFeeViewSeccion name="PRECIO DE VENTA (COMPLEJIDAD ALTA)" value={selectedServiceFee?.complexity[0].value} />
-        <ServiceFeeViewSeccion name="PRECIO DE VENTA (COMPLEJIDAD MEDIA)" value={selectedServiceFee?.complexity[1].value} />
-        <ServiceFeeViewSeccion name="PRECIO DE VENTA (COMPLEJIDAD BAJA)" value={selectedServiceFee?.complexity[2].value} />
+        <article className="flex ml-[210px] justify-end pl-4 pr-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+          <div className="flex w-[150px] font-bold pl-2">MN</div>
+          <Divider type="vertical" />
+          <div className="flex w-[150px] font-bold pl-2">USD</div>
+        </article>
+        <SalePriceViewSeccion name="PRECIO DE VENTA" value={selectedServiceFee?.salePrice} USDValue={selectedServiceFee?.salePriceUSD} currencyChange={serviceFeeAuxiliary.currencyChange} />
+        <SalePriceViewSeccion name="PRECIO DE VENTA COMPLEJIDAD ALTA " value={selectedServiceFee?.complexity[0]?.value} USDValue={selectedServiceFee?.complexity[0]?.USDValue} />
+        <SalePriceViewSeccion name="PRECIO DE VENTA COMPLEJIDAD MEDIA" value={selectedServiceFee?.complexity[1]?.value} USDValue={selectedServiceFee?.complexity[1]?.USDValue} />
+        <SalePriceViewSeccion name="PRECIO DE VENTA COMPLEJIDAD BAJA " value={selectedServiceFee?.complexity[2]?.value} USDValue={selectedServiceFee?.complexity[2]?.USDValue} />
       </section>
     </>
   );
@@ -163,7 +166,21 @@ export const ServiceFeeViewSeccion = (props: any) => {
       <div className="flex w-[90%] justify-end pr-4 font-bold">
         <h2>{name}: </h2>
       </div>
-      <div className="flex w-[9.5%] pl-2">$ {value?.toFixed(2)}</div>
+      <div className="flex w-[150px] pl-2">$ {value?.toFixed(2)}</div>
+    </article>
+  );
+};
+
+export const SalePriceViewSeccion = (props: any) => {
+  const { name, value, USDValue } = props;
+  return (
+    <article className="flex ml-[210px] pl-4 pr-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+      <div className="flex flex-grow justify-end pr-4 font-bold">
+        <h2>{name}: </h2>
+      </div>
+      <div className="flex w-[150px] pl-2">$ {value?.toFixed(2)}</div>
+      <Divider type="vertical" />
+      <div className="flex w-[150px] pl-2">$ {USDValue?.toFixed(2)}</div>
     </article>
   );
 };
