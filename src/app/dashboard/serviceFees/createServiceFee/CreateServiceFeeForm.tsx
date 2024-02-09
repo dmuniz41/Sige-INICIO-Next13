@@ -340,7 +340,7 @@ export const CreateServiceFeeForm = () => {
         buttonText="Añadir Gastos de Personal Contratado"
         form={form}
       />
-      <article className="flex gap-2">
+      <article className="flex gap-5">
         <div className="font-bold text-base items-center flex">
           <span>Coeficientes de Complejidad</span>
         </div>
@@ -381,7 +381,7 @@ export const CreateServiceFeeForm = () => {
       <Form.Item>
         <button
           type="submit"
-          className="bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300 w-[5rem] h-[2rem] flex items-center p-1 text-sm font-bold text-white-100  justify-center gap-2 rounded-md "
+          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
           onClick={() => {
             form
               .validateFields()
@@ -448,18 +448,19 @@ export const CreateServiceFeeForm = () => {
   );
 };
 
+
 export const FormSection = (props: any) => {
   const { sectionName, values, formName, valuesSetter, modalSetter, buttonText, form } = props;
   return (
-    <section className=" flex w-full mb-4 bg-background_light p-2 rounded shadow-md ">
-      <div className="flex w-[15%] justify-center items-center text-center gap-1 ">
-        <span className="text-base font-bold mb-3">{sectionName}</span>
+    <section className=" flex w-full mb-8 bg-white-100 rounded shadow-[0px_0px_5px_0px_#00000024] ">
+      <div className="flex w-[15%] h-full justify-center items-center text-center gap-1 ">
+        <span className="text-base font-bold">{sectionName}</span>
       </div>
       <div className="flex pl-2 w-full flex-col">
         {values?.length == 0 ? (
           <div></div>
         ) : (
-          <div className="flex flex-1 mb-4 pr-4 font-bold">
+          <div className="flex flex-1 pr-4 pt-4 font-bold">
             <div className="flex-1">
               <span>Descripción</span>
             </div>
@@ -479,7 +480,7 @@ export const FormSection = (props: any) => {
         )}
         <Form.List name={formName}>
           {(fields, { add, remove }) => (
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col pr-2 w-full pt-6">
               {fields.map(({ key, name, ...restField }) => (
                 <div key={key} className="w-full">
                   <div className="flex items-center flex-row mb-0 h-9  gap-1">
@@ -508,8 +509,8 @@ export const FormSection = (props: any) => {
                   </div>
                 </div>
               ))}
-              <Form.Item className="mb-2 w-full">
-                <Button className="flex flex-row justify-center items-center" type="dashed" onClick={() => modalSetter(true)} block icon={<PlusOutlined />}>
+              <Form.Item className="justify-center w-full">
+                <Button className="flex flex-row justify-center items-center" block  type="dashed" onClick={() => modalSetter(true)}  icon={<PlusOutlined />}>
                   {buttonText}
                 </Button>
               </Form.Item>

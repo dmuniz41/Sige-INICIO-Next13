@@ -121,7 +121,7 @@ const UserTable: React.FC = () => {
       values.securityPrivileges,
       values.warehousePrivileges,
       values.costSheetPrivileges,
-      values.serviceFeePrivileges,
+      values.serviceFeePrivileges
     );
     dispatch(startUpdateUser(selectedRow?._id!, values.user, values.userName, values.lastName, privileges, values.area));
     setSelectedRow(undefined);
@@ -293,16 +293,12 @@ const UserTable: React.FC = () => {
     },
   ];
 
+  // !TODO: Pasar la opcion de establecer la tasa de cambio completamente hacia la hoja de auxiliares de las tarifas de servicio
+
   return (
     <>
       <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
-        <button
-          disabled={!canCreate}
-          onClick={handleNew}
-          className={`${
-            canCreate ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"
-          } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
-        >
+        <button disabled={!canCreate} onClick={handleNew} className={"toolbar-primary-icon-btn"}>
           <PlusSvg />
           Nuevo
         </button>
@@ -329,7 +325,7 @@ const UserTable: React.FC = () => {
               <ShieldSvg />
             </button>
           </Tooltip>
-          <Tooltip placement="top" title={"Establecer Tasa de Cambio"} arrow={{ pointAtCenter: true }}>
+          {/* <Tooltip placement="top" title={"Establecer Tasa de Cambio"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canEdit}
               className={`${
@@ -339,7 +335,7 @@ const UserTable: React.FC = () => {
             >
               <CurrencySvg />
             </button>
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canDelete}

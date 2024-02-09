@@ -217,7 +217,7 @@ const WarehousesTable: React.FC = () => {
       dataIndex: "totalValue",
       key: "totalValue",
       width: "25%",
-      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>
+      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
     },
   ];
 
@@ -225,24 +225,12 @@ const WarehousesTable: React.FC = () => {
     <>
       <div className="flex h-14 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <div className="flex gap-2">
-          <button
-            disabled={!canCreate}
-            onClick={handleNew}
-            className={`${
-              canCreate ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"
-            } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
-          >
+          <button disabled={!canCreate} onClick={handleNew} className="toolbar-primary-icon-btn">
             <PlusSvg />
             Nuevo
           </button>
           <Link href={`/dashboard/warehouse/${selectedRow === undefined ? " " : selectedRow?._id}`} className="cursor-default">
-            <button
-              disabled={!canList}
-              onClick={handleView}
-              className={`${
-                canList ? "bg-secondary-500 cursor-pointer hover:bg-secondary-600 ease-in-out duration-300" : "bg-secondary-200"
-              } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
-            >
+            <button disabled={!canList} onClick={handleView} className="toolbar-secondary-icon-btn">
               <SeeSvg />
               Ver
             </button>

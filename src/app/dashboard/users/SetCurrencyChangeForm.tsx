@@ -20,7 +20,7 @@ export const SetCurrencyChangeForm: React.FC<CollectionCreateFormProps> = ({ ope
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Establecer Tasa de Cambio</span>
+          <span className="font-bold text-lg">Establecer Tasa de Cambio</span>
         </div>
       }
       centered

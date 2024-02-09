@@ -180,7 +180,7 @@ const LowExistenceMaterials: React.FC = () => {
   return (
     <>
       <div className="flex h-14 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-2 justify-between pr-4">
-        <span className="items-center flex flex-initial gap-2 font-black text-xl">
+        <span className="items-center flex flex-initial gap-2 font-bold text-xl">
           Materiales con pocas existencias
           <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="#ff0000" fill="none" strokeLinecap="round" strokeLinejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>

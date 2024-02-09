@@ -82,15 +82,10 @@ export const ServiceFeeView = () => {
       <article>
         <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
           <div className="flex gap-2">
-            <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
-              <button
-                className="bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300 w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md"
-                onClick={handleEdit}
-              >
-                <EditSvg />
-                Editar
-              </button>
-            </Tooltip>
+            <button className="toolbar-primary-icon-btn" onClick={handleEdit}>
+              <EditSvg />
+              Editar
+            </button>
             {/* <PDFDownloadLink document={<CostSheetPDFReport fields={fields} data={PDFReportData} title={`Ficha de costo`} />} fileName={`Ficha de costo ${selectedCostSheet.taskName}`}>
               {({ blob, url, loading, error }) => (
                 <button disabled={loading} className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 rounded-full w-[2.5rem] h-[2.5rem] flex justify-center items-center">
@@ -105,8 +100,8 @@ export const ServiceFeeView = () => {
       <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-2">
         <article className="w-full flex flex-row p-2 ">
           <label className="font-bold mr-2 ">Descripción del servicio:</label>
-          <p className="w-[40%]">{selectedServiceFee.taskName}</p>
-          <div className="w-[15%] flex flex-col pl-10">
+          <p className="w-[25%]">{selectedServiceFee.taskName}</p>
+          <div className="w-[25%] flex flex-col pl-10">
             <label className="font-bold">
               Creador: <span className="font-normal">INICIO</span>
             </label>
@@ -114,7 +109,7 @@ export const ServiceFeeView = () => {
               Cantidad de trabajadores: <span className="font-normal">{selectedServiceFee.workersAmount}</span>
             </label>
           </div>
-          <div className="flex flex-1 flex-col pl-10">
+          <div className="flex w-[25%] flex-col pl-10">
             <label className="font-bold">
               Nomenclador: <span className="font-normal">{selectedServiceFee.nomenclatorId}</span>
             </label>
@@ -143,12 +138,12 @@ export const ServiceFeeView = () => {
         <ServiceFeeViewSeccion name={`ONAT(${selectedServiceFee.ONAT}%)`} value={selectedServiceFee?.ONATValue} />
         <ServiceFeeViewSeccion name={`MARGEN COMERCIAL APLICADO (${selectedServiceFee?.commercialMargin}%)`} value={selectedServiceFee?.commercialMarginValue} />
         <ServiceFeeViewSeccion name="MATERIAS PRIMAS Y MATERIALES APORTADOS POR EL CLIENTE" value={selectedServiceFee?.rawMaterialsByClient} />
-        <article className="flex ml-[210px] justify-end pl-4 pr-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+        <article className="flex ml-[210px] justify-end pl-4 pr-4 items-center h-[39px] flex-grow bg-white-100 border-solid border-[1px] border-border_light rounded-lg">
           <div className="flex w-[150px] font-bold pl-2">MN</div>
           <Divider type="vertical" />
           <div className="flex w-[150px] font-bold pl-2">USD</div>
         </article>
-        <article className="flex ml-[210px] pl-4 pr-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+        <article className="flex ml-[210px] pl-4 pr-4 items-center h-[39px] flex-grow bg-white-100 border-solid border-[1px] border-border_light rounded-lg">
           <div className="flex flex-grow justify-end pr-4 font-bold">
             <h2>PRECIO DE VENTA </h2>
           </div>
@@ -167,7 +162,7 @@ export const ServiceFeeView = () => {
 export const ServiceFeeViewSeccion = (props: any) => {
   const { name, value } = props;
   return (
-    <article className="flex ml-[210px] pl-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+    <article className="flex ml-[210px] pl-4 items-center h-[39px] flex-grow bg-white-100 border-solid border-[1px] border-border_light rounded-lg">
       <div className="flex w-[90%] justify-end pr-4 font-bold">
         <h2>{name}: </h2>
       </div>
@@ -179,7 +174,7 @@ export const ServiceFeeViewSeccion = (props: any) => {
 export const SalePriceViewSeccion = (props: any) => {
   const { name, value } = props;
   return (
-    <article className="flex ml-[210px] pl-4 pr-4 items-center h-[39px] flex-grow bg-background_light border-solid border-[1px] border-border_light rounded-lg">
+    <article className="flex ml-[210px] pl-4 pr-4 items-center h-[39px] flex-grow bg-white-100 border-solid border-[1px] border-border_light rounded-lg">
       <div className="flex flex-grow justify-end pr-4 font-bold">
         <h2>{name}: </h2>
       </div>

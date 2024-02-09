@@ -29,7 +29,7 @@ export const EditMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, on
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Editar Material</span>
+          <span className="font-bold text-lg">Editar Material</span>
         </div>
       }
       centered

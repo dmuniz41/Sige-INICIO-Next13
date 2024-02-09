@@ -40,7 +40,7 @@ export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, on
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Nuevo Trabajador</span>
+          <span className="font-bold text-lg">Nuevo Trabajador</span>
         </div>
       }
       centered

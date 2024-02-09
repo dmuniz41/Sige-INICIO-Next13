@@ -36,7 +36,7 @@ export const OperationsList: React.FC<CollectionCreateFormProps> = ({ open, onCa
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Operaciones</span>
+          <span className="font-bold text-lg">Operaciones</span>
         </div>
       }
       centered
@@ -156,7 +156,7 @@ const OperationsTable: React.FC<Props> = (props) => {
       width: "10%",
       ...getColumnSearchProps("tipo"),
       render: (tipo: string) => (
-        <Tag className="font-black" color={tipo === "Añadir" ? "#34b042" : "#ff0000"} key={tipo}>
+        <Tag className="font-bold" color={tipo === "Añadir" ? "#34b042" : "#ff0000"} key={tipo}>
           {tipo.toUpperCase()}
         </Tag>
       ),

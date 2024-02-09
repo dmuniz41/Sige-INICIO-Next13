@@ -222,8 +222,8 @@ const WorkersTable: React.FC = () => {
       ...getColumnSearchProps("role"),
       render: (_, { role }) => (
         <>
-          {role.map((r) => {
-            return <Tag key={r}>{r}</Tag>;
+          {role.map((role) => {
+            return <Tag key={role}>{role}</Tag>;
           })}
         </>
       ),
@@ -257,9 +257,7 @@ const WorkersTable: React.FC = () => {
         <button
           disabled={!canCreate}
           onClick={handleNew}
-          className={`${
-            canCreate ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"
-          } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
+          className= "toolbar-primary-icon-btn"
         >
           <PlusSvg />
           Nuevo
