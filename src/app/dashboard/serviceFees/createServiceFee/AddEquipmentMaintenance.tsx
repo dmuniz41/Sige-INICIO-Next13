@@ -48,14 +48,14 @@ export const AddEquipmentMaintenanceModal: React.FC<CollectionCreateFormProps> =
         <div key="footer" className="flex gap-2 w-full justify-end">
           <button
             key="2"
-            className="bg-danger-500 cursor-pointer hover:bg-danger-600 ease-in-out duration-300 w-[5rem] h-[2rem] flex items-center p-1 text-sm font-bold text-white-100  justify-center gap-2 rounded-md"
+            className="modal-btn-danger"
             onClick={onCancel}
           >
             Cancelar
           </button>
           <button
             key="1"
-            className="bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300 w-[5rem] h-[2rem] flex items-center p-1 text-sm font-bold text-white-100  justify-center gap-2 rounded-md "
+            className="modal-btn-primary "
             onClick={() => {
               form
                 .validateFields()
@@ -76,7 +76,7 @@ export const AddEquipmentMaintenanceModal: React.FC<CollectionCreateFormProps> =
                 });
             }}
           >
-            Crear
+            Añadir
           </button>
         </div>,
       ]}

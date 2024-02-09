@@ -59,7 +59,7 @@ export default function Login() {
           autoComplete="current-password"
         />
         <button type="submit">
-          <a className="cursor-pointer text-xl justify-center items-center flex bg-primary-500 rounded-md mt-2 w-full h-[50px] border-none transition ease-in delay-50 hover:bg-primary-600 shadow-md">
+          <a className="cursor-pointer text-xl justify-center items-center uppercase flex bg-primary-500 rounded-md mt-2 w-full h-[50px] border-none transition ease-in delay-50 hover:bg-primary-600 shadow-md">
             <span className="text-white-100 font-bold">Entrar</span>
           </a>
         </button>

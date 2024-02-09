@@ -84,7 +84,7 @@ const ServiceFeeTable: React.FC = () => {
   useEffect(() => {
     dispatch(serviceFeeStartLoading());
     dispatch(nomenclatorsStartLoading());
-    dispatch(startLoadServiceFeeAuxiliary())
+    dispatch(startLoadServiceFeeAuxiliary());
   }, [dispatch]);
 
   const { serviceFees }: any = useAppSelector((state: RootState) => state?.serviceFee);
@@ -303,23 +303,11 @@ const ServiceFeeTable: React.FC = () => {
     <>
       <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <div className="flex gap-2">
-          <button
-            disabled={!canCreate}
-            onClick={() => router.push("/dashboard/serviceFees/createServiceFee")}
-            className={`${
-              canCreate ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"
-            } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
-          >
+          <button disabled={!canCreate} onClick={() => router.push("/dashboard/serviceFees/createServiceFee")} className={`${canCreate ? "toolbar-primary-icon-btn" : "bg-success-200"} `}>
             <PlusSvg />
             Nuevo
           </button>
-          <button
-            disabled={!canList}
-            onClick={handleView}
-            className={`${
-              canList ? "bg-secondary-500 cursor-pointer hover:bg-secondary-600 ease-in-out duration-300" : "bg-secondary-200"
-            } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
-          >
+          <button disabled={!canList} onClick={handleView} className={`${canList ? "toolbar-secondary-icon-btn" : "bg-secondary-200"}  `}>
             <SeeSvg />
             Ver
           </button>

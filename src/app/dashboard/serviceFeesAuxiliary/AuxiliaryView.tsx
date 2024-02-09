@@ -55,9 +55,7 @@ export const AuxiliaryView = () => {
             <button
               disabled={!canEdit}
               onClick={handleEdit}
-              className={`${
-                true ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"
-              } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
+              className="toolbar-primary-icon-btn"
             >
               <EditSvg />
               Editar

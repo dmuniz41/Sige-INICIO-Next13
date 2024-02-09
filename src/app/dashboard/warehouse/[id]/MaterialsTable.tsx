@@ -489,9 +489,7 @@ const MaterialsTable: React.FC = () => {
           <button
             disabled={!canAdd}
             onClick={handleAdd}
-            className={`${
-              canCreate ? "bg-success-500 cursor-pointer hover:bg-success-600 ease-in-out duration-300" : "bg-success-200"
-            } w-[6rem] h-[2.5rem] flex items-center p-1 text-base font-bold text-white-100  justify-center gap-2 rounded-md `}
+            className="toolbar-primary-icon-btn "
           >
             <PlusSvg />
             Añadir
@@ -499,9 +497,7 @@ const MaterialsTable: React.FC = () => {
           <button
             disabled={!canMinus}
             onClick={handleMinus}
-            className={`${
-              canCreate ? "bg-danger-500 cursor-pointer hover:bg-danger-600 ease-in-out duration-300" : "bg-danger-200"
-            } w-[6rem] h-[2.5rem] flex items-center p-1 pr-2 text-base font-bold text-white-100 justify-center gap-2 rounded-md `}
+            className="toolbar-danger-icon-btn "
           >
             <MinusSvg />
             Sustraer
