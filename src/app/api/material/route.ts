@@ -189,7 +189,7 @@ export async function POST(request: Request) {
       // * Crea un nuevo nomenclador asociado a ese material
       const BDNomenclator = (await Nomenclator.findOne({ category: "Material", code: `${category} ${materialName}` })) as INomenclator;
 
-      const key = generateRandomString(26)
+      const key = generateRandomString(26);
 
       if (!BDNomenclator) {
         const newNomenclator = new Nomenclator({
@@ -201,8 +201,7 @@ export async function POST(request: Request) {
         await newNomenclator.save();
       } else {
         const updatedNMaterialNomenclator = await Nomenclator.findOneAndUpdate({ category: "Material", code: `${category} ${materialName}` }, { value: maxPrice }, { new: true });
-        await updateServiceFeesMaterials(updatedNMaterialNomenclator, await ServiceFee.find(), accessToken)
-
+        await updateServiceFeesMaterials(updatedNMaterialNomenclator, await ServiceFee.find(), accessToken);
       }
 
       return new NextResponse(
@@ -281,7 +280,7 @@ export async function GET(request: Request) {
 export async function PUT(request: Request) {
   const { category = "", code = "", description = "", materialName = "", minimumExistence = 1 } = await request.json();
   const accessToken = request.headers.get("accessToken");
-  const key = generateRandomString(26)
+  const key = generateRandomString(26);
 
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -348,7 +347,12 @@ export async function PUT(request: Request) {
         });
         await newNomenclator.save();
       } else {
-        await Nomenclator.findOneAndUpdate({ category: "Material", code: `${materialToUpdate.category} ${materialToUpdate.materialName}` }, { value: maxPrice }, { new: true });
+        const updatedNMaterialNomenclator = await Nomenclator.findOneAndUpdate(
+          { category: "Material", code: `${materialToUpdate.category} ${materialToUpdate.materialName}` },
+          { value: maxPrice },
+          { new: true }
+        );
+        await updateServiceFeesMaterials(updatedNMaterialNomenclator, await ServiceFee.find(), accessToken);
       }
     }
 
@@ -421,7 +425,12 @@ export async function PATCH(request: Request) {
       const maxPrice: number = Math.max(...prices);
 
       // * Verifica si exsite un nomenclador con esa categoría y material en la BD, si no existe crea uno nuevo
-      await Nomenclator.findOneAndUpdate({ category: "Material", code: `${deletedMaterial.category} ${deletedMaterial.materialName}` }, { value: maxPrice }, { new: true });
+      const updatedNMaterialNomenclator = await Nomenclator.findOneAndUpdate(
+        { category: "Material", code: `${deletedMaterial.category} ${deletedMaterial.materialName}` },
+        { value: maxPrice },
+        { new: true }
+      );
+      await updateServiceFeesMaterials(updatedNMaterialNomenclator, await ServiceFee.find(), accessToken);
     }
     return new NextResponse(
       JSON.stringify({

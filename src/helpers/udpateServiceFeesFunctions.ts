@@ -5,7 +5,7 @@ import { generateRandomString } from "./randomStrings";
 import Nomenclator, { INomenclator } from "@/models/nomenclator";
 import ServiceFee, { IServiceFee} from "@/models/serviceFees";
 
-// * Cuando se modifica el valor de un nomenclador asociado a un material del almacen(categoria + nombre) se actualizan todas las fichas de costo que utilizan ese material y se vuelven a calcular sus precios *//
+// ? Cuando se modifica el valor de un nomenclador asociado a un material del almacen(categoria + nombre) se actualizan todas las fichas de costo que utilizan ese material y se vuelven a calcular sus precios ?//
 
 export const updateServiceFeesMaterials = async (materialNomenclator: INomenclator, serviceFees: IServiceFee[], accessToken: string) => {
   const serviceFeesToUpdate: IServiceFee[] = [];
