@@ -34,7 +34,7 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Nueva Depreciación de Equipo</span>
+          <span className="font-bold text-lg">Nueva Depreciación de Equipo</span>
         </div>
       }
       style={{ textAlign: "left" }}

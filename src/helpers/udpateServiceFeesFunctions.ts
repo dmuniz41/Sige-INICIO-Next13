@@ -17,7 +17,7 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
           description: rawMaterial.description,
           unitMeasure: rawMaterial.unitMeasure,
           amount: rawMaterial.amount,
-          price: materialNomenclator.value ?? 999,
+          price: materialNomenclator.value ?? 0,
           value: materialNomenclator.value! * rawMaterial.amount,
         };
         return rawMaterials[index];

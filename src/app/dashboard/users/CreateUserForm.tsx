@@ -153,7 +153,7 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Nuevo Usuario</span>
+          <span className="font-bold text-lg">Nuevo Usuario</span>
         </div>
       }
       style={{ textAlign: "left" }}

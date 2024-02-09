@@ -16,7 +16,7 @@ export const CreateWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open,
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Nuevo Almacén</span>
+          <span className="font-bold text-lg">Nuevo Almacén</span>
         </div>
       }
       style={{ textAlign: "left" }}

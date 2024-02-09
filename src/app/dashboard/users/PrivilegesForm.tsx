@@ -211,7 +211,7 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Cambiar Permisos</span>
+          <span className="font-bold text-lg">Cambiar Permisos</span>
         </div>
       }
       centered

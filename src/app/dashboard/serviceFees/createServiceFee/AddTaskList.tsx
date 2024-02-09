@@ -31,7 +31,7 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Nueva Actividad</span>
+          <span className="font-bold text-lg">Nueva Actividad</span>
         </div>
       }
       style={{ textAlign: "left" }}

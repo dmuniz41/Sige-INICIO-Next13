@@ -340,7 +340,7 @@ export const CreateServiceFeeForm = () => {
         buttonText="Añadir Gastos de Personal Contratado"
         form={form}
       />
-      <article className="flex gap-2">
+      <article className="flex gap-5">
         <div className="font-bold text-base items-center flex">
           <span>Coeficientes de Complejidad</span>
         </div>
@@ -448,10 +448,11 @@ export const CreateServiceFeeForm = () => {
   );
 };
 
+
 export const FormSection = (props: any) => {
   const { sectionName, values, formName, valuesSetter, modalSetter, buttonText, form } = props;
   return (
-    <section className=" flex w-full mb-4 bg-background_light p-2 rounded shadow-md ">
+    <section className=" flex w-full mb-5 bg-[#fafafa] p-2 rounded shadow-[0px_0px_5px_0px_#00000024] ">
       <div className="flex w-[15%] justify-center items-center text-center gap-1 ">
         <span className="text-base font-bold mb-3">{sectionName}</span>
       </div>

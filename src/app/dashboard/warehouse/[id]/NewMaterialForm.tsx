@@ -61,7 +61,7 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Nuevo Material</span>
+          <span className="font-bold text-lg">Nuevo Material</span>
         </div>
       }
       style={{ textAlign: "left" }}

@@ -155,7 +155,7 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCrea
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Editar Usuario</span>
+          <span className="font-bold text-lg">Editar Usuario</span>
         </div>
       }
       centered

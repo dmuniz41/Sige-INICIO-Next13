@@ -46,7 +46,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Nueva Materia Prima</span>
+          <span className="font-bold text-lg">Nueva Materia Prima</span>
         </div>
       }
       style={{ textAlign: "left" }}

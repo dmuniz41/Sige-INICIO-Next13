@@ -35,7 +35,7 @@ export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps>
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Gastos Administrativos</span>
+          <span className="font-bold text-lg">Gastos Administrativos</span>
         </div>
       }
       style={{ textAlign: "left" }}

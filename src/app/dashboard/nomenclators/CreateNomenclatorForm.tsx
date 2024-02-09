@@ -52,7 +52,7 @@ export const CreateNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ ope
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Nuevo Nomenclador</span>
+          <span className="font-bold text-lg">Nuevo Nomenclador</span>
         </div>
       }
       style={{ textAlign: "left" }}

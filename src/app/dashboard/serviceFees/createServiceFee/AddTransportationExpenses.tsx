@@ -26,7 +26,7 @@ export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps>
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Gastos de Transportación</span>
+          <span className="font-bold text-lg">Gastos de Transportación</span>
         </div>
       }
       style={{ textAlign: "left" }}

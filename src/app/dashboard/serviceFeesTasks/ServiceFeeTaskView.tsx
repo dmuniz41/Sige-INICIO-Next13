@@ -41,7 +41,7 @@ export const ServiceFeeTaskView: React.FC<CollectionCreateFormProps> = ({ open, 
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Tarea</span>
+          <span className="font-bold text-lg">Tarea</span>
         </div>
       }
       style={{ textAlign: "left" }}

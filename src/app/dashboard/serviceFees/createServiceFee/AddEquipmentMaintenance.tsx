@@ -33,7 +33,7 @@ export const AddEquipmentMaintenanceModal: React.FC<CollectionCreateFormProps> =
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Nuevo Mantenimiento de Equipo</span>
+          <span className="font-bold text-lg">Nuevo Mantenimiento de Equipo</span>
         </div>
       }
       style={{ textAlign: "left" }}

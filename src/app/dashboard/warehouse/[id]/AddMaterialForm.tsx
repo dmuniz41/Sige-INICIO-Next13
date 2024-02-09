@@ -31,7 +31,7 @@ export const AddMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Añadir Material</span>
+          <span className="font-bold text-lg">Añadir Material</span>
         </div>
       }
       centered

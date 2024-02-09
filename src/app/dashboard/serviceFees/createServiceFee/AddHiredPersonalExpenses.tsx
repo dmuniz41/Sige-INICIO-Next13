@@ -21,7 +21,7 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-black text-lg">Gastos de Personal Contratado</span>
+          <span className="font-bold text-lg">Gastos de Personal Contratado</span>
         </div>
       }
       style={{ textAlign: "left" }}
