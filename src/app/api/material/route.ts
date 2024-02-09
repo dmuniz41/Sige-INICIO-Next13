@@ -7,6 +7,8 @@ import { verifyJWT } from "@/libs/jwt";
 import Warehouse from "@/models/warehouse";
 import Nomenclator, { INomenclator } from "@/models/nomenclator";
 import { generateRandomString } from "@/helpers/randomStrings";
+import { updateServiceFeesMaterials } from "@/helpers/udpateServiceFeesFunctions";
+import ServiceFee from "@/models/serviceFees";
 
 export async function POST(request: Request) {
   const {
@@ -198,7 +200,9 @@ export async function POST(request: Request) {
         });
         await newNomenclator.save();
       } else {
-        await Nomenclator.findOneAndUpdate({ category: "Material", code: `${category} ${materialName}` }, { value: maxPrice }, { new: true });
+        const updatedNMaterialNomenclator = await Nomenclator.findOneAndUpdate({ category: "Material", code: `${category} ${materialName}` }, { value: maxPrice }, { new: true });
+        await updateServiceFeesMaterials(updatedNMaterialNomenclator, await ServiceFee.find(), accessToken)
+
       }
 
       return new NextResponse(

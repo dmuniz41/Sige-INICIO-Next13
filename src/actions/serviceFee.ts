@@ -177,7 +177,7 @@ const addServiceFee = ({ ...serviceFee }) => ({
   },
 });
 
-const updateServiceFee = ({ ...serviceFee }) => ({
+export const updateServiceFee = ({ ...serviceFee }) => ({
   type: types.updateServiceFee,
   payload: {
     administrativeExpenses: serviceFee.administrativeExpenses ?? [],
