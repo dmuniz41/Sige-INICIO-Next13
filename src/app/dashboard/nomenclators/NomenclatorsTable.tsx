@@ -44,8 +44,8 @@ const NomenclatorsTable: React.FC = () => {
     dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
-  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-  let data: INomenclator[] = useMemo(() => nomenclators, [nomenclators]);
+  const { nomenclators }: {nomenclators: INomenclator[]} = useAppSelector((state: RootState) => state?.nomenclator);
+  let data: INomenclator[] = useMemo(() => nomenclators.filter((nomenclator)=>nomenclator.category !== "Tarifa de Servicio" && nomenclator.category !== "Material"), [nomenclators]);
   if (!canList) {
     data = [];
   }
@@ -304,7 +304,7 @@ const NomenclatorsTable: React.FC = () => {
         size="small"
         columns={columns}
         dataSource={data}
-        pagination={{ position: ["bottomCenter"], pageSize: 15 }}
+        pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
         rowSelection={{
           type: "radio",
           ...rowSelection,

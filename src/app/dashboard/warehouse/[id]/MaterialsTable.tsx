@@ -593,7 +593,7 @@ const MaterialsTable: React.FC = () => {
         size="small"
         columns={columns}
         dataSource={data}
-        pagination={{ position: ["bottomCenter"], pageSize: 15 }}
+        pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
         onChange={onChange}
         rowSelection={{
           type: "radio",

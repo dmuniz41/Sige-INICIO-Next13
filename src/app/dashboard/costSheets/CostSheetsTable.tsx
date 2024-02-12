@@ -361,7 +361,7 @@ const CostSheetsTable: React.FC = () => {
         columns={columns}
         dataSource={data}
         onChange={onChange}
-        pagination={{ position: ["bottomCenter"], pageSize: 15 }}
+        pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
         rowSelection={{
           type: "radio",
           ...rowSelection,
