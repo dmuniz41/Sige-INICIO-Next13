@@ -1,12 +1,14 @@
 "use client";
+import { useSession } from "next-auth/react";
+import React, { useEffect, useState } from "react";
+
 import { EditAuxiliary } from "./EditAuxiliary";
 import { EditSvg } from "@/app/global/EditSvg";
 import { IServiceFeeAuxiliary } from "../../../models/serviceFeeAuxiliary";
 import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary, startUpdateServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
-import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import { AuxiliarySection } from "./AuxiliarySection";
 
 export const AuxiliaryView = () => {
   const dispatch = useAppDispatch();
@@ -38,8 +40,8 @@ export const AuxiliaryView = () => {
         officialCurrencyChangeCoefficient: values.officialCurrencyChangeCoefficient,
         payMethod: values.payMethod,
         administrativeExpensesCoefficients: values.administrativeExpenses,
-        equipmentDepreciationCoefficients: values. equipmentDepreciation,
-        equipmentMaintenanceCoefficients: values. equipmentMaintenance,
+        equipmentDepreciationCoefficients: values.equipmentDepreciation,
+        equipmentMaintenanceCoefficients: values.equipmentMaintenance,
         transportationExpensesCoefficient: values.transportationExpensesCoefficient,
         salesAndDistributionExpensesCoefficient: values.salesAndDistributionExpensesCoefficient,
       })
@@ -47,96 +49,90 @@ export const AuxiliaryView = () => {
     setEditing(false);
   };
 
+  const payMethodColumns = [
+    {
+      title: "Representante",
+      dataIndex: "representative",
+      key: "representative",
+      width: "300px",
+    },
+    {
+      title: "Porcentaje",
+      dataIndex: "coefficientValue",
+      key: "coefficientValue",
+      width: "150px",
+    },
+  ];
+  const columns = [
+    {
+      title: "Nombre",
+      dataIndex: "name",
+      key: "name",
+      width: "300px",
+    },
+    {
+      title: "Valor",
+      dataIndex: "value",
+      key: "value",
+      width: "150px",
+    },
+  ];
+
   return (
     <>
       {!editing ? (
         <section className="grid w-full gap-4">
           <article className="flex h-16 w-full bg-white-100 rounded-md shadow-md  items-center pl-4 gap-3 animate-fade animate-once animate-duration-200">
-            <button
-              disabled={!canEdit}
-              onClick={handleEdit}
-              className="toolbar-primary-icon-btn"
-            >
+            <button disabled={!canEdit} onClick={handleEdit} className="toolbar-primary-icon-btn">
               <EditSvg />
               Editar
             </button>
           </article>
-          <article className=" flex flex-col items-start gap-3 max-w-[25%] bg-background_light p-4 rounded-md shadow-lg animate-fade animate-once animate-duration-200">
-            <div className="flex gap-1">
-              <label className="font-bold text-md">Cambio de Moneda: </label>
-              <label>{serviceFeeAuxiliary?.currencyChange}</label>
-            </div>
-            <div className="grid gap-1">
-              <label className="font-bold text-md">Coeficientes de Representación:</label>
-              <ul>
-                {serviceFeeAuxiliary?.payMethod?.map((payMethod) => (
-                  <li key={payMethod.representative} className="flex w-20 gap-1">
-                    <label className="font-bold ">{payMethod.representative}: </label>
-                    <label>{payMethod.coefficientValue}</label>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="flex gap-2">
-              <label className="font-bold text-md">Monedas: </label>
-              {serviceFeeAuxiliary?.currency?.map((currency) => (
-                <label key={currency}>{currency}</label>
-              ))}
-            </div>
-            <div className="flex gap-2">
-              <label className="font-bold text-md">Coeficiente de Cálculo: </label>
-              <label>{serviceFeeAuxiliary?.calculationCoefficient}</label>
-            </div>
-            <div className="flex gap-2">
-              <label className="font-bold text-md">Coef de Cambio Monetario Oficial: </label>
-              <label>{serviceFeeAuxiliary?.officialCurrencyChangeCoefficient}</label>
-            </div>
-            <div className="flex gap-2">
-              <label className="font-bold text-md">Cambio Informal: </label>
-              <label>{serviceFeeAuxiliary?.informalCurrencyChange}</label>
-            </div>
-            <div className="flex gap-2">
-              <label className="font-bold text-md">Coeficiente de Merma: </label>
-              <label>{serviceFeeAuxiliary?.mermaCoefficient}</label>
-            </div>
-            <label className="font-bold text-md">Coeficientes de Gastos Administrativos:</label>
-            <ul>
-              {serviceFeeAuxiliary.administrativeExpensesCoefficients?.map((administrativeExpense) => (
-                <li key={administrativeExpense.name} className="flex gap-1">
-                  <label className="font-bold ">{administrativeExpense.name}: </label>
-                  <label>{administrativeExpense.value.toFixed(2)}</label>
-                </li>
-              ))}
-            </ul>
-            <label className="font-bold text-md">Coeficientes de Depreciación de equipos:</label>
-            <ul>
-              {serviceFeeAuxiliary.equipmentDepreciationCoefficients?.map((equipmentDepreciation) => (
-                <li key={equipmentDepreciation.name} className="flex gap-1">
-                  <label className="font-bold ">{equipmentDepreciation.name}: </label>
-                  <label>{equipmentDepreciation.value.toFixed(2)}</label>
-                </li>
-              ))}
-            </ul>
-            <label className="font-bold text-md">Coeficientes de Mantenimiento de equipos:</label>
-            <ul>
-              {serviceFeeAuxiliary.equipmentMaintenanceCoefficients?.map((equipmentMaintenance) => (
-                <li key={equipmentMaintenance.name} className="flex gap-1">
-                  <label className="font-bold ">{equipmentMaintenance.name}: </label>
-                  <label>{equipmentMaintenance.value.toFixed(2)}</label>
-                </li>
-              ))}
-            </ul>
-            <label className="font-bold text-md">Coeficientes de gastos de transportación:</label>
-            <ul>
-              <li key="transportationExpensesCoefficient" className="flex gap-1">
-                <label className="font-bold ">Transportación: </label>
-                <label>{serviceFeeAuxiliary?.transportationExpensesCoefficient}</label>
-              </li>
-              <li key="salesAndDistributionExpensesCoefficient" className="flex gap-1">
-                <label className="font-bold ">Distribución y venta: </label>
-                <label>{serviceFeeAuxiliary?.salesAndDistributionExpensesCoefficient}</label>
-              </li>
-            </ul>
+          <article className=" flex flex-col items-start gap-3 p-4 rounded-md shadow-lg animate-fade animate-once animate-duration-200">
+            <AuxiliarySection data={serviceFeeAuxiliary?.payMethod} columns={payMethodColumns} sectionName="Métodos de pago" />
+            <AuxiliarySection data={serviceFeeAuxiliary?.administrativeExpensesCoefficients} columns={columns} sectionName="Gastos Administrativos" />
+            <AuxiliarySection data={serviceFeeAuxiliary?.equipmentDepreciationCoefficients} columns={columns} sectionName="Depreciación de Equipos" />
+            <AuxiliarySection data={serviceFeeAuxiliary?.equipmentMaintenanceCoefficients} columns={columns} sectionName="Mantenimiento de Equipos" />
+            <AuxiliarySection
+              data={[
+                {
+                  name: "Transportación",
+                  value: serviceFeeAuxiliary?.transportationExpensesCoefficient,
+                },
+                {
+                  name: "Distribución y Venta",
+                  value: serviceFeeAuxiliary?.salesAndDistributionExpensesCoefficient,
+                },
+              ]}
+              columns={columns}
+              sectionName="Gastos de Transportación"
+            />
+            <AuxiliarySection
+              data={[
+                {
+                  name: "Coeficiente de Cálculo",
+                  value: serviceFeeAuxiliary?.calculationCoefficient,
+                },
+                {
+                  name: "Coeficiente de Cambio Monetario Oficial",
+                  value: serviceFeeAuxiliary?.officialCurrencyChangeCoefficient,
+                },
+                {
+                  name: "Cambio Informal",
+                  value: serviceFeeAuxiliary?.informalCurrencyChange,
+                },
+                {
+                  name: "Coeficiente de Merma",
+                  value: serviceFeeAuxiliary?.mermaCoefficient,
+                },
+                {
+                  name: "Cambio de Moneda",
+                  value: serviceFeeAuxiliary?.currencyChange,
+                },
+              ]}
+              columns={columns}
+              sectionName="Otros"
+            />
           </article>
         </section>
       ) : (
