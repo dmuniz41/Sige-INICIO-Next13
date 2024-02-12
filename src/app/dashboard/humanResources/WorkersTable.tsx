@@ -306,7 +306,7 @@ const WorkersTable: React.FC = () => {
         size="middle"
         columns={columns}
         dataSource={data}
-        pagination={{ position: ["bottomCenter"], pageSize: 15 }}
+        pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
         rowSelection={{
           type: "radio",
           ...rowSelection,

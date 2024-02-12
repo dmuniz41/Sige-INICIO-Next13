@@ -448,7 +448,6 @@ export const CreateServiceFeeForm = () => {
   );
 };
 
-
 export const FormSection = (props: any) => {
   const { sectionName, values, formName, valuesSetter, modalSetter, buttonText, form } = props;
   return (
@@ -460,44 +459,44 @@ export const FormSection = (props: any) => {
         {values?.length == 0 ? (
           <div></div>
         ) : (
-          <div className="flex flex-1 pr-4 pt-4 font-bold">
-            <div className="flex-1">
+          <div className="flex w-full pr-9 gap-1 pt-4 font-bold">
+            <div className="grow">
               <span>Descripción</span>
             </div>
-            <div className="w-[200px]">
+            <div className="w-[200px] text-center">
               <span>Unidad de Medida</span>
             </div>
-            <div className="w-[88px]">
+            <div className="w-[88px] text-center">
               <span>Cantidad</span>
             </div>
-            <div className="w-[88px]">
+            <div className="w-[88px] text-center">
               <span>Precio/UM</span>
             </div>
-            <div className="w-[88px]">
+            <div className="w-[88px] text-center">
               <span>Importe</span>
             </div>
           </div>
         )}
         <Form.List name={formName}>
           {(fields, { add, remove }) => (
-            <div className="flex flex-col pr-2 w-full pt-6">
+            <div className="flex flex-col pr-4 flex-1 pt-6">
               {fields.map(({ key, name, ...restField }) => (
                 <div key={key} className="w-full">
                   <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="flex-1" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
-                      <Input placeholder="Descripción" className="w-full" />
+                    <Form.Item className="grow" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
+                      <Input disabled placeholder="Descripción" className="w-full disabled:bg-white-100  disabled:text-white-900" />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "unitMeasure"]} rules={[{ required: true }]}>
-                      <InputNumber className="w-full" placeholder="Unidad de Medida" />
+                    <Form.Item {...restField} name={[name, "unitMeasure"]} className="w-[200px]" rules={[{ required: true }]}>
+                      <Input disabled placeholder="Unidad de Medida" className=" disabled:bg-white-100 disabled:text-white-900" />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true }]}>
-                      <InputNumber placeholder="Cantidad" />
+                    <Form.Item {...restField} name={[name, "amount"]} className="w-[88px]" rules={[{ required: true }]}>
+                      <Input disabled placeholder="Cantidad" className=" disabled:bg-white-100  disabled:text-white-900" />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true }]}>
-                      <InputNumber placeholder="Precio" />
+                    <Form.Item {...restField} name={[name, "price"]} className="w-[88px]" rules={[{ required: true }]}>
+                      <Input disabled placeholder="Precio" className=" disabled:bg-white-100  disabled:text-white-900" />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true }]}>
-                      <InputNumber disabled />
+                    <Form.Item {...restField} name={[name, "value"]} className="w-[88px]" rules={[{ required: true }]}>
+                      <Input disabled className=" disabled:bg-white-100  disabled:text-white-900" />
                     </Form.Item>
                     <MinusCircleOutlined
                       className="mb-auto"
@@ -510,7 +509,7 @@ export const FormSection = (props: any) => {
                 </div>
               ))}
               <Form.Item className="justify-center w-full">
-                <Button className="flex flex-row justify-center items-center" block  type="dashed" onClick={() => modalSetter(true)}  icon={<PlusOutlined />}>
+                <Button className="flex flex-row justify-center items-center" block type="dashed" onClick={() => modalSetter(true)} icon={<PlusOutlined />}>
                   {buttonText}
                 </Button>
               </Form.Item>
