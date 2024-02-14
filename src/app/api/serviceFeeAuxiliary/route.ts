@@ -5,6 +5,8 @@ import { generateRandomString } from "@/helpers/randomStrings";
 import { IServiceFeeAuxiliary } from "../../../models/serviceFeeAuxiliary";
 import { verifyJWT } from "@/libs/jwt";
 import ServiceFeeAuxiliary from "@/models/serviceFeeAuxiliary";
+import ServiceFee from "@/models/serviceFees";
+import { updateServiceFeeWhenAuxiliary } from "@/helpers/updateServiceFeeWhenAuxiliary";
 
 export async function POST(request: Request) {
   const { ...serviceFeeAuxiliary }: IServiceFeeAuxiliary = await request.json();
@@ -177,6 +179,8 @@ export async function PUT(request: Request) {
       },
       { new: true }
     );
+
+    await updateServiceFeeWhenAuxiliary(updatedServiceFeeAuxiliary, await ServiceFee.find())
 
     return new NextResponse(
       JSON.stringify({

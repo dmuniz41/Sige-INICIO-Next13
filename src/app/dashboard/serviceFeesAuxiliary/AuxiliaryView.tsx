@@ -9,6 +9,9 @@ import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary, startUpdateServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import { AuxiliarySection } from "./AuxiliarySection";
+import { IServiceFee } from "@/models/serviceFees";
+import { serviceFeeStartLoading } from "@/actions/serviceFee";
+import { updateServiceFeeWhenAuxiliary } from "@/helpers/updateServiceFeeWhenAuxiliary";
 
 export const AuxiliaryView = () => {
   const dispatch = useAppDispatch();
@@ -19,6 +22,7 @@ export const AuxiliaryView = () => {
 
   useEffect(() => {
     dispatch(startLoadServiceFeeAuxiliary());
+    dispatch(serviceFeeStartLoading())
   }, [dispatch]);
 
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
@@ -27,7 +31,7 @@ export const AuxiliaryView = () => {
     setEditing(true);
   };
 
-  const onCreate = (values: any) => {
+  const onCreate = async (values: any) => {
     dispatch(
       startUpdateServiceFeeAuxiliary({
         _id: serviceFeeAuxiliary?._id,

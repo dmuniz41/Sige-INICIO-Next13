@@ -8,6 +8,7 @@ import ServiceFee, { IServiceFee, IServiceFeeComplexityItem } from "@/models/ser
 
 export async function POST(request: Request) {
   const { ...serviceFee }: IServiceFee = await request.json();
+  console.log("🚀 ~ POST ~ serviceFee:", serviceFee)
 
   const accessToken = request.headers.get("accessToken");
   try {
