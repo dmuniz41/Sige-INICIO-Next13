@@ -1,38 +1,78 @@
+import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
+import ServiceFee, { IServiceFee, IServiceFeeSubItem } from "@/models/serviceFees";
+import { AddEquipmentMaintenanceModal } from "../app/dashboard/serviceFees/createServiceFee/AddEquipmentMaintenance";
+import { connectDB } from "@/libs/mongodb";
+import Nomenclator from "@/models/nomenclator";
+import { generateRandomString } from "./randomStrings";
 import { NextResponse } from "next/server";
 
-import { connectDB } from "@/libs/mongodb";
-import { generateRandomString } from "./randomStrings";
-import Nomenclator, { INomenclator } from "@/models/nomenclator";
-import ServiceFee, { IServiceFee} from "@/models/serviceFees";
+// ? Cuando se modifica cualquier valor de la hoja de auxiliares se actualizan todas las fichas de costo y se vuelven a calcular sus precios ?//
 
-// ? Cuando se modifica el valor de un nomenclador asociado a un material del almacen(categoria + nombre) se actualizan todas las fichas de costo que utilizan ese material y se vuelven a calcular sus precios ?//
+export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxiliary, serviceFees: IServiceFee[]) => {
+  console.log("🚀 ~ updateServiceFeeWhenAuxiliary ~ auxiliary:", auxiliary);
 
-export const updateServiceFeesMaterials = async (materialNomenclator: INomenclator, serviceFees: IServiceFee[], accessToken: string) => {
-  const serviceFeesToUpdate: IServiceFee[] = [];
+  const administrativeExpensesNames = auxiliary.administrativeExpensesCoefficients.map((administrativeExpense) => administrativeExpense.name);
+  const equipmentDepreciationNames = auxiliary.equipmentDepreciationCoefficients.map((equipmentDepreciation) => equipmentDepreciation.name);
+  const equipmentMaintenanceNames = auxiliary.equipmentMaintenanceCoefficients.map((equipmentMaintenance) => equipmentMaintenance.name);
+
   serviceFees.forEach((serviceFee, index, serviceFees) => {
-    let rawMaterials = serviceFees[index].rawMaterials;
-    rawMaterials.forEach((rawMaterial, index, rawMaterials) => {
-      if (rawMaterial.description === materialNomenclator.code) {
-        rawMaterials[index] = {
-          description: rawMaterial.description,
-          unitMeasure: rawMaterial.unitMeasure,
-          amount: rawMaterial.amount,
-          price: materialNomenclator.value ?? 0,
-          value: materialNomenclator.value! * rawMaterial.amount,
+    const administrativeExpenses = serviceFees[index].administrativeExpenses;
+    const equipmentDepreciation = serviceFees[index].equipmentDepreciation;
+    const equipmentMaintenance = serviceFees[index].equipmentMaintenance;
+
+    administrativeExpenses.forEach((administrativeExpense, index, administrativeExpenses) => {
+      if (administrativeExpensesNames.includes(administrativeExpense.description)) {
+        const price = auxiliary.administrativeExpensesCoefficients.find((ae) => ae.name === administrativeExpense.description);
+        administrativeExpenses[index] = {
+          description: administrativeExpense.description,
+          unitMeasure: administrativeExpense.unitMeasure,
+          amount: administrativeExpense.amount,
+          price: price?.value!,
+          value: price?.value! * administrativeExpense.amount,
         };
-        return rawMaterials[index];
+        console.log("🚀 ~ administrativeExpenses.forEach ~ administrativeExpense:", administrativeExpenses[index]);
+        return administrativeExpenses[index];
+      }
+    });
+
+    equipmentDepreciation.forEach((equipmentDepreciation, index, equipmentDepreciations) => {
+      if (equipmentDepreciationNames.includes(equipmentDepreciation.description)) {
+        const price = auxiliary.equipmentDepreciationCoefficients.find((ed) => ed.name === equipmentDepreciation.description);
+        equipmentDepreciations[index] = {
+          description: equipmentDepreciation.description,
+          unitMeasure: equipmentDepreciation.unitMeasure,
+          amount: equipmentDepreciation.amount,
+          price: price?.value!,
+          value: price?.value! * equipmentDepreciation.amount,
+        };
+        return equipmentDepreciations[index];
+      }
+    });
+
+    equipmentMaintenance.forEach((equipmentMaintenance, index, equipmentMaintenances) => {
+      if (equipmentMaintenanceNames.includes(equipmentMaintenance.description)) {
+        const price = auxiliary.equipmentMaintenanceCoefficients.find((em) => em.name === equipmentMaintenance.description);
+        equipmentMaintenances[index] = {
+          description: equipmentMaintenance.description,
+          unitMeasure: equipmentMaintenance.unitMeasure,
+          amount: equipmentMaintenance.amount,
+          price: price?.value!,
+          value: price?.value! * equipmentMaintenance.amount,
+        };
+        return equipmentMaintenances[index];
       }
     });
   });
-  serviceFees.map((serviceFee) =>
-    serviceFee.rawMaterials.map((rawMaterial) => {
-      if (rawMaterial.description === materialNomenclator.code) serviceFeesToUpdate.push(serviceFee);
-    })
-  );
 
-  serviceFeesToUpdate.map(async (serviceFee) => {
+  console.log(serviceFees.map((sf) => sf.administrativeExpenses));
+  console.log(serviceFees.map((sf) => sf.equipmentDepreciation));
+  console.log(serviceFees.map((sf) => sf.equipmentMaintenance));
+
+  serviceFees.map(async (serviceFee) => {
     try {
       await connectDB();
+
+      //* Calcula el valor de cada subtotal en cada seccion de la ficha de costo
       const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
       const taskListSubtotal: number = serviceFee.taskList.reduce((total, currentValue) => total + currentValue.value, 0);
       const equipmentDepreciationSubtotal: number = serviceFee.equipmentDepreciation.reduce((total, currentValue) => total + currentValue.value, 0);
@@ -58,14 +98,13 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
       const artisticTalentValue = expensesTotalValue * (serviceFee.artisticTalent / 100);
       const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
 
-
       // * Calcula el valor de los 3 niveles de complejidad en dependencia del coeficiente asignado
       const complexityValues = serviceFee?.complexity?.map((complexity) => {
         return {
-          name: complexity?.name,
-          coefficient: complexity?.coefficient,
-          value: salePrice * complexity?.coefficient,
-          USDValue: (salePrice * complexity?.coefficient) / serviceFee?.currencyChange
+          name: complexity.name,
+          coefficient: complexity.coefficient,
+          value: salePrice * complexity.coefficient,
+          USDValue: (salePrice * complexity.coefficient) / serviceFee.currencyChange,
         };
       });
 
@@ -141,9 +180,9 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
             "Content-Type": "application/json",
           },
         }
-        );
+      );
     } catch (error) {
-      console.log("🚀 ~ PUT ~ error:", error);
+      console.log("🚀 ~ POST ~ error:", error);
       if (error instanceof Error) {
         return NextResponse.json(
           {
@@ -158,4 +197,3 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
     }
   });
 };
-
