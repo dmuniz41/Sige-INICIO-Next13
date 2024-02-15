@@ -139,38 +139,8 @@ export const EditServiceFeeForm = () => {
   };
   const onAddTransportationExpenses = (values: any) => {
     console.log("🚀 ~ onAddTransportationExpenses ~ values:", values);
-    setTransportationExpensesValues([
-      {
-        description: "Transportación",
-        price: values.transportationExpenseCoef,
-        unitMeasure: "$/u",
-        amount: values.transportationAmount,
-        value: values.transportationExpenseValue,
-      },
-      {
-        description: "Distribución y Venta",
-        price: values.salesAndDistributionExpenseCoef,
-        unitMeasure: "$/u",
-        amount: values.salesAndDistributionAmount,
-        value: values.salesAndDistributionExpenseValue,
-      },
-    ]);
-    form.setFieldValue("transportationExpenses", [
-      {
-        description: "Transportación",
-        price: values.transportationExpenseCoef,
-        unitMeasure: "$/u",
-        amount: values.transportationAmount,
-        value: values.transportationExpenseValue,
-      },
-      {
-        description: "Distribución y Venta",
-        price: values.salesAndDistributionExpenseCoef,
-        unitMeasure: "$/u",
-        amount: values.salesAndDistributionAmount,
-        value: values.salesAndDistributionExpenseValue,
-      },
-    ]);
+    setTransportationExpensesValues([values, ...transportationExpensesValues]);
+    form.setFieldValue("transportationExpenses", [...transportationExpensesValues, values]);
     setAddTransportationExpensesModal(false);
   };
   const onAddHiredPersonalExpenses = (values: any) => {

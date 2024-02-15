@@ -55,8 +55,7 @@ export async function POST(request: Request) {
       administrativeExpensesCoefficients: serviceFeeAuxiliary.administrativeExpensesCoefficients,
       equipmentDepreciationCoefficients: serviceFeeAuxiliary.equipmentDepreciationCoefficients,
       equipmentMaintenanceCoefficients: serviceFeeAuxiliary.equipmentMaintenanceCoefficients,
-      transportationExpensesCoefficient: serviceFeeAuxiliary.transportationExpensesCoefficient,
-      salesAndDistributionExpensesCoefficient: serviceFeeAuxiliary.salesAndDistributionExpensesCoefficient,
+      transportationExpensesCoefficients: serviceFeeAuxiliary.transportationExpensesCoefficients,
     });
 
     await newServiceFeeAuxiliary.save();
@@ -174,8 +173,7 @@ export async function PUT(request: Request) {
         administrativeExpensesCoefficients: serviceFeeAuxiliary.administrativeExpensesCoefficients,
         equipmentDepreciationCoefficients: serviceFeeAuxiliary.equipmentDepreciationCoefficients,
         equipmentMaintenanceCoefficients: serviceFeeAuxiliary.equipmentMaintenanceCoefficients,
-        transportationExpensesCoefficient: serviceFeeAuxiliary.transportationExpensesCoefficient,
-        salesAndDistributionExpensesCoefficient: serviceFeeAuxiliary.salesAndDistributionExpensesCoefficient,
+        transportationExpensesCoefficients: serviceFeeAuxiliary.transportationExpensesCoefficients,
       },
       { new: true }
     );
