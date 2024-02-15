@@ -6,7 +6,7 @@ import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 import Nomenclator from "@/models/nomenclator";
 import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 
-// ? Cuando se modifica cualquier valor de la hoja de auxiliares se actualizan todas las fichas de costo y se vuelven a calcular sus precios ?//
+// ? Cuando se modifica cualquier valor de la hoja de auxiliares se actualizan todas las fichas de costo y se vuelven a calcular sus precios. Si uno de los coeficientes es eliminado se elimina de todas las fichas de costo y se recalcula el valor de estas ?//
 
 export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxiliary, serviceFees: IServiceFee[]) => {
   console.log("🚀 ~ updateServiceFeeWhenAuxiliary ~ auxiliary:", auxiliary);
@@ -14,11 +14,13 @@ export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxili
   const administrativeExpensesNames = auxiliary.administrativeExpensesCoefficients.map((administrativeExpense) => administrativeExpense.name);
   const equipmentDepreciationNames = auxiliary.equipmentDepreciationCoefficients.map((equipmentDepreciation) => equipmentDepreciation.name);
   const equipmentMaintenanceNames = auxiliary.equipmentMaintenanceCoefficients.map((equipmentMaintenance) => equipmentMaintenance.name);
+  const transportacionExpensesNames = auxiliary.transportationExpensesCoefficients.map((transportationExpense) => transportationExpense.name);
 
   serviceFees.forEach((serviceFee, index, serviceFees) => {
     const administrativeExpenses = serviceFees[index].administrativeExpenses;
     const equipmentDepreciation = serviceFees[index].equipmentDepreciation;
     const equipmentMaintenance = serviceFees[index].equipmentMaintenance;
+    const transportationExpenses = serviceFees[index].transportationExpenses;
 
     administrativeExpenses.forEach((administrativeExpense, index, administrativeExpenses) => {
       if (administrativeExpensesNames.includes(administrativeExpense.description)) {
@@ -32,6 +34,8 @@ export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxili
         };
         console.log("🚀 ~ administrativeExpenses.forEach ~ administrativeExpense:", administrativeExpenses[index]);
         return administrativeExpenses[index];
+      } else {
+        administrativeExpenses.splice(index, 1);
       }
     });
 
@@ -46,6 +50,8 @@ export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxili
           value: price?.value! * equipmentDepreciation.amount,
         };
         return equipmentDepreciations[index];
+      } else {
+        equipmentDepreciations.splice(index, 1);
       }
     });
 
@@ -60,13 +66,31 @@ export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxili
           value: price?.value! * equipmentMaintenance.amount,
         };
         return equipmentMaintenances[index];
+      } else {
+        equipmentMaintenances.splice(index, 1);
+      }
+    });
+
+    transportationExpenses.forEach((transportationExpense, index, transportationExpenses) => {
+      if (transportacionExpensesNames.includes(transportationExpense.description)) {
+        const price = auxiliary.transportationExpensesCoefficients.find((te) => te.name === transportationExpense.description);
+        transportationExpenses[index] = {
+          description: transportationExpense.description,
+          unitMeasure: transportationExpense.unitMeasure,
+          amount: transportationExpense.amount,
+          price: price?.value!,
+          value: price?.value! * transportationExpense.amount,
+        };
+        return transportationExpenses[index];
+      } else {
+        transportationExpenses.splice(index, 1);
       }
     });
   });
 
-  console.log(serviceFees.map((sf) => sf.administrativeExpenses));
-  console.log(serviceFees.map((sf) => sf.equipmentDepreciation));
-  console.log(serviceFees.map((sf) => sf.equipmentMaintenance));
+  // console.log(serviceFees.map((sf) => sf.administrativeExpenses));
+  // console.log(serviceFees.map((sf) => sf.equipmentDepreciation));
+  // console.log(serviceFees.map((sf) => sf.equipmentMaintenance));
 
   serviceFees.map(async (serviceFee) => {
     try {
