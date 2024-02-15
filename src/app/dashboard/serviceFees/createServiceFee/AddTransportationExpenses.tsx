@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, InputNumber, Modal, } from "antd";
+import { Form, InputNumber, Modal, Select, SelectProps } from "antd";
 import { useState } from "react";
 
 import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
@@ -16,8 +16,18 @@ interface CollectionCreateFormProps {
 export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
 
-  const [transportationExpenseValue, setTransportationExpenseValue] = useState(0);
-  const [salesAndDistributionExpenseValue, setSalesAndDistributionExpenseValue] = useState(0);
+  const [currentPrice, setCurrentPrice] = useState(0);
+  const [currentTransportationExpense, setCurrentTransportationExpense] = useState<{ name: string; value: number }>({
+    name: "",
+    value: 0,
+  });
+
+  const listOfTransportationExpenses: SelectProps["options"] = serviceFeeAuxiliary?.transportationExpensesCoefficients?.map((transportationExpense) => {
+    return {
+      label: `${transportationExpense.name}`,
+      value: `${transportationExpense.name}`,
+    };
+  });
 
   const [form] = Form.useForm();
   return (
@@ -39,11 +49,7 @@ export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps>
       cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button
-            key="2"
-            className="modal-btn-danger"
-            onClick={onCancel}
-          >
+          <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
           <button
@@ -53,10 +59,16 @@ export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps>
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate({ ...values, transportationExpenseValue, salesAndDistributionExpenseValue });
+                  onCreate({
+                    description: values.description,
+                    amount: values.amount,
+                    unitMeasure: "$/h",
+                    price: currentTransportationExpense.value,
+                    value: currentPrice,
+                  });
                   form.resetFields();
-                  setTransportationExpenseValue(0);
-                  setSalesAndDistributionExpenseValue(0);
+                  setCurrentTransportationExpense({ name: "", value: 0 });
+                  setCurrentPrice(0);
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -68,82 +80,46 @@ export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps>
         </div>,
       ]}
     >
-      <Form
-        form={form}
-        layout="vertical"
-        name="transportationExpenses"
-        size="middle"
-        fields={[
-          {
-            name: "unitMeasure",
-            value: "$/u",
-          },
-          {
-            name: "transportationExpenseCoef",
-            value: serviceFeeAuxiliary?.transportationExpensesCoefficient,
-          },
-          {
-            name: "salesAndDistributionExpenseCoef",
-            value: serviceFeeAuxiliary?.salesAndDistributionExpensesCoefficient,
-          },
-
-          {
-            name: "transportationExpenseDescription",
-            value: "Transportación",
-          },
-          {
-            name: "salesAndDistributionExpenseDescription",
-            value: "Distribución y Venta",
-          },
-        ]}
-      >
-        {/* Transportacion */}
-        <section className="flex flex-1 gap-2">
-          <Form.Item name="transportationExpenseDescription" className="w-[10rem]" label="Descripción">
-            <Input style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item name="unitMeasure" className="w-[10rem]" label="Unidad de Medida">
-            <Input />
-          </Form.Item>
-          <Form.Item name="transportationAmount" label="Cantidad" rules={[{ required: true, message: "Campo requerido" }]}>
-            <InputNumber
-              onChange={() => {
-                let values = form.getFieldsValue();
-                setTransportationExpenseValue(values.transportationAmount * values.transportationExpenseCoef);
-              }}
-            />
-          </Form.Item>
-          <Form.Item name="transportationExpenseCoef" label="Precio/UM">
-            <InputNumber />
-          </Form.Item>
-          <div className=" flex flex-col w-[4rem]">
-            <span className="font-bold h-[22px] mb-2">Importe</span>
-            <span className="h-[30px] pt-1.5">$ {!transportationExpenseValue ? 0 : transportationExpenseValue?.toFixed(2)}</span>
-          </div>
-        </section>
-        {/* Distribucion y venta */}
-        <section className="flex flex-1 gap-2">
-          <Form.Item name="salesAndDistributionExpenseDescription" className="w-[10rem]">
-            <Input style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item name="unitMeasure" className="w-[10rem]">
-            <Input />
-          </Form.Item>
-          <Form.Item name="salesAndDistributionAmount" rules={[{ required: true, message: "Campo requerido" }]}>
-            <InputNumber
-              onChange={() => {
-                let values = form.getFieldsValue();
-                setSalesAndDistributionExpenseValue(values.salesAndDistributionAmount * values.salesAndDistributionExpenseCoef);
-              }}
-            />
-          </Form.Item>
-          <Form.Item name="salesAndDistributionExpenseCoef">
-            <InputNumber />
-          </Form.Item>
-          <div className=" flex flex-col w-[4rem]">
-            <span className="pt-1.5 h-[30px]">$ {!salesAndDistributionExpenseValue ? 0 : salesAndDistributionExpenseValue?.toFixed(2)}</span>
-          </div>
-        </section>
+      <Form form={form} layout="vertical" name="addTransportationExpenses" size="middle">
+        <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Select
+            allowClear
+            options={listOfTransportationExpenses}
+            style={{ width: "100%" }}
+            onSelect={(value: any) => {
+              const selectedTransportationExpense = serviceFeeAuxiliary?.transportationExpensesCoefficients?.find((transportationExpense) => transportationExpense.name === value);
+              setCurrentTransportationExpense(selectedTransportationExpense!);
+              form.setFieldsValue({
+                unitMeasure: "$/m2",
+                price: form.getFieldValue("amount") * selectedTransportationExpense?.value!,
+              });
+              setCurrentPrice(form.getFieldValue("amount") * selectedTransportationExpense?.value!);
+            }}
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
+            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+          />
+        </Form.Item>
+        <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
+          <InputNumber
+            onChange={(value: any) => {
+              setCurrentPrice(value * currentTransportationExpense?.value!);
+            }}
+          />
+        </Form.Item>
+        <div className=" flex gap-2 pl-2 mb-4">
+          <span className="font-bold">Unidad de Medida:</span>
+          <span>$/m2</span>
+        </div>
+        <div className=" flex gap-2 pl-2 mb-4">
+          <span className="font-bold">Precio/UM:</span>
+          <span>${currentTransportationExpense?.value?.toFixed(2)}</span>
+        </div>
+        <div className=" flex gap-2 pl-2 mb-4">
+          <span className="font-bold">Importe:</span>
+          <span>${!currentPrice ? 0 : currentPrice?.toFixed(2)}</span>
+        </div>
       </Form>
     </Modal>
   );

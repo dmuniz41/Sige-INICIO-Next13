@@ -9,9 +9,7 @@ import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary, startUpdateServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import { AuxiliarySection } from "./AuxiliarySection";
-import { IServiceFee } from "@/models/serviceFees";
 import { serviceFeeStartLoading } from "@/actions/serviceFee";
-import { updateServiceFeeWhenAuxiliary } from "@/helpers/updateServiceFeeWhenAuxiliary";
 
 export const AuxiliaryView = () => {
   const dispatch = useAppDispatch();
@@ -46,8 +44,7 @@ export const AuxiliaryView = () => {
         administrativeExpensesCoefficients: values.administrativeExpenses,
         equipmentDepreciationCoefficients: values.equipmentDepreciation,
         equipmentMaintenanceCoefficients: values.equipmentMaintenance,
-        transportationExpensesCoefficient: values.transportationExpensesCoefficient,
-        salesAndDistributionExpensesCoefficient: values.salesAndDistributionExpensesCoefficient,
+        transportationExpensesCoefficients: values.transportationExpenses,
       })
     );
     setEditing(false);
@@ -98,16 +95,7 @@ export const AuxiliaryView = () => {
             <AuxiliarySection data={serviceFeeAuxiliary?.equipmentDepreciationCoefficients} columns={columns} sectionName="Depreciación de Equipos" />
             <AuxiliarySection data={serviceFeeAuxiliary?.equipmentMaintenanceCoefficients} columns={columns} sectionName="Mantenimiento de Equipos" />
             <AuxiliarySection
-              data={[
-                {
-                  name: "Transportación",
-                  value: serviceFeeAuxiliary?.transportationExpensesCoefficient,
-                },
-                {
-                  name: "Distribución y Venta",
-                  value: serviceFeeAuxiliary?.salesAndDistributionExpensesCoefficient,
-                },
-              ]}
+              data={serviceFeeAuxiliary?.transportationExpensesCoefficients}
               columns={columns}
               sectionName="Gastos de Transportación"
             />
