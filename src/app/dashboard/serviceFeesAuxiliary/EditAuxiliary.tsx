@@ -67,10 +67,24 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
           name: "transportationExpenses",
           value: defaultValues?.transportationExpensesCoefficients,
         },
+        {
+          name: "currencyChange",
+          value: defaultValues?.currencyChange,
+        },
 
       ]}
     >
       <section className=" flex-col">
+        <div className="flex gap-2 pr-[13rem]">
+          <Form.Item
+            className="mb-3 flex-1"
+            label={<span className="font-bold text-md">Cambio USD</span>}
+            name="currencyChange"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
+            <InputNumber />
+          </Form.Item>
+        </div>
         <div className="flex gap-2 pr-[13rem]">
           <Form.Item
             className="mb-3 flex-1"

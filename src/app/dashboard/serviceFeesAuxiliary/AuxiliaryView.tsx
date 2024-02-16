@@ -35,7 +35,7 @@ export const AuxiliaryView = () => {
         _id: serviceFeeAuxiliary?._id,
         calculationCoefficient: values.calculationCoefficient,
         currency: serviceFeeAuxiliary?.currency,
-        currencyChange: serviceFeeAuxiliary?.currencyChange,
+        currencyChange: values?.currencyChange,
         informalCurrencyChange: values.informalCurrencyChange,
         key: serviceFeeAuxiliary?.key,
         mermaCoefficient: values.mermaCoefficient,
