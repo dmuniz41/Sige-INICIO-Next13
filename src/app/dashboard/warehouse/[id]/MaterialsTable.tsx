@@ -194,7 +194,6 @@ const MaterialsTable: React.FC = () => {
       });
     }
   };
-
   const handleEditMaterial = (): void => {
     if (selectedRow) {
       setEditMaterialModal(true);
@@ -205,18 +204,15 @@ const MaterialsTable: React.FC = () => {
       });
     }
   };
-
-  const handleRefresh = () => {
+  const handleRefresh = (): void => {
     dispatch(materialsStartLoading(selectedWarehouse));
   };
-
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
-
-  const handleDelete = () => {
+  const handleDelete = (): void => {
     if (selectedRow) {
       Swal.fire({
         title: "Eliminar Material",
@@ -239,12 +235,10 @@ const MaterialsTable: React.FC = () => {
       });
     }
   };
-
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText("");
   };
-
   const onCreate = (values: any): void => {
     let operation: IOperation = {
       date: currentDate,
@@ -268,7 +262,6 @@ const MaterialsTable: React.FC = () => {
     );
     setCreateNewModal(false);
   };
-
   const onAdd = (values: any): void => {
     console.log("🚀 ~ file: MaterialsTable.tsx:232 ~ onAdd ~ values:", values);
     let operation: IOperation = {
@@ -292,7 +285,6 @@ const MaterialsTable: React.FC = () => {
     );
     setAddModal(false);
   };
-
   const onMinus = (values: any): void => {
     let operation: IOperation = {
       date: currentDate,
@@ -315,24 +307,20 @@ const MaterialsTable: React.FC = () => {
     );
     setMinusModal(false);
   };
-
-  const onEditMaterial = (values: any): void => {    
+  const onEditMaterial = (values: any): void => {
     dispatch(editMaterial(selectedRow?.category!, values.code, values.description, values.materialName, values.minimumExistence, selectedWarehouse));
     setEditMaterialModal(false);
   };
-
   const onChange: TableProps<DataType>["onChange"] = (pagination, filters, sorter, extra) => {
     setFilteredData(extra.currentDataSource);
     console.log(filteredData);
   };
-
   const rowSelection: TableRowSelection<DataType> = {
     onChange: async (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
       setSelectedRow(selectedRows[0]);
       console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows);
     },
   };
-
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
@@ -399,14 +387,12 @@ const MaterialsTable: React.FC = () => {
         text
       ),
   });
-
   const columns: ColumnsType<DataType> = [
     {
       title: "Código",
       dataIndex: "code",
       key: "code",
       width: "5%",
-      // ...getColumnSearchProps("code"),
     },
     {
       title: "Categoría",
@@ -429,7 +415,6 @@ const MaterialsTable: React.FC = () => {
       dataIndex: "description",
       key: "description",
       width: "15%",
-      // ...getColumnSearchProps("description"),
     },
     {
       title: "Coste Unitario",
@@ -486,19 +471,11 @@ const MaterialsTable: React.FC = () => {
     <>
       <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <div className="flex gap-2">
-          <button
-            disabled={!canAdd}
-            onClick={handleAdd}
-            className="toolbar-primary-icon-btn "
-          >
+          <button disabled={!canAdd} onClick={handleAdd} className="toolbar-primary-icon-btn ">
             <PlusSvg />
             Añadir
           </button>
-          <button
-            disabled={!canMinus}
-            onClick={handleMinus}
-            className="toolbar-danger-icon-btn "
-          >
+          <button disabled={!canMinus} onClick={handleMinus} className="toolbar-danger-icon-btn ">
             <MinusSvg />
             Sustraer
           </button>

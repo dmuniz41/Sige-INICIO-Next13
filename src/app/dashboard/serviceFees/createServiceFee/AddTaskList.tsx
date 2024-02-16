@@ -68,7 +68,7 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
                 });
             }}
           >
-            Crear
+            Añadir
           </button>
         </div>,
       ]}

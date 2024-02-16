@@ -17,7 +17,7 @@ export const CreateServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ 
   const unitMeasures: string[] | undefined = [];
 
   nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Categoría de tarea") categories.push(nomenclator.code);
+    if (nomenclator.category === "Categoría de tareas") categories.push(nomenclator.code);
     if (nomenclator.category === "Unidad de medida") unitMeasures.push(nomenclator.code);
   });
 
@@ -68,23 +68,7 @@ export const CreateServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ 
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate({
-                    ...values,
-                    complexityLevels: [
-                      {
-                        name: "Alta",
-                        coefficient: values.high,
-                      },
-                      {
-                        name: "Media",
-                        coefficient: values.medium,
-                      },
-                      {
-                        name: "Baja",
-                        coefficient: values.low,
-                      },
-                    ],
-                  });
+                  onCreate(values);
                   form.resetFields();
                 })
                 .catch((error) => {

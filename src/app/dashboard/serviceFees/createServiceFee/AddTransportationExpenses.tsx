@@ -80,7 +80,7 @@ export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps>
         </div>,
       ]}
     >
-      <Form form={form} layout="vertical" name="addTransportationExpenses" size="middle">
+      <Form form={form} layout="horizontal" name="addTransportationExpenses" size="middle">
         <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select
             allowClear
