@@ -1,10 +1,11 @@
 "use client";
 import { signIn } from "next-auth/react";
-import { Toast } from "@/helpers/customAlert";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import logo from "../../../assets/inicio.svg";
 import React, { FormEvent, useState } from "react";
+
+import { Toast } from "@/helpers/customAlert";
+import logo from "../../../assets/inicio.svg";
 
 export default function Login() {
   const [error, setError] = useState("");

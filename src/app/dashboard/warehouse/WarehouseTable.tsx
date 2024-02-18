@@ -23,6 +23,7 @@ import { SeeSvg } from "../../global/SeeSvg";
 import { EditSvg } from "../../global/EditSvg";
 import { DeleteSvg } from "../../global/DeleteSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
+import { useRouter } from "next/navigation";
 interface DataType {
   _id: string;
   key: string;
@@ -40,6 +41,7 @@ const WarehousesTable: React.FC = () => {
   const [editModal, setEditModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState<DataType>();
   const searchInput = useRef<InputRef>(null);
+  const router = useRouter()
   const { data: sessionData } = useSession();
 
   const canList = sessionData?.user.role.includes("Listar Almacén");
@@ -56,11 +58,9 @@ const WarehousesTable: React.FC = () => {
   if (!canList) {
     data = [];
   }
-
   const handleNew = (): void => {
     setCreateNewModal(true);
   };
-
   const handleEdit = (): void => {
     if (selectedRow) {
       setEditModal(true);
@@ -71,24 +71,20 @@ const WarehousesTable: React.FC = () => {
       });
     }
   };
-
   const onCreate = (values: any): void => {
     dispatch(startAddWarehouse(values.name));
     setCreateNewModal(false);
   };
-
   const onEdit = (values: any): void => {
     dispatch(startUpdateWarehouse(selectedRow?._id!, values.name));
     setSelectedRow(undefined);
     setEditModal(false);
   };
-
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
-
   const handleView = async () => {
     if (selectedRow) {
       await dispatch(materialsStartLoading(selectedRow?._id!));
@@ -100,6 +96,10 @@ const WarehousesTable: React.FC = () => {
     }
   };
 
+  const handleRowClick = async(record: any)=>{
+    await dispatch(materialsStartLoading(selectedRow?._id!));
+    router.push(`/dashboard/warehouse/${record === undefined ? " " : record?._id}`)
+  }
   const handleDelete = () => {
     if (selectedRow) {
       Swal.fire({
@@ -123,12 +123,10 @@ const WarehousesTable: React.FC = () => {
       });
     }
   };
-
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText("");
   };
-
   const rowSelection: TableRowSelection<DataType> = {
     onChange: async (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
       setSelectedRow(selectedRows[0]);
@@ -136,7 +134,6 @@ const WarehousesTable: React.FC = () => {
       console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows);
     },
   };
-
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
@@ -203,7 +200,6 @@ const WarehousesTable: React.FC = () => {
         text
       ),
   });
-
   const columns: ColumnsType<DataType> = [
     {
       title: "Nombre",
@@ -281,10 +277,14 @@ const WarehousesTable: React.FC = () => {
         columns={columns}
         dataSource={data}
         pagination={{ position: ["bottomCenter"], pageSize: 10 }}
-        rowSelection={{
-          type: "radio",
-          ...rowSelection,
-        }}
+        // rowSelection={{
+        //   type: "radio",
+        //   ...rowSelection,
+        // }}
+        onRow={(record=>({
+          onClick: () => handleRowClick(record),
+    
+        }))}
         className="shadow-md"
       />
     </>
