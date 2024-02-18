@@ -45,6 +45,11 @@ const ServiceFeeTaskTable: React.FC = () => {
   const searchInput = useRef<InputRef>(null);
   const router = useRouter();
   const { data: sessionData } = useSession();
+  
+  const taskCategory: string[] | undefined = [];
+  const taskCategoryFilter: any[] = [];
+  const unitMeasureFilter: any[] = [];
+  const unitMeasures: string[] | undefined = [];
 
   const canList = sessionData?.user.role.includes("Listar Tarifas de Servicio");
   const canCreate = sessionData?.user.role.includes("Crear Tarifas de Servicio");
@@ -90,10 +95,29 @@ const ServiceFeeTaskTable: React.FC = () => {
   }, [dispatch]);
 
   const { serviceFeeTasks }: { serviceFeeTasks: IServiceFeeTask[] } = useAppSelector((state: RootState) => state?.serviceFee);
+  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
+
   let data: IServiceFeeTask[] = useMemo(() => serviceFeeTasks, [serviceFeeTasks]);
   if (!canList) {
     data = [];
   }
+  nomenclators.map((nomenclator: INomenclator) => {
+    if (nomenclator.category === "Unidad de medida") unitMeasures.push(nomenclator.code);
+    if (nomenclator.category === "Categoría de tareas") taskCategory.push(nomenclator.code);
+  });
+
+  taskCategory.map((taskCategory: string) => {
+    taskCategoryFilter.push({
+      text: `${taskCategory}`,
+      value: `${taskCategory}`,
+    });
+  });
+  unitMeasures.map((unitMeasure: string) => {
+    unitMeasureFilter.push({
+      text: `${unitMeasure}`,
+      value: `${unitMeasure}`,
+    });
+  });
 
   // let PDFReportData: ICostSheet[] = [];
 
@@ -289,14 +313,17 @@ const ServiceFeeTaskTable: React.FC = () => {
       dataIndex: "description",
       key: "description",
       width: "45%",
+      sorter: (a: any, b: any) => a.description.localeCompare(b.description),
+      ...getColumnSearchProps("description"),
     },
     {
       title: "Categoría",
       dataIndex: "category",
       key: "category",
       width: "20%",
-      sorter: (a: any, b: any) => a.category.localeCompare(b.category),
-      ...getColumnSearchProps("category"),
+      filters: taskCategoryFilter,
+      onFilter: (value: any, record: any) => record.category.startsWith(value),
+      filterSearch: true,
     },
     {
       title: "Cantidad",
@@ -310,6 +337,8 @@ const ServiceFeeTaskTable: React.FC = () => {
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "20%",
+      filters: unitMeasureFilter,
+      onFilter: (value: any, record: any) => record.unitMeasure.startsWith(value),
       filterSearch: true,
     },
 

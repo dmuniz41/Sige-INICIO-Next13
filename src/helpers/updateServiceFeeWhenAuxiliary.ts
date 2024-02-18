@@ -22,6 +22,8 @@ export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxili
     const equipmentMaintenance = serviceFees[index].equipmentMaintenance;
     const transportationExpenses = serviceFees[index].transportationExpenses;
 
+    serviceFee.currencyChange = auxiliary.currencyChange
+
     administrativeExpenses.forEach((administrativeExpense, index, administrativeExpenses) => {
       if (administrativeExpensesNames.includes(administrativeExpense.description)) {
         const price = auxiliary.administrativeExpensesCoefficients.find((ae) => ae.name === administrativeExpense.description);
@@ -88,9 +90,6 @@ export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxili
     });
   });
 
-  // console.log(serviceFees.map((sf) => sf.administrativeExpenses));
-  // console.log(serviceFees.map((sf) => sf.equipmentDepreciation));
-  // console.log(serviceFees.map((sf) => sf.equipmentMaintenance));
 
   serviceFees.map(async (serviceFee) => {
     try {
