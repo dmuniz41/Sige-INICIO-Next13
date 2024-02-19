@@ -368,7 +368,7 @@ export async function PATCH(request: Request) {
     if (!serviceFeeToDelete) {
       return NextResponse.json({
         ok: true,
-        message: "La tarifa de servicio  a borrar no existe",
+        message: "La tarifa de servicio a borrar no existe",
       });
     }
 
