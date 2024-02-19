@@ -128,9 +128,9 @@ export async function PUT(request: Request) {
         expenses: project.expenses,
         profits: project.profits,
         totalValue: project.totalValue,
-      }
+      },
+      { new: true }
     );
-    console.log("🚀 ~ PUT ~ updatedProject:", updatedProject)
 
     return new NextResponse(
       JSON.stringify({
