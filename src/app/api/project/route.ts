@@ -1,8 +1,9 @@
+import { NextResponse } from "next/server";
+
+import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
-import { connectDB } from "@/libs/mongodb";
 import Project, { IProject } from "@/models/project";
-import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const { ...project }: IProject = await request.json();
@@ -111,7 +112,7 @@ export async function PUT(request: Request) {
       );
     }
 
-    const updatedProject = Project.findByIdAndUpdate(
+    const updatedProject = await Project.findByIdAndUpdate(
       project._id,
       {
         clientNumber: project.clientNumber,
@@ -127,9 +128,9 @@ export async function PUT(request: Request) {
         expenses: project.expenses,
         profits: project.profits,
         totalValue: project.totalValue,
-      },
-      { new: true }
+      }
     );
+    console.log("🚀 ~ PUT ~ updatedProject:", updatedProject)
 
     return new NextResponse(
       JSON.stringify({
@@ -176,6 +177,7 @@ export async function GET(request: Request) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
+        projectCounter: listOfProjects.length,
         listOfProjects,
       }),
       {

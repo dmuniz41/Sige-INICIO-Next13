@@ -1,7 +1,6 @@
 import { Schema, model, models, Model } from "mongoose";
 
 export interface IItem {
-  _id: string;
   key: string;
   idNumber: number;
   description: string;
@@ -50,7 +49,6 @@ const ProjectSchema = new Schema<IProject, Model<IProject>>({
   currency: {
     type: String,
     required: true,
-    unique: true,
   },
   initDate: {
     type: Date,
@@ -65,7 +63,6 @@ const ProjectSchema = new Schema<IProject, Model<IProject>>({
   },
   itemsList: [
     {
-      _id: String,
       key: String,
       idNumber: Number,
       description: String,
