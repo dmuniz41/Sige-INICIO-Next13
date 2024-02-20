@@ -1,5 +1,5 @@
 "use client";
-import { Button, Input, Space, Table, Tooltip } from "antd";
+import { Button, Input, Space, Table, Tag, Tooltip } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -85,7 +85,7 @@ const ProjectTable: React.FC = () => {
   }, [dispatch]);
 
   const { projects }: any = useAppSelector((state: RootState) => state?.project);
-  console.log("🚀 ~ projects:", projects)
+  console.log("🚀 ~ projects:", projects);
   let data: IProject[] = useMemo(() => projects, [projects]);
   if (!canList) {
     data = [];
@@ -242,12 +242,14 @@ const ProjectTable: React.FC = () => {
       ),
   });
 
+  let color = "green";
+
   const columns: ColumnsType<IProject> = [
     {
       title: "Nombre del Proyecto",
       dataIndex: "projectName",
       key: "projectName",
-      width: "40%",
+      width: "30%",
       sorter: (a: any, b: any) => a.projectName.localeCompare(b.projectName),
       ...getColumnSearchProps("projectName"),
     },
@@ -282,12 +284,31 @@ const ProjectTable: React.FC = () => {
       dataIndex: "status",
       key: "status",
       width: "10%",
+      render: (_, { status }) => (
+        <>
+          {status === "Terminado" && (
+            <Tag color="#34b042" key={status}>
+              {status.toUpperCase()}
+            </Tag>
+          )}
+          {status === "Cobrado" && (
+            <Tag color="#34395e" key={status}>
+              {status.toUpperCase()}
+            </Tag>
+          )}
+          {status === "Cerrado" && (
+            <Tag color="#ff6600" key={status}>
+              {status.toUpperCase()}
+            </Tag>
+          )}
+        </>
+      ),
     },
     {
       title: "Gastos",
       dataIndex: "expenses",
       key: "expenses",
-      width: "10%",
+      width: "5%",
       render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
       sorter: {
         compare: (a, b) => a.expenses - b.expenses,
@@ -297,7 +318,7 @@ const ProjectTable: React.FC = () => {
       title: "Ganancia",
       dataIndex: "profits",
       key: "profits",
-      width: "10%",
+      width: "5%",
       render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
       sorter: {
         compare: (a, b) => a.profits - b.profits,
@@ -307,7 +328,7 @@ const ProjectTable: React.FC = () => {
       title: "Fecha de creación",
       dataIndex: "initDate",
       key: "initDate",
-      width: "10%",
+      width: "15%",
     },
   ];
 

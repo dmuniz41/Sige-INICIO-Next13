@@ -39,7 +39,7 @@ export const startAddProject = ({ ...project }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: serviceFee.ts:96 ~ return ~ message:", message);
+        console.log("🚀 ~ file: project.ts:42 ~ return ~ message:", message);
         Swal.fire("Error", "Error al crear proyecto", "error");
       });
   };
@@ -79,7 +79,7 @@ export const startUpdateProject = ({ ...project }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: serviceFee.ts:104 ~ return ~ message:", message);
+        console.log("🚀 ~ file: project.ts:82 ~ return ~ message:", message);
         Swal.fire("Error", "Error al editar proyecto", "error");
       });
   };
@@ -96,7 +96,7 @@ export const projectsStartLoading = () => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: serviceFee.ts:69 ~ return ~ message:", message);
+        console.log("🚀 ~ file: project.ts:99 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar los proyectos", "error");
       });
   };
@@ -117,7 +117,7 @@ export const startDeleteProject = (id: string): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: serviceFee.ts:90 ~ return ~ message:", message);
+        console.log("🚀 ~ file: project.ts:120 ~ return ~ message:", message);
         Swal.fire("Error", "Error al eliminar el proyecto", "error");
       });
   };
@@ -134,7 +134,7 @@ export const loadSelectedProject = (id: string) => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: serviceFee.ts:159 ~ return ~ message:", message);
+        console.log("🚀 ~ file: project.ts:137 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar el proyecto seleccionado", "error");
       });
   };

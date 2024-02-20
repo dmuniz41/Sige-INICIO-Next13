@@ -27,7 +27,7 @@ export const projectReducer = (state = initialState, action: any) => {
     case types.selectedProject:
       return {
         ...state,
-        selectedServiceFee: action.payload,
+        selectedProject: action.payload,
       };
 
     default:

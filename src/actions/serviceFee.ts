@@ -91,7 +91,7 @@ export const startUpdateServiceFee = ({ ...serviceFee }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: serviceFee.ts:104 ~ return ~ message:", message);
+        console.log("🚀 ~ file: serviceFee.ts:94 ~ return ~ message:", message);
         Swal.fire("Error", "Error al editar la tarifa de servicio", "error");
       });
   };
@@ -108,7 +108,7 @@ export const serviceFeeStartLoading = () => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: serviceFee.ts:69 ~ return ~ message:", message);
+        console.log("🚀 ~ file: serviceFee.ts:111 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar las tarifas de servicio", "error");
       });
   };
@@ -129,7 +129,7 @@ export const startDeleteServiceFee = (id: string): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: serviceFee.ts:90 ~ return ~ message:", message);
+        console.log("🚀 ~ file: serviceFee.ts:132 ~ return ~ message:", message);
         Swal.fire("Error", "Error al eliminar la tarifa de servicio", "error");
       });
   };
@@ -146,7 +146,7 @@ export const loadSelectedServiceFee = (id: string) => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: serviceFee.ts:159 ~ return ~ message:", message);
+        console.log("🚀 ~ file: serviceFee.ts:149 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar tarifa de servicio seleccionada", "error");
       });
   };
