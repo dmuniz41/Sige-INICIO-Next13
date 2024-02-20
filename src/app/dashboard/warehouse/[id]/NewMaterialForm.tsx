@@ -11,6 +11,7 @@ interface Values {
   provider: string;
   unitMeasure?: string;
   unitsTotal: number;
+  enterDate: Date
 }
 interface CollectionCreateFormProps {
   open: boolean;

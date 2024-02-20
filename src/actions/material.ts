@@ -7,6 +7,7 @@ import { IOperation } from "@/models/operation";
 import { IMaterial } from "@/models/material";
 
 export const startAddMaterial = ({ ...material }): any => {
+  console.log("🚀 ~ startAddMaterial ~ material:", material)
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
