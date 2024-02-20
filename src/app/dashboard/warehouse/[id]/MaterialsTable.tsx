@@ -251,7 +251,7 @@ const MaterialsTable: React.FC = () => {
         category: values.category,
         costPerUnit: values.costPerUnit,
         description: values.description,
-        currentDate: values.enterDate.format("MM/DD/YYYY"),
+        enterDate: values.enterDate.format("MM/DD/YYYY"),
         materialName: values.materialName,
         minimumExistence: values.minimumExistence,
         operation: operation,
