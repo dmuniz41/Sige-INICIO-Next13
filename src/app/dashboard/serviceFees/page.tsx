@@ -1,5 +1,5 @@
 import React from "react";
-import ServiceFeeTable from "./serviceFeesTable";
+import ServiceFeeTable from "./ServiceFeesTable";
 
 export default function page() {
   return (
