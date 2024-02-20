@@ -43,10 +43,16 @@ export const types = {
   serviceFeesLoaded:       "[ServiceFee] Service Fees Loaded",
   selectedServiceFee:      "[ServiceFee] Load Selected Service Fee",
 
-  addServiceFeeTask:           "[ServiceFee] Add Service Fee Task",
-  updateServiceFeeTask:        "[ServiceFee] Update Service Fee Task",
-  deleteServiceFeeTask:        "[ServiceFee] Delete Service Fee Task",
-  serviceFeesTasksLoaded:      "[ServiceFee] Service Fees Tasks Loaded ",
+  addServiceFeeTask:       "[ServiceFee] Add Service Fee Task",
+  updateServiceFeeTask:    "[ServiceFee] Update Service Fee Task",
+  deleteServiceFeeTask:    "[ServiceFee] Delete Service Fee Task",
+  serviceFeesTasksLoaded:  "[ServiceFee] Service Fees Tasks Loaded ",
+
+  addProject:              "[Project] Add Project",
+  updateProject:           "[Project] Update Project",
+  deleteProject:           "[Project] Delete Project",
+  projectsLoaded:          "[Project] Projects Loaded ",
+  selectedProject:         "[Project] Project Selected ",
 
   setCurrencyChange:       "[Global] Set Currency Change",
 
