@@ -125,6 +125,13 @@ const ProjectTable: React.FC = () => {
     }
   };
 
+
+  const handleRowClick = async(record: any) => {
+    console.log("🚀 ~ handleRowClick ~ record:", record._id)
+    await dispatch(loadSelectedProject(record?._id!));
+    router.push(`/dashboard/project/${record?._id}`)
+  }
+
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -340,10 +347,6 @@ const ProjectTable: React.FC = () => {
             <PlusSvg />
             Nuevo
           </button>
-          <button disabled={!canList} onClick={handleView} className={`${canList ? "toolbar-secondary-icon-btn" : "bg-secondary-200"}  `}>
-            <SeeSvg />
-            Ver
-          </button>
         </div>
         <div className="flex">
           {/* <PDFDownloadLink document={<CostSheetTablePDFReport fields={fields} data={PDFReportData} title={`Fichas de costo`} />} fileName={`Listado de fichas de costo `}>
@@ -384,10 +387,9 @@ const ProjectTable: React.FC = () => {
         dataSource={data}
         onChange={onChange}
         pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
-        rowSelection={{
-          type: "radio",
-          ...rowSelection,
-        }}
+        onRow={(record=>({
+          onClick: () => handleRowClick(record),
+        }))}
         className="shadow-md"
       />
     </>
