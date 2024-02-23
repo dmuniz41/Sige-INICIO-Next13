@@ -125,6 +125,13 @@ const ProjectTable: React.FC = () => {
     }
   };
 
+
+  const handleRowClick = async(record: any) => {
+    console.log("🚀 ~ handleRowClick ~ record:", record._id)
+    await dispatch(loadSelectedProject(record?._id!));
+    router.push(`/dashboard/project/${record?._id}`)
+  }
+
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -277,27 +284,27 @@ const ProjectTable: React.FC = () => {
       title: "Moneda",
       dataIndex: "currency",
       key: "currency",
-      width: "10%",
+      width: "5%",
     },
     {
       title: "Estado",
       dataIndex: "status",
       key: "status",
-      width: "10%",
+      width: "5%",
       render: (_, { status }) => (
         <>
           {status === "Terminado" && (
-            <Tag color="#34b042" key={status}>
+            <Tag className="font-bold" color="#34b042" key={status}>
               {status.toUpperCase()}
             </Tag>
           )}
           {status === "Cobrado" && (
-            <Tag color="#34395e" key={status}>
+            <Tag className="font-bold" color="#34395e" key={status}>
               {status.toUpperCase()}
             </Tag>
           )}
           {status === "Cerrado" && (
-            <Tag color="#ff6600" key={status}>
+            <Tag className="font-bold" color="#ff6600" key={status}>
               {status.toUpperCase()}
             </Tag>
           )}
@@ -328,7 +335,7 @@ const ProjectTable: React.FC = () => {
       title: "Fecha de creación",
       dataIndex: "initDate",
       key: "initDate",
-      width: "15%",
+      width: "10%",
     },
   ];
 
@@ -339,10 +346,6 @@ const ProjectTable: React.FC = () => {
           <button disabled={!canCreate} onClick={() => router.push("/dashboard/project/createProject")} className={`${canCreate ? "toolbar-primary-icon-btn" : "bg-success-200"} `}>
             <PlusSvg />
             Nuevo
-          </button>
-          <button disabled={!canList} onClick={handleView} className={`${canList ? "toolbar-secondary-icon-btn" : "bg-secondary-200"}  `}>
-            <SeeSvg />
-            Ver
           </button>
         </div>
         <div className="flex">
@@ -384,10 +387,9 @@ const ProjectTable: React.FC = () => {
         dataSource={data}
         onChange={onChange}
         pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
-        rowSelection={{
-          type: "radio",
-          ...rowSelection,
-        }}
+        onRow={(record=>({
+          onClick: () => handleRowClick(record),
+        }))}
         className="shadow-md"
       />
     </>

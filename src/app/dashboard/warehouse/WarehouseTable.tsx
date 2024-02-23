@@ -85,19 +85,9 @@ const WarehousesTable: React.FC = () => {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
-  const handleView = async () => {
-    if (selectedRow) {
-      await dispatch(materialsStartLoading(selectedRow?._id!));
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un almacén a visualizar",
-      });
-    }
-  };
 
   const handleRowClick = async(record: any)=>{
-    await dispatch(materialsStartLoading(selectedRow?._id!));
+    await dispatch(materialsStartLoading(record?._id!));
     router.push(`/dashboard/warehouse/${record === undefined ? " " : record?._id}`)
   }
   const handleDelete = () => {
@@ -219,18 +209,12 @@ const WarehousesTable: React.FC = () => {
 
   return (
     <>
-      <div className="flex h-14 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
+      <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <div className="flex gap-2">
           <button disabled={!canCreate} onClick={handleNew} className="toolbar-primary-icon-btn">
             <PlusSvg />
             Nuevo
           </button>
-          <Link href={`/dashboard/warehouse/${selectedRow === undefined ? " " : selectedRow?._id}`} className="cursor-default">
-            <button disabled={!canList} onClick={handleView} className="toolbar-secondary-icon-btn">
-              <SeeSvg />
-              Ver
-            </button>
-          </Link>
         </div>
         <div className="flex">
           <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
@@ -277,13 +261,8 @@ const WarehousesTable: React.FC = () => {
         columns={columns}
         dataSource={data}
         pagination={{ position: ["bottomCenter"], pageSize: 10 }}
-        // rowSelection={{
-        //   type: "radio",
-        //   ...rowSelection,
-        // }}
         onRow={(record=>({
           onClick: () => handleRowClick(record),
-    
         }))}
         className="shadow-md"
       />
