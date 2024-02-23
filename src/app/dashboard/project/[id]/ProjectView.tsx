@@ -135,30 +135,40 @@ export const ProjectView = () => {
 
         <article className="w-full flex justify-between p-2">
           <article>
-            <div className="flex gap-1">
+            {/* <div className="flex gap-1">
               <span className="font-bold mr-2 ">Solicitado por:</span>
               <p></p>
             </div>
             <div className="flex gap-1">
               <span className="font-bold mr-2 ">Recibido por:</span>
               <p></p>
-            </div>
+            </div> */}
             <div className="flex gap-1">
               <span className="font-bold mr-2 ">Gastos:</span>
-              <p>${selectedProject.expenses}</p>
+              <p>${selectedProject.expenses === undefined ? 0 : selectedProject.expenses}</p>
             </div>
             <div className="flex gap-1">
               <span className="font-bold mr-2 ">Ganancias:</span>
-              <p>${selectedProject.profits}</p>
+              <p>${selectedProject.profits === undefined ? 0 : selectedProject.profits}</p>
             </div>
             <div className="flex gap-1">
               <span className="font-bold mr-2 ">Estado:</span>
               {selectedProject.status === "Terminado" ? (
-                <Tag className="font-bold" color="#34b042">TERMINADO</Tag>
+                <Tag className="font-bold" color="#34b042">
+                  TERMINADO
+                </Tag>
               ) : selectedProject.status === "Cobrado" ? (
-                <Tag className="font-bold" color="#34395e">COBRADO</Tag>
+                <Tag className="font-bold" color="#34395e">
+                  COBRADO
+                </Tag>
               ) : selectedProject.status === "Cerrado" ? (
-                <Tag className="font-bold" color="#ff6600">CERRADO</Tag>
+                <Tag className="font-bold" color="#ff6600">
+                  CERRADO
+                </Tag>
+              ) : selectedProject.status === "Solicitud" ? (
+                <Tag className="font-bold" color="#1677ff">
+                  SOLICITUD
+                </Tag>
               ) : (
                 <></>
               )}

@@ -507,7 +507,7 @@ export const EditServiceFeeForm = () => {
   );
 };
 
-export const FormSection = (props: any) => {
+const FormSection = (props: any) => {
   const { sectionName, values, formName, valuesSetter, modalSetter, buttonText, form } = props;
   return (
     <section className=" flex w-full mb-8 bg-white-100 rounded shadow-[0px_0px_5px_0px_#00000024] ">

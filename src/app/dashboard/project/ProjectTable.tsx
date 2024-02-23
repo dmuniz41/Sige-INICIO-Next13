@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Highlighter from "react-highlight-words";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import Swal from "sweetalert2";
 import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
@@ -20,9 +20,10 @@ import { PlusSvg } from "@/app/global/PlusSvg";
 import { projectsStartLoading, startDeleteProject } from "@/actions/project";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { RootState, useAppSelector } from "@/store/store";
-import { SeeSvg } from "@/app/global/SeeSvg";
 import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
+import { Loading } from "@/app/global/Loading";
+import { SeeSvg } from "@/app/global/SeeSvg";
 
 // const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
 //   ssr: false,
@@ -85,7 +86,6 @@ const ProjectTable: React.FC = () => {
   }, [dispatch]);
 
   const { projects }: any = useAppSelector((state: RootState) => state?.project);
-  console.log("🚀 ~ projects:", projects);
   let data: IProject[] = useMemo(() => projects, [projects]);
   if (!canList) {
     data = [];
@@ -113,10 +113,10 @@ const ProjectTable: React.FC = () => {
   //   });
   // });
 
-  const handleView = (): void => {
-    if (selectedRow) {
-      dispatch(loadSelectedProject(selectedRow._id));
-      router.push(`/dashboard/project/${selectedRow._id}`);
+  const handleView = (id: string): void => {
+    if (id) {
+      dispatch(loadSelectedProject(id));
+      router.push(`/dashboard/project/${id}`);
     } else {
       Toast.fire({
         icon: "error",
@@ -125,12 +125,11 @@ const ProjectTable: React.FC = () => {
     }
   };
 
-
-  const handleRowClick = async(record: any) => {
-    console.log("🚀 ~ handleRowClick ~ record:", record._id)
+  const handleRowClick = async (record: any) => {
+    console.log("🚀 ~ handleRowClick ~ record:", record._id);
     await dispatch(loadSelectedProject(record?._id!));
-    router.push(`/dashboard/project/${record?._id}`)
-  }
+    router.push(`/dashboard/project/${record?._id}`);
+  };
 
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
@@ -138,8 +137,8 @@ const ProjectTable: React.FC = () => {
     setSearchedColumn(dataIndex);
   };
 
-  const handleDelete = () => {
-    if (selectedRow) {
+  const handleDelete = (id: string) => {
+    if (id) {
       Swal.fire({
         title: "Eliminar Proyecto",
         text: "El proyecto seleccionado se borrará de forma permanente",
@@ -152,7 +151,7 @@ const ProjectTable: React.FC = () => {
       }).then((result) => {
         if (result.isConfirmed) {
           // const nomenclatorToDelete = nomenclators.find((nomenclator: INomenclator) => nomenclator?.code === selectedRow?.nomenclatorId);
-          dispatch(startDeleteProject(selectedRow?._id));
+          dispatch(startDeleteProject(id));
           // dispatch(startDeleteNomenclator(nomenclatorToDelete?._id));
         }
       });
@@ -308,6 +307,11 @@ const ProjectTable: React.FC = () => {
               {status.toUpperCase()}
             </Tag>
           )}
+          {status === "Solicitud" && (
+            <Tag className="font-bold" color="#1677ff" key={status}>
+              {status.toUpperCase()}
+            </Tag>
+          )}
         </>
       ),
     },
@@ -337,6 +341,37 @@ const ProjectTable: React.FC = () => {
       key: "initDate",
       width: "10%",
     },
+    {
+      title: "Acciones",
+      key: "actions",
+      width: "5%",
+      render: (_, { _id }) => (
+        <div className="flex gap-1">
+          <Tooltip placement="top" title={"Ver"} arrow={{ pointAtCenter: true }}>
+            <button
+              disabled={!canList}
+              onClick={() => handleView(_id)}
+              className={`${
+                canList ? "cursor-pointer hover:bg-secondary-400 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2rem] h-[2rem] text-xl rounded-md bg-secondary-500 text-white-100`}
+            >
+              <SeeSvg width={20} height={20} />
+            </button>
+          </Tooltip>
+          <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
+            <button
+              disabled={!canDelete}
+              className={`${
+                canDelete ? "cursor-pointer hover:bg-danger-400 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2rem] h-[2rem] text-xl rounded-md bg-danger-600 text-white-100`}
+              onClick={() => handleDelete(_id)}
+            >
+              <DeleteSvg width={20} height={20} />
+            </button>
+          </Tooltip>
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -356,7 +391,7 @@ const ProjectTable: React.FC = () => {
               </button>
             )}
           </PDFDownloadLink> */}
-          <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
+          {/* <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canDelete}
               className={`${
@@ -366,7 +401,7 @@ const ProjectTable: React.FC = () => {
             >
               <DeleteSvg />
             </button>
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canList}
@@ -380,16 +415,15 @@ const ProjectTable: React.FC = () => {
           </Tooltip>
         </div>
       </div>
-
       <Table
         size="small"
         columns={columns}
         dataSource={data}
         onChange={onChange}
         pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
-        onRow={(record=>({
-          onClick: () => handleRowClick(record),
-        }))}
+        // onRow={(record) => ({
+        //   onClick: () => handleRowClick(record),
+        // })}
         className="shadow-md"
       />
     </>
