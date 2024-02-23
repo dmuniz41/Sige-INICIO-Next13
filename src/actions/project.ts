@@ -40,7 +40,7 @@ export const startAddProject = ({ ...project }): any => {
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
         console.log("🚀 ~ file: project.ts:42 ~ return ~ message:", message);
-        Swal.fire("Error", "Error al crear proyecto", "error");
+        Swal.fire("Error", message, "error");
       });
   };
 };

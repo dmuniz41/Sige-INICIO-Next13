@@ -21,13 +21,15 @@ export async function POST(request: Request) {
       );
     }
     await connectDB();
-    let DBProject = await Project.findOne({ projectName: project.projectName });
+    let DBProject = await Project.findOne({
+      $or: [{ projectName: project.projectName }, { projectNumber: project.projectNumber }],
+    });
 
     if (DBProject) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Ya existe un proyecto con ese nombre",
+          message: "Ya existe un proyecto con ese nombre o número de solicitud.\n (El nombre de los proyectos y número de solicitud deben ser únicos)",
         },
         {
           status: 409,
@@ -49,9 +51,9 @@ export async function POST(request: Request) {
       projectNumber: project.projectNumber,
       itemsList: project.itemsList,
       status: project.status,
-      expenses: project.expenses,
-      profits: project.profits,
-      totalValue: project.totalValue,
+      expenses: project.expenses ?? 0,
+      profits: project.profits ?? 0,
+      totalValue: project.totalValue ?? 0,
     });
 
     await newProject.save();
