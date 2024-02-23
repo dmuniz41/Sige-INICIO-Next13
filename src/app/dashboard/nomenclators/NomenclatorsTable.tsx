@@ -44,8 +44,14 @@ const NomenclatorsTable: React.FC = () => {
     dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
-  const { nomenclators }: {nomenclators: INomenclator[]} = useAppSelector((state: RootState) => state?.nomenclator);
-  let data: INomenclator[] = useMemo(() => nomenclators.filter((nomenclator)=>nomenclator.category !== "Tarifa de Servicio" && nomenclator.category !== "Material"), [nomenclators]);
+  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
+  let data: INomenclator[] = useMemo(() => nomenclators.filter((nomenclator) => 
+    nomenclator.category !== "Tarifa de Servicio" 
+    && 
+    nomenclator.category !== "Material"
+    &&
+    nomenclator.category !== "Ficha de costo"
+  ), [nomenclators]);
   if (!canList) {
     data = [];
   }
@@ -216,12 +222,16 @@ const NomenclatorsTable: React.FC = () => {
           value: "Precio/UM en ficha de costo",
         },
         {
-          text: "Ficha de costo",
-          value: "Ficha de costo",
-        },
-        {
           text: "Categoría de tarea",
           value: "Categoría de tarea",
+        },
+        {
+          text: "Nombre de Cliente",
+          value: "Nombre de Cliente",
+        },
+        {
+          text: "Moneda",
+          value: "Moneda",
         },
       ],
       onFilter: (value: any, record: any) => record.category.startsWith(value),

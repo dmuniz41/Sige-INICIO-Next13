@@ -11,14 +11,15 @@ import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { AddItemModal } from "./AddItem";
+import { INomenclator } from "@/models/nomenclator";
 
 export const CreateProjectForm = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
-  const serviceFeeCategory: string[] | undefined = [];
-  const valuePerUM: string[] | undefined = [];
   const router = useRouter();
-  const payMethods: IRepresentationCoefficients[] | undefined = [];
+  const payMethodNomenclator: IRepresentationCoefficients[] | undefined = [];
+  const clientNamesNomenclators: string[] | undefined = [];
+  const currencyNomenclators: string[] | undefined = [];
   const [itemsValues, setItemsValues]: any = useState([]);
   const [addItemModal, setAddItemModal] = useState(false);
 
@@ -28,12 +29,30 @@ export const CreateProjectForm = () => {
   }, [dispatch]);
 
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
-  serviceFeeAuxiliary?.payMethod?.map((payMethod) => payMethods.push(payMethod));
+  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
 
-  const payMethodOptions: SelectProps["options"] = payMethods.map((payMethod) => {
+  serviceFeeAuxiliary?.payMethod?.map((payMethod) => payMethodNomenclator.push(payMethod));
+  nomenclators.map((nomenclator: INomenclator) => {
+    if (nomenclator.category === "Nombre de Cliente") clientNamesNomenclators.push(nomenclator.code);
+    if (nomenclator.category === "Moneda") currencyNomenclators.push(nomenclator.code);
+  });
+
+  const payMethodOptions: SelectProps["options"] = payMethodNomenclator.map((payMethod) => {
     return {
       label: payMethod.representative,
       value: payMethod.representative,
+    };
+  });
+  const clientNameOptions: SelectProps["options"] = clientNamesNomenclators.map((clientName) => {
+    return {
+      label: `${clientName}`,
+      value: `${clientName}`,
+    };
+  });
+  const currencyOptions: SelectProps["options"] = currencyNomenclators.map((currency) => {
+    return {
+      label: `${currency}`,
+      value: `${currency}`,
     };
   });
 
@@ -69,7 +88,14 @@ export const CreateProjectForm = () => {
               <InputNumber />
             </Form.Item>
             <Form.Item className="mb-3" label={<span className="font-bold text-md">Nombre del Cliente</span>} name="clientName" rules={[{ required: true, message: "Campo requerido" }]}>
-              <Input />
+              <Select
+                allowClear
+                options={clientNameOptions}
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
+                filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+              />
             </Form.Item>
             <Form.Item className="mb-3" label={<span className="font-bold text-md">Proyecto</span>} name="projectName" rules={[{ required: true, message: "Campo requerido" }]}>
               <Input />
@@ -98,7 +124,7 @@ export const CreateProjectForm = () => {
             <Form.Item className="mb-3" label={<span className="font-bold text-md">Moneda </span>} name="currency" rules={[{ required: true, message: "Campo requerido" }]}>
               <Select
                 allowClear
-                options={payMethodOptions}
+                options={currencyOptions}
                 showSearch
                 optionFilterProp="children"
                 filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
@@ -118,7 +144,7 @@ export const CreateProjectForm = () => {
               .validateFields()
               .then((values) => {
                 console.log("🚀 ~ .then ~ values:", values);
-                dispatch(startAddProject({...values, status: "Solicitud", expenses: 0, profits: 0}));
+                dispatch(startAddProject({ ...values, status: "Solicitud", expenses: 0, profits: 0 }));
                 form.resetFields();
                 router.push("/dashboard/project");
               })

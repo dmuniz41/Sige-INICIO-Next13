@@ -22,8 +22,9 @@ import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
-import { Loading } from "@/app/global/Loading";
 import { SeeSvg } from "@/app/global/SeeSvg";
+import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
+import { INomenclator } from "@/models/nomenclator";
 
 // const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
 //   ssr: false,
@@ -41,6 +42,9 @@ const ProjectTable: React.FC = () => {
   const searchInput = useRef<InputRef>(null);
   const router = useRouter();
   const { data: sessionData } = useSession();
+  const payMethodNomenclator: string[] | undefined = [];
+  const clientNamesNomenclators: string[] | undefined = [];
+  const currencyNomenclators: string[] | undefined = [];
 
   const canList = sessionData?.user.role.includes("Listar Tarifas de Servicio");
   const canCreate = sessionData?.user.role.includes("Crear Tarifas de Servicio");
@@ -85,11 +89,62 @@ const ProjectTable: React.FC = () => {
     dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
+
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
+  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
   const { projects }: any = useAppSelector((state: RootState) => state?.project);
+
   let data: IProject[] = useMemo(() => projects, [projects]);
   if (!canList) {
     data = [];
   }
+
+
+  serviceFeeAuxiliary?.payMethod?.map((payMethod) => payMethodNomenclator.push(payMethod.representative));
+  nomenclators.map((nomenclator: INomenclator) => {
+    if (nomenclator.category === "Nombre de Cliente") clientNamesNomenclators.push(nomenclator.code);
+    if (nomenclator.category === "Moneda") currencyNomenclators.push(nomenclator.code);
+  });
+
+  const payMethodFilter: any[] = [];
+  payMethodNomenclator.map((payMethod: string) => {
+    payMethodFilter.push({
+      text: `${payMethod}`,
+      value: `${payMethod}`,
+    });
+  });
+  const clientNameFilter: any[] = [];
+  clientNamesNomenclators.map((clientName: string) => {
+    clientNameFilter.push({
+      text: `${clientName}`,
+      value: `${clientName}`,
+    });
+  });
+  const currencyFilter: any[] = [];
+  currencyNomenclators.map((currency: string) => {
+    currencyFilter.push({
+      text: `${currency}`,
+      value: `${currency}`,
+    });
+  });
+  const statusFilter: any[] = [
+    {
+      text: "Terminado",
+      value: "Terminado"
+    },
+    {
+      text: "Cerrado",
+      value: "Cerrado"
+    },
+    {
+      text: "Solicitud",
+      value: "Solicitud"
+    },
+    {
+      text: "Cobrado",
+      value: "Cobrado"
+    },
+  ];
 
   // let PDFReportData: ICostSheet[] = [];
 
@@ -98,20 +153,6 @@ const ProjectTable: React.FC = () => {
   // } else {
   //   PDFReportData = data;
   // }
-
-  // const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-
-  // nomenclators.map((nomenclator: INomenclator) => {
-  //   if (nomenclator.category === "Tarifa de Servicio") serviceFeeNomenclator.push(nomenclator.code);
-  // });
-
-  // const costSheetNomenclatorFilter: any[] = [];
-  // serviceFeeNomenclator.map((nomenclator: string) => {
-  //   costSheetNomenclatorFilter.push({
-  //     text: `${nomenclator}`,
-  //     value: `${nomenclator}`,
-  //   });
-  // });
 
   const handleView = (id: string): void => {
     if (id) {
@@ -123,12 +164,6 @@ const ProjectTable: React.FC = () => {
         title: "Seleccione un proyecto para ver",
       });
     }
-  };
-
-  const handleRowClick = async (record: any) => {
-    console.log("🚀 ~ handleRowClick ~ record:", record._id);
-    await dispatch(loadSelectedProject(record?._id!));
-    router.push(`/dashboard/project/${record?._id}`);
   };
 
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
@@ -171,14 +206,6 @@ const ProjectTable: React.FC = () => {
   const onChange: TableProps<IProject>["onChange"] = (pagination, filters, sorter, extra) => {
     setFilteredData(extra.currentDataSource);
     console.log(filteredData);
-  };
-
-  const rowSelection: TableRowSelection<IProject> = {
-    onChange: async (selectedRowKeys: React.Key[], selectedRows: IProject[]) => {
-      setSelectedRow(selectedRows[0]);
-      dispatch(loadSelectedProject(selectedRows[0]._id));
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows);
-    },
   };
 
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<IProject> => ({
@@ -264,10 +291,18 @@ const ProjectTable: React.FC = () => {
       dataIndex: "clientName",
       key: "clientName",
       width: "15%",
-      // filters: costSheetNomenclatorFilter,
-      // onFilter: (value: any, record: any) => record.nomenclatorId.startsWith(value),
-      // filterSearch: true,
-      sorter: (a: any, b: any) => a.clientName.localeCompare(b.clientName),
+      filters: clientNameFilter,
+      onFilter: (value: any, record: any) => record.clientName.startsWith(value),
+      filterSearch: true,
+    },
+    {
+      title: "Cobrado por",
+      dataIndex: "payMethod",
+      key: "payMethod",
+      width: "10%",
+      filters: payMethodFilter,
+      onFilter: (value: any, record: any) => record.payMethod.startsWith(value),
+      filterSearch: true,
     },
     {
       title: "Precio",
@@ -284,12 +319,18 @@ const ProjectTable: React.FC = () => {
       dataIndex: "currency",
       key: "currency",
       width: "5%",
+      filters: currencyFilter,
+      onFilter: (value: any, record: any) => record.currency.startsWith(value),
+      filterSearch: true,
     },
     {
       title: "Estado",
       dataIndex: "status",
       key: "status",
       width: "5%",
+      filters: statusFilter,
+      onFilter: (value: any, record: any) => record.status.startsWith(value),
+      filterSearch: true,
       render: (_, { status }) => (
         <>
           {status === "Terminado" && (
@@ -340,6 +381,8 @@ const ProjectTable: React.FC = () => {
       dataIndex: "initDate",
       key: "initDate",
       width: "10%",
+      sorter: (a: any, b: any) => a.initDate.localeCompare(b.initDate),
+      ...getColumnSearchProps("initDate"),
     },
     {
       title: "Acciones",
