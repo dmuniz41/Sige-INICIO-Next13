@@ -284,27 +284,27 @@ const ProjectTable: React.FC = () => {
       title: "Moneda",
       dataIndex: "currency",
       key: "currency",
-      width: "10%",
+      width: "5%",
     },
     {
       title: "Estado",
       dataIndex: "status",
       key: "status",
-      width: "10%",
+      width: "5%",
       render: (_, { status }) => (
         <>
           {status === "Terminado" && (
-            <Tag color="#34b042" key={status}>
+            <Tag className="font-bold" color="#34b042" key={status}>
               {status.toUpperCase()}
             </Tag>
           )}
           {status === "Cobrado" && (
-            <Tag color="#34395e" key={status}>
+            <Tag className="font-bold" color="#34395e" key={status}>
               {status.toUpperCase()}
             </Tag>
           )}
           {status === "Cerrado" && (
-            <Tag color="#ff6600" key={status}>
+            <Tag className="font-bold" color="#ff6600" key={status}>
               {status.toUpperCase()}
             </Tag>
           )}
@@ -335,7 +335,7 @@ const ProjectTable: React.FC = () => {
       title: "Fecha de creación",
       dataIndex: "initDate",
       key: "initDate",
-      width: "15%",
+      width: "10%",
     },
   ];
 
