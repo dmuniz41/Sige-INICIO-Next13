@@ -44,6 +44,14 @@ const category: SelectProps["options"] = [
     label: "Categoría de tarea",
     value: "Categoría de tarea",
   },
+  {
+    label: "Nombre de Cliente",
+    value: "Nombre de Cliente",
+  },
+  {
+    label: "Moneda",
+    value: "Moneda",
+  },
 ];
 export const CreateNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
   const [form] = Form.useForm();
