@@ -279,22 +279,6 @@ export const startSetCurrencyChange = (currencyChange: number, listOfCostSheets:
     });
   };
 };
-export const startLoadCurrencyChange = (): any => {
-  const token = localStorage.getItem("accessToken");
-  return async (dispatch: any) => {
-    await axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/costSheet`, { headers: { accessToken: token } })
-      .then((resp) => {
-        let { listOfCostSheets } = resp.data;
-        dispatch(setCurrencyChange(listOfCostSheets[0].USDValue));
-      })
-      .catch((error: AxiosError) => {
-        let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: costSheet.ts:288 ~ return ~ message:", message)
-        Swal.fire("Error", 'Error al cargar el valor del cambio de moneda', "error");
-      });
-  };
-};
 
 const addCostSheet = (
   administrativeExpenses: ICostSheetSubitem[],
