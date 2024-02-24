@@ -6,7 +6,7 @@ import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Swal from "sweetalert2";
 import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
-import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
+import type { FilterConfirmProps } from "antd/es/table/interface";
 import type { InputRef } from "antd";
 
 import { DeleteSvg } from "@/app/global/DeleteSvg";
@@ -36,7 +36,6 @@ const ServiceFeeTable: React.FC = () => {
   const dispatch = useAppDispatch();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [selectedRow, setSelectedRow] = useState<IServiceFee>();
   const [filteredData, setFilteredData] = useState<IServiceFee[]>();
   const searchInput = useRef<InputRef>(null);
   const router = useRouter();
@@ -115,10 +114,10 @@ const ServiceFeeTable: React.FC = () => {
     });
   });
 
-  const handleView = (): void => {
-    if (selectedRow) {
-      dispatch(loadSelectedServiceFee(selectedRow._id));
-      router.push(`/dashboard/serviceFees/${selectedRow._id}`);
+  const handleView = (id: string): void => {
+    if (id) {
+      dispatch(loadSelectedServiceFee(id));
+      router.push(`/dashboard/serviceFees/${id}`);
     } else {
       Toast.fire({
         icon: "error",
@@ -133,8 +132,8 @@ const ServiceFeeTable: React.FC = () => {
     setSearchedColumn(dataIndex);
   };
 
-  const handleDelete = () => {
-    if (selectedRow) {
+  const handleDelete = (record: any) => {
+    if (record) {
       Swal.fire({
         title: "Eliminar Tarifa de Servicio",
         text: "La tarifa de servicio seleccionada se borrará de forma permanente",
@@ -146,8 +145,8 @@ const ServiceFeeTable: React.FC = () => {
         confirmButtonText: "Eliminar",
       }).then((result) => {
         if (result.isConfirmed) {
-          const nomenclatorToDelete = nomenclators.find((nomenclator: INomenclator) => nomenclator?.code === selectedRow?.nomenclatorId);
-          dispatch(startDeleteServiceFee(selectedRow?._id));
+          const nomenclatorToDelete = nomenclators.find((nomenclator: INomenclator) => nomenclator?.code === record?.nomenclatorId);
+          dispatch(startDeleteServiceFee(record._id));
           dispatch(startDeleteNomenclator(nomenclatorToDelete?._id));
         }
       });
@@ -167,14 +166,6 @@ const ServiceFeeTable: React.FC = () => {
   const onChange: TableProps<IServiceFee>["onChange"] = (pagination, filters, sorter, extra) => {
     setFilteredData(extra.currentDataSource);
     console.log(filteredData);
-  };
-
-  const rowSelection: TableRowSelection<IServiceFee> = {
-    onChange: async (selectedRowKeys: React.Key[], selectedRows: IServiceFee[]) => {
-      setSelectedRow(selectedRows[0]);
-      dispatch(loadSelectedServiceFee(selectedRows[0]._id));
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows);
-    },
   };
 
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<IServiceFee> => ({
@@ -297,6 +288,37 @@ const ServiceFeeTable: React.FC = () => {
       key: "valuePerUnitMeasure",
       width: "10%",
     },
+    {
+      title: "Acciones",
+      key: "actions",
+      width: "5%",
+      render: (_, record) => (
+        <div className="flex gap-1">
+          <Tooltip placement="top" title={"Ver"} arrow={{ pointAtCenter: true }}>
+            <button
+              disabled={!canList}
+              onClick={() => handleView(record._id)}
+              className={`${
+                canList ? "cursor-pointer hover:bg-secondary-400 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2rem] h-[2rem] text-xl rounded-md bg-secondary-500 text-white-100`}
+            >
+              <SeeSvg width={20} height={20} />
+            </button>
+          </Tooltip>
+          <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
+            <button
+              disabled={!canDelete}
+              className={`${
+                canDelete ? "cursor-pointer hover:bg-danger-400 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2rem] h-[2rem] text-xl rounded-md bg-danger-600 text-white-100`}
+              onClick={() => handleDelete(record)}
+            >
+              <DeleteSvg width={20} height={20} />
+            </button>
+          </Tooltip>
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -307,10 +329,6 @@ const ServiceFeeTable: React.FC = () => {
             <PlusSvg />
             Nuevo
           </button>
-          <button disabled={!canList} onClick={handleView} className={`${canList ? "toolbar-secondary-icon-btn" : "bg-secondary-200"}  `}>
-            <SeeSvg />
-            Ver
-          </button>
         </div>
         <div className="flex">
           {/* <PDFDownloadLink document={<CostSheetTablePDFReport fields={fields} data={PDFReportData} title={`Fichas de costo`} />} fileName={`Listado de fichas de costo `}>
@@ -320,17 +338,6 @@ const ServiceFeeTable: React.FC = () => {
               </button>
             )}
           </PDFDownloadLink> */}
-          <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canDelete}
-              className={`${
-                canDelete ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={handleDelete}
-            >
-              <DeleteSvg />
-            </button>
-          </Tooltip>
           <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canList}
@@ -351,10 +358,6 @@ const ServiceFeeTable: React.FC = () => {
         dataSource={data}
         onChange={onChange}
         pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
-        rowSelection={{
-          type: "radio",
-          ...rowSelection,
-        }}
         className="shadow-md"
       />
     </>

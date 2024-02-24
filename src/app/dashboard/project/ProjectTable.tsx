@@ -184,9 +184,7 @@ const ProjectTable: React.FC = () => {
         confirmButtonText: "Eliminar",
       }).then((result) => {
         if (result.isConfirmed) {
-          // const nomenclatorToDelete = nomenclators.find((nomenclator: INomenclator) => nomenclator?.code === selectedRow?.nomenclatorId);
           dispatch(startDeleteProject(id));
-          // dispatch(startDeleteNomenclator(nomenclatorToDelete?._id));
         }
       });
     } else {
