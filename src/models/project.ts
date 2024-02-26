@@ -8,20 +8,20 @@ export interface IItem {
 
 export interface IProject {
   _id: string;
-  key: string;
-  clientNumber: number;
   clientName: string;
-  projectName: string;
-  payMethod: string;
+  clientNumber: number;
   currency: string;
-  initDate: Date;
-  projectNumber: number;
-  itemsList: IItem[];
-  status: string;
-  expenses: number;
-  profits: number;
-  totalValue: number;
   deliveryDate: Date;
+  expenses: number;
+  initDate: Date;
+  itemsList: IItem[];
+  key: string;
+  payMethod: string;
+  profits: number;
+  projectName: string;
+  projectNumber: string;
+  status: string;
+  totalValue: number;
 }
 
 const ProjectSchema = new Schema<IProject, Model<IProject>>({
@@ -58,7 +58,7 @@ const ProjectSchema = new Schema<IProject, Model<IProject>>({
     type: Date,
   },
   projectNumber: {
-    type: Number,
+    type: String,
     unique: true,
   },
   itemsList: [

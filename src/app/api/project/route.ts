@@ -4,6 +4,7 @@ import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
 import Project, { IProject } from "@/models/project";
+import moment from "moment";
 
 export async function POST(request: Request) {
   const { ...project }: IProject = await request.json();
@@ -38,21 +39,22 @@ export async function POST(request: Request) {
     }
 
     let newKey = generateRandomString(26);
+    const newProjectNumber = `${project.projectNumber}/${moment().year()}`
 
     const newProject = new Project({
-      key: newKey,
-      clientNumber: project.clientNumber,
       clientName: project.clientName,
-      projectName: project.projectName,
-      payMethod: project.payMethod,
+      clientNumber: project.clientNumber,
       currency: project.currency,
-      initDate: project.initDate,
       deliveryDate: project.deliveryDate,
-      projectNumber: project.projectNumber,
-      itemsList: project.itemsList,
-      status: project.status,
       expenses: project.expenses ?? 0,
+      initDate: project.initDate,
+      itemsList: project.itemsList,
+      key: newKey,
+      payMethod: project.payMethod,
       profits: project.profits ?? 0,
+      projectName: project.projectName,
+      projectNumber: newProjectNumber,
+      status: project.status,
       totalValue: project.totalValue ?? 0,
     });
 

@@ -1,7 +1,6 @@
 import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
 
-import { nomenclatorsStartLoading } from "./nomenclator";
 import { Toast } from "@/helpers/customAlert";
 import { types } from "@/types/types";
 
@@ -22,7 +21,7 @@ export const startAddProject = ({ ...project }): any => {
           payMethod: project.payMethod,
           profits: project.profits,
           projectName: project.projectName,
-          projectNumber: project.projectNumber,
+          projectNumber: project.projectNumber.toString(),
           status: project.status,
           totalValue: project.totalValue,
         },
@@ -30,7 +29,6 @@ export const startAddProject = ({ ...project }): any => {
       )
       .then((project) => {
         dispatch(addProject(project));
-        dispatch(nomenclatorsStartLoading());
         dispatch(projectsStartLoading());
         Toast.fire({
           icon: "success",
