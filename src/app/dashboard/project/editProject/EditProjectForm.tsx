@@ -127,7 +127,7 @@ export const EditProjectForm = () => {
               <InputNumber />
             </Form.Item>
             <Form.Item className="mb-3" name="projectNumber" label={<span className="font-bold text-md">No. de Solicitud</span>} rules={[{ required: true, message: "Campo requerido" }]}>
-              <InputNumber />
+              <Input />
             </Form.Item>
             <Form.Item className="mb-3" label={<span className="font-bold text-md">Nombre del Cliente</span>} name="clientName" rules={[{ required: true, message: "Campo requerido" }]}>
               <Select

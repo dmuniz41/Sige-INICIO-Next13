@@ -11,9 +11,9 @@ export interface IProject {
   clientName: string;
   clientNumber: number;
   currency: string;
-  deliveryDate: Date;
+  deliveryDate: string;
   expenses: number;
-  initDate: Date;
+  initDate: string;
   itemsList: IItem[];
   key: string;
   payMethod: string;
@@ -51,11 +51,11 @@ const ProjectSchema = new Schema<IProject, Model<IProject>>({
     required: true,
   },
   initDate: {
-    type: Date,
+    type: String,
     required: true,
   },
   deliveryDate: {
-    type: Date,
+    type: String,
   },
   projectNumber: {
     type: String,

@@ -39,7 +39,8 @@ export async function POST(request: Request) {
     }
 
     let newKey = generateRandomString(26);
-    const newProjectNumber = `${project.projectNumber}/${moment().year()}`
+    const simplifyYear = moment().year() % 100;
+    const newProjectNumber = `${(await Project.find()).length + 1}/${simplifyYear}`;
 
     const newProject = new Project({
       clientName: project.clientName,

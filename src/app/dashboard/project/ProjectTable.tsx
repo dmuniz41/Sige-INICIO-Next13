@@ -370,7 +370,7 @@ const ProjectTable: React.FC = () => {
       },
     },
     {
-      title: "Fecha de creación",
+      title: "Fecha",
       dataIndex: "initDate",
       key: "initDate",
       width: "10%",
@@ -396,7 +396,7 @@ const ProjectTable: React.FC = () => {
             <></>
           ) : (
             <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-              <button disabled={!canDelete} className="table-delete-action-btn">
+              <button disabled={!canDelete} onClick={() => handleDelete(_id)} className="table-delete-action-btn">
                 <DeleteSvg width={20} height={20} />
               </button>
             </Tooltip>

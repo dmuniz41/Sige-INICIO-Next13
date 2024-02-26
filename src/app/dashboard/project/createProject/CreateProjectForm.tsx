@@ -143,8 +143,8 @@ export const CreateProjectForm = () => {
             form
               .validateFields()
               .then((values) => {
-                console.log("🚀 ~ .then ~ values:", values);
-                dispatch(startAddProject({ ...values, status: "Solicitud", expenses: 0, profits: 0 }));
+                console.log("🚀 ~ .then ~ values:", values.initDate.format("MM/DD/YYYY"));
+                dispatch(startAddProject({ ...values, status: "Solicitud", expenses: 0, profits: 0, initDate: values.initDate.format("MM/DD/YYYY") }));
                 form.resetFields();
                 router.push("/dashboard/project");
               })
