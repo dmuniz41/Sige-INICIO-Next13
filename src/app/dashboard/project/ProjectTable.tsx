@@ -8,7 +8,7 @@ import Highlighter from "react-highlight-words";
 import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import Swal from "sweetalert2";
 import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
-import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
+import type { FilterConfirmProps } from "antd/es/table/interface";
 import type { InputRef } from "antd";
 
 import { DeleteSvg } from "@/app/global/DeleteSvg";
@@ -37,7 +37,6 @@ const ProjectTable: React.FC = () => {
   const dispatch = useAppDispatch();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [selectedRow, setSelectedRow] = useState<IProject>();
   const [filteredData, setFilteredData] = useState<IProject[]>();
   const searchInput = useRef<InputRef>(null);
   const router = useRouter();
@@ -185,9 +184,7 @@ const ProjectTable: React.FC = () => {
         confirmButtonText: "Eliminar",
       }).then((result) => {
         if (result.isConfirmed) {
-          // const nomenclatorToDelete = nomenclators.find((nomenclator: INomenclator) => nomenclator?.code === selectedRow?.nomenclatorId);
           dispatch(startDeleteProject(id));
-          // dispatch(startDeleteNomenclator(nomenclatorToDelete?._id));
         }
       });
     } else {
@@ -464,9 +461,6 @@ const ProjectTable: React.FC = () => {
         dataSource={data}
         onChange={onChange}
         pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
-        // onRow={(record) => ({
-        //   onClick: () => handleRowClick(record),
-        // })}
         className="shadow-md"
       />
     </>

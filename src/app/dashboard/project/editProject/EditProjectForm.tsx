@@ -2,18 +2,20 @@
 import { Button, DatePicker, Form, Input, InputNumber, Select, SelectProps } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import moment, { Moment } from "moment";
 
 import { useAppDispatch } from "@/hooks/hooks";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
-import { startAddProject } from "@/actions/project";
+import { startUpdateProject } from "@/actions/project";
 import { IRepresentationCoefficients, IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { AddItemModal } from "./AddItem";
 import { INomenclator } from "@/models/nomenclator";
+import { IProject } from "@/models/project";
+import { AddItemModal } from "../createProject/AddItem";
 
-export const CreateProjectForm = () => {
+export const EditProjectForm = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const router = useRouter();
@@ -23,13 +25,15 @@ export const CreateProjectForm = () => {
   const [itemsValues, setItemsValues]: any = useState([]);
   const [addItemModal, setAddItemModal] = useState(false);
 
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
+  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
+  const { selectedProject }: { selectedProject: IProject } = useAppSelector((state: RootState) => state.project);
+
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
     dispatch(startLoadServiceFeeAuxiliary());
-  }, [dispatch]);
-
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
-  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
+    setItemsValues(selectedProject.itemsList);
+  }, [dispatch, selectedProject]);
 
   serviceFeeAuxiliary?.payMethod?.map((payMethod) => payMethodNomenclator.push(payMethod));
   nomenclators.map((nomenclator: INomenclator) => {
@@ -72,11 +76,49 @@ export const CreateProjectForm = () => {
       labelCol={{ span: 0 }}
       wrapperCol={{ span: 0 }}
       className="w-full flex flex-col gap-0"
-      initialValues={{ remember: true }}
+      // initialValues={initialValues}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
       requiredMark={"optional"}
       size="middle"
+      fields={[
+        {
+          name: "clientNumber",
+          value: selectedProject.clientNumber,
+        },
+        {
+          name: "projectNumber",
+          value: selectedProject.projectNumber,
+        },
+        {
+          name: "clientName",
+          value: selectedProject.clientName,
+        },
+        {
+          name: "projectName",
+          value: selectedProject.projectName,
+        },
+        {
+          name: "payMethod",
+          value: selectedProject.payMethod,
+        },
+        // {
+        //   name: "initDate",
+        //   value: moment(selectedProject.initDate),
+        // },
+        // {
+        //   name: "deliveryDate",
+        //   value: selectedProject.deliveryDate,
+        // },
+        {
+          name: "currency",
+          value: selectedProject.currency,
+        },
+        {
+          name: "itemList",
+          value: itemsValues,
+        },
+      ]}
     >
       <section className=" flex-col mb-4">
         <article className="grid gap-4">
@@ -110,8 +152,8 @@ export const CreateProjectForm = () => {
                 filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
               />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Fecha de creación</span>} name="initDate" rules={[{ required: true, message: "Campo requerido" }]}>
-              <DatePicker />
+            {/* <Form.Item className="mb-3" label={<span className="font-bold text-md">Fecha de creación</span>} name="initDate" rules={[{ required: true, message: "Campo requerido" }]}>
+              <DatePicker defaultValue={parsedDate}/>
             </Form.Item>
             <Form.Item
               className="mb-3"
@@ -120,7 +162,7 @@ export const CreateProjectForm = () => {
               rules={[{ required: true, message: "Campo requerido" }]}
             >
               <DatePicker />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item className="mb-3" label={<span className="font-bold text-md">Moneda </span>} name="currency" rules={[{ required: true, message: "Campo requerido" }]}>
               <Select
                 allowClear
@@ -133,7 +175,7 @@ export const CreateProjectForm = () => {
             </Form.Item>
           </div>
         </article>
-        <FormSection sectionName="Servicios" values={itemsValues} formName="itemsList" valuesSetter={setItemsValues} modalSetter={setAddItemModal} buttonText="Añadir Servicio" form={form} />
+        <FormSection sectionName="Servicios" values={itemsValues} formName="itemList" valuesSetter={setItemsValues} modalSetter={setAddItemModal} buttonText="Añadir Servicio" form={form} />
       </section>
       <Form.Item>
         <button
@@ -144,16 +186,16 @@ export const CreateProjectForm = () => {
               .validateFields()
               .then((values) => {
                 console.log("🚀 ~ .then ~ values:", values);
-                dispatch(startAddProject({ ...values, status: "Solicitud", expenses: 0, profits: 0 }));
+                dispatch(startUpdateProject({ ...values, _id: selectedProject._id, itemsList: itemsValues }));
                 form.resetFields();
-                router.push("/dashboard/project");
+                router.push(`/dashboard/project/${selectedProject._id}`);
               })
               .catch((error) => {
                 console.log("Validate Failed:", error);
               });
           }}
         >
-          Crear
+          Editar
         </button>
       </Form.Item>
       <AddItemModal open={addItemModal} onCancel={() => setAddItemModal(false)} onCreate={onAddItem} />

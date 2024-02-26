@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { UserOutlined } from "@ant-design/icons";
@@ -11,8 +11,6 @@ import { Tooltip } from "antd";
 import { RootState, useAppSelector } from "@/store/store";
 import { IWarehouse } from "@/models/warehouse";
 import { useAppDispatch } from "@/hooks/hooks";
-import { costSheetsStartLoading, startLoadCurrencyChange } from "@/actions/costSheet";
-import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 
 export const Navbar = () => {
   const pathname = usePathname();
@@ -26,12 +24,6 @@ export const Navbar = () => {
 
   const { warehouses }: { warehouses: IWarehouse[] } = useAppSelector((state: RootState) => state?.warehouse);
 
-  useEffect(() => {
-    dispatch(costSheetsStartLoading())
-    dispatch(nomenclatorsStartLoading())
-    dispatch(startLoadCurrencyChange())
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   warehouses.map((warehouse) => {
     if (warehouse._id === warehouseId) {
       currentWarehouseName = `/ ${warehouse.name}`;
