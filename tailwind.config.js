@@ -86,4 +86,9 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animated")],
+  variants: {
+    extend: {
+      opacity: ['disabled'],
+    },
+  },
 };

@@ -1,31 +1,30 @@
 "use client";
 
+import { Button, Input, Space, Table, Tag, Tooltip } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, Tag, Tooltip } from "antd";
-import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
+import type { InputRef } from "antd";
 
+import { costSheetsStartLoading, startSetCurrencyChange } from "@/actions/costSheet";
 import { CreateUserForm } from "./CreateUserForm";
-import { startAddUser, startDeleteUser, startUpdateUser, usersStartLoading } from "@/actions/users";
-import { costSheetsStartLoading, startLoadCurrencyChange, startSetCurrencyChange } from "@/actions/costSheet";
-import { useAppDispatch } from "@/hooks/hooks";
-import { RootState, useAppSelector } from "@/store/store";
-import { Toast } from "@/helpers/customAlert";
-import { EditUserForm } from "./EditUserForm";
-import Swal from "sweetalert2";
-import { nomenclatorsStartLoading } from "@/actions/nomenclator";
-import { useSession } from "next-auth/react";
-import { EditSvg } from "../../global/EditSvg";
 import { DeleteSvg } from "../../global/DeleteSvg";
-import { RefreshSvg } from "../../global/RefreshSvg";
+import { EditSvg } from "../../global/EditSvg";
+import { EditUserForm } from "./EditUserForm";
+import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { PlusSvg } from "../../global/PlusSvg";
-import { ShieldSvg } from "@/app/global/ShieldSvg";
 import { PrivilegesForm } from "./PrivilegesForm";
+import { RefreshSvg } from "../../global/RefreshSvg";
+import { RootState, useAppSelector } from "@/store/store";
 import { SetCurrencyChangeForm } from "./SetCurrencyChangeForm";
-import { CurrencySvg } from "@/app/global/CurrencySVG";
+import { ShieldSvg } from "@/app/global/ShieldSvg";
+import { startAddUser, startDeleteUser, startUpdateUser, usersStartLoading } from "@/actions/users";
+import { Toast } from "@/helpers/customAlert";
+import { useAppDispatch } from "@/hooks/hooks";
+import { useSession } from "next-auth/react";
+import Swal from "sweetalert2";
 
 interface DataType {
   _id: string;
@@ -46,7 +45,7 @@ const UserTable: React.FC = () => {
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [privilegesModal, setPrivilegesModal] = useState(false);
-  const [currencyChangeModal, setCurrencyChangeModal] = useState(false);
+  // const [currencyChangeModal, setCurrencyChangeModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState<DataType>();
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
@@ -63,13 +62,10 @@ const UserTable: React.FC = () => {
   }, [dispatch]);
 
   const { users }: any = useAppSelector((state: RootState) => state?.user);
-  const { costSheets }: any = useAppSelector((state: RootState) => state?.costSheet);
   let data: DataType[] = useMemo(() => users, [users]);
   if (!canList) {
     data = [];
   }
-
-  const { currencyChange }: any = useAppSelector((state: RootState) => state?.costSheet);
 
   const handleNew = (): void => {
     setCreateNewModal(true);
@@ -97,10 +93,6 @@ const UserTable: React.FC = () => {
     }
   };
 
-  const handleSetCurrencyChange = (): void => {
-    setCurrencyChangeModal(true);
-  };
-
   const onCreate = (values: any): void => {
     dispatch(startAddUser(values.user, values.userName, values.lastName, values.privileges, values.password, values.area));
     setCreateNewModal(false);
@@ -121,16 +113,17 @@ const UserTable: React.FC = () => {
       values.securityPrivileges,
       values.warehousePrivileges,
       values.costSheetPrivileges,
-      values.serviceFeePrivileges
+      values.serviceFeePrivileges,
+      values.projectPrivileges
     );
     dispatch(startUpdateUser(selectedRow?._id!, values.user, values.userName, values.lastName, privileges, values.area));
     setSelectedRow(undefined);
     setPrivilegesModal(false);
   };
-  const onSetCurrencyChange = (values: any): void => {
-    dispatch(startSetCurrencyChange(values.currencyChange, costSheets));
-    setCurrencyChangeModal(false);
-  };
+  // const onSetCurrencyChange = (values: any): void => {
+  //   dispatch(startSetCurrencyChange(values.currencyChange, costSheets));
+  //   setCurrencyChangeModal(false);
+  // };
 
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
@@ -253,21 +246,21 @@ const UserTable: React.FC = () => {
       title: "Nombre",
       dataIndex: "userName",
       key: "userName",
-      width: "20%",
+      width: "10%",
       ...getColumnSearchProps("lastName"),
     },
     {
       title: "Apellidos",
       dataIndex: "lastName",
       key: "lastName",
-      width: "30%",
+      width: "10%",
       ...getColumnSearchProps("lastName"),
     },
     {
       title: "Privilegios",
       dataIndex: "privileges",
       key: "privileges",
-      width: "30%",
+      width: "60%",
       ...getColumnSearchProps("privileges"),
       render: (_, { privileges }) => (
         <>
@@ -281,7 +274,7 @@ const UserTable: React.FC = () => {
       title: "Area",
       dataIndex: "area",
       key: "area",
-      width: "30%",
+      width: "15%",
       ...getColumnSearchProps("area"),
       render: (_, { area }) => (
         <>
@@ -364,7 +357,7 @@ const UserTable: React.FC = () => {
       <CreateUserForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
       <EditUserForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />
       <PrivilegesForm open={privilegesModal} onCancel={() => setPrivilegesModal(false)} onCreate={onEditPrivileges} defaultValues={selectedRow} />
-      <SetCurrencyChangeForm open={currencyChangeModal} onCancel={() => setCurrencyChangeModal(false)} onCreate={onSetCurrencyChange} defaultValues={currencyChange} />
+      {/* <SetCurrencyChangeForm open={currencyChangeModal} onCancel={() => setCurrencyChangeModal(false)} onCreate={onSetCurrencyChange} defaultValues={currencyChange} /> */}
 
       <Table
         size="middle"

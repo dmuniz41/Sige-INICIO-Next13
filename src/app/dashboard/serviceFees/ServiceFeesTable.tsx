@@ -294,28 +294,24 @@ const ServiceFeeTable: React.FC = () => {
       width: "5%",
       render: (_, record) => (
         <div className="flex gap-1">
-          <Tooltip placement="top" title={"Ver"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canList}
-              onClick={() => handleView(record._id)}
-              className={`${
-                canList ? "cursor-pointer hover:bg-secondary-400 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2rem] h-[2rem] text-xl rounded-md bg-secondary-500 text-white-100`}
-            >
-              <SeeSvg width={20} height={20} />
-            </button>
-          </Tooltip>
-          <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canDelete}
-              className={`${
-                canDelete ? "cursor-pointer hover:bg-danger-400 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2rem] h-[2rem] text-xl rounded-md bg-danger-600 text-white-100`}
-              onClick={() => handleDelete(record)}
-            >
-              <DeleteSvg width={20} height={20} />
-            </button>
-          </Tooltip>
+          {!canList ? (
+            <></>
+          ) : (
+            <Tooltip placement="top" title={"Ver"} arrow={{ pointAtCenter: true }}>
+              <button disabled={!canList} onClick={() => handleView(record._id)} className="table-see-action-btn">
+                <SeeSvg width={20} height={20} />
+              </button>
+            </Tooltip>
+          )}
+          {!canDelete ? (
+            <></>
+          ) : (
+            <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
+              <button disabled={!canDelete} className="table-delete-action-btn" onClick={() => handleDelete(record)}>
+                <DeleteSvg width={20} height={20} />
+              </button>
+            </Tooltip>
+          )}
         </div>
       ),
     },
@@ -352,14 +348,7 @@ const ServiceFeeTable: React.FC = () => {
         </div>
       </div>
 
-      <Table
-        size="small"
-        columns={columns}
-        dataSource={data}
-        onChange={onChange}
-        pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
-        className="shadow-md"
-      />
+      <Table size="small" columns={columns} dataSource={data} onChange={onChange} pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }} className="shadow-md" />
     </>
   );
 };
