@@ -37,7 +37,7 @@ export const startAddProject = ({ ...project }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: project.ts:42 ~ return ~ message:", message);
+        console.log("🚀 ~ file: project.ts:40 ~ return ~ message:", message);
         Swal.fire("Error", message, "error");
       });
   };
@@ -77,7 +77,7 @@ export const startUpdateProject = ({ ...project }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: project.ts:82 ~ return ~ message:", message);
+        console.log("🚀 ~ file: project.ts:80 ~ return ~ message:", message);
         Swal.fire("Error", "Error al editar proyecto", "error");
       });
   };
@@ -115,7 +115,7 @@ export const startDeleteProject = (id: string): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: project.ts:120 ~ return ~ message:", message);
+        console.log("🚀 ~ file: project.ts:118 ~ return ~ message:", message);
         Swal.fire("Error", "Error al eliminar el proyecto", "error");
       });
   };

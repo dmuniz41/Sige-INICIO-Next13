@@ -45,10 +45,10 @@ const ProjectTable: React.FC = () => {
   const clientNamesNomenclators: string[] | undefined = [];
   const currencyNomenclators: string[] | undefined = [];
 
-  const canList = sessionData?.user.role.includes("Listar Tarifas de Servicio");
-  const canCreate = sessionData?.user.role.includes("Crear Tarifas de Servicio");
-  const canEdit = sessionData?.user.role.includes("Editar Tarifas de Servicio");
-  const canDelete = sessionData?.user.role.includes("Eliminar Tarifas de Servicio");
+  const canList = sessionData?.user.role.includes("Listar Proyectos");
+  const canCreate = sessionData?.user.role.includes("Crear Proyectos");
+  const canEdit = sessionData?.user.role.includes("Editar Proyectos");
+  const canDelete = sessionData?.user.role.includes("Eliminar Proyectos");
 
   // const fields = [
   //   {
@@ -88,7 +88,6 @@ const ProjectTable: React.FC = () => {
     dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
-
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
   const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
   const { projects }: any = useAppSelector((state: RootState) => state?.project);
@@ -97,7 +96,6 @@ const ProjectTable: React.FC = () => {
   if (!canList) {
     data = [];
   }
-
 
   serviceFeeAuxiliary?.payMethod?.map((payMethod) => payMethodNomenclator.push(payMethod.representative));
   nomenclators.map((nomenclator: INomenclator) => {
@@ -129,19 +127,19 @@ const ProjectTable: React.FC = () => {
   const statusFilter: any[] = [
     {
       text: "Terminado",
-      value: "Terminado"
+      value: "Terminado",
     },
     {
       text: "Cerrado",
-      value: "Cerrado"
+      value: "Cerrado",
     },
     {
       text: "Solicitud",
-      value: "Solicitud"
+      value: "Solicitud",
     },
     {
       text: "Cobrado",
-      value: "Cobrado"
+      value: "Cobrado",
     },
   ];
 
@@ -272,8 +270,6 @@ const ProjectTable: React.FC = () => {
       ),
   });
 
-  let color = "green";
-
   const columns: ColumnsType<IProject> = [
     {
       title: "Nombre del Proyecto",
@@ -374,7 +370,7 @@ const ProjectTable: React.FC = () => {
       },
     },
     {
-      title: "Fecha de creación",
+      title: "Fecha",
       dataIndex: "initDate",
       key: "initDate",
       width: "10%",
@@ -387,28 +383,24 @@ const ProjectTable: React.FC = () => {
       width: "5%",
       render: (_, { _id }) => (
         <div className="flex gap-1">
-          <Tooltip placement="top" title={"Ver"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canList}
-              onClick={() => handleView(_id)}
-              className={`${
-                canList ? "cursor-pointer hover:bg-secondary-400 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2rem] h-[2rem] text-xl rounded-md bg-secondary-500 text-white-100`}
-            >
-              <SeeSvg width={20} height={20} />
-            </button>
-          </Tooltip>
-          <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canDelete}
-              className={`${
-                canDelete ? "cursor-pointer hover:bg-danger-400 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2rem] h-[2rem] text-xl rounded-md bg-danger-600 text-white-100`}
-              onClick={() => handleDelete(_id)}
-            >
-              <DeleteSvg width={20} height={20} />
-            </button>
-          </Tooltip>
+          {!canList ? (
+            <></>
+          ) : (
+            <Tooltip placement="top" title={"Ver"} arrow={{ pointAtCenter: true }}>
+              <button disabled={!canList} onClick={() => handleView(_id)} className="table-see-action-btn">
+                <SeeSvg width={20} height={20} />
+              </button>
+            </Tooltip>
+          )}
+          {!canDelete ? (
+            <></>
+          ) : (
+            <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
+              <button disabled={!canDelete} onClick={() => handleDelete(_id)} className="table-delete-action-btn">
+                <DeleteSvg width={20} height={20} />
+              </button>
+            </Tooltip>
+          )}
         </div>
       ),
     },
@@ -455,14 +447,7 @@ const ProjectTable: React.FC = () => {
           </Tooltip>
         </div>
       </div>
-      <Table
-        size="small"
-        columns={columns}
-        dataSource={data}
-        onChange={onChange}
-        pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
-        className="shadow-md"
-      />
+      <Table size="small" columns={columns} dataSource={data} onChange={onChange} pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }} className="shadow-md" />
     </>
   );
 };

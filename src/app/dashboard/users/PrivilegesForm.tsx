@@ -148,6 +148,25 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
       value: "Eliminar Tarifas de Servicio",
     },
   ]
+  const projectPrivileges: SelectProps["options"]= [ 
+    
+    {
+      label: "Listar Proyectos",
+      value: "Listar Proyectos",
+    },
+    {
+      label: "Crear Proyectos",
+      value: "Crear Proyectos",
+    },
+    {
+      label: "Editar Proyectos",
+      value: "Editar Proyectos",
+    },
+    {
+      label: "Eliminar Proyectos",
+      value: "Eliminar Proyectos",
+    },
+  ]
   const costSheetPrivileges: SelectProps["options"]= [ 
     
     {
@@ -208,7 +227,6 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
   const [form] = Form.useForm();
   return (
     <Modal
-      className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
           <span className="font-bold text-lg">Cambiar Permisos</span>
@@ -216,7 +234,6 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
       }
       centered
       open={open}
-      style={{ textAlign: "left" }}
       destroyOnClose
       onCancel={onCancel}
       okType="default"
@@ -302,6 +319,10 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
             value: defaultValues?.privileges.filter((privilege)=>privilege.includes("Tarifas de Servicio")),
           },
           {
+            name: "projectPrivileges",
+            value: defaultValues?.privileges.filter((privilege)=>privilege.includes("Proyectos")),
+          },
+          {
             name: "area",
             value: defaultValues?.area,
           },
@@ -342,6 +363,9 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
         </Form.Item>
         <Form.Item name="serviceFeePrivileges" label="Tarifas de Servicio" >
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={serviceFeePrivileges} />
+        </Form.Item>
+        <Form.Item name="projectPrivileges" label="Proyectos" >
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={projectPrivileges} />
         </Form.Item>
       </Form>
     </Modal>
