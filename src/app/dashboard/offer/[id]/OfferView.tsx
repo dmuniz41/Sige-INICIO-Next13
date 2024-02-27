@@ -46,7 +46,7 @@ export const OfferView = () => {
       </article>
 
       <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-2">
-        <h1 className="pl-2 text-xl font-bold">{selectedOffer.name}</h1>
+        <h1 className="pl-2 text-xl font-bold">{selectedOffer.projectName}</h1>
       </section>
     </>
   );

@@ -10,9 +10,10 @@ import React, { useEffect } from "react";
 
 import { EditSvg } from "@/app/global/EditSvg";
 import CostSheetPDFReport from "@/helpers/CostSheetPDFReport";
-import { loadSelectedProject } from "@/actions/project";
+import { changeProjectStatus, loadSelectedProject } from "@/actions/project";
 import { IProject } from "@/models/project";
 import { ProjectViewTable } from "./ProjectViewTable";
+import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
 
 // const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
 //   ssr: false,
@@ -68,6 +69,10 @@ export const ProjectView = () => {
   const handleEdit = (): void => {
     router.push(`/dashboard/project/editProject`);
   };
+  const handleRequestOffer = (): void => {
+    dispatch(changeProjectStatus(selectedProject, "Pendiente de Oferta"))
+    router.push(`/dashboard/project`);
+  };
 
   return (
     <>
@@ -77,6 +82,10 @@ export const ProjectView = () => {
             <button className="toolbar-primary-icon-btn" onClick={handleEdit}>
               <EditSvg />
               Editar
+            </button>
+            <button className="toolbar-secondary-icon-btn" onClick={handleRequestOffer}>
+              <ReportMoneySvg />
+              Solicitar Oferta
             </button>
             {/* <PDFDownloadLink document={<CostSheetPDFReport fields={fields} data={PDFReportData} title={`Ficha de costo`} />} fileName={`Ficha de costo ${selectedCostSheet.taskName}`}>
               {({ blob, url, loading, error }) => (
@@ -154,19 +163,23 @@ export const ProjectView = () => {
               <span className="font-bold mr-2 ">Estado:</span>
               {selectedProject.status === "Terminado" ? (
                 <Tag className="font-bold" color="#34b042">
-                  TERMINADO
+                  {selectedProject.status.toUpperCase()}
                 </Tag>
               ) : selectedProject.status === "Cobrado" ? (
                 <Tag className="font-bold" color="#34395e">
-                  COBRADO
+                  {selectedProject.status.toUpperCase()}
                 </Tag>
               ) : selectedProject.status === "Cerrado" ? (
                 <Tag className="font-bold" color="#ff6600">
-                  CERRADO
+                  {selectedProject.status.toUpperCase()}
                 </Tag>
               ) : selectedProject.status === "Solicitud" ? (
                 <Tag className="font-bold" color="#1677ff">
-                  SOLICITUD
+                  {selectedProject.status.toUpperCase()}
+                </Tag>
+              ) : selectedProject.status === "Pendiente de Oferta" ? (
+                <Tag className="font-bold" color="#ffa426">
+                  {selectedProject.status.toUpperCase()}
                 </Tag>
               ) : (
                 <></>
