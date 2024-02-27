@@ -394,13 +394,16 @@ const ProjectTable: React.FC = () => {
       title: "Acciones",
       key: "actions",
       width: "5%",
-      render: (_, { _id }) => (
+      render: (_, { ...record }) => (
         <div className="flex gap-1">
-          {!canList ? (
+          {
+            false
+          // record.status === "Solicitud" 
+          ? (
             <></>
           ) : (
             <Tooltip placement="top" title={"Ver Oferta"} arrow={{ pointAtCenter: true }}>
-              <button disabled={!canList} onClick={() => handleViewOffer(_id)} className="table-see-action-btn">
+              <button disabled={!canList} onClick={() => handleViewOffer(record._id)} className="table-see-offer-action-btn">
                 <ReportMoneySvg width={20} height={20} />
               </button>
             </Tooltip>
@@ -408,8 +411,8 @@ const ProjectTable: React.FC = () => {
           {!canList ? (
             <></>
           ) : (
-            <Tooltip placement="top" title={"Ver"} arrow={{ pointAtCenter: true }}>
-              <button disabled={!canList} onClick={() => handleView(_id)} className="table-see-action-btn">
+            <Tooltip placement="top" title={"Detalles"} arrow={{ pointAtCenter: true }}>
+              <button disabled={!canList} onClick={() => handleView(record._id)} className="table-see-action-btn">
                 <SeeSvg width={20} height={20} />
               </button>
             </Tooltip>
@@ -418,7 +421,7 @@ const ProjectTable: React.FC = () => {
             <></>
           ) : (
             <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-              <button disabled={!canDelete} onClick={() => handleDelete(_id)} className="table-delete-action-btn">
+              <button disabled={!canDelete} onClick={() => handleDelete(record._id)} className="table-delete-action-btn">
                 <DeleteSvg width={20} height={20} />
               </button>
             </Tooltip>
