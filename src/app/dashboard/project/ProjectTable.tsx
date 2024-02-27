@@ -25,6 +25,8 @@ import { useAppDispatch } from "@/hooks/hooks";
 import { SeeSvg } from "@/app/global/SeeSvg";
 import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 import { INomenclator } from "@/models/nomenclator";
+import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
+import { loadSelectedOffer } from "@/actions/offer";
 
 // const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
 //   ssr: false,
@@ -159,6 +161,17 @@ const ProjectTable: React.FC = () => {
       Toast.fire({
         icon: "error",
         title: "Seleccione un proyecto para ver",
+      });
+    }
+  };
+  const handleViewOffer = (projectId: string): void => {
+    if (projectId) {
+      dispatch(loadSelectedOffer(projectId));
+      router.push(`/dashboard/offer/${projectId}`);
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "Seleccione una oferta para ver",
       });
     }
   };
@@ -346,6 +359,11 @@ const ProjectTable: React.FC = () => {
               {status.toUpperCase()}
             </Tag>
           )}
+          {status === "Pendiente de Oferta" && (
+            <Tag className="font-bold" color="#ffa426" key={status}>
+              {status.toUpperCase()}
+            </Tag>
+          )}
         </>
       ),
     },
@@ -381,13 +399,22 @@ const ProjectTable: React.FC = () => {
       title: "Acciones",
       key: "actions",
       width: "5%",
-      render: (_, { _id }) => (
+      render: (_, { ...record }) => (
         <div className="flex gap-1">
+          {record.status === "Solicitud" ? (
+            <></>
+          ) : (
+            <Tooltip placement="top" title={"Ver Oferta"} arrow={{ pointAtCenter: true }}>
+              <button disabled={!canList} onClick={() => handleViewOffer(record._id)} className="table-see-offer-action-btn">
+                <ReportMoneySvg width={20} height={20} />
+              </button>
+            </Tooltip>
+          )}
           {!canList ? (
             <></>
           ) : (
-            <Tooltip placement="top" title={"Ver"} arrow={{ pointAtCenter: true }}>
-              <button disabled={!canList} onClick={() => handleView(_id)} className="table-see-action-btn">
+            <Tooltip placement="top" title={"Detalles"} arrow={{ pointAtCenter: true }}>
+              <button disabled={!canList} onClick={() => handleView(record._id)} className="table-see-action-btn">
                 <SeeSvg width={20} height={20} />
               </button>
             </Tooltip>
@@ -396,7 +423,7 @@ const ProjectTable: React.FC = () => {
             <></>
           ) : (
             <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-              <button disabled={!canDelete} onClick={() => handleDelete(_id)} className="table-delete-action-btn">
+              <button disabled={!canDelete} onClick={() => handleDelete(record._id)} className="table-delete-action-btn">
                 <DeleteSvg width={20} height={20} />
               </button>
             </Tooltip>

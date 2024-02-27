@@ -61,7 +61,7 @@ export const CreateProjectForm = () => {
   };
 
   const onAddItem = (values: any) => {
-    setItemsValues([values, ...itemsValues]);
+    setItemsValues([...itemsValues,values]);
     form.setFieldValue("itemsList", [...itemsValues, values]);
     setAddItemModal(false);
   };

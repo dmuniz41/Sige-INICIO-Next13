@@ -1,8 +1,9 @@
-import Swal from "sweetalert2";
-import { types } from "../types/types";
-import { Toast } from "../helpers/customAlert";
 import axios, { AxiosError } from "axios";
+import Swal from "sweetalert2";
+
 import { IOffer } from "@/models/offer";
+import { Toast } from "../helpers/customAlert";
+import { types } from "../types/types";
 
 export const startAddOffer = ({ ...offer }: IOffer) => {
   const token = localStorage.getItem("accessToken");
@@ -19,7 +20,8 @@ export const startAddOffer = ({ ...offer }: IOffer) => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ file: offer.ts:22 ~ return ~ message:", message);
+        Swal.fire("Error", "Error al crear la oferta", "error");
       });
   };
 };
@@ -38,7 +40,8 @@ export const startUpdateOffer = ({ ...offer }: IOffer) => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ file: offer.ts:41 ~ return ~ message:", message);
+        Swal.fire("Error", "Error al actualizar la oferta", "error");
       });
   };
 };
@@ -57,7 +60,8 @@ export const startDeleteOffer = (id: string): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ file: offer.ts:60 ~ return ~ message:", message);
+        Swal.fire("Error", "Error al borrar la oferta", "error");
       });
   };
 };
@@ -72,7 +76,25 @@ export const offersStartLoading = () => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ file: offer.ts:75 ~ return ~ message:", message);
+        Swal.fire("Error", "Error al cargar las ofertas", "error");
+      });
+  };
+};
+
+export const loadSelectedOffer = (projectId: string) => {
+  const token = localStorage.getItem("accessToken");
+  return async (dispatch: any) => {
+    await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/offer/${projectId}`, { headers: { accessToken: token } })
+      .then((resp) => {
+        let { BDOffer } = resp.data;
+        dispatch(selectedOffer(BDOffer));
+      })
+      .catch((error: AxiosError) => {
+        let { message }: any = error.response?.data;
+        console.log("🚀 ~ file: offer.ts:91 ~ return ~ message:", message);
+        Swal.fire("Error", "Error al cargar la oferta seleccionada", "error");
       });
   };
 };
@@ -97,4 +119,8 @@ const deleteOffer = (id: string) => ({
   payload: {
     id,
   },
+});
+const selectedOffer = (offer: IOffer) => ({
+  type: types.selectedOffer,
+  payload: offer,
 });

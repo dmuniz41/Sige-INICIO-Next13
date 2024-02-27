@@ -7,6 +7,7 @@ import { nomenclatorReducer } from "./nomenclatorReducer";
 import { costSheetReducer } from "./costSheetReducer";
 import { serviceFeeReducer } from "./serviceFeeReducer";
 import { projectReducer } from "./projectReducer";
+import { offerReducer } from "./offerReducer";
 
 export const rootReducer = combineReducers({
   user: userReducer,
@@ -16,5 +17,6 @@ export const rootReducer = combineReducers({
   nomenclator: nomenclatorReducer,
   costSheet: costSheetReducer,
   serviceFee: serviceFeeReducer,
-  project: projectReducer
+  project: projectReducer,
+  offer: offerReducer,
 });
