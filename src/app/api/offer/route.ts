@@ -39,8 +39,8 @@ export async function POST(request: Request) {
     let newKey = generateRandomString(26);
 
     const newOffer = new Offer({
-      key: newKey,
       itemsList: offer.itemsList,
+      key: newKey,
       name: offer.name,
       projectName: offer.projectName,
       value: offer.value,

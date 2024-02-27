@@ -1,15 +1,17 @@
 import { Schema, model, models, Model } from "mongoose";
 
 export interface IActivity {
+  amount: number;
   description: string;
-  unitMeasure: string;
   price: number;
+  unitMeasure: string;
   value: number;
 }
 
 export interface IItem {
   description: string;
   activities: IActivity[];
+  value: number;
 }
 
 export interface IOffer {
@@ -32,15 +34,17 @@ const OfferSchema = new Schema<IOffer, Model<IOffer>>({
         description: String,
         activities: [
           {
+            amount: Number,
             description: String,
             unitMeasure: String,
             price: Number,
             value: Number,
           },
         ],
+        value: Number,
       },
     ],
-    required: false
+    required: false,
   },
   projectName: {
     type: String,
