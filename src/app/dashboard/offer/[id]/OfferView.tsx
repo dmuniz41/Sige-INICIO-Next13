@@ -7,6 +7,7 @@ import { useAppDispatch } from "@/hooks/hooks";
 import { loadSelectedOffer } from "@/actions/offer";
 import { IOffer } from "@/models/offer";
 import { RootState, useAppSelector } from "@/store/store";
+import { Item } from "./Item";
 
 export const OfferView = () => {
   const url = usePathname().split("/");
@@ -21,7 +22,6 @@ export const OfferView = () => {
   useEffect(() => {
     dispatch(loadSelectedOffer(projectId));
   }, [dispatch, projectId]);
-
 
   const { selectedOffer }: { selectedOffer: IOffer } = useAppSelector((state: RootState) => state?.offer);
 
@@ -46,7 +46,12 @@ export const OfferView = () => {
       </article>
 
       <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-2">
-        <h1 className="pl-2 text-xl font-bold">{selectedOffer.projectName}</h1>
+        <h1 className="pl-2 text-xl font-bold mb-2">{selectedOffer.projectName}</h1>
+        {selectedOffer?.itemsList?.map((item, index) => (
+          <div key={item.description}>
+            <Item number={index + 1 } item={item}/>
+          </div>
+        ))}
       </section>
     </>
   );
