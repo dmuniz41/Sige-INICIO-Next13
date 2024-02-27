@@ -25,6 +25,8 @@ import { useAppDispatch } from "@/hooks/hooks";
 import { SeeSvg } from "@/app/global/SeeSvg";
 import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 import { INomenclator } from "@/models/nomenclator";
+import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
+import { loadSelectedOffer } from "@/actions/offer";
 
 // const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
 //   ssr: false,
@@ -159,6 +161,17 @@ const ProjectTable: React.FC = () => {
       Toast.fire({
         icon: "error",
         title: "Seleccione un proyecto para ver",
+      });
+    }
+  };
+  const handleViewOffer = (projectId: string): void => {
+    if (projectId) {
+      dispatch(loadSelectedOffer(projectId));
+      router.push(`/dashboard/offer/${projectId}`);
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "Seleccione una oferta para ver",
       });
     }
   };
@@ -383,6 +396,15 @@ const ProjectTable: React.FC = () => {
       width: "5%",
       render: (_, { _id }) => (
         <div className="flex gap-1">
+          {!canList ? (
+            <></>
+          ) : (
+            <Tooltip placement="top" title={"Ver Oferta"} arrow={{ pointAtCenter: true }}>
+              <button disabled={!canList} onClick={() => handleViewOffer(_id)} className="table-see-action-btn">
+                <ReportMoneySvg width={20} height={20} />
+              </button>
+            </Tooltip>
+          )}
           {!canList ? (
             <></>
           ) : (

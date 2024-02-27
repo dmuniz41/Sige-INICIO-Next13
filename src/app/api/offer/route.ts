@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 
-import Nomenclator from "@/models/nomenclator";
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
@@ -43,6 +42,7 @@ export async function POST(request: Request) {
       key: newKey,
       name: offer.name,
       projectName: offer.projectName,
+      projectId: offer.projectId,
       value: offer.value,
     });
 

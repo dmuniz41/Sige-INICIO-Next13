@@ -82,11 +82,11 @@ export const offersStartLoading = () => {
   };
 };
 
-export const loadSelectedOffer = (id: string) => {
+export const loadSelectedOffer = (projectId: string) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/offer/${id}`, { headers: { accessToken: token } })
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/offer/${projectId}`, { headers: { accessToken: token } })
       .then((resp) => {
         let { BDOffer } = resp.data;
         dispatch(selectedOffer(BDOffer));

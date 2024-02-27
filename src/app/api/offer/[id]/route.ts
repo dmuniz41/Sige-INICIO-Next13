@@ -8,7 +8,8 @@ export async function GET(request: NextRequest) {
   const accessToken = request.headers.get("accessToken");
   const { pathname } = request.nextUrl;
   const urlParams = pathname.split("/");
-  const offerId = urlParams[3];
+  const projectId = urlParams[3];
+  console.log("🚀 ~ GET ~ projectId:", projectId)
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
       );
     }
     await connectDB();
-    const BDOffer = await Offer.findById(offerId);
+    const BDOffer = await Offer.findOne({projectId: projectId});
     return new NextResponse(
       JSON.stringify({
         ok: true,
