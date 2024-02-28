@@ -1,8 +1,8 @@
 import React from "react";
 
-export const NoDataSvg = () => {
+export const NoDataSvg = ({width = 24, height = 24}) => {
   return (
-    <svg width="184" height="152" viewBox="0 0 184 152">
+    <svg width={`${width}`} height={`${height}`} viewBox="0 0 184 152">
       <g fill="none" fill-rule="evenodd">
         <g transform="translate(24 31.67)">
           <ellipse fill-opacity=".8" fill="#F5F5F7" cx="67.797" cy="106.89" rx="67.797" ry="12.668"></ellipse>

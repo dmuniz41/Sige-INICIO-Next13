@@ -15,40 +15,94 @@ import { Item } from "../[id]/Item";
 import { IOfferItem } from "@/models/offer";
 import { IProject } from "@/models/project";
 import { PointSvg } from "@/app/global/PointSvg";
+import { NoDataSvg } from "@/app/global/NoDataSvg";
 
 export const CreateOfferForm = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const router = useRouter();
   const [listOfItems, setListOfItems] = useState<IOfferItem[]>([
-    {
-      description: "Cartel luminico exterior con fondo y laterales de pvc 10mm con frente acrilico 5mm vinilo impreso transparente impreso y fondeado. Iluminacion interior led. Dim 2.40 * 0.70 m",
-      activities: [
-        {
-          amount: 1.68,
-          description: "Caja de luz con fondo y laterales en pvc 10mm y laterales en pvc 3mm con frente acrilico 5mm vinilo impreso y fondeado. Iluminacioninterior led",
-          unitMeasure: "m2",
-          price: 61175.52,
-          value: 102774.87,
-        },
-        {
-          amount: 1,
-          description: "Uso de andamios 2 niveles",
-          unitMeasure: "u",
-          price: 5488.11,
-          value: 5488.1,
-        },
-        {
-          amount: 1,
-          description: "Instalacion electrica cajas de luz fijo media",
-          unitMeasure: "u",
-          price: 12848.94,
-          value: 3,
-        },
-      ],
-      value: 102774.87,
-    },
-
+    // {
+    //   description: "Cartel luminico exterior con fondo y laterales de pvc 10mm con frente acrilico 5mm vinilo impreso transparente impreso y fondeado. Iluminacion interior led. Dim 2.40 * 0.70 m",
+    //   activities: [
+    //     {
+    //       amount: 1.68,
+    //       description: "Caja de luz con fondo y laterales en pvc 10mm y laterales en pvc 3mm con frente acrilico 5mm vinilo impreso y fondeado. Iluminacioninterior led",
+    //       unitMeasure: "m2",
+    //       price: 61175.52,
+    //       value: 102774.87,
+    //     },
+    //     {
+    //       amount: 1,
+    //       description: "Uso de andamios 2 niveles",
+    //       unitMeasure: "u",
+    //       price: 5488.11,
+    //       value: 5488.1,
+    //     },
+    //     {
+    //       amount: 1,
+    //       description: "Instalacion electrica cajas de luz fijo media",
+    //       unitMeasure: "u",
+    //       price: 12848.94,
+    //       value: 3,
+    //     },
+    //   ],
+    //   value: 102774.87,
+    // },
+    // {
+    //   description: "Cartel luminico exterior con fondo y laterales de pvc 10mm con frente acrilico 5mm vinilo impreso transparente impreso y fondeado. Iluminacion interior led. Dim 2.40 * 0.70 m",
+    //   activities: [
+    //     {
+    //       amount: 1.68,
+    //       description: "Caja de luz con fondo y laterales en pvc 10mm y laterales en pvc 3mm con frente acrilico 5mm vinilo impreso y fondeado. Iluminacioninterior led",
+    //       unitMeasure: "m2",
+    //       price: 61175.52,
+    //       value: 102774.87,
+    //     },
+    //     {
+    //       amount: 1,
+    //       description: "Uso de andamios 2 niveles",
+    //       unitMeasure: "u",
+    //       price: 5488.11,
+    //       value: 5488.1,
+    //     },
+    //     {
+    //       amount: 1,
+    //       description: "Instalacion electrica cajas de luz fijo media",
+    //       unitMeasure: "u",
+    //       price: 12848.94,
+    //       value: 3,
+    //     },
+    //   ],
+    //   value: 102774.87,
+    // },
+    // {
+    //   description: "Cartel luminico exterior con fondo y laterales de pvc 10mm con frente acrilico 5mm vinilo impreso transparente impreso y fondeado. Iluminacion interior led. Dim 2.40 * 0.70 m",
+    //   activities: [
+    //     {
+    //       amount: 1.68,
+    //       description: "Caja de luz con fondo y laterales en pvc 10mm y laterales en pvc 3mm con frente acrilico 5mm vinilo impreso y fondeado. Iluminacioninterior led",
+    //       unitMeasure: "m2",
+    //       price: 61175.52,
+    //       value: 102774.87,
+    //     },
+    //     {
+    //       amount: 1,
+    //       description: "Uso de andamios 2 niveles",
+    //       unitMeasure: "u",
+    //       price: 5488.11,
+    //       value: 5488.1,
+    //     },
+    //     {
+    //       amount: 1,
+    //       description: "Instalacion electrica cajas de luz fijo media",
+    //       unitMeasure: "u",
+    //       price: 12848.94,
+    //       value: 3,
+    //     },
+    //   ],
+    //   value: 102774.87,
+    // },
   ]);
 
   useEffect(() => {
@@ -74,15 +128,26 @@ export const CreateOfferForm = () => {
       requiredMark={"optional"}
       size="middle"
     >
-      <section className=" flex gap-2 mb-4 ">
-        <article className="grid gap-2">
-          {listOfItems.map((item, index) => (
-            <article key={index}>
-              <Item number={index + 1} item={item} />
-            </article>
-          ))}
-        </article>
-
+      <section className=" flex w-full gap-2 mb-4 ">
+        {listOfItems.length == 0 ? (
+          <article className="flex justify-center border border-border_light grow py-4">
+            <div className="grid">
+              <div className="grid place-content-center">
+                <NoDataSvg width={100} height={100} />
+              </div>
+              <span className="font-bold mb-4">No hay items disponibles</span>
+              <button className="toolbar-primary-icon-btn ">Añadir Item</button>
+            </div>
+          </article>
+        ) : (
+          <article className="grid grow gap-2">
+            {listOfItems.map((item, index) => (
+              <article key={index}>
+                <Item number={index + 1} item={item} />
+              </article>
+            ))}
+          </article>
+        )}
         <article className="flex flex-col border border-border_light w-[500px]">
           <div className="w-full border-b p-2 font-bold border-border_light flex justify-center items-center bg-background_light">
             <span>LISTA DE ITEMS</span>
@@ -93,7 +158,7 @@ export const CreateOfferForm = () => {
                 <div className=" flex grow justify-center font-bold border-r  border-border_light items-center h-full">
                   <p>{index + 1}</p>
                 </div>
-                <div className="flex w-[380px]">
+                <div className="flex w-[90%]">
                   <p className="w-fit">{item.description}</p>
                 </div>
               </li>
