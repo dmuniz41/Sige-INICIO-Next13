@@ -29,14 +29,14 @@ export const ActivitiesTable = (props: any) => {
       dataIndex: "price",
       key: "price",
       width: "5%",
-      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
+      render: (text) => <span>$ {parseFloat(text).toLocaleString('DE')}</span>,
     },
     {
       title: "Importe CUP",
       dataIndex: "value",
       key: "value",
       width: "5%",
-      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
+      render: (text) => <span>$ {parseFloat(text).toLocaleString('DE')}</span>,
     },
   ];
   return <Table size="small" columns={columns} dataSource={activities} className="border-solid w-full rounded-none" pagination={false} bordered />;

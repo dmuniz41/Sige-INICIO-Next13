@@ -46,12 +46,18 @@ export const OfferView = () => {
       </article>
 
       <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-2">
-        <h1 className="pl-2 text-xl font-bold mb-2">{selectedOffer.projectName}</h1>
+        <h1 className="pl-2 text-xl font-bold mb-2">{selectedOffer?.projectName}</h1>
         {selectedOffer?.itemsList?.map((item, index) => (
           <div key={item.description}>
-            <Item number={index + 1 } item={item}/>
+            <Item number={index + 1} item={item} />
           </div>
         ))}
+        <article className="flex items-center justify-end h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-lg">
+          <div className="flex w-[90%] justify-end pr-4 font-bold">
+            <h2>VALOR TOTAL: </h2>
+          </div>
+          <div className="flex w-[100px] py-4">$ {selectedOffer.value?.toLocaleString("DE")}</div>
+        </article>
       </section>
     </>
   );

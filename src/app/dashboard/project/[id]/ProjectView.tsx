@@ -69,9 +69,8 @@ export const ProjectView = () => {
   const handleEdit = (): void => {
     router.push(`/dashboard/project/editProject`);
   };
-  const handleRequestOffer = (): void => {
-    dispatch(changeProjectStatus(selectedProject, "Pendiente de Oferta"))
-    router.push(`/dashboard/project`);
+  const handleCreateOffer = (): void => {
+    router.push(`/dashboard/offer/createOffer`);
   };
 
   return (
@@ -83,9 +82,9 @@ export const ProjectView = () => {
               <EditSvg />
               Editar
             </button>
-            <button className="toolbar-secondary-icon-btn" onClick={handleRequestOffer}>
+            <button className="toolbar-secondary-icon-btn" onClick={handleCreateOffer}>
               <ReportMoneySvg />
-              Solicitar Oferta
+              Crear Oferta
             </button>
             {/* <PDFDownloadLink document={<CostSheetPDFReport fields={fields} data={PDFReportData} title={`Ficha de costo`} />} fileName={`Ficha de costo ${selectedCostSheet.taskName}`}>
               {({ blob, url, loading, error }) => (
@@ -128,7 +127,6 @@ export const ProjectView = () => {
               <span className="font-bold mr-2 ">No. de Solicitud:</span>
               <p>{selectedProject.projectNumber}</p>
             </div>
-
             <div className="flex gap-1">
               <span className="font-bold mr-2 ">Moneda:</span>
               <p>{selectedProject.currency}</p>
@@ -171,10 +169,6 @@ export const ProjectView = () => {
                 </Tag>
               ) : selectedProject.status === "Cerrado" ? (
                 <Tag className="font-bold" color="#ff6600">
-                  {selectedProject.status.toUpperCase()}
-                </Tag>
-              ) : selectedProject.status === "Solicitud" ? (
-                <Tag className="font-bold" color="#1677ff">
                   {selectedProject.status.toUpperCase()}
                 </Tag>
               ) : selectedProject.status === "Pendiente de Oferta" ? (
