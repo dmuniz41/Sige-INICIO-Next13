@@ -68,7 +68,7 @@ export const CreateProjectForm = () => {
   return (
     <Form
       form={form}
-      name="editProjectForm"
+      name="createProjectForm"
       labelCol={{ span: 0 }}
       wrapperCol={{ span: 0 }}
       className="w-full flex flex-col gap-0"
