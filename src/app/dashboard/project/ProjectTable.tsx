@@ -354,11 +354,6 @@ const ProjectTable: React.FC = () => {
               {status.toUpperCase()}
             </Tag>
           )}
-          {status === "Solicitud" && (
-            <Tag className="font-bold" color="#1677ff" key={status}>
-              {status.toUpperCase()}
-            </Tag>
-          )}
           {status === "Pendiente de Oferta" && (
             <Tag className="font-bold" color="#ffa426" key={status}>
               {status.toUpperCase()}
@@ -401,7 +396,7 @@ const ProjectTable: React.FC = () => {
       width: "5%",
       render: (_, { ...record }) => (
         <div className="flex gap-1">
-          {record.status === "Solicitud" ? (
+          {record.status === "Pendiente de Oferta" ? (
             <></>
           ) : (
             <Tooltip placement="top" title={"Ver Oferta"} arrow={{ pointAtCenter: true }}>

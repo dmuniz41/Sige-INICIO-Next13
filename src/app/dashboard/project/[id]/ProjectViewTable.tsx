@@ -14,6 +14,7 @@ export const ProjectViewTable = (props: any) => {
       dataIndex: "idNumber",
       key: "idNumber",
       width: "1%",
+      align: 'center'
     },
     {
       title: "Descripción del servicio ",

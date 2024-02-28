@@ -61,7 +61,7 @@ export const CreateProjectForm = () => {
   };
 
   const onAddItem = (values: any) => {
-    setItemsValues([...itemsValues,values]);
+    setItemsValues([...itemsValues, values]);
     form.setFieldValue("itemsList", [...itemsValues, values]);
     setAddItemModal(false);
   };
@@ -143,8 +143,7 @@ export const CreateProjectForm = () => {
             form
               .validateFields()
               .then((values) => {
-                console.log("🚀 ~ .then ~ values:", values.initDate.format("MM/DD/YYYY"));
-                dispatch(startAddProject({ ...values, status: "Solicitud", expenses: 0, profits: 0, initDate: values.initDate.format("MM/DD/YYYY") }));
+                dispatch(startAddProject({ ...values, status: "Pendiente de Oferta", expenses: 0, profits: 0, initDate: values.initDate.format("MM/DD/YYYY") }));
                 form.resetFields();
                 router.push("/dashboard/project");
               })
