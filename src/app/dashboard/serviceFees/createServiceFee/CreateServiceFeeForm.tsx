@@ -417,12 +417,14 @@ export const CreateServiceFeeForm = () => {
   );
 };
 
-const FormSection = (props: any) => {
+export const FormSection = (props: any) => {
   const { sectionName, values, formName, valuesSetter, modalSetter, buttonText, form } = props;
   return (
-    <section className=" flex w-full mb-8 bg-white-100 rounded shadow-[0px_0px_5px_0px_#00000024] ">
-      <div className="flex w-[15%] h-full justify-center items-center text-center gap-1 ">
-        <span className="text-base font-bold">{sectionName}</span>
+    <section className=" flex items-center w-full mb-8 bg-white-100 rounded shadow-[0px_0px_5px_0px_#00000024] ">
+      <div className="flex w-[15%] min-h-[100px] h-full justify-center items-center text-center gap-1 ">
+        <div className="flex h-full items-center">
+          <span className="text-base flex h-full items-center font-bold">{sectionName}</span>
+        </div>
       </div>
       <div className="flex pl-2 w-full flex-col">
         {values?.length == 0 ? (

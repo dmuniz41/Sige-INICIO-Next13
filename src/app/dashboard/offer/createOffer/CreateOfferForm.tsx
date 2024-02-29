@@ -16,6 +16,7 @@ import { IOfferItem } from "@/models/offer";
 import { IProject } from "@/models/project";
 import { PointSvg } from "@/app/global/PointSvg";
 import { NoDataSvg } from "@/app/global/NoDataSvg";
+import { PlusSvg } from "@/app/global/PlusSvg";
 
 export const CreateOfferForm = () => {
   const dispatch = useAppDispatch();
@@ -130,13 +131,16 @@ export const CreateOfferForm = () => {
     >
       <section className=" flex w-full gap-2 mb-4 ">
         {listOfItems.length == 0 ? (
-          <article className="flex justify-center border border-border_light grow py-4">
+          <article className="flex justify-center border border-border_light grow py-4 rounded-md">
             <div className="grid">
               <div className="grid place-content-center">
                 <NoDataSvg width={100} height={100} />
               </div>
               <span className="font-bold mb-4">No hay items disponibles</span>
-              <button className="toolbar-primary-icon-btn ">Añadir Item</button>
+              <button className="toolbar-primary-icon-btn" onClick={()=>{router.push('/dashboard/offer/createOffer/createItem')}}>
+                <PlusSvg width={20} height={20} />
+                Añadir Item
+              </button>
             </div>
           </article>
         ) : (
@@ -148,7 +152,7 @@ export const CreateOfferForm = () => {
             ))}
           </article>
         )}
-        <article className="flex flex-col border border-border_light w-[500px]">
+        <article className="flex flex-col border border-border_light w-[500px] rounded-md">
           <div className="w-full border-b p-2 font-bold border-border_light flex justify-center items-center bg-background_light">
             <span>LISTA DE ITEMS</span>
           </div>
