@@ -57,8 +57,9 @@ export const types = {
   addOffer:              "[Offer] Add Offer",
   updateOffer:           "[Offer] Update Offer",
   deleteOffer:           "[Offer] Delete Offer",
-  offersLoaded:          "[Offer] Offers Loaded ",
-  selectedOffer:         "[Offer] Project Selected ",
+  offersLoaded:          "[Offer] Offers Loaded",
+  selectedOffer:         "[Offer] Project Selected",
+  addItemToOffer:        "[Offer] Add Item to Selected Offer",
 
   setCurrencyChange:       "[Global] Set Currency Change",
 

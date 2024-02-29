@@ -6,30 +6,30 @@ import React, { useState } from "react";
 import { useAppDispatch } from "@/hooks/hooks";
 import TextArea from "antd/es/input/TextArea";
 import { FormSection } from "@/app/dashboard/serviceFees/createServiceFee/CreateServiceFeeForm";
-import { IActivity } from "@/models/offer";
+import { IActivity, IOffer } from "@/models/offer";
 import { AddActivityModal } from "./AddActivity";
+import { addItemToOffer } from "@/actions/offer";
+import { RootState, useAppSelector } from "@/store/store";
 
 export const CreateItemForm = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const router = useRouter();
 
-  const [itemValue, setItemValue] = useState<number>();
   const [activitiesValues, setActivitiesValues] = useState<IActivity[]>([]);
   const [addActivitiesModal, setAddActivitiesModal] = useState(false);
-  
+
+  // const { selectedOffer }: { selectedOffer: IOffer } = useAppSelector((state: RootState) => state?.offer);
+  // const previousItemList = selectedOffer.itemsList;
+
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
-  
+
   const onAddActivity = (values: IActivity) => {
-    console.log("🚀 ~ onAddActivity ~ values:", values.value)
     setActivitiesValues([values, ...activitiesValues]);
-    form.setFieldValue("activities", [...activitiesValues, values]);
+    form.setFieldValue("activities", [values, ...activitiesValues]);
     setAddActivitiesModal(false);
-    setItemValue(values.value)
-    console.log("🚀 ~ CreateItemForm ~ itemValue:", itemValue)
-    setItemValue(activitiesValues.map((activity) => activity.value).reduce((ac, cv) => ac! + cv, 0));
   };
 
   return (
@@ -61,29 +61,39 @@ export const CreateItemForm = () => {
         />
       </section>
 
-      <article className="flex pl-4 items-center h-[39px] flex-grow bg-white-100 border-solid border-[1px] border-border_light rounded-lg">
+      <article className="flex pl-4 items-center h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-md">
         <div className="flex w-[90%] justify-end pr-4 font-bold">
           <h2>VALOR: </h2>
         </div>
-        <div className="flex w-[150px] pl-2">$ {itemValue}</div>
+        <div className="flex w-[150px] pl-2">$ {activitiesValues.map((activity) => activity.value).reduce((total, current) => total + current, 0)}</div>
       </article>
 
       <Form.Item>
         <button
           type="submit"
           className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
-          onClick={() => {
-            form
-              .validateFields()
-              .then((values) => {
-                console.log("🚀 ~ .then ~ values:", values);
-                form.resetFields();
-                // router.push("/dashboard/offer/createOffer");
-              })
-              .catch((error) => {
-                console.log("Validate Failed:", error);
-              });
-          }}
+          // onClick={() => {
+          //   form
+          //     .validateFields()
+          //     .then((values) => {
+          //       console.log("🚀 ~ .then ~ values:", { ...values, value: activitiesValues.map((activity) => activity.value).reduce((total, current) => total + current, 0) });
+          //       previousItemList.push({
+          //         ...values,
+          //         value: activitiesValues.map((activity) => activity.value).reduce((total, current) => total + current, 0),
+          //       });
+          //       dispatch(
+          //         addItemToOffer({
+          //           ...selectedOffer,
+          //           // itemsList: previousItemList,
+          //         })
+          //       );
+          //       form.resetFields();
+          //       // router.push("/dashboard/offer/createOffer");
+          //     })
+          //     .catch((error) => {
+          //       console.log("Validate Failed:", error);
+          //     });
+          // }}
         >
           Crear
         </button>

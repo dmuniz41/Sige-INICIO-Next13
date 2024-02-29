@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
 
-import { IOffer } from "@/models/offer";
+import { IOffer, IOfferItem } from "@/models/offer";
 import { Toast } from "../helpers/customAlert";
 import { types } from "../types/types";
 
@@ -124,3 +124,8 @@ const selectedOffer = (offer: IOffer) => ({
   type: types.selectedOffer,
   payload: offer,
 });
+
+export const addItemToOffer = (offer: IOffer)=>({
+  type: types.addItemToOffer,
+  payload: offer
+})

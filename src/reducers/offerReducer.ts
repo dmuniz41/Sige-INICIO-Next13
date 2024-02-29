@@ -1,8 +1,16 @@
+import { IOffer } from "@/models/offer";
 import { types } from "../types/types";
 
-const initialState = {
+const initialState: { offers: IOffer[]; selectedOffer: IOffer } = {
   offers: [],
-  selectedOffer: {},
+  selectedOffer: {
+    _id: "",
+    itemsList: [],
+    key: "",
+    name: "",
+    projectName: "",
+    projectId: "",
+  },
 };
 
 export const offerReducer = (state = initialState, action: any) => {
@@ -28,6 +36,11 @@ export const offerReducer = (state = initialState, action: any) => {
       return {
         ...state,
         selectedOffer: action.payload,
+      };
+    case types.addItemToOffer:
+      return {
+        ...state,
+        selectedOffer: action.payload
       };
 
     default:
