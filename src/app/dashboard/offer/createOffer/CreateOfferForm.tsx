@@ -1,110 +1,22 @@
 "use client";
-import { Button, DatePicker, Form, Input, InputNumber, Select, SelectProps } from "antd";
+import { Form } from "antd";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import { useAppDispatch } from "@/hooks/hooks";
-import { nomenclatorsStartLoading } from "@/actions/nomenclator";
-import { changeProjectStatus, clearOffer, startAddProject } from "@/actions/project";
-import { IRepresentationCoefficients, IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
-import { RootState, useAppSelector } from "@/store/store";
-import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { INomenclator } from "@/models/nomenclator";
-import { Item } from "../[id]/Item";
-import { IOffer, IOfferItem } from "@/models/offer";
+import { changeProjectStatus, clearOffer } from "@/actions/project";
+import { IOffer } from "@/models/offer";
 import { IProject } from "@/models/project";
+import { Item } from "../[id]/Item";
 import { NoDataSvg } from "@/app/global/NoDataSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
+import { RootState, useAppSelector } from "@/store/store";
 import { startAddOffer } from "@/actions/offer";
+import { useAppDispatch } from "@/hooks/hooks";
 
 export const CreateOfferForm = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const router = useRouter();
-  // const [listOfItems, setListOfItems] = useState<IOfferItem[]>([
-  //   // {
-  //   //   description: "Cartel luminico exterior con fondo y laterales de pvc 10mm con frente acrilico 5mm vinilo impreso transparente impreso y fondeado. Iluminacion interior led. Dim 2.40 * 0.70 m",
-  //   //   activities: [
-  //   //     {
-  //   //       amount: 1.68,
-  //   //       description: "Caja de luz con fondo y laterales en pvc 10mm y laterales en pvc 3mm con frente acrilico 5mm vinilo impreso y fondeado. Iluminacioninterior led",
-  //   //       unitMeasure: "m2",
-  //   //       price: 61175.52,
-  //   //       value: 102774.87,
-  //   //     },
-  //   //     {
-  //   //       amount: 1,
-  //   //       description: "Uso de andamios 2 niveles",
-  //   //       unitMeasure: "u",
-  //   //       price: 5488.11,
-  //   //       value: 5488.1,
-  //   //     },
-  //   //     {
-  //   //       amount: 1,
-  //   //       description: "Instalacion electrica cajas de luz fijo media",
-  //   //       unitMeasure: "u",
-  //   //       price: 12848.94,
-  //   //       value: 3,
-  //   //     },
-  //   //   ],
-  //   //   value: 102774.87,
-  //   // },
-  //   // {
-  //   //   description: "Cartel luminico exterior con fondo y laterales de pvc 10mm con frente acrilico 5mm vinilo impreso transparente impreso y fondeado. Iluminacion interior led. Dim 2.40 * 0.70 m",
-  //   //   activities: [
-  //   //     {
-  //   //       amount: 1.68,
-  //   //       description: "Caja de luz con fondo y laterales en pvc 10mm y laterales en pvc 3mm con frente acrilico 5mm vinilo impreso y fondeado. Iluminacioninterior led",
-  //   //       unitMeasure: "m2",
-  //   //       price: 61175.52,
-  //   //       value: 102774.87,
-  //   //     },
-  //   //     {
-  //   //       amount: 1,
-  //   //       description: "Uso de andamios 2 niveles",
-  //   //       unitMeasure: "u",
-  //   //       price: 5488.11,
-  //   //       value: 5488.1,
-  //   //     },
-  //   //     {
-  //   //       amount: 1,
-  //   //       description: "Instalacion electrica cajas de luz fijo media",
-  //   //       unitMeasure: "u",
-  //   //       price: 12848.94,
-  //   //       value: 3,
-  //   //     },
-  //   //   ],
-  //   //   value: 102774.87,
-  //   // },
-  //   // {
-  //   //   description: "Cartel luminico exterior con fondo y laterales de pvc 10mm con frente acrilico 5mm vinilo impreso transparente impreso y fondeado. Iluminacion interior led. Dim 2.40 * 0.70 m",
-  //   //   activities: [
-  //   //     {
-  //   //       amount: 1.68,
-  //   //       description: "Caja de luz con fondo y laterales en pvc 10mm y laterales en pvc 3mm con frente acrilico 5mm vinilo impreso y fondeado. Iluminacioninterior led",
-  //   //       unitMeasure: "m2",
-  //   //       price: 61175.52,
-  //   //       value: 102774.87,
-  //   //     },
-  //   //     {
-  //   //       amount: 1,
-  //   //       description: "Uso de andamios 2 niveles",
-  //   //       unitMeasure: "u",
-  //   //       price: 5488.11,
-  //   //       value: 5488.1,
-  //   //     },
-  //   //     {
-  //   //       amount: 1,
-  //   //       description: "Instalacion electrica cajas de luz fijo media",
-  //   //       unitMeasure: "u",
-  //   //       price: 12848.94,
-  //   //       value: 3,
-  //   //     },
-  //   //   ],
-  //   //   value: 102774.87,
-  //   // },
-  // ]);
 
   const { selectedProject }: { selectedProject: IProject } = useAppSelector((state: RootState) => state?.project);
   const { selectedOffer }: { selectedOffer: IOffer } = useAppSelector((state: RootState) => state?.offer);
@@ -166,7 +78,7 @@ export const CreateOfferForm = () => {
               <PlusSvg width={20} height={20} />
               Añadir Item
             </button>
-            <article className="flex items-center h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-md">
+            <article className={`${selectedOffer?.itemsList?.length == 0 && "hidden"} flex items-center h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-md`}>
               <div className="flex w-[90%] justify-end  font-bold">
                 <h2>VALOR: </h2>
               </div>
@@ -212,11 +124,11 @@ export const CreateOfferForm = () => {
                     itemsList: selectedOffer?.itemsList,
                     projectName: selectedProject?.projectName,
                     projectId: selectedProject?._id,
-                    value: selectedOffer?.itemsList?.map((item) => item.value).reduce((total, current) => total + current, 0)
+                    value: selectedOffer?.itemsList?.map((item) => item.value).reduce((total, current) => total + current, 0),
                   })
-                  );
-                  dispatch(changeProjectStatus(selectedProject, "Terminado"))
-                  dispatch(clearOffer())
+                );
+                dispatch(changeProjectStatus(selectedProject, "Terminado"));
+                dispatch(clearOffer());
                 form.resetFields();
                 router.push(`/dashboard/project/${selectedProject._id}`);
               })
