@@ -1,7 +1,7 @@
-import { IOffer } from "@/models/offer";
+import { IOffer, IOfferItem } from "@/models/offer";
 import { types } from "../types/types";
 
-const initialState: { offers: IOffer[]; selectedOffer: IOffer } = {
+const initialState: { offers: IOffer[]; selectedOffer: IOffer; currentItem: IOfferItem } = {
   offers: [],
   selectedOffer: {
     _id: "",
@@ -10,6 +10,11 @@ const initialState: { offers: IOffer[]; selectedOffer: IOffer } = {
     name: "",
     projectName: "",
     projectId: "",
+  },
+  currentItem: {
+    description: "",
+    activities: [],
+    value: 0,
   },
 };
 
@@ -37,10 +42,24 @@ export const offerReducer = (state = initialState, action: any) => {
         ...state,
         selectedOffer: action.payload,
       };
-    case types.addItemToOffer:
+    // case types.setCurrentItem:
+    //   return {
+    //     ...state,
+    //     currentItem: action.payload
+    //   };
+    case types.setCurrentItem:
       return {
         ...state,
-        selectedOffer: action.payload
+        selectedOffer: {
+          ...state.selectedOffer,
+          itemsList: [...state.selectedOffer.itemsList, action.payload],
+        },
+      };
+    case types.clearOffer:
+      return {
+        ...state,
+        selectedOffer: {},
+        currentItem: {},
       };
 
     default:

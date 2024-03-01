@@ -7,6 +7,7 @@ import Offer, { IOffer } from "@/models/offer";
 
 export async function POST(request: Request) {
   const { ...offer }: IOffer = await request.json();
+  console.log("🚀 ~ POST ~ offer:", offer.projectName)
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -41,8 +42,8 @@ export async function POST(request: Request) {
       itemsList: offer.itemsList,
       key: newKey,
       name: offer.name,
-      projectName: offer.projectName,
       projectId: offer.projectId,
+      projectName: offer.projectName,
       value: offer.value,
     });
 
@@ -61,6 +62,7 @@ export async function POST(request: Request) {
       }
     );
   } catch (error) {
+    console.log("🚀 ~ POST ~ error:", error)
     if (error instanceof Error) {
       return NextResponse.json(
         {

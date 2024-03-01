@@ -220,6 +220,9 @@ export const projectLoaded = (projects: any) => ({
   type: types.projectsLoaded,
   payload: projects,
 });
+export const clearOffer = () => ({
+  type: types.clearOffer,
+});
 
 const deleteProject = (id: string) => ({
   type: types.deleteProject,
@@ -227,7 +230,6 @@ const deleteProject = (id: string) => ({
     id,
   },
 });
-
 const selectedProject = (project: any) => ({
   type: types.selectedProject,
   payload: project,
