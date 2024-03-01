@@ -1,6 +1,6 @@
 import { IOfferItem } from "@/models/offer";
-import Table, { ColumnsType } from "antd/es/table";
 import React from "react";
+import Table, { ColumnsType } from "antd/es/table";
 
 export const ActivitiesTable = (props: any) => {
   const { activities } = props;

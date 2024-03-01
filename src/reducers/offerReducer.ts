@@ -42,11 +42,6 @@ export const offerReducer = (state = initialState, action: any) => {
         ...state,
         selectedOffer: action.payload,
       };
-    // case types.setCurrentItem:
-    //   return {
-    //     ...state,
-    //     currentItem: action.payload
-    //   };
     case types.setCurrentItem:
       return {
         ...state,

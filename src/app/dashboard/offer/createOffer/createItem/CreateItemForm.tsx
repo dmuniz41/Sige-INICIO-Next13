@@ -1,15 +1,14 @@
 "use client";
-import { Form, Input } from "antd";
+import { Form } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
+import { AddActivityModal } from "./AddActivity";
+import { FormSection } from "@/app/dashboard/serviceFees/createServiceFee/CreateServiceFeeForm";
+import { IActivity } from "@/models/offer";
+import { setCurrentItem } from "@/actions/offer";
 import { useAppDispatch } from "@/hooks/hooks";
 import TextArea from "antd/es/input/TextArea";
-import { FormSection } from "@/app/dashboard/serviceFees/createServiceFee/CreateServiceFeeForm";
-import { IActivity, IOffer } from "@/models/offer";
-import { AddActivityModal } from "./AddActivity";
-import { setCurrentItem } from "@/actions/offer";
-import { RootState, useAppSelector } from "@/store/store";
 
 export const CreateItemForm = () => {
   const dispatch = useAppDispatch();
@@ -18,9 +17,6 @@ export const CreateItemForm = () => {
 
   const [activitiesValues, setActivitiesValues] = useState<IActivity[]>([]);
   const [addActivitiesModal, setAddActivitiesModal] = useState(false);
-
-  // const { selectedOffer }: { selectedOffer: IOffer } = useAppSelector((state: RootState) => state?.offer);
-  // const previousItemList = selectedOffer.itemsList;
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
@@ -61,7 +57,7 @@ export const CreateItemForm = () => {
         />
       </section>
 
-      <article className="flex pl-4 items-center h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-md">
+      <article className={`flex pl-4 items-center h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-md ${activitiesValues.length == 0 && `hidden`}`}>
         <div className="flex w-[90%] justify-end pr-4 font-bold">
           <h2>VALOR: </h2>
         </div>
@@ -76,12 +72,12 @@ export const CreateItemForm = () => {
             form
               .validateFields()
               .then((values) => {
-
                 console.log("🚀 ~ .then ~ values:", { ...values, value: activitiesValues.map((activity) => activity.value).reduce((total, current) => total + current, 0) });
 
                 dispatch(
                   setCurrentItem({
-                    ...values, value: activitiesValues.map((activity) => activity.value).reduce((total, current) => total + current, 0) 
+                    ...values,
+                    value: activitiesValues.map((activity) => activity.value).reduce((total, current) => total + current, 0),
                   })
                 );
                 form.resetFields();
