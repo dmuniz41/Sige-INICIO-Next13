@@ -8,7 +8,7 @@ import TextArea from "antd/es/input/TextArea";
 import { FormSection } from "@/app/dashboard/serviceFees/createServiceFee/CreateServiceFeeForm";
 import { IActivity, IOffer } from "@/models/offer";
 import { AddActivityModal } from "./AddActivity";
-import { addItemToOffer } from "@/actions/offer";
+import { setCurrentItem } from "@/actions/offer";
 import { RootState, useAppSelector } from "@/store/store";
 
 export const CreateItemForm = () => {
@@ -72,28 +72,25 @@ export const CreateItemForm = () => {
         <button
           type="submit"
           className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
-          // onClick={() => {
-          //   form
-          //     .validateFields()
-          //     .then((values) => {
-          //       console.log("🚀 ~ .then ~ values:", { ...values, value: activitiesValues.map((activity) => activity.value).reduce((total, current) => total + current, 0) });
-          //       previousItemList.push({
-          //         ...values,
-          //         value: activitiesValues.map((activity) => activity.value).reduce((total, current) => total + current, 0),
-          //       });
-          //       dispatch(
-          //         addItemToOffer({
-          //           ...selectedOffer,
-          //           // itemsList: previousItemList,
-          //         })
-          //       );
-          //       form.resetFields();
-          //       // router.push("/dashboard/offer/createOffer");
-          //     })
-          //     .catch((error) => {
-          //       console.log("Validate Failed:", error);
-          //     });
-          // }}
+          onClick={() => {
+            form
+              .validateFields()
+              .then((values) => {
+
+                console.log("🚀 ~ .then ~ values:", { ...values, value: activitiesValues.map((activity) => activity.value).reduce((total, current) => total + current, 0) });
+
+                dispatch(
+                  setCurrentItem({
+                    ...values, value: activitiesValues.map((activity) => activity.value).reduce((total, current) => total + current, 0) 
+                  })
+                );
+                form.resetFields();
+                router.push("/dashboard/offer/createOffer");
+              })
+              .catch((error) => {
+                console.log("Validate Failed:", error);
+              });
+          }}
         >
           Crear
         </button>

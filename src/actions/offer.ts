@@ -5,11 +5,22 @@ import { IOffer, IOfferItem } from "@/models/offer";
 import { Toast } from "../helpers/customAlert";
 import { types } from "../types/types";
 
-export const startAddOffer = ({ ...offer }: IOffer) => {
+export const startAddOffer = ({ ...offer }: any) => {
+  console.log("🚀 ~ startAddOffer ~ offer:", offer)
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/offer`, { offer }, { headers: { accessToken: token } })
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/offer`,
+        {
+          itemsList: offer?.itemsList,
+          name: offer?.name,
+          projectName: offer?.projectName,
+          projectId: offer?.projectId,
+          value: offer?.value,
+        },
+        { headers: { accessToken: token } }
+      )
       .then(() => {
         dispatch(addOffer(offer));
         dispatch(offersStartLoading());
@@ -25,11 +36,11 @@ export const startAddOffer = ({ ...offer }: IOffer) => {
       });
   };
 };
-export const startUpdateOffer = ({ ...offer }: IOffer) => {
+export const startUpdateOffer = ({ ...offer }: any) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/offer`, { offer }, { headers: { accessToken: token } })
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/offer`, { ...offer }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(updateOffer(offer));
         dispatch(offersStartLoading());
@@ -125,7 +136,7 @@ const selectedOffer = (offer: IOffer) => ({
   payload: offer,
 });
 
-export const addItemToOffer = (offer: IOffer)=>({
-  type: types.addItemToOffer,
-  payload: offer
-})
+export const setCurrentItem = (item: IOfferItem) => ({
+  type: types.setCurrentItem,
+  payload: item,
+});
