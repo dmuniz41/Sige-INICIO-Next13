@@ -155,12 +155,12 @@ export const CreateProjectForm = () => {
           Crear
         </button>
       </Form.Item>
-      <AddItemModal open={addItemModal} onCancel={() => setAddItemModal(false)} onCreate={onAddItem} />
+      <AddItemModal open={addItemModal} onCancel={() => setAddItemModal(false)} onCreate={onAddItem} listLength={itemsValues?.length}/>
     </Form>
   );
 };
 
-const FormSection = (props: any) => {
+export const FormSection = (props: any) => {
   const { sectionName, values, formName, valuesSetter, modalSetter, buttonText, form } = props;
   return (
     <section className=" flex w-[50%] bg-white-100 rounded shadow-[0px_0px_5px_0px_#00000024] ">
@@ -172,7 +172,7 @@ const FormSection = (props: any) => {
           <div></div>
         ) : (
           <div className="flex w-full pr-9 gap-1 pt-4 font-bold">
-            <div className="w-[100px]">
+            <div className="w-[50px]">
               <span>No.</span>
             </div>
             <div className="">
@@ -186,11 +186,11 @@ const FormSection = (props: any) => {
               {fields.map(({ key, name, ...restField }) => (
                 <div key={key} className="w-full">
                   <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[100px]" {...restField} name={[name, "idNumber"]} rules={[{ required: true }]}>
-                      <InputNumber disabled placeholder="No." className="w-full disabled:bg-white-100  disabled:text-white-900" />
+                    <Form.Item className="" {...restField} name={[name, "idNumber"]} rules={[{ required: true }]}>
+                      <Input disabled placeholder="No." className=" w-[50px] disabled:bg-white-100  disabled:text-white-900" />
                     </Form.Item>
                     <Form.Item className="grow" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
-                      <Input disabled placeholder="No." className="w-full disabled:bg-white-100  disabled:text-white-900" />
+                      <Input disabled placeholder="Descripción" className="w-full disabled:bg-white-100  disabled:text-white-900" />
                     </Form.Item>
                     <MinusCircleOutlined
                       className="mb-auto"

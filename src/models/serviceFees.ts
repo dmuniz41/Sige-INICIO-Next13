@@ -57,7 +57,6 @@ export interface IServiceFee {
   commercialMarginValue: number;
   salePrice: number;
   salePriceUSD: number;
-  rawMaterialsByClient: number;
 }
 
 const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
@@ -195,9 +194,6 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
     type: Number,
   },
   ONATValue: {
-    type: Number,
-  },
-  rawMaterialsByClient: {
     type: Number,
   },
   commercialMargin: {

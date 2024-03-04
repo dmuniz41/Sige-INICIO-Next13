@@ -2,14 +2,16 @@
 
 import { Form, Input, InputNumber, Modal} from "antd";
 import { IItem } from "@/models/project";
+import TextArea from "antd/es/input/TextArea";
 
 interface CollectionCreateFormProps {
   open: boolean;
   onCreate: (values: IItem) => void;
   onCancel: () => void;
+  listLength: number
 }
 
-export const AddItemModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+export const AddItemModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, listLength }) => {
   const [form] = Form.useForm();
   return (
     <Modal
@@ -40,7 +42,7 @@ export const AddItemModal: React.FC<CollectionCreateFormProps> = ({ open, onCrea
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate(values);
+                  onCreate({...values, idNumber: listLength + 1});
                   form.resetFields();
                 })
                 .catch((error) => {
@@ -54,11 +56,8 @@ export const AddItemModal: React.FC<CollectionCreateFormProps> = ({ open, onCrea
       ]}
     >
       <Form form={form} layout="horizontal" name="addItem" size="middle">
-        <Form.Item name="idNumber" label="Número" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber />
-        </Form.Item>
         <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input/>
+          <TextArea rows={3}/>
         </Form.Item>
       </Form>
     </Modal>

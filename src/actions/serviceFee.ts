@@ -25,7 +25,6 @@ export const startAddServiceFee = ({ ...serviceFee }): any => {
           ONAT: serviceFee.ONAT,
           payMethodCoef: serviceFee.payMethodCoef,
           rawMaterials: serviceFee.rawMaterials ?? [],
-          rawMaterialsByClient: serviceFee.rawMaterialsByClient,
           taskList: serviceFee.taskList ?? [],
           taskName: serviceFee.taskName,
           transportationExpenses: serviceFee.transportationExpenses ?? [],
@@ -72,7 +71,6 @@ export const startUpdateServiceFee = ({ ...serviceFee }): any => {
           ONAT: serviceFee.ONAT,
           payMethodCoef: serviceFee.payMethodCoef,
           rawMaterials: serviceFee.rawMaterials ?? [],
-          rawMaterialsByClient: serviceFee.rawMaterialsByClient,
           taskList: serviceFee.taskList ?? [],
           taskName: serviceFee.taskName,
           transportationExpenses: serviceFee.transportationExpenses ?? [],
@@ -168,7 +166,6 @@ const addServiceFee = ({ ...serviceFee }) => ({
     ONAT: serviceFee.ONAT,
     payMethodCoef: serviceFee.payMethodCoef,
     rawMaterials: serviceFee.rawMaterials ?? [],
-    rawMaterialsByClient: serviceFee.rawMaterialsByClient,
     taskList: serviceFee.taskList ?? [],
     taskName: serviceFee.taskName,
     transportationExpenses: serviceFee.transportationExpenses ?? [],
@@ -193,7 +190,6 @@ export const updateServiceFee = ({ ...serviceFee }) => ({
     ONAT: serviceFee.ONAT,
     payMethodCoef: serviceFee.payMethodCoef,
     rawMaterials: serviceFee.rawMaterials ?? [],
-    rawMaterialsByClient: serviceFee.rawMaterialsByClient,
     taskList: serviceFee.taskList ?? [],
     taskName: serviceFee.taskName,
     transportationExpenses: serviceFee.transportationExpenses ?? [],
@@ -201,16 +197,19 @@ export const updateServiceFee = ({ ...serviceFee }) => ({
     workersAmount: serviceFee.workersAmount,
   },
 });
+
 export const serviceFeeLoaded = (serviceFees: any) => ({
   type: types.serviceFeesLoaded,
   payload: serviceFees,
 });
+
 const deleteServiceFee = (id: string) => ({
   type: types.deleteServiceFee,
   payload: {
     id,
   },
 });
+
 const selectedServiceFee = (serviceFee: any) => ({
   type: types.selectedServiceFee,
   payload: serviceFee,
