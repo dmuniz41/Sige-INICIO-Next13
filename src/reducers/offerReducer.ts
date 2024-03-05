@@ -7,7 +7,6 @@ const initialState: { offers: IOffer[]; selectedOffer: IOffer; currentItem: IOff
     _id: "",
     itemsList: [],
     key: "",
-    name: "",
     projectName: "",
     projectId: "",
   },
@@ -53,8 +52,8 @@ export const offerReducer = (state = initialState, action: any) => {
     case types.clearOffer:
       return {
         ...state,
-        selectedOffer: {},
-        currentItem: {},
+        selectedOffer: initialState.selectedOffer,
+        currentItem: initialState.currentItem,
       };
 
     default:

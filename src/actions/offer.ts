@@ -37,7 +37,7 @@ export const startAddOffer = ({ ...offer }: any) => {
   };
 };
 
-// * ACTUALIZA UN PROYECTO POR SU ID * //
+// * ACTUALIZA UNA OFERTA POR SU ID * //
 export const startUpdateOffer = ({ ...offer }: any) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -82,12 +82,14 @@ export const startDeleteOffer = (id: string): any => {
 
 // * CARGA TODAS LAS OFERTAS CORRESPONDIENTES A UN PROYECTO POR SI ID* //
 export const offersStartLoading = (projectId: string) => {
+  console.log("🚀 ~ offersStartLoading ~ projectId:", projectId)
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/offer`, { headers: { accessToken: token, projectId: projectId } })
       .then((resp) => {
         let { listOfOffers } = resp.data;
+        console.log("🚀 ~ .then ~ listOfOffers:", listOfOffers)
         dispatch(offersLoaded(listOfOffers));
       })
       .catch((error: AxiosError) => {
@@ -98,14 +100,16 @@ export const offersStartLoading = (projectId: string) => {
   };
 };
 
-// * CARGA LA INFORMACION DE UN OFERTA * //
+// * CARGA LA INFORMACION DE UNA OFERTA * //
 export const loadSelectedOffer = (projectId: string) => {
+  console.log("🚀 ~ loadSelectedOffer ~ projectId:", projectId)
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/offer/${projectId}`, { headers: { accessToken: token } })
       .then((resp) => {
         let { BDOffer } = resp.data;
+        console.log("🚀 ~ .then ~ BDOffer:", BDOffer)
         dispatch(selectedOffer(BDOffer));
       })
       .catch((error: AxiosError) => {
