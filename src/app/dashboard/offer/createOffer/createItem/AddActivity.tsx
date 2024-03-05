@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, Modal, Select, SelectProps } from "antd";
+import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
 import { INomenclator } from "@/models/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
 import { IServiceFee, IServiceFeeSubItem } from "@/models/serviceFees";
@@ -113,7 +113,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
           />
         </Form.Item>
         <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
-          <Input
+          <InputNumber
             onChange={() => {
               setActivityValue(form.getFieldValue("amount") * currentPrice);
             }}

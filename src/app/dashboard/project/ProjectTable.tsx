@@ -339,17 +339,27 @@ const ProjectTable: React.FC = () => {
       filterSearch: true,
       render: (_, { status }) => (
         <>
-          {status === "Terminado" && (
+          {status === "Cerrado" && (
             <Tag className="font-bold" color="#34b042" key={status}>
               {status.toUpperCase()}
             </Tag>
           )}
           {status === "Cobrado" && (
+            <Tag className="font-bold" color="#34b042" key={status}>
+              {status.toUpperCase()}
+            </Tag>
+          )}
+          {status === "Terminado" && (
             <Tag className="font-bold" color="#34395e" key={status}>
               {status.toUpperCase()}
             </Tag>
           )}
-          {status === "Cerrado" && (
+          {status === "Contratado" && (
+            <Tag className="font-bold" color="#ff6600" key={status}>
+              {status.toUpperCase()}
+            </Tag>
+          )}
+          {status === "Calculado" && (
             <Tag className="font-bold" color="#ff6600" key={status}>
               {status.toUpperCase()}
             </Tag>

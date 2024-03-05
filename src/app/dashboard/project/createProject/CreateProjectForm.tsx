@@ -100,7 +100,7 @@ export const CreateProjectForm = () => {
             <Form.Item className="mb-3" label={<span className="font-bold text-md">Proyecto</span>} name="projectName" rules={[{ required: true, message: "Campo requerido" }]}>
               <Input />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Método de pago </span>} name="payMethod" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item className="mb-3" label={<span className="font-bold text-md">Representación</span>} name="payMethod" rules={[{ required: true, message: "Campo requerido" }]}>
               <Select
                 allowClear
                 options={payMethodOptions}
@@ -155,7 +155,7 @@ export const CreateProjectForm = () => {
           Crear
         </button>
       </Form.Item>
-      <AddItemModal open={addItemModal} onCancel={() => setAddItemModal(false)} onCreate={onAddItem} listLength={itemsValues?.length}/>
+      <AddItemModal open={addItemModal} onCancel={() => setAddItemModal(false)} onCreate={onAddItem} listLength={itemsValues?.length} />
     </Form>
   );
 };
@@ -163,9 +163,9 @@ export const CreateProjectForm = () => {
 export const FormSection = (props: any) => {
   const { sectionName, values, formName, valuesSetter, modalSetter, buttonText, form } = props;
   return (
-    <section className=" flex w-[50%] bg-white-100 rounded shadow-[0px_0px_5px_0px_#00000024] ">
-      <div className="flex w-[15%] justify-center items-center text-center gap-1 ">
-        <span className="text-base font-bold">{sectionName}</span>
+    <section className=" flex w-[50%] bg-white-100 items-center rounded-md shadow-[0px_0px_5px_0px_#00000024] ">
+      <div className="flex w-[15%] min-h-[100px] h-full p-2 text-center items-center justify-center">
+        <span className="text-base font-bold">{sectionName.toUpperCase()}</span>
       </div>
       <div className="flex pl-2 w-full flex-col">
         {values?.length == 0 ? (
