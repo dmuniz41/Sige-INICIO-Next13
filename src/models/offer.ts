@@ -18,7 +18,6 @@ export interface IOffer {
   _id: string;
   itemsList: IOfferItem[];
   key: string;
-  name: string;
   projectName: string;
   projectId: string;
   value?: number;
@@ -50,17 +49,10 @@ const OfferSchema = new Schema<IOffer, Model<IOffer>>({
   projectName: {
     type: String,
     required: true,
-    unique: true,
   },
   projectId: {
     type: String,
     required: true,
-    unique: true,
-  },
-  name: {
-    type: String,
-    required: true,
-    unique: true,
   },
   value: {
     type: Number,

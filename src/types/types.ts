@@ -54,13 +54,13 @@ export const types = {
   projectsLoaded:          "[Project] Projects Loaded ",
   selectedProject:         "[Project] Project Selected ",
 
-  addOffer:              "[Offer] Add Offer",
-  updateOffer:           "[Offer] Update Offer",
-  deleteOffer:           "[Offer] Delete Offer",
-  offersLoaded:          "[Offer] Offers Loaded",
-  selectedOffer:         "[Offer] Project Selected",
-  setCurrentItem:        "[Offer] Add Item to State",
-  clearOffer:            "[Offer] Clear Offer",
+  addOffer:                "[Offer] Add Offer",
+  updateOffer:             "[Offer] Update Offer",
+  deleteOffer:             "[Offer] Delete Offer",
+  offersLoaded:            "[Offer] Offers Loaded",
+  selectedOffer:           "[Offer] Offer Selected",
+  setCurrentItem:          "[Offer] Add Item to State",
+  clearOffer:              "[Offer] Clear Offer",
 
   setCurrencyChange:       "[Global] Set Currency Change",
 

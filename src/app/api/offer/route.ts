@@ -7,7 +7,6 @@ import Offer, { IOffer } from "@/models/offer";
 
 export async function POST(request: Request) {
   const { ...offer }: IOffer = await request.json();
-  console.log("🚀 ~ POST ~ offer:", offer.projectName)
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -22,7 +21,7 @@ export async function POST(request: Request) {
       );
     }
     await connectDB();
-    let DBOffer = await Offer.findOne({ name: offer.name });
+    let DBOffer = await Offer.findOne({ projectName: offer.projectName });
 
     if (DBOffer) {
       return NextResponse.json(
@@ -41,7 +40,6 @@ export async function POST(request: Request) {
     const newOffer = new Offer({
       itemsList: offer.itemsList,
       key: newKey,
-      name: offer.name,
       projectId: offer.projectId,
       projectName: offer.projectName,
       value: offer.value,
@@ -79,6 +77,7 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   const accessToken = request.headers.get("accessToken");
+  const projectId = request.headers.get("projectId");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(
@@ -92,10 +91,11 @@ export async function GET(request: Request) {
       );
     }
     await connectDB();
-    const listOfOffers = (await Offer.find()).reverse();
+    const listOfOffers = (await Offer.find({projectId: projectId})).reverse();
     return new NextResponse(
       JSON.stringify({
         ok: true,
+        counter: listOfOffers.length,
         listOfOffers,
       }),
       {
@@ -150,7 +150,6 @@ export async function PUT(request: Request) {
       offer._id,
       {
         itemsList: offer.itemsList,
-        name: offer.name,
         projectName: offer.projectName,
         value: offer.value,
       },

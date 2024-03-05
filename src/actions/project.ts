@@ -1,11 +1,12 @@
 import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
 
+import { IProject } from "@/models/project";
 import { Toast } from "@/helpers/customAlert";
 import { types } from "@/types/types";
-import { IProject } from "@/models/project";
 
-export const startAddProject = ({ ...project }): any => {
+//* CREA UN NUEVO PROYECTO *//
+export const startAddProject = ({ ...project }) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
@@ -44,7 +45,8 @@ export const startAddProject = ({ ...project }): any => {
   };
 };
 
-export const startUpdateProject = ({ ...project }): any => {
+//* ACTUALIZA UN PROYECTO  *//
+export const startUpdateProject = ({ ...project }) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
@@ -83,6 +85,8 @@ export const startUpdateProject = ({ ...project }): any => {
       });
   };
 };
+
+//* CAMBIA EL ESTADO DE UN PROYECTO *//
 export const changeProjectStatus = (project: IProject, newStatus: string) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -123,6 +127,7 @@ export const changeProjectStatus = (project: IProject, newStatus: string) => {
   };
 };
 
+//* CARGA TODOS LOS PROYECTOS *//
 export const projectsStartLoading = () => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -140,7 +145,8 @@ export const projectsStartLoading = () => {
   };
 };
 
-export const startDeleteProject = (id: string): any => {
+//* ELIMINA UN PROYECTO POR SI ID *// 
+export const startDeleteProject = (id: string) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
@@ -161,6 +167,7 @@ export const startDeleteProject = (id: string): any => {
   };
 };
 
+//* CARGA LA INFORMACION DE UN PROYECTO *//
 export const loadSelectedProject = (id: string) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -181,42 +188,18 @@ export const loadSelectedProject = (id: string) => {
 const addProject = ({ ...project }) => ({
   type: types.addProject,
   payload: {
-    clientNumber: project.clientNumber,
-    clientName: project.clientName,
-    projectName: project.projectName,
-    payMethod: project.payMethod,
-    currency: project.currency,
-    initDate: project.initDate,
-    deliveryDate: project.deliveryDate,
-    projectNumber: project.projectNumber,
-    itemsList: project.itemsList,
-    status: project.status,
-    expenses: project.expenses,
-    profits: project.profits,
-    totalValue: project.totalValue,
+    project
   },
 });
 
 export const updateProject = ({ ...project }) => ({
   type: types.updateProject,
   payload: {
-    clientNumber: project.clientNumber,
-    clientName: project.clientName,
-    projectName: project.projectName,
-    payMethod: project.payMethod,
-    currency: project.currency,
-    initDate: project.initDate,
-    deliveryDate: project.deliveryDate,
-    projectNumber: project.projectNumber,
-    itemsList: project.itemsList,
-    status: project.status,
-    expenses: project.expenses,
-    profits: project.profits,
-    totalValue: project.totalValue,
+    project
   },
 });
 
-export const projectLoaded = (projects: any) => ({
+export const projectLoaded = (projects: IProject[]) => ({
   type: types.projectsLoaded,
   payload: projects,
 });

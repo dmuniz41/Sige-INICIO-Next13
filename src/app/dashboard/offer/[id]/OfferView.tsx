@@ -56,7 +56,7 @@ export const OfferView = () => {
           <div className="flex w-[90%] justify-end pr-4 font-bold">
             <h2>VALOR TOTAL: </h2>
           </div>
-          <div className="flex w-[100px] py-4">$ {selectedOffer.value?.toLocaleString("DE")}</div>
+          <div className="flex w-[100px] py-4">$ {selectedOffer?.value?.toLocaleString("DE")}</div>
         </article>
       </section>
     </>
