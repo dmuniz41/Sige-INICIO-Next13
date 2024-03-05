@@ -20,6 +20,7 @@ import { AddEquipmentMaintenanceModal } from "../createServiceFee/AddEquipmentMa
 import { AddAdministrativeExpensesModal } from "../createServiceFee/AddAdministrativeExpenses";
 import { AddTransportationExpensesModal } from "../createServiceFee/AddTransportationExpenses";
 import { AddHiredPersonalExpensesModal } from "../createServiceFee/AddHiredPersonalExpenses";
+import TextArea from "antd/es/input/TextArea";
 
 export const EditServiceFeeForm = () => {
   const dispatch = useAppDispatch();
@@ -74,27 +75,32 @@ export const EditServiceFeeForm = () => {
       value: `${serviceFeeCategory}`,
     };
   });
+
   const valuePerUMOptions: SelectProps["options"] = valuePerUM.map((valuePerUM) => {
     return {
       label: `${valuePerUM}`,
       value: `${valuePerUM}`,
     };
   });
+
   const payMethodOptions: SelectProps["options"] = payMethods.map((payMethod) => {
     return {
       label: `${payMethod.representative}`,
       value: payMethod.coefficientValue,
     };
   });
+
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
+
   const onAddRawMaterial = (values: any) => {
     console.log("🚀 ~ onAddRawMaterial ~ values:", values);
     setRawMaterialsValues([values, ...rawMaterialsValues]);
     form.setFieldValue("rawMaterials", [...rawMaterialsValues, values]);
     setAddRawMaterialModal(false);
   };
+
   const onAddTaskList = (values: any) => {
     console.log("🚀 ~ onAddTaskList ~ values:", values);
     setTaskListValues([
@@ -119,30 +125,35 @@ export const EditServiceFeeForm = () => {
     ]);
     setAddTaskListModal(false);
   };
+
   const onAddEquipmentDepreciation = (values: any) => {
     console.log("🚀 ~ onAddEquipmentDepreciation ~ values:", values);
     setEquipmentDepreciationValues([values, ...equipmentDepreciationValues]);
     form.setFieldValue("equipmentDepreciation", [...equipmentDepreciationValues, values]);
     setAddEquipmentDepreciationModal(false);
   };
+
   const onAddEquipmentMaintenance = (values: any) => {
     console.log("🚀 ~ onAddEquipmentMaintenance ~ values:", values);
     setEquipmentMaintenanceValues([values, ...equipmentMaintenanceValues]);
     form.setFieldValue("equipmentMaintenance", [...equipmentMaintenanceValues, values]);
     setAddEquipmentMaintenanceModal(false);
   };
+
   const onAddAdministrativeExpenses = (values: any) => {
     console.log("🚀 ~ onAddAdministrativeExpenses ~ values:", values);
     setAdministrativeExpensesValues([values, ...administrativeExpensesValues]);
     form.setFieldValue("administrativeExpenses", [...administrativeExpensesValues, values]);
     setAddAdministrativeExpensesModal(false);
   };
+
   const onAddTransportationExpenses = (values: any) => {
     console.log("🚀 ~ onAddTransportationExpenses ~ values:", values);
     setTransportationExpensesValues([values, ...transportationExpensesValues]);
     form.setFieldValue("transportationExpenses", [...transportationExpensesValues, values]);
     setAddTransportationExpensesModal(false);
   };
+
   const onAddHiredPersonalExpenses = (values: any) => {
     console.log("🚀 ~ onAddHiredPersonalExpenses ~ values:", values);
     setHiredPersonalExpensesValues([
@@ -258,10 +269,6 @@ export const EditServiceFeeForm = () => {
           value: selectedServiceFee?.commercialMargin,
         },
         {
-          name: "rawMaterialsByClient",
-          value: selectedServiceFee?.rawMaterialsByClient,
-        },
-        {
           name: "artisticTalentValue",
           value: selectedServiceFee?.artisticTalent,
         },
@@ -282,7 +289,7 @@ export const EditServiceFeeForm = () => {
       <section className=" flex-col mb-4">
         <div className="flex flex-row gap-4">
           <Form.Item className="mb-3 w-[35%]" name="taskName" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
-            <Input />
+            <TextArea rows={3} />
           </Form.Item>
           <article className="flex flex-col w-[300px]">
             <Form.Item className="mb-3" label={<span className="font-bold text-md">Nomenclador</span>} name="nomenclatorId" rules={[{ required: true, message: "Campo requerido" }]}>
@@ -321,7 +328,7 @@ export const EditServiceFeeForm = () => {
             <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cambio $ </span>} name="currencyChange" rules={[{ required: true, message: "Campo requerido" }]}>
               <InputNumber disabled className="w-full" />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Método de pago </span>} name="payMethodCoef" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item className="mb-3" label={<span className="font-bold text-md">Representación</span>} name="payMethodCoef" rules={[{ required: true, message: "Campo requerido" }]}>
               <Select
                 allowClear
                 options={payMethodOptions}
@@ -423,15 +430,6 @@ export const EditServiceFeeForm = () => {
         <Form.Item className="mb-3 " label={<span className="font-bold text-md">Margen Comercial (%)</span>} name="commercialMargin" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber />
         </Form.Item>
-        {/* rawMaterialsByClient */}
-        <Form.Item
-          className="mb-3 "
-          label={<span className="font-bold text-md">Materias Primas Aportadas por el Cliente</span>}
-          name="rawMaterialsByClient"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
-          <InputNumber />
-        </Form.Item>
         <Form.Item className="mb-3 " label={<span className="font-bold text-md">Talento Artístico</span>} name="artisticTalentValue" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber />
         </Form.Item>
@@ -477,7 +475,6 @@ export const EditServiceFeeForm = () => {
                     ONAT: values.ONAT,
                     payMethodCoef: values.payMethodCoef,
                     rawMaterials: values.rawMaterials,
-                    rawMaterialsByClient: values.rawMaterialsByClient,
                     taskList: values.taskList,
                     taskName: values.taskName,
                     transportationExpenses: values.transportationExpenses,
@@ -510,9 +507,9 @@ export const EditServiceFeeForm = () => {
 const FormSection = (props: any) => {
   const { sectionName, values, formName, valuesSetter, modalSetter, buttonText, form } = props;
   return (
-    <section className=" flex w-full mb-8 bg-white-100 rounded shadow-[0px_0px_5px_0px_#00000024] ">
-      <div className="flex w-[15%] h-full justify-center items-center text-center gap-1 ">
-        <span className="text-base font-bold">{sectionName}</span>
+    <section className=" flex w-full mb-8 bg-white-100 rounded-md p-2 shadow-[0px_0px_5px_0px_#00000024] ">
+      <div className="flex w-[15%] min-h-[100px] h-full p-2 text-center items-center justify-center">
+        <span className="text-base font-bold">{sectionName.toUpperCase()}</span>
       </div>
       <div className="flex pl-2 w-full flex-col">
         {values?.length == 0 ? (
@@ -579,4 +576,3 @@ const FormSection = (props: any) => {
     </section>
   );
 };
-

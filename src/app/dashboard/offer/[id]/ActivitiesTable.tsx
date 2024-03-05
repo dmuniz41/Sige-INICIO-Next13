@@ -17,6 +17,7 @@ export const ActivitiesTable = (props: any) => {
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "8%",
+      render: (text) => <span>{text.replace("$/", "")}</span>,
     },
     {
       title: "Cantidad",

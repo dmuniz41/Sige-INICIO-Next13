@@ -43,8 +43,8 @@ export const ServiceFeeViewTableSection = (props: any) => {
   ];
   return (
     <section className="flex flex-1 mt-2">
-      <article className="flex items-center w-[15rem] p-4">
-        <h2 className="text-lg font-bold">{name}</h2>
+      <article className="flex items-center text-center w-[15rem] p-4">
+        <h2 className="text-base w-full font-bold">{name.toUpperCase()}</h2>
       </article>
       <Table
         size="small"

@@ -45,7 +45,7 @@ export const OfferView = () => {
         </div>
       </article>
 
-      <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-2">
+      <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-4">
         <h1 className="pl-2 text-xl font-bold mb-2">{selectedOffer?.projectName}</h1>
         {selectedOffer?.itemsList?.map((item, index) => (
           <div key={item.description}>

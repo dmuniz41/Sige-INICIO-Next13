@@ -19,6 +19,7 @@ import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { startLoadServiceFeesTasks } from "@/actions/serviceFeeTask";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useRouter } from "next/navigation";
+import TextArea from "antd/es/input/TextArea";
 
 export const CreateServiceFeeForm = () => {
   const dispatch = useAppDispatch();
@@ -193,7 +194,7 @@ export const CreateServiceFeeForm = () => {
       <section className=" flex-col mb-4">
         <div className="flex flex-row gap-4">
           <Form.Item className="mb-3 w-[35%]" name="taskName" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
-            <Input />
+            <TextArea rows={3} />
           </Form.Item>
           <article className="flex flex-col w-[300px]">
             <Form.Item className="mb-3" label={<span className="font-bold text-md">Nomenclador</span>} name="nomenclatorId" rules={[{ required: true, message: "Campo requerido" }]}>
@@ -232,7 +233,7 @@ export const CreateServiceFeeForm = () => {
             <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cambio $ </span>} name="currencyChange" rules={[{ required: true, message: "Campo requerido" }]}>
               <InputNumber disabled className="w-full" />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Método de pago </span>} name="payMethodCoef" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item className="mb-3" label={<span className="font-bold text-md">Representación</span>} name="payMethodCoef" rules={[{ required: true, message: "Campo requerido" }]}>
               <Select
                 allowClear
                 options={payMethodOptions}
@@ -334,15 +335,6 @@ export const CreateServiceFeeForm = () => {
         <Form.Item className="mb-3 " label={<span className="font-bold text-md">Margen Comercial (%)</span>} name="commercialMargin" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber />
         </Form.Item>
-        {/* rawMaterialsByClient */}
-        <Form.Item
-          className="mb-3 "
-          label={<span className="font-bold text-md">Materias Primas Aportadas por el Cliente</span>}
-          name="rawMaterialsByClient"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
-          <InputNumber />
-        </Form.Item>
         <Form.Item className="mb-3 " label={<span className="font-bold text-md">Talento Artístico</span>} name="artisticTalentValue" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber />
         </Form.Item>
@@ -387,7 +379,6 @@ export const CreateServiceFeeForm = () => {
                     ONAT: values.ONAT,
                     payMethodCoef: values.payMethodCoef,
                     rawMaterials: values.rawMaterials,
-                    rawMaterialsByClient: values.rawMaterialsByClient,
                     taskList: values.taskList,
                     taskName: values.taskName,
                     transportationExpenses: values.transportationExpenses,
@@ -420,11 +411,9 @@ export const CreateServiceFeeForm = () => {
 export const FormSection = (props: any) => {
   const { sectionName, values, formName, valuesSetter, modalSetter, buttonText, form } = props;
   return (
-    <section className=" flex items-center w-full mb-8 bg-white-100 rounded shadow-[0px_0px_5px_0px_#00000024] ">
-      <div className="flex w-[15%] min-h-[100px] h-full justify-center items-center text-center gap-1 ">
-        <div className="flex h-full items-center">
-          <span className="text-base flex h-full items-center font-bold">{sectionName}</span>
-        </div>
+    <section className=" flex items-center w-full mb-8 bg-white-100 rounded-md p-2 shadow-[0px_0px_5px_0px_#00000024] ">
+      <div className="flex w-[15%] min-h-[100px] h-full p-2 text-center items-center justify-center">
+          <span className="text-base font-bold">{sectionName.toUpperCase()}</span>
       </div>
       <div className="flex pl-2 w-full flex-col">
         {values?.length == 0 ? (

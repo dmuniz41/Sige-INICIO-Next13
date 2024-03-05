@@ -31,6 +31,7 @@ export const ProjectView = () => {
   }, [dispatch, selectedProjectId]);
 
   const { selectedProject }: { selectedProject: IProject } = useAppSelector((state: RootState) => state?.project);
+  console.log("🚀 ~ ProjectView ~ selectedProject:", selectedProject.status)
 
   // const fields: any = [
   //   {
@@ -82,10 +83,12 @@ export const ProjectView = () => {
               <EditSvg />
               Editar
             </button>
-            <button className="toolbar-secondary-icon-btn" onClick={handleCreateOffer}>
-              <ReportMoneySvg />
-              Crear Oferta
-            </button>
+            {selectedProject.status === "Pendiente de Oferta" && (
+              <button className="toolbar-secondary-icon-btn" onClick={handleCreateOffer}>
+                <ReportMoneySvg />
+                Crear Oferta
+              </button>
+            )}
             {/* <PDFDownloadLink document={<CostSheetPDFReport fields={fields} data={PDFReportData} title={`Ficha de costo`} />} fileName={`Ficha de costo ${selectedCostSheet.taskName}`}>
               {({ blob, url, loading, error }) => (
                 <button disabled={loading} className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 rounded-full w-[2.5rem] h-[2.5rem] flex justify-center items-center">
@@ -159,15 +162,23 @@ export const ProjectView = () => {
             </div>
             <div className="flex gap-1">
               <span className="font-bold mr-2 ">Estado:</span>
-              {selectedProject.status === "Terminado" ? (
+              {selectedProject.status === "Cerrado" ? (
                 <Tag className="font-bold" color="#34b042">
                   {selectedProject.status.toUpperCase()}
                 </Tag>
               ) : selectedProject.status === "Cobrado" ? (
+                <Tag className="font-bold" color="#a2c9ff">
+                  {selectedProject.status.toUpperCase()}
+                </Tag>
+              ) : selectedProject.status === "Terminado" ? (
                 <Tag className="font-bold" color="#34395e">
                   {selectedProject.status.toUpperCase()}
                 </Tag>
-              ) : selectedProject.status === "Cerrado" ? (
+              ) : selectedProject.status === "Contratado" ? (
+                <Tag className="font-bold" color="#c6c013">
+                  {selectedProject.status.toUpperCase()}
+                </Tag>
+              ) : selectedProject.status === "Calculado" ? (
                 <Tag className="font-bold" color="#ff6600">
                   {selectedProject.status.toUpperCase()}
                 </Tag>

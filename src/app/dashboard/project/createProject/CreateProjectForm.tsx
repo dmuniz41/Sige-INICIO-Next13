@@ -100,7 +100,7 @@ export const CreateProjectForm = () => {
             <Form.Item className="mb-3" label={<span className="font-bold text-md">Proyecto</span>} name="projectName" rules={[{ required: true, message: "Campo requerido" }]}>
               <Input />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Método de pago </span>} name="payMethod" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item className="mb-3" label={<span className="font-bold text-md">Representación</span>} name="payMethod" rules={[{ required: true, message: "Campo requerido" }]}>
               <Select
                 allowClear
                 options={payMethodOptions}
@@ -155,24 +155,24 @@ export const CreateProjectForm = () => {
           Crear
         </button>
       </Form.Item>
-      <AddItemModal open={addItemModal} onCancel={() => setAddItemModal(false)} onCreate={onAddItem} />
+      <AddItemModal open={addItemModal} onCancel={() => setAddItemModal(false)} onCreate={onAddItem} listLength={itemsValues?.length} />
     </Form>
   );
 };
 
-const FormSection = (props: any) => {
+export const FormSection = (props: any) => {
   const { sectionName, values, formName, valuesSetter, modalSetter, buttonText, form } = props;
   return (
-    <section className=" flex w-[50%] bg-white-100 rounded shadow-[0px_0px_5px_0px_#00000024] ">
-      <div className="flex w-[15%] justify-center items-center text-center gap-1 ">
-        <span className="text-base font-bold">{sectionName}</span>
+    <section className=" flex w-[50%] bg-white-100 items-center rounded-md shadow-[0px_0px_5px_0px_#00000024] ">
+      <div className="flex w-[15%] min-h-[100px] h-full p-2 text-center items-center justify-center">
+        <span className="text-base font-bold">{sectionName.toUpperCase()}</span>
       </div>
       <div className="flex pl-2 w-full flex-col">
         {values?.length == 0 ? (
           <div></div>
         ) : (
           <div className="flex w-full pr-9 gap-1 pt-4 font-bold">
-            <div className="w-[100px]">
+            <div className="w-[50px]">
               <span>No.</span>
             </div>
             <div className="">
@@ -186,11 +186,11 @@ const FormSection = (props: any) => {
               {fields.map(({ key, name, ...restField }) => (
                 <div key={key} className="w-full">
                   <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[100px]" {...restField} name={[name, "idNumber"]} rules={[{ required: true }]}>
-                      <InputNumber disabled placeholder="No." className="w-full disabled:bg-white-100  disabled:text-white-900" />
+                    <Form.Item className="" {...restField} name={[name, "idNumber"]} rules={[{ required: true }]}>
+                      <Input disabled placeholder="No." className=" w-[50px] disabled:bg-white-100  disabled:text-white-900" />
                     </Form.Item>
                     <Form.Item className="grow" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
-                      <Input disabled placeholder="No." className="w-full disabled:bg-white-100  disabled:text-white-900" />
+                      <Input disabled placeholder="Descripción" className="w-full disabled:bg-white-100  disabled:text-white-900" />
                     </Form.Item>
                     <MinusCircleOutlined
                       className="mb-auto"

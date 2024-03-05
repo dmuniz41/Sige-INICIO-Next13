@@ -98,8 +98,8 @@ export const ServiceFeeView = () => {
       </article>
 
       <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-2">
-        <article className="w-full flex flex-row p-2 ">
-          <label className="font-bold mr-2 ">Descripción del servicio:</label>
+        <article className="w-full flex flex-row p-4 ">
+          <label className="font-bold mr-6 ">Descripción del servicio:</label>
           <p className="w-[25%]">{selectedServiceFee.taskName}</p>
           <div className="w-[25%] flex flex-col pl-10">
             <label className="font-bold">
@@ -137,7 +137,6 @@ export const ServiceFeeView = () => {
         <ServiceFeeViewSeccion name={`PRECIO ARTISTICO(${selectedServiceFee?.artisticTalent}%)`} value={selectedServiceFee?.artisticTalentValue} />
         <ServiceFeeViewSeccion name={`ONAT(${selectedServiceFee.ONAT}%)`} value={selectedServiceFee?.ONATValue} />
         <ServiceFeeViewSeccion name={`MARGEN COMERCIAL APLICADO (${selectedServiceFee?.commercialMargin}%)`} value={selectedServiceFee?.commercialMarginValue} />
-        <ServiceFeeViewSeccion name="MATERIAS PRIMAS Y MATERIALES APORTADOS POR EL CLIENTE" value={selectedServiceFee?.rawMaterialsByClient} />
         <article className="flex ml-[210px] justify-end pl-4 pr-4 items-center h-[39px] flex-grow bg-white-100 border-solid border-[1px] border-border_light rounded-lg">
           <div className="flex w-[150px] font-bold pl-2">MN</div>
           <Divider type="vertical" />

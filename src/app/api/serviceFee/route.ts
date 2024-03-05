@@ -114,7 +114,6 @@ export async function POST(request: Request) {
       commercialMarginValue: comercialMarginValue,
       artisticTalent: serviceFee.artisticTalent,
       artisticTalentValue: artisticTalentValue,
-      rawMaterialsByClient: serviceFee.rawMaterialsByClient,
       salePrice: salePrice,
       salePriceUSD: salePrice / serviceFee?.currencyChange,
     });
@@ -268,7 +267,6 @@ export async function PUT(request: Request) {
         commercialMarginValue: comercialMarginValue,
         artisticTalent: serviceFee.artisticTalent,
         artisticTalentValue: artisticTalentValue,
-        rawMaterialsByClient: serviceFee.rawMaterialsByClient,
         salePrice: salePrice,
         salePriceUSD: salePrice / serviceFee?.currencyChange,
       },

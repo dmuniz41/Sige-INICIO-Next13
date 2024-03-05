@@ -127,7 +127,7 @@ export const CreateOfferForm = () => {
                     value: selectedOffer?.itemsList?.map((item) => item.value).reduce((total, current) => total + current, 0),
                   })
                 );
-                dispatch(changeProjectStatus(selectedProject, "Terminado"));
+                dispatch(changeProjectStatus(selectedProject, "Calculado"));
                 dispatch(clearOffer());
                 form.resetFields();
                 router.push(`/dashboard/project/${selectedProject._id}`);
