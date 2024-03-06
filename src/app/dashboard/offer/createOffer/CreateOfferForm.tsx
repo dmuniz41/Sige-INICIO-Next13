@@ -18,8 +18,12 @@ export const CreateOfferForm = () => {
   const [form] = Form.useForm();
   const router = useRouter();
 
-  const { selectedProject }: { selectedProject: IProject } = useAppSelector((state: RootState) => state?.project);
-  const { selectedOffer }: { selectedOffer: IOffer } = useAppSelector((state: RootState) => state?.offer);
+  const { selectedProject }: { selectedProject: IProject } = useAppSelector(
+    (state: RootState) => state?.project,
+  );
+  const { selectedOffer }: { selectedOffer: IOffer } = useAppSelector(
+    (state: RootState) => state?.offer,
+  );
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
@@ -78,7 +82,9 @@ export const CreateOfferForm = () => {
               <PlusSvg width={20} height={20} />
               Añadir Item
             </button>
-            <article className={`${selectedOffer?.itemsList?.length == 0 && "hidden"} flex items-center h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-md`}>
+            <article
+              className={`${selectedOffer?.itemsList?.length == 0 && "hidden"} flex items-center h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-md`}
+            >
               <div className="flex w-[90%] justify-end  font-bold">
                 <h2>VALOR: </h2>
               </div>
@@ -98,7 +104,10 @@ export const CreateOfferForm = () => {
           </div>
           <ul className=" flex flex-col">
             {selectedProject?.itemsList?.map((item, index) => (
-              <li key={index} className=" flex w-full items-center gap-2 border-b border-border_light">
+              <li
+                key={index}
+                className=" flex w-full items-center gap-2 border-b border-border_light"
+              >
                 <div className=" flex grow justify-center font-bold border-r  border-border_light items-center h-full">
                   <p>{index + 1}</p>
                 </div>
@@ -124,8 +133,10 @@ export const CreateOfferForm = () => {
                     itemsList: selectedOffer?.itemsList,
                     projectName: selectedProject?.projectName,
                     projectId: selectedProject?._id,
-                    value: selectedOffer?.itemsList?.map((item) => item.value).reduce((total, current) => total + current, 0),
-                  })
+                    value: selectedOffer?.itemsList
+                      ?.map((item) => item.value)
+                      .reduce((total, current) => total + current, 0),
+                  }),
                 );
                 dispatch(changeProjectStatus(selectedProject, "Calculado"));
                 dispatch(clearOffer());
