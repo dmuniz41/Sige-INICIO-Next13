@@ -42,7 +42,12 @@ export const CreateItemForm = () => {
       size="middle"
     >
       <section className=" flex-col">
-        <Form.Item className="mb-3 w-[35%]" name="description" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          className="mb-3 w-[35%]"
+          name="description"
+          label={<span className="font-bold text-md">Descripción</span>}
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <TextArea rows={4} />
         </Form.Item>
 
@@ -57,11 +62,18 @@ export const CreateItemForm = () => {
         />
       </section>
 
-      <article className={`flex pl-4 items-center h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-md ${activitiesValues.length == 0 && `hidden`}`}>
+      <article
+        className={`flex pl-4 items-center h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-md ${activitiesValues.length == 0 && `hidden`}`}
+      >
         <div className="flex w-[90%] justify-end pr-4 font-bold">
           <h2>VALOR: </h2>
         </div>
-        <div className="flex w-[150px] pl-2">$ {activitiesValues.map((activity) => activity.value).reduce((total, current) => total + current, 0)}</div>
+        <div className="flex w-[150px] pl-2">
+          ${" "}
+          {activitiesValues
+            .map((activity) => activity.value)
+            .reduce((total, current) => total + current, 0).toLocaleString('DE')}
+        </div>
       </article>
 
       <Form.Item>
@@ -72,13 +84,20 @@ export const CreateItemForm = () => {
             form
               .validateFields()
               .then((values) => {
-                console.log("🚀 ~ .then ~ values:", { ...values, value: activitiesValues.map((activity) => activity.value).reduce((total, current) => total + current, 0) });
+                console.log("🚀 ~ .then ~ values:", {
+                  ...values,
+                  value: activitiesValues
+                    .map((activity) => activity.value)
+                    .reduce((total, current) => total + current, 0),
+                });
 
                 dispatch(
                   setCurrentItem({
                     ...values,
-                    value: activitiesValues.map((activity) => activity.value).reduce((total, current) => total + current, 0),
-                  })
+                    value: activitiesValues
+                      .map((activity) => activity.value)
+                      .reduce((total, current) => total + current, 0),
+                  }),
                 );
                 form.resetFields();
                 router.push("/dashboard/offer/createOffer");
@@ -92,7 +111,11 @@ export const CreateItemForm = () => {
         </button>
       </Form.Item>
 
-      <AddActivityModal open={addActivitiesModal} onCancel={() => setAddActivitiesModal(false)} onCreate={onAddActivity} />
+      <AddActivityModal
+        open={addActivitiesModal}
+        onCancel={() => setAddActivitiesModal(false)}
+        onCreate={onAddActivity}
+      />
     </Form>
   );
 };

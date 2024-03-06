@@ -11,7 +11,10 @@ import { AddRawMaterialModal } from "./AddRawMaterial";
 import { AddTaskListModal } from "./AddTaskList";
 import { AddTransportationExpensesModal } from "./AddTransportationExpenses";
 import { INomenclator } from "@/models/nomenclator";
-import { IRepresentationCoefficients, IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
+import {
+  IRepresentationCoefficients,
+  IServiceFeeAuxiliary,
+} from "@/models/serviceFeeAuxiliary";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
 import { startAddServiceFee } from "@/actions/serviceFee";
@@ -31,19 +34,29 @@ export const CreateServiceFeeForm = () => {
 
   const [addRawMaterialModal, setAddRawMaterialModal] = useState(false);
   const [addTaskListModal, setAddTaskListModal] = useState(false);
-  const [addEquipmentDepreciationModal, setAddEquipmentDepreciationModal] = useState(false);
-  const [addEquipmentMaintenanceModal, setAddEquipmentMaintenanceModal] = useState(false);
-  const [addAdministrativeExpensesModal, setAddAdministrativeExpensesModal] = useState(false);
-  const [addTransportationExpensesModal, setAddTransportationExpensesModal] = useState(false);
-  const [addHiredPersonalExpensesModal, setAddHiredPersonalExpensesModal] = useState(false);
+  const [addEquipmentDepreciationModal, setAddEquipmentDepreciationModal] =
+    useState(false);
+  const [addEquipmentMaintenanceModal, setAddEquipmentMaintenanceModal] =
+    useState(false);
+  const [addAdministrativeExpensesModal, setAddAdministrativeExpensesModal] =
+    useState(false);
+  const [addTransportationExpensesModal, setAddTransportationExpensesModal] =
+    useState(false);
+  const [addHiredPersonalExpensesModal, setAddHiredPersonalExpensesModal] =
+    useState(false);
 
   const [rawMaterialsValues, setRawMaterialsValues]: any = useState([]);
   const [taskListValues, setTaskListValues]: any = useState([]);
-  const [equipmentDepreciationValues, setEquipmentDepreciationValues]: any = useState([]);
-  const [equipmentMaintenanceValues, setEquipmentMaintenanceValues]: any = useState([]);
-  const [administrativeExpensesValues, setAdministrativeExpensesValues]: any = useState([]);
-  const [transportationExpensesValues, setTransportationExpensesValues]: any = useState([]);
-  const [hiredPersonalExpensesValues, setHiredPersonalExpensesValues]: any = useState([]);
+  const [equipmentDepreciationValues, setEquipmentDepreciationValues]: any =
+    useState([]);
+  const [equipmentMaintenanceValues, setEquipmentMaintenanceValues]: any =
+    useState([]);
+  const [administrativeExpensesValues, setAdministrativeExpensesValues]: any =
+    useState([]);
+  const [transportationExpensesValues, setTransportationExpensesValues]: any =
+    useState([]);
+  const [hiredPersonalExpensesValues, setHiredPersonalExpensesValues]: any =
+    useState([]);
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
@@ -51,33 +64,46 @@ export const CreateServiceFeeForm = () => {
     dispatch(startLoadServiceFeesTasks());
   }, [dispatch]);
 
-  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
-  serviceFeeAuxiliary?.payMethod?.map((payMethod) => payMethods.push(payMethod));
+  const { nomenclators }: any = useAppSelector(
+    (state: RootState) => state?.nomenclator,
+  );
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } =
+    useAppSelector((state: RootState) => state?.serviceFee);
+  serviceFeeAuxiliary?.payMethod?.map((payMethod) =>
+    payMethods.push(payMethod),
+  );
 
   nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Categoría de ficha de costo") serviceFeeCategory.push(nomenclator.code);
-    if (nomenclator.category === "Precio/UM en ficha de costo") valuePerUM.push(nomenclator.code);
+    if (nomenclator.category === "Categoría de ficha de costo")
+      serviceFeeCategory.push(nomenclator.code);
+    if (nomenclator.category === "Precio/UM en ficha de costo")
+      valuePerUM.push(nomenclator.code);
   });
 
-  const categoriesOptions: SelectProps["options"] = serviceFeeCategory.map((serviceFeeCategory) => {
-    return {
-      label: `${serviceFeeCategory}`,
-      value: `${serviceFeeCategory}`,
-    };
-  });
-  const valuePerUMOptions: SelectProps["options"] = valuePerUM.map((valuePerUM) => {
-    return {
-      label: `${valuePerUM}`,
-      value: `${valuePerUM}`,
-    };
-  });
-  const payMethodOptions: SelectProps["options"] = payMethods.map((payMethod) => {
-    return {
-      label: `${payMethod.representative}`,
-      value: payMethod.coefficientValue,
-    };
-  });
+  const categoriesOptions: SelectProps["options"] = serviceFeeCategory.map(
+    (serviceFeeCategory) => {
+      return {
+        label: `${serviceFeeCategory}`,
+        value: `${serviceFeeCategory}`,
+      };
+    },
+  );
+  const valuePerUMOptions: SelectProps["options"] = valuePerUM.map(
+    (valuePerUM) => {
+      return {
+        label: `${valuePerUM}`,
+        value: `${valuePerUM}`,
+      };
+    },
+  );
+  const payMethodOptions: SelectProps["options"] = payMethods.map(
+    (payMethod) => {
+      return {
+        label: `${payMethod.representative}`,
+        value: payMethod.coefficientValue,
+      };
+    },
+  );
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
@@ -114,25 +140,37 @@ export const CreateServiceFeeForm = () => {
   const onAddEquipmentDepreciation = (values: any) => {
     console.log("🚀 ~ onAddEquipmentDepreciation ~ values:", values);
     setEquipmentDepreciationValues([values, ...equipmentDepreciationValues]);
-    form.setFieldValue("equipmentDepreciation", [...equipmentDepreciationValues, values]);
+    form.setFieldValue("equipmentDepreciation", [
+      ...equipmentDepreciationValues,
+      values,
+    ]);
     setAddEquipmentDepreciationModal(false);
   };
   const onAddEquipmentMaintenance = (values: any) => {
     console.log("🚀 ~ onAddEquipmentMaintenance ~ values:", values);
     setEquipmentMaintenanceValues([values, ...equipmentMaintenanceValues]);
-    form.setFieldValue("equipmentMaintenance", [...equipmentMaintenanceValues, values]);
+    form.setFieldValue("equipmentMaintenance", [
+      ...equipmentMaintenanceValues,
+      values,
+    ]);
     setAddEquipmentMaintenanceModal(false);
   };
   const onAddAdministrativeExpenses = (values: any) => {
     console.log("🚀 ~ onAddAdministrativeExpenses ~ values:", values);
     setAdministrativeExpensesValues([values, ...administrativeExpensesValues]);
-    form.setFieldValue("administrativeExpenses", [...administrativeExpensesValues, values]);
+    form.setFieldValue("administrativeExpenses", [
+      ...administrativeExpensesValues,
+      values,
+    ]);
     setAddAdministrativeExpensesModal(false);
   };
   const onAddTransportationExpenses = (values: any) => {
     console.log("🚀 ~ onAddTransportationExpenses ~ values:", values);
     setTransportationExpensesValues([values, ...transportationExpensesValues]);
-    form.setFieldValue("transportationExpenses", [...transportationExpensesValues, values]);
+    form.setFieldValue("transportationExpenses", [
+      ...transportationExpensesValues,
+      values,
+    ]);
     setAddTransportationExpensesModal(false);
   };
   const onAddHiredPersonalExpenses = (values: any) => {
@@ -193,54 +231,111 @@ export const CreateServiceFeeForm = () => {
     >
       <section className=" flex-col mb-4">
         <div className="flex flex-row gap-4">
-          <Form.Item className="mb-3 w-[35%]" name="taskName" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            className="mb-3 w-[35%]"
+            name="taskName"
+            label={<span className="font-bold text-md">Descripción</span>}
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <TextArea rows={3} />
           </Form.Item>
           <article className="flex flex-col w-[300px]">
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Nomenclador</span>} name="nomenclatorId" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3"
+              label={<span className="font-bold text-md">Nomenclador</span>}
+              name="nomenclatorId"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <Input />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Categoría</span>} name="category" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3"
+              label={<span className="font-bold text-md">Categoría</span>}
+              name="category"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <Select
                 allowClear
                 options={categoriesOptions}
                 showSearch
                 onSelect={(value) => {
-                  value === "Trabajo Pladur" ? form.setFieldValue("commercialMargin", 12) : form.setFieldValue("commercialMargin", 15);
+                  value === "Trabajo Pladur"
+                    ? form.setFieldValue("commercialMargin", 12)
+                    : form.setFieldValue("commercialMargin", 15);
                 }}
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-                filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                filterOption={(input: any, option: any) =>
+                  (option?.label ?? "").toLowerCase().includes(input)
+                }
+                filterSort={(optionA: any, optionB: any) =>
+                  (optionA?.label ?? "")
+                    .toLowerCase()
+                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                }
               />
             </Form.Item>
           </article>
           <article className="flex flex-col w-[300px]">
-            <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cantidad de empleados</span>} name="workersAmount" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3 "
+              label={
+                <span className="font-bold text-md">Cantidad de empleados</span>
+              }
+              name="workersAmount"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <InputNumber className="w-full" />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Precio/UM</span>} name="valuePerUnitMeasure" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3"
+              label={<span className="font-bold text-md">Precio/UM</span>}
+              name="valuePerUnitMeasure"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <Select
                 allowClear
                 options={valuePerUMOptions}
                 showSearch
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-                filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                filterOption={(input: any, option: any) =>
+                  (option?.label ?? "").toLowerCase().includes(input)
+                }
+                filterSort={(optionA: any, optionB: any) =>
+                  (optionA?.label ?? "")
+                    .toLowerCase()
+                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                }
               />
             </Form.Item>
           </article>
           <article className="flex flex-col w-[300px]">
-            <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cambio $ </span>} name="currencyChange" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3 "
+              label={<span className="font-bold text-md">Cambio $ </span>}
+              name="currencyChange"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <InputNumber disabled className="w-full" />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Representación</span>} name="payMethodCoef" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3"
+              label={<span className="font-bold text-md">Representación</span>}
+              name="payMethodCoef"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <Select
                 allowClear
                 options={payMethodOptions}
                 showSearch
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-                filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                filterOption={(input: any, option: any) =>
+                  (option?.label ?? "").toLowerCase().includes(input)
+                }
+                filterSort={(optionA: any, optionB: any) =>
+                  (optionA?.label ?? "")
+                    .toLowerCase()
+                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                }
               />
             </Form.Item>
           </article>
@@ -315,27 +410,59 @@ export const CreateServiceFeeForm = () => {
           <span>Coeficientes de Complejidad</span>
         </div>
         <div className="flex gap-2 pt-3 items-center">
-          <Form.Item className="mb-3" label={<span className="font-bold text-md">Alta</span>} name="highComplexity" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            className="mb-3"
+            label={<span className="font-bold text-md">Alta</span>}
+            name="highComplexity"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <InputNumber />
           </Form.Item>
-          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Media</span>} name="mediumComplexity" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            className="mb-3 "
+            label={<span className="font-bold text-md">Media</span>}
+            name="mediumComplexity"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <InputNumber />
           </Form.Item>
-          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Baja</span>} name="lowComplexity" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            className="mb-3 "
+            label={<span className="font-bold text-md">Baja</span>}
+            name="lowComplexity"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <InputNumber />
           </Form.Item>
         </div>
       </article>
       <section className="flex gap-4 mt-4">
         {/* ONAT */}
-        <Form.Item className="mb-3 " label={<span className="font-bold text-md">ONAT (%)</span>} name="ONAT" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          className="mb-3 "
+          label={<span className="font-bold text-md">ONAT (%)</span>}
+          name="ONAT"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <InputNumber />
         </Form.Item>
         {/* commercialMargin */}
-        <Form.Item className="mb-3 " label={<span className="font-bold text-md">Margen Comercial (%)</span>} name="commercialMargin" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          className="mb-3 "
+          label={
+            <span className="font-bold text-md">Margen Comercial (%)</span>
+          }
+          name="commercialMargin"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <InputNumber />
         </Form.Item>
-        <Form.Item className="mb-3 " label={<span className="font-bold text-md">Talento Artístico</span>} name="artisticTalentValue" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          className="mb-3 "
+          label={<span className="font-bold text-md">Talento Artístico</span>}
+          name="artisticTalentValue"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <InputNumber />
         </Form.Item>
       </section>
@@ -384,7 +511,7 @@ export const CreateServiceFeeForm = () => {
                     transportationExpenses: values.transportationExpenses,
                     valuePerUnitMeasure: values.valuePerUnitMeasure,
                     workersAmount: values.workersAmount,
-                  })
+                  }),
                 );
                 form.resetFields();
                 router.push("/dashboard/serviceFees");
@@ -397,23 +524,59 @@ export const CreateServiceFeeForm = () => {
           Crear
         </button>
       </Form.Item>
-      <AddRawMaterialModal open={addRawMaterialModal} onCancel={() => setAddRawMaterialModal(false)} onCreate={onAddRawMaterial} />
-      <AddTaskListModal open={addTaskListModal} onCancel={() => setAddTaskListModal(false)} onCreate={onAddTaskList} />
-      <AddEquipmentDepreciationModal open={addEquipmentDepreciationModal} onCancel={() => setAddEquipmentDepreciationModal(false)} onCreate={onAddEquipmentDepreciation} />
-      <AddEquipmentMaintenanceModal open={addEquipmentMaintenanceModal} onCancel={() => setAddEquipmentMaintenanceModal(false)} onCreate={onAddEquipmentMaintenance} />
-      <AddAdministrativeExpensesModal open={addAdministrativeExpensesModal} onCancel={() => setAddAdministrativeExpensesModal(false)} onCreate={onAddAdministrativeExpenses} />
-      <AddTransportationExpensesModal open={addTransportationExpensesModal} onCancel={() => setAddTransportationExpensesModal(false)} onCreate={onAddTransportationExpenses} />
-      <AddHiredPersonalExpensesModal open={addHiredPersonalExpensesModal} onCancel={() => setAddHiredPersonalExpensesModal(false)} onCreate={onAddHiredPersonalExpenses} />
+      <AddRawMaterialModal
+        open={addRawMaterialModal}
+        onCancel={() => setAddRawMaterialModal(false)}
+        onCreate={onAddRawMaterial}
+      />
+      <AddTaskListModal
+        open={addTaskListModal}
+        onCancel={() => setAddTaskListModal(false)}
+        onCreate={onAddTaskList}
+      />
+      <AddEquipmentDepreciationModal
+        open={addEquipmentDepreciationModal}
+        onCancel={() => setAddEquipmentDepreciationModal(false)}
+        onCreate={onAddEquipmentDepreciation}
+      />
+      <AddEquipmentMaintenanceModal
+        open={addEquipmentMaintenanceModal}
+        onCancel={() => setAddEquipmentMaintenanceModal(false)}
+        onCreate={onAddEquipmentMaintenance}
+      />
+      <AddAdministrativeExpensesModal
+        open={addAdministrativeExpensesModal}
+        onCancel={() => setAddAdministrativeExpensesModal(false)}
+        onCreate={onAddAdministrativeExpenses}
+      />
+      <AddTransportationExpensesModal
+        open={addTransportationExpensesModal}
+        onCancel={() => setAddTransportationExpensesModal(false)}
+        onCreate={onAddTransportationExpenses}
+      />
+      <AddHiredPersonalExpensesModal
+        open={addHiredPersonalExpensesModal}
+        onCancel={() => setAddHiredPersonalExpensesModal(false)}
+        onCreate={onAddHiredPersonalExpenses}
+      />
     </Form>
   );
 };
 
 export const FormSection = (props: any) => {
-  const { sectionName, values, formName, valuesSetter, modalSetter, buttonText, form } = props;
+  const {
+    sectionName,
+    values,
+    formName,
+    valuesSetter,
+    modalSetter,
+    buttonText,
+    form,
+  } = props;
   return (
     <section className=" flex items-center w-full mb-8 bg-white-100 rounded-md p-2 shadow-[0px_0px_5px_0px_#00000024] ">
       <div className="flex w-[15%] min-h-[100px] h-full p-2 text-center items-center justify-center">
-          <span className="text-base font-bold">{sectionName.toUpperCase()}</span>
+        <span className="text-base font-bold">{sectionName.toUpperCase()}</span>
       </div>
       <div className="flex pl-2 w-full flex-col">
         {values?.length == 0 ? (
@@ -443,20 +606,64 @@ export const FormSection = (props: any) => {
               {fields.map(({ key, name, ...restField }) => (
                 <div key={key} className="w-full">
                   <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="grow" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
-                      <Input disabled placeholder="Descripción" className="w-full disabled:bg-white-100  disabled:text-white-900" />
+                    <Form.Item
+                      className="grow"
+                      {...restField}
+                      name={[name, "description"]}
+                      rules={[{ required: true }]}
+                    >
+                      <Input
+                        disabled
+                        placeholder="Descripción"
+                        className="w-full disabled:bg-white-100  disabled:text-white-900"
+                      />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "unitMeasure"]} className="w-[200px]" rules={[{ required: true }]}>
-                      <Input disabled placeholder="Unidad de Medida" className=" disabled:bg-white-100 disabled:text-white-900" />
+                    <Form.Item
+                      {...restField}
+                      name={[name, "unitMeasure"]}
+                      className="w-[200px]"
+                      rules={[{ required: true }]}
+                    >
+                      <Input
+                        disabled
+                        placeholder="Unidad de Medida"
+                        className=" disabled:bg-white-100 disabled:text-white-900"
+                      />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "amount"]} className="w-[88px]" rules={[{ required: true }]}>
-                      <Input disabled placeholder="Cantidad" className=" disabled:bg-white-100  disabled:text-white-900" />
+                    <Form.Item
+                      {...restField}
+                      name={[name, "amount"]}
+                      className="w-[88px]"
+                      rules={[{ required: true }]}
+                    >
+                      <Input
+                        disabled
+                        placeholder="Cantidad"
+                        className=" disabled:bg-white-100  disabled:text-white-900"
+                      />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "price"]} className="w-[88px]" rules={[{ required: true }]}>
-                      <Input disabled placeholder="Precio" className=" disabled:bg-white-100  disabled:text-white-900" />
+                    <Form.Item
+                      {...restField}
+                      name={[name, "price"]}
+                      className="w-[88px]"
+                      rules={[{ required: true }]}
+                    >
+                      <Input
+                        disabled
+                        placeholder="Precio"
+                        className=" disabled:bg-white-100  disabled:text-white-900"
+                      />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "value"]} className="w-[88px]" rules={[{ required: true }]}>
-                      <Input disabled className=" disabled:bg-white-100  disabled:text-white-900" />
+                    <Form.Item
+                      {...restField}
+                      name={[name, "value"]}
+                      className="w-[88px]"
+                      rules={[{ required: true }]}
+                    >
+                      <Input
+                        disabled
+                        className=" disabled:bg-white-100  disabled:text-white-900"
+                      />
                     </Form.Item>
                     <MinusCircleOutlined
                       className="mb-auto"
@@ -469,7 +676,13 @@ export const FormSection = (props: any) => {
                 </div>
               ))}
               <Form.Item className="justify-center w-full">
-                <Button className="flex flex-row justify-center items-center" block type="dashed" onClick={() => modalSetter(true)} icon={<PlusOutlined />}>
+                <Button
+                  className="flex flex-row justify-center items-center"
+                  block
+                  type="dashed"
+                  onClick={() => modalSetter(true)}
+                  icon={<PlusOutlined />}
+                >
                   {buttonText}
                 </Button>
               </Form.Item>
