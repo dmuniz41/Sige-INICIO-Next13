@@ -23,7 +23,6 @@ export const startAddProject = ({ ...project }) => {
           payMethod: project.payMethod,
           profits: project.profits,
           projectName: project.projectName,
-          projectNumber: project.projectNumber.toString(),
           status: project.status,
           totalValue: project.totalValue,
         },
@@ -64,7 +63,6 @@ export const startUpdateProject = ({ ...project }) => {
           payMethod: project.payMethod,
           profits: project.profits,
           projectName: project.projectName,
-          projectNumber: project.projectNumber,
           status: project.status,
           totalValue: project.totalValue,
         },
@@ -203,9 +201,11 @@ export const projectLoaded = (projects: IProject[]) => ({
   type: types.projectsLoaded,
   payload: projects,
 });
-export const clearOffer = () => ({
+export const clearOffer = () => {
+  console.log('Clear')
+  return {
   type: types.clearOffer,
-});
+}};
 
 const deleteProject = (id: string) => ({
   type: types.deleteProject,
