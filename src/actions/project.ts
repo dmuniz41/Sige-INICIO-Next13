@@ -203,9 +203,11 @@ export const projectLoaded = (projects: IProject[]) => ({
   type: types.projectsLoaded,
   payload: projects,
 });
-export const clearOffer = () => ({
+export const clearOffer = () => {
+  console.log('Clear')
+  return {
   type: types.clearOffer,
-});
+}};
 
 const deleteProject = (id: string) => ({
   type: types.deleteProject,

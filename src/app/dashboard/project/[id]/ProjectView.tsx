@@ -10,7 +10,7 @@ import React, { useEffect } from "react";
 
 import { EditSvg } from "@/app/global/EditSvg";
 import CostSheetPDFReport from "@/helpers/CostSheetPDFReport";
-import { changeProjectStatus, loadSelectedProject } from "@/actions/project";
+import { changeProjectStatus, clearOffer, loadSelectedProject } from "@/actions/project";
 import { IProject } from "@/models/project";
 import { ProjectViewTable } from "./ProjectViewTable";
 import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
@@ -31,7 +31,6 @@ export const ProjectView = () => {
   }, [dispatch, selectedProjectId]);
 
   const { selectedProject }: { selectedProject: IProject } = useAppSelector((state: RootState) => state?.project);
-  console.log("🚀 ~ ProjectView ~ selectedProject:", selectedProject.status)
 
   // const fields: any = [
   //   {
@@ -71,6 +70,8 @@ export const ProjectView = () => {
     router.push(`/dashboard/project/editProject`);
   };
   const handleCreateOffer = (): void => {
+    dispatch(clearOffer())
+    
     router.push(`/dashboard/offer/createOffer`);
   };
 
