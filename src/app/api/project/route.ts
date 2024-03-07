@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
+import moment from "moment";
 
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
 import Project, { IProject } from "@/models/project";
-import moment from "moment";
 
 export async function POST(request: Request) {
   const { ...project }: IProject = await request.json();
   const accessToken = request.headers.get("accessToken");
+  let newProjectNumber = "";
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(
@@ -18,29 +19,43 @@ export async function POST(request: Request) {
         },
         {
           status: 401,
-        }
+        },
       );
     }
     await connectDB();
     let DBProject = await Project.findOne({
-      $or: [{ projectName: project.projectName }, { projectNumber: project.projectNumber }],
+      $or: [
+        { projectName: project.projectName },
+        { projectNumber: project.projectNumber },
+      ],
     });
 
     if (DBProject) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Ya existe un proyecto con ese nombre o número de solicitud.\n (El nombre de los proyectos y número de solicitud deben ser únicos)",
+          message:
+            "Ya existe un proyecto con ese nombre o número de solicitud.\n (El nombre de los proyectos y número de solicitud deben ser únicos)",
         },
         {
           status: 409,
-        }
+        },
       );
     }
 
     let newKey = generateRandomString(26);
     const simplifyYear = moment().year() % 100;
-    const newProjectNumber = `${(await Project.find()).length + 1}/${simplifyYear}`;
+
+    if (project.payMethod.localeCompare("efectivo")) {
+      const arrayLength = (await Project.find({ payMethod: "Efectivo" }))
+        .length;
+      newProjectNumber = `${arrayLength + 1}/${simplifyYear}`;
+    } else {
+      const arrayLength = (
+        await Project.find({ $nor: [{ payMethod: "Efectivo" }] })
+      ).length;
+      newProjectNumber = `${arrayLength + 1}/${simplifyYear}`;
+    }
 
     const newProject = new Project({
       clientName: project.clientName,
@@ -71,7 +86,7 @@ export async function POST(request: Request) {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
         },
-      }
+      },
     );
   } catch (error) {
     if (error instanceof Error) {
@@ -82,7 +97,7 @@ export async function POST(request: Request) {
         },
         {
           status: 400,
-        }
+        },
       );
     }
   }
@@ -99,7 +114,7 @@ export async function PUT(request: Request) {
         },
         {
           status: 401,
-        }
+        },
       );
     }
     await connectDB();
@@ -113,7 +128,7 @@ export async function PUT(request: Request) {
         },
         {
           status: 409,
-        }
+        },
       );
     }
 
@@ -134,7 +149,7 @@ export async function PUT(request: Request) {
         profits: project.profits,
         totalValue: project.totalValue,
       },
-      { new: true }
+      { new: true },
     );
 
     return new NextResponse(
@@ -147,7 +162,7 @@ export async function PUT(request: Request) {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
         },
-      }
+      },
     );
   } catch (error) {
     if (error instanceof Error) {
@@ -158,7 +173,7 @@ export async function PUT(request: Request) {
         },
         {
           status: 400,
-        }
+        },
       );
     }
   }
@@ -174,7 +189,7 @@ export async function GET(request: Request) {
         },
         {
           status: 401,
-        }
+        },
       );
     }
     await connectDB();
@@ -191,7 +206,7 @@ export async function GET(request: Request) {
           "Content-Type": "application/json",
         },
         status: 200,
-      }
+      },
     );
   } catch (error) {
     if (error instanceof Error) {
@@ -202,7 +217,7 @@ export async function GET(request: Request) {
         },
         {
           status: 400,
-        }
+        },
       );
     }
   }
@@ -220,7 +235,7 @@ export async function PATCH(request: Request) {
         },
         {
           status: 401,
-        }
+        },
       );
     }
     await connectDB();
@@ -247,7 +262,7 @@ export async function PATCH(request: Request) {
           "Content-Type": "application/json",
         },
         status: 200,
-      }
+      },
     );
   } catch (error) {
     if (error instanceof Error) {
@@ -258,7 +273,7 @@ export async function PATCH(request: Request) {
         },
         {
           status: 400,
-        }
+        },
       );
     }
   }
