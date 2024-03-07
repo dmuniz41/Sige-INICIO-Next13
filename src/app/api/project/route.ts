@@ -15,19 +15,16 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
-        },
+          status: 401
+        }
       );
     }
     await connectDB();
     let DBProject = await Project.findOne({
-      $or: [
-        { projectName: project.projectName },
-        { projectNumber: project.projectNumber },
-      ],
+      $or: [{ projectName: project.projectName }, { projectNumber: project.projectNumber }]
     });
 
     if (DBProject) {
@@ -35,25 +32,23 @@ export async function POST(request: Request) {
         {
           ok: false,
           message:
-            "Ya existe un proyecto con ese nombre o número de solicitud.\n (El nombre de los proyectos y número de solicitud deben ser únicos)",
+            "Ya existe un proyecto con ese nombre o número de solicitud.\n (El nombre de los proyectos y número de solicitud deben ser únicos)"
         },
         {
-          status: 409,
-        },
+          status: 409
+        }
       );
     }
 
     let newKey = generateRandomString(26);
     const simplifyYear = moment().year() % 100;
 
-    if (project.payMethod.localeCompare("efectivo")) {
-      const arrayLength = (await Project.find({ payMethod: "Efectivo" }))
-        .length;
+    if (project.payMethod ==="EFECTIVO") {
+      const arrayLength = (await Project.find({ payMethod: "EFECTIVO" })).length;
       newProjectNumber = `${arrayLength + 1}/${simplifyYear}`;
-    } else {
-      const arrayLength = (
-        await Project.find({ $nor: [{ payMethod: "Efectivo" }] })
-      ).length;
+    } else if (project.payMethod !== "EFECTIVO") {
+      const arrayLength = (await Project.find({ $nor: [{ payMethod: "EFECTIVO" }] })).length;
+      console.log("🚀 ~ POST ~ arrayLength:", arrayLength);
       newProjectNumber = `${arrayLength + 1}/${simplifyYear}`;
     }
 
@@ -71,7 +66,7 @@ export async function POST(request: Request) {
       projectName: project.projectName,
       projectNumber: newProjectNumber,
       status: project.status,
-      totalValue: project.totalValue ?? 0,
+      totalValue: project.totalValue ?? 0
     });
 
     await newProject.save();
@@ -79,25 +74,25 @@ export async function POST(request: Request) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        newProject,
+        newProject
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
-      },
+          "Content-Type": "application/json"
+        }
+      }
     );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: error.message
         },
         {
-          status: 400,
-        },
+          status: 400
+        }
       );
     }
   }
@@ -110,11 +105,11 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
-        },
+          status: 401
+        }
       );
     }
     await connectDB();
@@ -124,11 +119,11 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "El proyecto a actualizar no existe",
+          message: "El proyecto a actualizar no existe"
         },
         {
-          status: 409,
-        },
+          status: 409
+        }
       );
     }
 
@@ -142,38 +137,37 @@ export async function PUT(request: Request) {
         currency: project.currency,
         initDate: project.initDate,
         deliveryDate: project.deliveryDate,
-        projectNumber: project.projectNumber,
         itemsList: project.itemsList,
         status: project.status,
         expenses: project.expenses,
         profits: project.profits,
-        totalValue: project.totalValue,
+        totalValue: project.totalValue
       },
-      { new: true },
+      { new: true }
     );
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        updatedProject,
+        updatedProject
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
-      },
+          "Content-Type": "application/json"
+        }
+      }
     );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: error.message
         },
         {
-          status: 400,
-        },
+          status: 400
+        }
       );
     }
   }
@@ -185,11 +179,11 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
-        },
+          status: 401
+        }
       );
     }
     await connectDB();
@@ -198,26 +192,26 @@ export async function GET(request: Request) {
       JSON.stringify({
         ok: true,
         projectCounter: listOfProjects.length,
-        listOfProjects,
+        listOfProjects
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
-        status: 200,
-      },
+        status: 200
+      }
     );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: error.message
         },
         {
-          status: 400,
-        },
+          status: 400
+        }
       );
     }
   }
@@ -231,11 +225,11 @@ export async function PATCH(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
-        },
+          status: 401
+        }
       );
     }
     await connectDB();
@@ -244,7 +238,7 @@ export async function PATCH(request: Request) {
     if (!projectToDelete) {
       return NextResponse.json({
         ok: true,
-        message: "El proyecto a borrar no existe",
+        message: "El proyecto a borrar no existe"
       });
     }
 
@@ -254,26 +248,26 @@ export async function PATCH(request: Request) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        projectToDelete,
+        projectToDelete
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
-        status: 200,
-      },
+        status: 200
+      }
     );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: error.message
         },
         {
-          status: 400,
-        },
+          status: 400
+        }
       );
     }
   }

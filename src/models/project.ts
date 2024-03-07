@@ -59,7 +59,6 @@ const ProjectSchema = new Schema<IProject, Model<IProject>>({
   },
   projectNumber: {
     type: String,
-    unique: true,
   },
   itemsList: [
     {

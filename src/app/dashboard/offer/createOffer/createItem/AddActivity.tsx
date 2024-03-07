@@ -17,7 +17,7 @@ interface CollectionCreateFormProps {
 export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
   open,
   onCreate,
-  onCancel,
+  onCancel
 }) => {
   const [activityValue, setActivityValue] = useState<number>(0);
   const [size, setSize] = useState<number>(0);
@@ -30,17 +30,15 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
   }, [dispatch]);
 
   const { serviceFees }: { serviceFees: IServiceFee[] } = useAppSelector(
-    (state: RootState) => state?.serviceFee,
+    (state: RootState) => state?.serviceFee
   );
 
-  const listOfActivities: SelectProps["options"] = serviceFees.map(
-    (serviceFee) => {
-      return {
-        label: `${serviceFee.taskName}`,
-        value: `${serviceFee.taskName}`,
-      };
-    },
-  );
+  const listOfActivities: SelectProps["options"] = serviceFees.map((serviceFee) => {
+    return {
+      label: `${serviceFee.taskName}`,
+      value: `${serviceFee.taskName}`
+    };
+  });
 
   const [form] = Form.useForm();
   return (
@@ -79,15 +77,15 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                           description: values.description.value,
                           price: Number(currentPrice.toFixed(2)),
                           unitMeasure: currentUnitMeasure,
-                          value: Number(activityValue.toFixed(2)),
+                          value: Number(activityValue.toFixed(2))
                         }
                       : {
                           amount: values.amount,
                           description: values.description.value,
                           price: Number(currentPrice.toFixed(2)),
                           unitMeasure: currentUnitMeasure,
-                          value: Number(activityValue.toFixed(2)),
-                        },
+                          value: Number(activityValue.toFixed(2))
+                        }
                   );
                   form.resetFields();
                   setActivityValue(0);
@@ -102,7 +100,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
           >
             Añadir
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form form={form} layout="horizontal" name="addActivity" size="middle">
@@ -119,7 +117,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
             options={listOfActivities}
             onSelect={(value) => {
               const selectedServiceFee = serviceFees.find(
-                (serviceFee) => serviceFee.taskName === value.label,
+                (serviceFee) => serviceFee.taskName === value.label
               );
               setCurrentUnitMeasure(selectedServiceFee?.valuePerUnitMeasure!);
               setCurrentPrice(selectedServiceFee?.salePrice!);
@@ -131,7 +129,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                 height: 0,
                 width: 0,
                 amount: 0,
-                size: 0,
+                size: 0
               });
             }}
             showSearch
@@ -168,12 +166,10 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
             precision={2}
             className="w-full"
             onChange={() => {
-              setSize(
-                form.getFieldValue("width") * form.getFieldValue("height"),
-              );
+              setSize(form.getFieldValue("width") * form.getFieldValue("height"));
               form.setFieldValue(
                 "size",
-                form.getFieldValue("width") * form.getFieldValue("height"),
+                form.getFieldValue("width") * form.getFieldValue("height")
               );
               setActivityValue(form.getFieldValue("size") * currentPrice);
             }}
@@ -189,12 +185,10 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
             precision={2}
             className="w-full"
             onChange={() => {
-              setSize(
-                form.getFieldValue("width") * form.getFieldValue("height"),
-              );
+              setSize(form.getFieldValue("width") * form.getFieldValue("height"));
               form.setFieldValue(
                 "size",
-                form.getFieldValue("width") * form.getFieldValue("height"),
+                form.getFieldValue("width") * form.getFieldValue("height")
               );
               setActivityValue(form.getFieldValue("size") * currentPrice);
             }}
@@ -212,14 +206,11 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
           <div className=" flex gap-2 pl-2 mb-4">
             <span className="font-bold">Tamaño:</span>
             <span>
-              {!size ? 0 : size.toLocaleString("DE")}{" "}
-              {currentUnitMeasure.replace("$/", "")}
+              {!size ? 0 : size.toLocaleString("DE")} {currentUnitMeasure.replace("$/", "")}
             </span>
           </div>
         ) : (
-          <div
-            className={`flex gap-2 pl-2 mb-4 ${currentUnitMeasure.includes("u") && "hidden"}`}
-          >
+          <div className={`flex gap-2 pl-2 mb-4 ${currentUnitMeasure.includes("u") && "hidden"}`}>
             <span className="font-bold">Cantidad:</span>
             <span>
               {!form.getFieldValue("amount")

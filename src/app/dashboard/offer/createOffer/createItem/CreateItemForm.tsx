@@ -72,7 +72,8 @@ export const CreateItemForm = () => {
           ${" "}
           {activitiesValues
             .map((activity) => activity.value)
-            .reduce((total, current) => total + current, 0).toLocaleString('DE')}
+            .reduce((total, current) => total + current, 0)
+            .toLocaleString("DE")}
         </div>
       </article>
 
@@ -88,7 +89,7 @@ export const CreateItemForm = () => {
                   ...values,
                   value: activitiesValues
                     .map((activity) => activity.value)
-                    .reduce((total, current) => total + current, 0),
+                    .reduce((total, current) => total + current, 0)
                 });
 
                 dispatch(
@@ -96,8 +97,8 @@ export const CreateItemForm = () => {
                     ...values,
                     value: activitiesValues
                       .map((activity) => activity.value)
-                      .reduce((total, current) => total + current, 0),
-                  }),
+                      .reduce((total, current) => total + current, 0)
+                  })
                 );
                 form.resetFields();
                 router.push("/dashboard/offer/createOffer");
