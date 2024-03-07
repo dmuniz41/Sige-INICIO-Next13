@@ -5,6 +5,7 @@ import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
 import Project, { IProject } from "@/models/project";
+import Offer from "@/models/offer";
 
 export async function POST(request: Request) {
   const { ...project }: IProject = await request.json();
@@ -43,12 +44,11 @@ export async function POST(request: Request) {
     let newKey = generateRandomString(26);
     const simplifyYear = moment().year() % 100;
 
-    if (project.payMethod ==="EFECTIVO") {
+    if (project.payMethod === "EFECTIVO") {
       const arrayLength = (await Project.find({ payMethod: "EFECTIVO" })).length;
       newProjectNumber = `${arrayLength + 1}/${simplifyYear}`;
     } else if (project.payMethod !== "EFECTIVO") {
       const arrayLength = (await Project.find({ $nor: [{ payMethod: "EFECTIVO" }] })).length;
-      console.log("🚀 ~ POST ~ arrayLength:", arrayLength);
       newProjectNumber = `${arrayLength + 1}/${simplifyYear}`;
     }
 
@@ -244,6 +244,8 @@ export async function PATCH(request: Request) {
 
     if (projectToDelete) {
       await Project.findByIdAndDelete(id);
+      const offersToDelete = await Offer.find({ projectId: id });
+      offersToDelete.map(async (offer: any) => await Offer.findByIdAndDelete(offer._id));
     }
     return new NextResponse(
       JSON.stringify({
