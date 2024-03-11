@@ -3,30 +3,27 @@ import { Button, Input, Space, Table, Tag, Tooltip } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import dynamic from "next/dynamic";
 import Highlighter from "react-highlight-words";
-import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Swal from "sweetalert2";
-import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
+import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import type { InputRef } from "antd";
 
+import {
+  clientNomenclatorsStartLoading,
+  startAddClientNomenclator,
+  startDeleteClientNomenclator
+} from "@/actions/nomenclators/client";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
-import { nomenclatorsStartLoading } from "@/actions/nomenclator";
-import { PDFSvg } from "@/app/global/PDFSvg";
+import { EditSvg } from "@/app/global/EditSvg";
+import { IClientNomenclator } from "@/models/nomenclators/client";
 import { PlusSvg } from "@/app/global/PlusSvg";
-import { projectsStartLoading, startDeleteProject } from "@/actions/project";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
-import { SeeSvg } from "@/app/global/SeeSvg";
-import { INomenclator } from "@/models/nomenclator";
-import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
-import { loadSelectedOffer } from "@/actions/offer";
-import { clientNomenclatorsStartLoading, startDeleteClientNomenclator } from "@/actions/nomenclators/client";
-import { IClientNomenclator } from "@/models/nomenclators/client";
-import { EditSvg } from "@/app/global/EditSvg";
+import { CreateClientNomenclatorForm } from "./CreateClientNomenclaorForm";
 
 type DataIndex = keyof IClientNomenclator;
 
@@ -34,7 +31,8 @@ const ClientNomenclatorsTable: React.FC = () => {
   const dispatch = useAppDispatch();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [filteredData, setFilteredData] = useState<IClientNomenclator[]>();
+  const [createNewModal, setCreateNewModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
   const searchInput = useRef<InputRef>(null);
   const router = useRouter();
   const { data: sessionData } = useSession();
@@ -61,6 +59,11 @@ const ClientNomenclatorsTable: React.FC = () => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
+  };
+
+  const onCreate = (values: IClientNomenclator): void => {
+    dispatch(startAddClientNomenclator(values));
+    setCreateNewModal(false);
   };
 
   const handleDelete = (id: string) => {
@@ -92,9 +95,8 @@ const ClientNomenclatorsTable: React.FC = () => {
     setSearchText("");
   };
   const handleEdit = (record: IClientNomenclator) => {
-    console.log("🚀 ~ handleEdit ~ record:", record)
+    console.log("🚀 ~ handleEdit ~ record:", record);
   };
-
 
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<IClientNomenclator> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
@@ -152,8 +154,7 @@ const ClientNomenclatorsTable: React.FC = () => {
       <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
     onFilter: (value, record) =>
-      record[dataIndex]!
-        .toString()
+      record[dataIndex]!.toString()
         .toLowerCase()
         .includes((value as string).toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
@@ -217,28 +218,25 @@ const ClientNomenclatorsTable: React.FC = () => {
       width: "5%",
       render: (_, { ...record }) => (
         <div className="flex gap-1">
+          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+            <button
+              disabled={!canList}
+              onClick={() => handleEdit(record)}
+              className="table-see-action-btn"
+            >
+              <EditSvg width={20} height={20} />
+            </button>
+          </Tooltip>
 
-            <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
-              <button
-                disabled={!canList}
-                onClick={() => handleEdit(record)}
-                className="table-see-action-btn"
-              >
-                <EditSvg width={20} height={20} />
-              </button>
-            </Tooltip>
-
-  
-            <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-              <button
-                disabled={!canDelete}
-                onClick={() => handleDelete(record._id)}
-                className="table-delete-action-btn"
-              >
-                <DeleteSvg width={20} height={20} />
-              </button>
-            </Tooltip>
-
+          <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
+            <button
+              disabled={!canDelete}
+              onClick={() => handleDelete(record._id)}
+              className="table-delete-action-btn"
+            >
+              <DeleteSvg width={20} height={20} />
+            </button>
+          </Tooltip>
         </div>
       )
     }
@@ -249,8 +247,8 @@ const ClientNomenclatorsTable: React.FC = () => {
       <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <div className="flex gap-2">
           <button
-            onClick={() => router.push("/dashboard/project/createProject")}
-            className={`${true ? "toolbar-primary-icon-btn" : "bg-success-200"} `}
+            onClick={() => setCreateNewModal(true)}
+            className={`${canCreate ? "toolbar-primary-icon-btn" : "bg-success-200"} `}
           >
             <PlusSvg />
             Nuevo
@@ -260,11 +258,11 @@ const ClientNomenclatorsTable: React.FC = () => {
           <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
             <button
               className={`${
-                true
+                canList
                   ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
                   : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={() => dispatch(projectsStartLoading())}
+              onClick={() => dispatch(clientNomenclatorsStartLoading())}
             >
               <RefreshSvg />
             </button>
@@ -277,6 +275,12 @@ const ClientNomenclatorsTable: React.FC = () => {
         dataSource={data}
         pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
         className="shadow-md"
+      />
+
+      <CreateClientNomenclatorForm
+        open={createNewModal}
+        onCancel={() => setCreateNewModal(false)}
+        onCreate={onCreate}
       />
     </>
   );

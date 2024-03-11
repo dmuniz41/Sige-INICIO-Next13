@@ -100,7 +100,7 @@ export const CreateNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ ope
         </div>,
       ]}
     >
-      <Form form={form} layout="vertical" name="createUserForm" size="middle">
+      <Form form={form} layout="vertical" name="createNomenclatorForm" size="middle">
         <Form.Item name="category" label="Categoría" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select allowClear style={{ width: "100%" }} options={category} />
         </Form.Item>

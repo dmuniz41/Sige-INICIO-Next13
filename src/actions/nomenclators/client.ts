@@ -69,10 +69,9 @@ export const startDeleteClientNomenclator = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/client?id=${id}`,
-        { headers: { accessToken: token } }
-      )
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/client?id=${id}`, {
+        headers: { accessToken: token }
+      })
       .then(() => {
         dispatch(deleteClientNomenclator(id));
         dispatch(clientNomenclatorsStartLoading());
