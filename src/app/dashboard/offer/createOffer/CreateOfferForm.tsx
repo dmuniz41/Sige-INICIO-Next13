@@ -141,7 +141,7 @@ export const CreateOfferForm = () => {
                 dispatch(changeProjectStatus(selectedProject, "Calculado"));
                 dispatch(clearOffer());
                 form.resetFields();
-                router.push(`/dashboard/project/${selectedProject._id}`);
+                router.push(`/dashboard/project`);
               })
               .catch((error) => {
                 console.log("Validate Failed:", error);

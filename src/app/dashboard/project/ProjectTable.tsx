@@ -90,8 +90,12 @@ const ProjectTable: React.FC = () => {
     dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
-  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
+    (state: RootState) => state?.serviceFee
+  );
+  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector(
+    (state: RootState) => state?.nomenclator
+  );
   const { projects }: any = useAppSelector((state: RootState) => state?.project);
 
   let data: IProject[] = useMemo(() => projects, [projects]);
@@ -99,9 +103,12 @@ const ProjectTable: React.FC = () => {
     data = [];
   }
 
-  serviceFeeAuxiliary?.payMethod?.map((payMethod) => payMethodNomenclator.push(payMethod.representative));
+  serviceFeeAuxiliary?.payMethod?.map((payMethod) =>
+    payMethodNomenclator.push(payMethod.representative)
+  );
   nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Nombre de Cliente") clientNamesNomenclators.push(nomenclator.code);
+    if (nomenclator.category === "Nombre de Cliente")
+      clientNamesNomenclators.push(nomenclator.code);
     if (nomenclator.category === "Moneda") currencyNomenclators.push(nomenclator.code);
   });
 
@@ -109,40 +116,40 @@ const ProjectTable: React.FC = () => {
   payMethodNomenclator.map((payMethod: string) => {
     payMethodFilter.push({
       text: `${payMethod}`,
-      value: `${payMethod}`,
+      value: `${payMethod}`
     });
   });
   const clientNameFilter: any[] = [];
   clientNamesNomenclators.map((clientName: string) => {
     clientNameFilter.push({
       text: `${clientName}`,
-      value: `${clientName}`,
+      value: `${clientName}`
     });
   });
   const currencyFilter: any[] = [];
   currencyNomenclators.map((currency: string) => {
     currencyFilter.push({
       text: `${currency}`,
-      value: `${currency}`,
+      value: `${currency}`
     });
   });
   const statusFilter: any[] = [
     {
       text: "Terminado",
-      value: "Terminado",
+      value: "Terminado"
     },
     {
       text: "Cerrado",
-      value: "Cerrado",
+      value: "Cerrado"
     },
     {
       text: "Solicitud",
-      value: "Solicitud",
+      value: "Solicitud"
     },
     {
       text: "Cobrado",
-      value: "Cobrado",
-    },
+      value: "Cobrado"
+    }
   ];
 
   // let PDFReportData: ICostSheet[] = [];
@@ -160,7 +167,7 @@ const ProjectTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione un proyecto para ver",
+        title: "Seleccione un proyecto para ver"
       });
     }
   };
@@ -171,12 +178,16 @@ const ProjectTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione una oferta para ver",
+        title: "Seleccione una oferta para ver"
       });
     }
   };
 
-  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -192,7 +203,7 @@ const ProjectTable: React.FC = () => {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         cancelButtonText: "Cancelar",
-        confirmButtonText: "Eliminar",
+        confirmButtonText: "Eliminar"
       }).then((result) => {
         if (result.isConfirmed) {
           dispatch(startDeleteProject(id));
@@ -201,7 +212,7 @@ const ProjectTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione un proyecto a eliminar",
+        title: "Seleccione un proyecto a eliminar"
       });
     }
   };
@@ -238,7 +249,11 @@ const ProjectTable: React.FC = () => {
           >
             Search
           </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
           <Button
@@ -264,7 +279,9 @@ const ProjectTable: React.FC = () => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
+    ),
     onFilter: (value, record) =>
       record[dataIndex]
         .toString()
@@ -277,10 +294,15 @@ const ProjectTable: React.FC = () => {
     },
     render: (text) =>
       searchedColumn === dataIndex ? (
-        <Highlighter highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }} searchWords={[searchText]} autoEscape textToHighlight={text ? text.toString() : ""} />
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
       ) : (
         text
-      ),
+      )
   });
 
   const columns: ColumnsType<IProject> = [
@@ -290,7 +312,7 @@ const ProjectTable: React.FC = () => {
       key: "projectName",
       width: "30%",
       sorter: (a: any, b: any) => a.projectName.localeCompare(b.projectName),
-      ...getColumnSearchProps("projectName"),
+      ...getColumnSearchProps("projectName")
     },
     {
       title: "Cliente",
@@ -299,27 +321,18 @@ const ProjectTable: React.FC = () => {
       width: "15%",
       filters: clientNameFilter,
       onFilter: (value: any, record: any) => record.clientName.startsWith(value),
-      filterSearch: true,
+      filterSearch: true
     },
     {
       title: "Cobrado por",
       dataIndex: "payMethod",
       key: "payMethod",
-      width: "10%",
+      width: "8%",
       filters: payMethodFilter,
       onFilter: (value: any, record: any) => record.payMethod.startsWith(value),
-      filterSearch: true,
+      filterSearch: true
     },
-    {
-      title: "Precio",
-      dataIndex: "totalValue",
-      key: "totalValue",
-      width: "10%",
-      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
-      sorter: {
-        compare: (a, b) => a.totalValue - b.totalValue,
-      },
-    },
+
     {
       title: "Moneda",
       dataIndex: "currency",
@@ -327,7 +340,7 @@ const ProjectTable: React.FC = () => {
       width: "5%",
       filters: currencyFilter,
       onFilter: (value: any, record: any) => record.currency.startsWith(value),
-      filterSearch: true,
+      filterSearch: true
     },
     {
       title: "Estado",
@@ -370,7 +383,17 @@ const ProjectTable: React.FC = () => {
             </Tag>
           )}
         </>
-      ),
+      )
+    },
+    {
+      title: "Precio",
+      dataIndex: "totalValue",
+      key: "totalValue",
+      width: "5%",
+      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
+      sorter: {
+        compare: (a, b) => a.totalValue - b.totalValue
+      }
     },
     {
       title: "Gastos",
@@ -379,8 +402,8 @@ const ProjectTable: React.FC = () => {
       width: "5%",
       render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
       sorter: {
-        compare: (a, b) => a.expenses - b.expenses,
-      },
+        compare: (a, b) => a.expenses - b.expenses
+      }
     },
     {
       title: "Ganancia",
@@ -389,16 +412,16 @@ const ProjectTable: React.FC = () => {
       width: "5%",
       render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
       sorter: {
-        compare: (a, b) => a.profits - b.profits,
-      },
+        compare: (a, b) => a.profits - b.profits
+      }
     },
     {
       title: "Fecha",
       dataIndex: "initDate",
       key: "initDate",
-      width: "10%",
+      width: "5%",
       sorter: (a: any, b: any) => a.initDate.localeCompare(b.initDate),
-      ...getColumnSearchProps("initDate"),
+      ...getColumnSearchProps("initDate")
     },
     {
       title: "Acciones",
@@ -410,7 +433,11 @@ const ProjectTable: React.FC = () => {
             <></>
           ) : (
             <Tooltip placement="top" title={"Ver Oferta"} arrow={{ pointAtCenter: true }}>
-              <button disabled={!canList} onClick={() => handleViewOffer(record._id)} className="table-see-offer-action-btn">
+              <button
+                disabled={!canList}
+                onClick={() => handleViewOffer(record._id)}
+                className="table-see-offer-action-btn"
+              >
                 <ReportMoneySvg width={20} height={20} />
               </button>
             </Tooltip>
@@ -419,7 +446,11 @@ const ProjectTable: React.FC = () => {
             <></>
           ) : (
             <Tooltip placement="top" title={"Detalles"} arrow={{ pointAtCenter: true }}>
-              <button disabled={!canList} onClick={() => handleView(record._id)} className="table-see-action-btn">
+              <button
+                disabled={!canList}
+                onClick={() => handleView(record._id)}
+                className="table-see-action-btn"
+              >
                 <SeeSvg width={20} height={20} />
               </button>
             </Tooltip>
@@ -428,21 +459,29 @@ const ProjectTable: React.FC = () => {
             <></>
           ) : (
             <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-              <button disabled={!canDelete} onClick={() => handleDelete(record._id)} className="table-delete-action-btn">
+              <button
+                disabled={!canDelete}
+                onClick={() => handleDelete(record._id)}
+                className="table-delete-action-btn"
+              >
                 <DeleteSvg width={20} height={20} />
               </button>
             </Tooltip>
           )}
         </div>
-      ),
-    },
+      )
+    }
   ];
 
   return (
     <>
       <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <div className="flex gap-2">
-          <button disabled={!canCreate} onClick={() => router.push("/dashboard/project/createProject")} className={`${canCreate ? "toolbar-primary-icon-btn" : "bg-success-200"} `}>
+          <button
+            disabled={!canCreate}
+            onClick={() => router.push("/dashboard/project/createProject")}
+            className={`${canCreate ? "toolbar-primary-icon-btn" : "bg-success-200"} `}
+          >
             <PlusSvg />
             Nuevo
           </button>
@@ -470,7 +509,9 @@ const ProjectTable: React.FC = () => {
             <button
               disabled={!canList}
               className={`${
-                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canList
+                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                  : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={() => dispatch(projectsStartLoading())}
             >
@@ -479,7 +520,14 @@ const ProjectTable: React.FC = () => {
           </Tooltip>
         </div>
       </div>
-      <Table size="small" columns={columns} dataSource={data} onChange={onChange} pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }} className="shadow-md" />
+      <Table
+        size="small"
+        columns={columns}
+        dataSource={data}
+        onChange={onChange}
+        pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
+        className="shadow-md"
+      />
     </>
   );
 };
