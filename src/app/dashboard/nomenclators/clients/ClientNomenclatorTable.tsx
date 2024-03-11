@@ -13,7 +13,8 @@ import type { InputRef } from "antd";
 import {
   clientNomenclatorsStartLoading,
   startAddClientNomenclator,
-  startDeleteClientNomenclator
+  startDeleteClientNomenclator,
+  startUpdateClientNomenclator
 } from "@/actions/nomenclators/client";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { EditSvg } from "@/app/global/EditSvg";
@@ -24,6 +25,7 @@ import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
 import { CreateClientNomenclatorForm } from "./CreateClientNomenclaorForm";
+import { EditClientNomenclatorForm } from "./EditClientNomenclatorForm";
 
 type DataIndex = keyof IClientNomenclator;
 
@@ -33,6 +35,7 @@ const ClientNomenclatorsTable: React.FC = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const [selectedNomenclator, setSelectedNomenclator] = useState<IClientNomenclator>();
   const searchInput = useRef<InputRef>(null);
   const router = useRouter();
   const { data: sessionData } = useSession();
@@ -61,9 +64,13 @@ const ClientNomenclatorsTable: React.FC = () => {
     setSearchedColumn(dataIndex);
   };
 
-  const onCreate = (values: IClientNomenclator): void => {
+  const onCreate = (values: IClientNomenclator) => {
     dispatch(startAddClientNomenclator(values));
     setCreateNewModal(false);
+  };
+  const onEdit = (values: IClientNomenclator) => {
+    dispatch(startUpdateClientNomenclator({ ...values, _id: selectedNomenclator?._id }));
+    setEditModal(false);
   };
 
   const handleDelete = (id: string) => {
@@ -95,7 +102,8 @@ const ClientNomenclatorsTable: React.FC = () => {
     setSearchText("");
   };
   const handleEdit = (record: IClientNomenclator) => {
-    console.log("🚀 ~ handleEdit ~ record:", record);
+    setSelectedNomenclator(record);
+    setEditModal(true);
   };
 
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<IClientNomenclator> => ({
@@ -218,15 +226,19 @@ const ClientNomenclatorsTable: React.FC = () => {
       width: "5%",
       render: (_, { ...record }) => (
         <div className="flex gap-1">
-          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canList}
-              onClick={() => handleEdit(record)}
-              className="table-see-action-btn"
-            >
-              <EditSvg width={20} height={20} />
-            </button>
-          </Tooltip>
+          {canEdit ? (
+            <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+              <button
+                disabled={!canList}
+                onClick={() => handleEdit(record)}
+                className="table-see-action-btn"
+              >
+                <EditSvg width={20} height={20} />
+              </button>
+            </Tooltip>
+          ) : (
+            <></>
+          )}
 
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
@@ -281,6 +293,12 @@ const ClientNomenclatorsTable: React.FC = () => {
         open={createNewModal}
         onCancel={() => setCreateNewModal(false)}
         onCreate={onCreate}
+      />
+      <EditClientNomenclatorForm
+        open={editModal}
+        onCancel={() => setEditModal(false)}
+        onCreate={onEdit}
+        defaultValues={selectedNomenclator!}
       />
     </>
   );

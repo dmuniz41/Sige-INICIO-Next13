@@ -34,7 +34,7 @@ export const startAddClientNomenclator = ({ ...clientNomenclator }): any => {
   };
 };
 
-export const startUpdateNomenclator = ({ ...clientNomenclator }): any => {
+export const startUpdateClientNomenclator = ({ ...clientNomenclator }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios

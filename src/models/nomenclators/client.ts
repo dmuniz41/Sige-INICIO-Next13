@@ -34,7 +34,8 @@ const ClientNomenclatorSchema = new Schema<IClientNomenclator, Model<IClientNome
   },
   idNumber: {
     type: Number,
-    required: true
+    required: true,
+    unique: true
   },
 });
 

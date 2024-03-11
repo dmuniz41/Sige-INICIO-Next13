@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Ya existe un nomenclador de cliente con ese nombre o número"
+          message: "Ya existe un nomenclador con ese nombre o número de cliente"
         },
         {
           status: 409
@@ -140,14 +140,33 @@ export async function PUT(request: Request) {
     }
     await connectDB();
     const nomenclatorToUpdate = await ClientNomenclator.findById(clientNomenclator._id);
+    const existNumberOrName = await ClientNomenclator.find({
+      $or: [{ name: clientNomenclator.name }, { idNumber: clientNomenclator.idNumber }]
+    });
 
     if (!nomenclatorToUpdate) {
-      return NextResponse.json({
-        ok: false,
-        message: "El nomenclador de cliente a actualizar no existe"
-      });
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "El nomenclador de cliente a actualizar no existe"
+        },
+        {
+          status: 409
+        }
+      );
     }
 
+    if (existNumberOrName) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Ya existe un nomenclador con ese nombre o número de cliente"
+        },
+        {
+          status: 409
+        }
+      );
+    }
     const updatedNomenclator = await ClientNomenclator.findByIdAndUpdate(
       clientNomenclator._id,
       {
