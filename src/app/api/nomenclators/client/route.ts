@@ -93,12 +93,12 @@ export async function GET(request: Request) {
       );
     }
     await connectDB();
-    const listOfClients = (await ClientNomenclator.find()).reverse();
+    const listOfClientNomenclators = (await ClientNomenclator.find()).reverse();
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        counter: listOfClients.length,
-        listOfClients
+        counter: listOfClientNomenclators.length,
+        listOfClientNomenclators
       }),
       {
         headers: {
