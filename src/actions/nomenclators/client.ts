@@ -34,7 +34,7 @@ export const startAddClientNomenclator = ({ ...clientNomenclator }): any => {
   };
 };
 
-export const startUpdateNomenclator = ({ ...clientNomenclator }): any => {
+export const startUpdateClientNomenclator = ({ ...clientNomenclator }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
@@ -65,15 +65,13 @@ export const startUpdateNomenclator = ({ ...clientNomenclator }): any => {
   };
 };
 
-export const startDeleteNomenclator = (id: string): any => {
+export const startDeleteClientNomenclator = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/client?id=${id}`,
-        { id },
-        { headers: { accessToken: token } }
-      )
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/client?id=${id}`, {
+        headers: { accessToken: token }
+      })
       .then(() => {
         dispatch(deleteClientNomenclator(id));
         dispatch(clientNomenclatorsStartLoading());
@@ -108,7 +106,7 @@ export const clientNomenclatorsStartLoading = () => {
 };
 
 export const clientNomenclatorsLoaded = (clientNomenclators: any) => ({
-  type: types.nomenclatorsLoaded,
+  type: types.clientNomenclatorsLoaded,
   payload: clientNomenclators
 });
 
