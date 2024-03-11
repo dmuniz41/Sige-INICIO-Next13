@@ -65,13 +65,12 @@ export const startUpdateNomenclator = ({ ...clientNomenclator }): any => {
   };
 };
 
-export const startDeleteNomenclator = (id: string): any => {
+export const startDeleteClientNomenclator = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .patch(
+      .delete(
         `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/client?id=${id}`,
-        { id },
         { headers: { accessToken: token } }
       )
       .then(() => {
@@ -108,7 +107,7 @@ export const clientNomenclatorsStartLoading = () => {
 };
 
 export const clientNomenclatorsLoaded = (clientNomenclators: any) => ({
-  type: types.nomenclatorsLoaded,
+  type: types.clientNomenclatorsLoaded,
   payload: clientNomenclators
 });
 
