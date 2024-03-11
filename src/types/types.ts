@@ -31,6 +31,11 @@ export const types = {
   nomenclatorsLoaded:      "[Nomenclator] Nomenclators Loaded",
   selectedNomenclator:     "[Nomenclator] Nomenclator selected",
 
+  addClientNomenclator:    "[Nomenclator] Add Client Nomenclator",
+  updateClientNomenclator: "[Nomenclator] Update Client Nomenclator",
+  deleteClientNomenclator: "[Nomenclator] Delete Client Nomenclator",
+  clientNomenclatorsLoaded:"[Nomenclator] Client Nomenclators Loaded",
+
   addCostSheet:            "[CostSheet] Add CostSheet",
   updateCostSheet:         "[CostSheet] Update CostSheet",
   deleteCostSheet:         "[CostSheet] Delete CostSheet",
