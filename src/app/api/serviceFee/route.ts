@@ -8,17 +8,17 @@ import ServiceFee, { IServiceFee, IServiceFeeComplexityItem } from "@/models/ser
 
 export async function POST(request: Request) {
   const { ...serviceFee }: IServiceFee = await request.json();
-  
+
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
@@ -29,21 +29,42 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Ya existe una tarifa de servicio con ese nombre",
+          message: "Ya existe una tarifa de servicio con ese nombre"
         },
         {
-          status: 409,
+          status: 409
         }
       );
     }
     //* Calcula el valor de cada subtotal en cada seccion de la ficha de costo
-    const rawMaterialsSubtotal: number = serviceFee?.rawMaterials?.reduce((total, currentValue) => total + currentValue.value, 0);
-    const taskListSubtotal: number = serviceFee?.taskList?.reduce((total, currentValue) => total + currentValue.value, 0);
-    const equipmentDepreciationSubtotal: number = serviceFee?.equipmentDepreciation?.reduce((total, currentValue) => total + currentValue.value, 0);
-    const equipmentMaintenanceSubtotal: number = serviceFee?.equipmentMaintenance?.reduce((total, currentValue) => total + currentValue.value, 0);
-    const administrativeExpensesSubtotal: number = serviceFee?.administrativeExpenses?.reduce((total, currentValue) => total + currentValue.value, 0);
-    const transportationExpensesSubtotal: number = serviceFee?.transportationExpenses?.reduce((total, currentValue) => total + currentValue.value, 0);
-    const hiredPersonalExpensesSubtotal: number = serviceFee?.hiredPersonalExpenses?.reduce((total, currentValue) => total + currentValue.value, 0);
+    const rawMaterialsSubtotal: number = serviceFee?.rawMaterials?.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const taskListSubtotal: number = serviceFee?.taskList?.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const equipmentDepreciationSubtotal: number = serviceFee?.equipmentDepreciation?.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const equipmentMaintenanceSubtotal: number = serviceFee?.equipmentMaintenance?.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const administrativeExpensesSubtotal: number = serviceFee?.administrativeExpenses?.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const transportationExpensesSubtotal: number = serviceFee?.transportationExpenses?.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const hiredPersonalExpensesSubtotal: number = serviceFee?.hiredPersonalExpenses?.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
 
     const expensesTotalValue: number =
       rawMaterialsSubtotal +
@@ -56,7 +77,10 @@ export async function POST(request: Request) {
 
     const newKey = generateRandomString(26);
 
-    const BDNomenclator = (await Nomenclator.findOne({ category: "Tarifa de Servicio", code: serviceFee?.nomenclatorId })) as INomenclator;
+    const BDNomenclator = (await Nomenclator.findOne({
+      category: "Tarifa de Servicio",
+      code: serviceFee?.nomenclatorId
+    })) as INomenclator;
 
     // * El precio final se calcula (Suma de el valor de todos los gastos + valor del margen comercial() + valor del impuesto de la ONAT())
     const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
@@ -70,7 +94,7 @@ export async function POST(request: Request) {
         name: complexity.name,
         coefficient: complexity.coefficient,
         value: salePrice * complexity.coefficient,
-        USDValue: (salePrice * complexity.coefficient) / serviceFee.currencyChange,
+        USDValue: (salePrice * complexity.coefficient) / serviceFee.currencyChange
       };
     });
 
@@ -79,7 +103,7 @@ export async function POST(request: Request) {
         key: newKey,
         code: serviceFee?.nomenclatorId,
         category: "Tarifa de Servicio",
-        value: salePrice,
+        value: salePrice
       });
       await newNomenclator.save();
     }
@@ -115,7 +139,7 @@ export async function POST(request: Request) {
       artisticTalent: serviceFee.artisticTalent,
       artisticTalentValue: artisticTalentValue,
       salePrice: salePrice,
-      salePriceUSD: salePrice / serviceFee?.currencyChange,
+      salePriceUSD: salePrice / serviceFee?.currencyChange
     });
 
     await newServiceFee.save();
@@ -123,13 +147,13 @@ export async function POST(request: Request) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        newServiceFee,
+        newServiceFee
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
@@ -137,10 +161,10 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: error.message
         },
         {
-          status: 400,
+          status: 400
         }
       );
     }
@@ -155,10 +179,10 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
@@ -169,22 +193,43 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "La tarifa de servicio a actualizar no existe",
+          message: "La tarifa de servicio a actualizar no existe"
         },
         {
-          status: 409,
+          status: 409
         }
       );
     }
 
     //* Calcula el valor de cada subtotal en cada seccion de la ficha de costo
-    const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
-    const taskListSubtotal: number = serviceFee.taskList.reduce((total, currentValue) => total + currentValue.value, 0);
-    const equipmentDepreciationSubtotal: number = serviceFee.equipmentDepreciation.reduce((total, currentValue) => total + currentValue.value, 0);
-    const equipmentMaintenanceSubtotal: number = serviceFee.equipmentMaintenance.reduce((total, currentValue) => total + currentValue.value, 0);
-    const administrativeExpensesSubtotal: number = serviceFee.administrativeExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const transportationExpensesSubtotal: number = serviceFee.transportationExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const hiredPersonalExpensesSubtotal: number = serviceFee.hiredPersonalExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+    const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const taskListSubtotal: number = serviceFee.taskList.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const equipmentDepreciationSubtotal: number = serviceFee.equipmentDepreciation.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const equipmentMaintenanceSubtotal: number = serviceFee.equipmentMaintenance.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const administrativeExpensesSubtotal: number = serviceFee.administrativeExpenses.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const transportationExpensesSubtotal: number = serviceFee.transportationExpenses.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const hiredPersonalExpensesSubtotal: number = serviceFee.hiredPersonalExpenses.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
 
     const expensesTotalValue: number =
       rawMaterialsSubtotal +
@@ -195,7 +240,10 @@ export async function PUT(request: Request) {
       administrativeExpensesSubtotal +
       hiredPersonalExpensesSubtotal;
 
-    const BDNomenclator = await Nomenclator.findOne({ category: "Tarifa de Servicio", code: serviceFee.nomenclatorId });
+    const BDNomenclator = await Nomenclator.findOne({
+      category: "Tarifa de Servicio",
+      code: serviceFee.nomenclatorId
+    });
 
     // * El precio final se calcula (Suma de el valor de todos los gastos + valor del margen comercial + el valor del impuesto de la ONAT)
     const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
@@ -209,7 +257,7 @@ export async function PUT(request: Request) {
         name: complexity.name,
         coefficient: complexity.coefficient,
         value: salePrice * complexity.coefficient,
-        USDValue: (salePrice * complexity.coefficient) / serviceFee.currencyChange,
+        USDValue: (salePrice * complexity.coefficient) / serviceFee.currencyChange
       };
     });
 
@@ -220,7 +268,7 @@ export async function PUT(request: Request) {
         key: newKey,
         code: serviceFee.nomenclatorId,
         category: "Tarifa de Servicio",
-        value: salePrice,
+        value: salePrice
       });
       await newNomenclator.save();
     } else {
@@ -229,7 +277,7 @@ export async function PUT(request: Request) {
         {
           category: "Tarifa de Servicio",
           code: serviceFee.nomenclatorId,
-          value: salePrice,
+          value: salePrice
         },
         { new: true }
       );
@@ -268,7 +316,7 @@ export async function PUT(request: Request) {
         artisticTalent: serviceFee.artisticTalent,
         artisticTalentValue: artisticTalentValue,
         salePrice: salePrice,
-        salePriceUSD: salePrice / serviceFee?.currencyChange,
+        salePriceUSD: salePrice / serviceFee?.currencyChange
       },
       { new: true }
     );
@@ -276,13 +324,13 @@ export async function PUT(request: Request) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        updatedServiceFee,
+        updatedServiceFee
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
@@ -291,10 +339,10 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: error.message
         },
         {
-          status: 400,
+          status: 400
         }
       );
     }
@@ -307,10 +355,10 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
@@ -319,14 +367,14 @@ export async function GET(request: Request) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        listOfServiceFees,
+        listOfServiceFees
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
-        status: 200,
+        status: 200
       }
     );
   } catch (error) {
@@ -334,10 +382,10 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: error.message
         },
         {
-          status: 400,
+          status: 400
         }
       );
     }
@@ -352,38 +400,44 @@ export async function PATCH(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
     await connectDB();
     const serviceFeeToDelete = await ServiceFee.findByIdAndDelete(id);
-    const BDNomenclator = await Nomenclator.findOne({ category: "Tarifa de Servicio", code: serviceFeeToDelete.nomenclatorId });
+    const BDNomenclator = await Nomenclator.findOne({
+      category: "Tarifa de Servicio",
+      code: serviceFeeToDelete.nomenclatorId
+    });
 
     if (!serviceFeeToDelete) {
       return NextResponse.json({
         ok: true,
-        message: "La tarifa de servicio a borrar no existe",
+        message: "La tarifa de servicio a borrar no existe"
       });
     }
 
     if (BDNomenclator) {
-      await Nomenclator.findOneAndDelete({ category: "Tarifa de Servicio", code: serviceFeeToDelete.nomenclatorId });
+      await Nomenclator.findOneAndDelete({
+        category: "Tarifa de Servicio",
+        code: serviceFeeToDelete.nomenclatorId
+      });
     }
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        serviceFeeToDelete,
+        serviceFeeToDelete
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
-        status: 200,
+        status: 200
       }
     );
   } catch (error) {
@@ -391,10 +445,10 @@ export async function PATCH(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: error.message
         },
         {
-          status: 400,
+          status: 400
         }
       );
     }
