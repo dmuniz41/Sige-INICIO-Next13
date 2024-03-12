@@ -12,47 +12,59 @@ import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { AddItemModal } from "./AddItem";
 import { INomenclator } from "@/models/nomenclator";
+import { IClientNomenclator } from "@/models/nomenclators/client";
+import {
+  clientNomenclatorsLoaded,
+  clientNomenclatorsStartLoading
+} from "@/actions/nomenclators/client";
 
 export const CreateProjectForm = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const router = useRouter();
   const payMethodNomenclator: IRepresentationCoefficients[] | undefined = [];
-  const clientNamesNomenclators: string[] | undefined = [];
   const currencyNomenclators: string[] | undefined = [];
   const [itemsValues, setItemsValues]: any = useState([]);
   const [addItemModal, setAddItemModal] = useState(false);
+  const [clientNumber, setClientNumber] = useState(0);
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
+    dispatch(clientNomenclatorsStartLoading());
     dispatch(startLoadServiceFeeAuxiliary());
   }, [dispatch]);
 
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
-  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
+    (state: RootState) => state?.serviceFee
+  );
+  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector(
+    (state: RootState) => state?.nomenclator
+  );
+  const { clientNomenclators }: { clientNomenclators: IClientNomenclator[] } = useAppSelector(
+    (state: RootState) => state?.nomenclator
+  );
 
   serviceFeeAuxiliary?.payMethod?.map((payMethod) => payMethodNomenclator.push(payMethod));
   nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Nombre de Cliente") clientNamesNomenclators.push(nomenclator.code);
     if (nomenclator.category === "Moneda") currencyNomenclators.push(nomenclator.code);
   });
 
   const payMethodOptions: SelectProps["options"] = payMethodNomenclator.map((payMethod) => {
     return {
       label: payMethod.representative,
-      value: payMethod.representative,
+      value: payMethod.representative
     };
   });
-  const clientNameOptions: SelectProps["options"] = clientNamesNomenclators.map((clientName) => {
+  const clientNameOptions: SelectProps["options"] = clientNomenclators.map((client) => {
     return {
-      label: `${clientName}`,
-      value: `${clientName}`,
+      label: `${client.name}`,
+      value: `${client.name}`
     };
   });
   const currencyOptions: SelectProps["options"] = currencyNomenclators.map((currency) => {
     return {
       label: `${currency}`,
-      value: `${currency}`,
+      value: `${currency}`
     };
   });
 
@@ -81,56 +93,111 @@ export const CreateProjectForm = () => {
       <section className=" flex-col mb-4">
         <article className="grid gap-4">
           <div className="grid w-[50%]">
-            <Form.Item className="mb-3" name="clientNumber" label={<span className="font-bold text-md">No. de Cliente</span>} rules={[{ required: true, message: "Campo requerido" }]}>
-              <InputNumber />
-            </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Nombre del Cliente</span>} name="clientName" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3"
+              label={<span className="font-bold text-md">Nombre del Cliente</span>}
+              name="clientName"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <Select
                 allowClear
                 options={clientNameOptions}
                 showSearch
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-                filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                filterOption={(input: any, option: any) =>
+                  (option?.label ?? "").toLowerCase().includes(input)
+                }
+                filterSort={(optionA: any, optionB: any) =>
+                  (optionA?.label ?? "")
+                    .toLowerCase()
+                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                }
+                onSelect={(value) => {
+                  clientNomenclators.map((client) => {
+                    client.name === value && setClientNumber(client.idNumber);
+                  });
+                }}
               />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Proyecto</span>} name="projectName" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3"
+              label={<span className="font-bold text-md">Proyecto</span>}
+              name="projectName"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <Input />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Representación</span>} name="payMethod" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3"
+              label={<span className="font-bold text-md">Representación</span>}
+              name="payMethod"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <Select
                 allowClear
                 options={payMethodOptions}
                 showSearch
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-                filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                filterOption={(input: any, option: any) =>
+                  (option?.label ?? "").toLowerCase().includes(input)
+                }
+                filterSort={(optionA: any, optionB: any) =>
+                  (optionA?.label ?? "")
+                    .toLowerCase()
+                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                }
               />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Fecha de creación</span>} name="initDate" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3"
+              label={<span className="font-bold text-md">Fecha de creación</span>}
+              name="initDate"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <DatePicker />
             </Form.Item>
             <Form.Item
               className="mb-3"
-              label={<span className="font-bold text-md">Fecha en la que se necesita el servicio</span>}
+              label={
+                <span className="font-bold text-md">Fecha en la que se necesita el servicio</span>
+              }
               name="deliveryDate"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
               <DatePicker />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Moneda </span>} name="currency" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3"
+              label={<span className="font-bold text-md">Moneda </span>}
+              name="currency"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <Select
                 allowClear
                 options={currencyOptions}
                 showSearch
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-                filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                filterOption={(input: any, option: any) =>
+                  (option?.label ?? "").toLowerCase().includes(input)
+                }
+                filterSort={(optionA: any, optionB: any) =>
+                  (optionA?.label ?? "")
+                    .toLowerCase()
+                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                }
               />
             </Form.Item>
           </div>
         </article>
-        <FormSection sectionName="Servicios" values={itemsValues} formName="itemsList" valuesSetter={setItemsValues} modalSetter={setAddItemModal} buttonText="Añadir Servicio" form={form} />
+        <FormSection
+          sectionName="Servicios"
+          values={itemsValues}
+          formName="itemsList"
+          valuesSetter={setItemsValues}
+          modalSetter={setAddItemModal}
+          buttonText="Añadir Servicio"
+          form={form}
+        />
       </section>
       <Form.Item>
         <button
@@ -140,7 +207,16 @@ export const CreateProjectForm = () => {
             form
               .validateFields()
               .then((values) => {
-                dispatch(startAddProject({ ...values, status: "Pendiente de Oferta", expenses: 0, profits: 0, initDate: values.initDate.format("MM/DD/YYYY") }));
+                dispatch(
+                  startAddProject({
+                    ...values,
+                    clientNumber: clientNumber,
+                    status: "Pendiente de Oferta",
+                    expenses: 0,
+                    profits: 0,
+                    initDate: values.initDate.format("MM/DD/YYYY")
+                  })
+                );
                 form.resetFields();
                 router.push("/dashboard/project");
               })
@@ -152,7 +228,12 @@ export const CreateProjectForm = () => {
           Crear
         </button>
       </Form.Item>
-      <AddItemModal open={addItemModal} onCancel={() => setAddItemModal(false)} onCreate={onAddItem} listLength={itemsValues?.length} />
+      <AddItemModal
+        open={addItemModal}
+        onCancel={() => setAddItemModal(false)}
+        onCreate={onAddItem}
+        listLength={itemsValues?.length}
+      />
     </Form>
   );
 };
@@ -183,11 +264,29 @@ export const FormSection = (props: any) => {
               {fields.map(({ key, name, ...restField }) => (
                 <div key={key} className="w-full">
                   <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="" {...restField} name={[name, "idNumber"]} rules={[{ required: true }]}>
-                      <Input disabled placeholder="No." className=" w-[50px] disabled:bg-white-100  disabled:text-white-900" />
+                    <Form.Item
+                      className=""
+                      {...restField}
+                      name={[name, "idNumber"]}
+                      rules={[{ required: true }]}
+                    >
+                      <Input
+                        disabled
+                        placeholder="No."
+                        className=" w-[50px] disabled:bg-white-100  disabled:text-white-900"
+                      />
                     </Form.Item>
-                    <Form.Item className="grow" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
-                      <Input disabled placeholder="Descripción" className="w-full disabled:bg-white-100  disabled:text-white-900" />
+                    <Form.Item
+                      className="grow"
+                      {...restField}
+                      name={[name, "description"]}
+                      rules={[{ required: true }]}
+                    >
+                      <Input
+                        disabled
+                        placeholder="Descripción"
+                        className="w-full disabled:bg-white-100  disabled:text-white-900"
+                      />
                     </Form.Item>
                     <MinusCircleOutlined
                       className="mb-auto"
@@ -200,7 +299,13 @@ export const FormSection = (props: any) => {
                 </div>
               ))}
               <Form.Item className="justify-center w-full">
-                <Button className="flex flex-row justify-center items-center" block type="dashed" onClick={() => modalSetter(true)} icon={<PlusOutlined />}>
+                <Button
+                  className="flex flex-row justify-center items-center"
+                  block
+                  type="dashed"
+                  onClick={() => modalSetter(true)}
+                  icon={<PlusOutlined />}
+                >
                   {buttonText}
                 </Button>
               </Form.Item>
@@ -211,3 +316,4 @@ export const FormSection = (props: any) => {
     </section>
   );
 };
+FormSection;
