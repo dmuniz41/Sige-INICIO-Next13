@@ -151,6 +151,12 @@ const selectedOffer = (offer: IOffer) => ({
   payload: offer,
 });
 
+export const selectedItem = (item: IOfferItem) => ({
+  type: types.selectedItem,
+  payload: item,
+});
+
+// * AÑADE UN NUEVO ITEM A LA OFERTA * //
 export const setCurrentItem = (item: IOfferItem) => ({
   type: types.setCurrentItem,
   payload: item,
@@ -159,5 +165,11 @@ export const setCurrentItem = (item: IOfferItem) => ({
 // * ELIMINA UN ITEM DE LA LISTA DE LA LISTA DE ITEMS EN LA OFERTA * //
 export const deleteItem = (item: IOfferItem) => ({
   type: types.deleteItem,
+  payload: item,
+});
+
+// * EDITA UN ITEM SELECCIONADO * //
+export const editItem = (item: IOfferItem) => ({
+  type: types.editItem,
   payload: item,
 });

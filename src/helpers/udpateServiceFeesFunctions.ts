@@ -123,7 +123,6 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
           commercialMarginValue: comercialMarginValue,
           artisticTalent: serviceFee.artisticTalent,
           artisticTalentValue: artisticTalentValue,
-          rawMaterialsByClient: serviceFee.rawMaterialsByClient,
           salePrice: salePrice,
           salePriceUSD: salePrice / serviceFee?.currencyChange,
         },

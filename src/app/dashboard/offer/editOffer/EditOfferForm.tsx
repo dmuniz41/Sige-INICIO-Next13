@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { EditSvg } from "@/app/global/EditSvg";
 import { useAppDispatch } from "@/hooks/hooks";
-import { deleteItem, startAddOffer } from "@/actions/offer";
+import { deleteItem, selectedItem, startAddOffer } from "@/actions/offer";
 import { IOffer, IOfferItem } from "@/models/offer";
 import { RootState, useAppSelector } from "@/store/store";
 import { Item } from "../[id]/Item";
@@ -17,7 +17,6 @@ import { DeleteSvg } from "@/app/global/DeleteSvg";
 export const EditOfferForm = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const currentDate = new Date();
 
   const { selectedOffer, offers }: { selectedOffer: IOffer; offers: IOffer[] } = useAppSelector(
     (state: RootState) => state?.offer
@@ -27,6 +26,8 @@ export const EditOfferForm = () => {
   );
 
   const handleEdit = (item: IOfferItem) => {
+    dispatch(selectedItem(item));
+    router.push("/dashboard/offer/editOffer/editItem");
     console.log("🚀 ~ handleEdit ~ item:", item);
   };
   const handleDeleteItem = (item: IOfferItem) => {

@@ -8,6 +8,7 @@ export interface IActivity {
   value: number;
 }
 export interface IOfferItem {
+  _id: string
   description: string;
   activities: IActivity[];
   value: number;
