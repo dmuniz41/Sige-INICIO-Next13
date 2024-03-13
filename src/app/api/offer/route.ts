@@ -7,6 +7,7 @@ import Offer, { IOffer } from "@/models/offer";
 
 export async function POST(request: Request) {
   const { ...offer }: IOffer = await request.json();
+  console.log("🚀 ~ POST ~ offer:", offer)
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {

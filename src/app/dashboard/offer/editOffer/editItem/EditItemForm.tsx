@@ -1,22 +1,28 @@
 "use client";
 import { Form } from "antd";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
-import { AddActivityModal } from "./AddActivity";
 import { FormSection } from "@/app/dashboard/serviceFees/createServiceFee/CreateServiceFeeForm";
-import { IActivity } from "@/models/offer";
-import { setCurrentItem } from "@/actions/offer";
+import { IActivity, IOffer, IOfferItem } from "@/models/offer";
+import { editItem, setCurrentItem } from "@/actions/offer";
 import { useAppDispatch } from "@/hooks/hooks";
 import TextArea from "antd/es/input/TextArea";
+import { AddActivityModal } from "../../createOffer/createItem/AddActivity";
+import { RootState, useAppSelector } from "@/store/store";
 
-export const CreateItemForm = () => {
+export const EditItemForm = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const router = useRouter();
 
-  const [activitiesValues, setActivitiesValues] = useState<IActivity[]>([]);
+  const { selectedItem, selectedOffer }: { selectedOffer: IOffer; selectedItem: IOfferItem } =
+    useAppSelector((state: RootState) => state?.offer);
+
+  const [activitiesValues, setActivitiesValues] = useState<IActivity[]>(selectedItem.activities);
+  const [description, setDescription] = useState(selectedItem?.description);
   const [addActivitiesModal, setAddActivitiesModal] = useState(false);
+  const activities = useMemo(() => activitiesValues, [activitiesValues]);
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
@@ -31,14 +37,23 @@ export const CreateItemForm = () => {
   return (
     <Form
       form={form}
-      name="createItemForm"
+      name="editItemForm"
       labelCol={{ span: 0 }}
       wrapperCol={{ span: 0 }}
       className="w-full flex flex-col gap-0"
-      initialValues={{ remember: true }}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
       requiredMark={"optional"}
+      fields={[
+        {
+          name: "description",
+          value: description
+        },
+        {
+          name: "activities",
+          value: activities
+        }
+      ]}
       size="middle"
     >
       <section className=" flex-col">
@@ -48,7 +63,7 @@ export const CreateItemForm = () => {
           label={<span className="font-bold text-md">Descripción</span>}
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <TextArea rows={4} />
+          <TextArea rows={4} onChange={(value) => setDescription(String(value.target.value))} />
         </Form.Item>
 
         <FormSection
@@ -86,22 +101,23 @@ export const CreateItemForm = () => {
               .validateFields()
               .then((values) => {
                 dispatch(
-                  setCurrentItem({
+                  editItem({
                     ...values,
                     value: activitiesValues
                       .map((activity) => activity.value)
                       .reduce((total, current) => total + current, 0)
                   })
                 );
+
                 form.resetFields();
-                router.push("/dashboard/offer/createOffer");
+                router.push("/dashboard/offer/editOffer");
               })
               .catch((error) => {
                 console.log("Validate Failed:", error);
               });
           }}
         >
-          Crear
+          Editar
         </button>
       </Form.Item>
 
