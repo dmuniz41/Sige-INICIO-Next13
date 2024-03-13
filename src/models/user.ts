@@ -1,13 +1,14 @@
 import { Model, Schema, Types, model, models } from "mongoose";
 
 export interface IUser {
-  key: string,
-  user: string,
-  userName: string,
-  lastName: string,
-  privileges: string[],
-  password: string,
-  area: string[]
+  _id: string;
+  key: string;
+  user: string;
+  userName: string;
+  lastName: string;
+  privileges?: string[];
+  password: string;
+  area?: string[];
 }
 
 const UserSchema = new Schema<IUser, Model<IUser>>({
@@ -16,30 +17,30 @@ const UserSchema = new Schema<IUser, Model<IUser>>({
   },
   user: {
     type: String,
-    required: [true, 'El usuario es requerido'],
-    unique: true,
+    required: [true, "El usuario es requerido"],
+    unique: true
   },
   userName: {
     type: String,
-    required: [true, 'El nombre es requerido'],
+    required: [true, "El nombre es requerido"]
   },
   lastName: {
     type: String,
-    required: [true, 'Los apellidos son requeridos'],
+    required: [true, "Los apellidos son requeridos"]
   },
   privileges: {
     type: [],
-    required: [true, 'Los privilegios son requeridos'],
+    required: [false]
   },
   password: {
     type: String,
-    required: [true, 'La contraseña es requerida'],
+    required: [true, "La contraseña es requerida"]
   },
   area: {
     type: [],
-    required: [true, 'El area es requerida'],
-  },
+    required: [false]
+  }
 });
 
-const User = models.User || model('User', UserSchema)
-export default User
+const User = models.User || model("User", UserSchema);
+export default User;
