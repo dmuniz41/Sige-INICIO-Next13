@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { Toast } from "@/helpers/customAlert";
 import { types } from "@/types/types";
 
+// * CREA UN NUEVO NOMENCLADOR DE CLIENTE * //
 export const startAddClientNomenclator = ({ ...clientNomenclator }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -34,6 +35,7 @@ export const startAddClientNomenclator = ({ ...clientNomenclator }): any => {
   };
 };
 
+// * ACTUALIZA UN NOMENCLADOR DE CLIENTE POR SU ID * //
 export const startUpdateClientNomenclator = ({ ...clientNomenclator }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -65,6 +67,7 @@ export const startUpdateClientNomenclator = ({ ...clientNomenclator }): any => {
   };
 };
 
+// * ELIMINA UN NOMENCLADOR DE CLIENTE POR SU ID* //
 export const startDeleteClientNomenclator = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -87,6 +90,7 @@ export const startDeleteClientNomenclator = (id: string): any => {
   };
 };
 
+// * CARGA TODOS LOS NOMENCLADORES DE CLIENTE * //
 export const clientNomenclatorsStartLoading = () => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {

@@ -5,7 +5,7 @@ import { IOffer, IOfferItem } from "@/models/offer";
 import { Toast } from "../helpers/customAlert";
 import { types } from "../types/types";
 
-// * CREA UN NUEVO PROYECTO* //
+// * CREA UN NUEVO PROYECTO * //
 export const startAddOffer = ({ ...offer }: any) => {
   console.log("🚀 ~ startAddOffer ~ offer:", offer)
   const token = localStorage.getItem("accessToken");
@@ -80,7 +80,7 @@ export const startDeleteOffer = (id: string): any => {
   };
 };
 
-// * CARGA TODAS LAS OFERTAS CORRESPONDIENTES A UN PROYECTO POR SI ID* //
+// * CARGA TODAS LAS OFERTAS CORRESPONDIENTES A UN PROYECTO POR SI ID * //
 export const offersStartLoading = (projectId: string) => {
   console.log("🚀 ~ offersStartLoading ~ projectId:", projectId)
   const token = localStorage.getItem("accessToken");

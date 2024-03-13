@@ -17,7 +17,11 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel
+}) => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
   const userArea: string[] | undefined = [];
   nomenclators.map((nomenclator: INomenclator) => {
@@ -28,122 +32,122 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
   const privileges: SelectProps["options"] = [
     {
       label: "ADMINISTRADOR",
-      value: "ADMIN",
+      value: "ADMIN"
     },
     {
       label: "COMERCIAL",
-      value: "COMMERCIAL",
+      value: "COMMERCIAL"
     },
     {
       label: "RECURSOS HUMANOS",
-      value: "HR",
+      value: "HR"
     },
     {
       label: "PROYECTOS",
-      value: "PROJECT",
+      value: "PROJECT"
     },
     {
       label: "ALMACEN",
-      value: "WAREHOUSE",
+      value: "WAREHOUSE"
     },
     {
       label: "OFICINA",
-      value: "OFFICE",
+      value: "OFFICE"
     },
     {
       label: "Crear Nomenclador",
-      value: "Crear Nomenclador",
+      value: "Crear Nomenclador"
     },
     {
       label: "Editar Nomenclador",
-      value: "Editar Nomenclador",
+      value: "Editar Nomenclador"
     },
     {
       label: "Eliminar Nomenclador",
-      value: "Eliminar Nomenclador",
+      value: "Eliminar Nomenclador"
     },
     {
       label: "Listar Nomencladores",
-      value: "Listar Nomencladores",
+      value: "Listar Nomencladores"
     },
     {
       label: "Crear Trabajador",
-      value: "Crear Trabajador",
+      value: "Crear Trabajador"
     },
     {
       label: "Editar Trabajador",
-      value: "Editar Trabajador",
+      value: "Editar Trabajador"
     },
     {
       label: "Eliminar Trabajador",
-      value: "Eliminar Trabajador",
+      value: "Eliminar Trabajador"
     },
     {
       label: "Listar Trabajadores",
-      value: "Listar Trabajadores",
+      value: "Listar Trabajadores"
     },
     {
       label: "Crear Usuario",
-      value: "Crear Usuario",
+      value: "Crear Usuario"
     },
     {
       label: "Editar Usuario",
-      value: "Editar Usuario",
+      value: "Editar Usuario"
     },
     {
       label: "Eliminar Usuario",
-      value: "Eliminar Usuario",
+      value: "Eliminar Usuario"
     },
     {
       label: "Listar Usuarios",
-      value: "Listar Usuarios",
+      value: "Listar Usuarios"
     },
     {
       label: "Crear Almacén",
-      value: "Crear Almacén",
+      value: "Crear Almacén"
     },
     {
       label: "Editar Almacén",
-      value: "Editar Almacén",
+      value: "Editar Almacén"
     },
     {
       label: "Eliminar Almacén",
-      value: "Eliminar Almacén",
+      value: "Eliminar Almacén"
     },
     {
       label: "Listar Almacenes",
-      value: "Listar Almacenes",
+      value: "Listar Almacenes"
     },
     {
       label: "Listar Materiales",
-      value: "Listar Materiales",
+      value: "Listar Materiales"
     },
     {
       label: "Añadir Material",
-      value: "Añadir Material",
+      value: "Añadir Material"
     },
     {
       label: "Sustraer Material",
-      value: "Sustraer Material",
+      value: "Sustraer Material"
     },
     {
       label: "Nuevo Material",
-      value: "Nuevo Material",
+      value: "Nuevo Material"
     },
     {
       label: "Editar Existencias Mínimas",
-      value: "Editar Existencias Mínimas",
+      value: "Editar Existencias Mínimas"
     },
     {
       label: "Eliminar Material",
-      value: "Eliminar Material",
-    },
+      value: "Eliminar Material"
+    }
   ];
 
   const areas: SelectProps["options"] = userArea.map((area) => {
     return {
       label: `${area}`,
-      value: `${area}`,
+      value: `${area}`
     };
   });
 
@@ -166,11 +170,7 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
       cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button
-            key="2"
-            className="modal-btn-danger"
-            onClick={onCancel}
-          >
+          <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
           <button
@@ -181,7 +181,6 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
                 .validateFields()
                 .then((values) => {
                   onCreate(values);
-                  console.log("🚀 ~ file: CreateNomenclatorForm.tsx:51 ~ .then ~ values:", values);
                   form.resetFields();
                 })
                 .catch((error) => {
@@ -191,31 +190,48 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
           >
             Crear
           </button>
-        </div>,
+        </div>
       ]}
     >
-      <Form 
-        form={form} 
-        layout="vertical" 
-        name="createUserForm" 
-        size="middle" 
+      <Form
+        form={form}
+        layout="vertical"
+        name="createUserForm"
+        size="middle"
         fields={[
           {
-            name:"privileges",
+            name: "privileges",
             value: [""]
           }
         ]}
       >
-        <Form.Item name="user" label="Usuario" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="user"
+          label="Usuario"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Input />
         </Form.Item>
-        <Form.Item name="userName" label="Nombre" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="userName"
+          label="Nombre"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Input />
         </Form.Item>
-        <Form.Item name="lastName" label="Apellidos" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="lastName"
+          label="Apellidos"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Input />
         </Form.Item>
-        <Form.Item name="password" label="Contraseña" hasFeedback rules={[{ required: true, min: 7, message: "Campo requerido" }]}>
+        <Form.Item
+          name="password"
+          label="Contraseña"
+          hasFeedback
+          rules={[{ required: true, min: 7, message: "Campo requerido" }]}
+        >
           <Input type="password" />
         </Form.Item>
         <Form.Item
@@ -231,16 +247,25 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
                   return Promise.resolve();
                 }
                 return Promise.reject(new Error("Las contraseñas deben ser iguales"));
-              },
-            }),
+              }
+            })
           ]}
         >
           <Input type="password" />
         </Form.Item>
-        <Form.Item className="hidden" name="privileges" label="Privilegios" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          className="hidden"
+          name="privileges"
+          label="Privilegios"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={privileges} />
         </Form.Item>
-        <Form.Item name="area" label="Área" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="area"
+          label="Área"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={areas} />
         </Form.Item>
       </Form>

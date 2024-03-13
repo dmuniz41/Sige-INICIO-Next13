@@ -3,17 +3,22 @@ import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
 import axios, { AxiosError } from "axios";
 
-export const startAddUser = (user: string, userName: string, lastName: string, privileges: string[], password: string, area: string[]): any => {
+// * CREA UN NUEVO USUARIO DEL SISTEMA *//
+export const startAddUser = ({ ...user }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user, userName, lastName, privileges, password, area }, { headers: { accessToken: token } })
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/user`,
+        { ...user },
+        { headers: { accessToken: token } }
+      )
       .then(() => {
-        dispatch(addUser(user, userName, lastName, privileges, password, area));
+        dispatch(addUser(user));
         dispatch(usersStartLoading());
         Toast.fire({
           icon: "success",
-          title: "Usuario Creado",
+          title: "Usuario Creado"
         });
       })
       .catch((error: AxiosError) => {
@@ -23,17 +28,23 @@ export const startAddUser = (user: string, userName: string, lastName: string, p
   };
 };
 
-export const startUpdateUser = (_id: string, user: string, userName: string, lastName: string, privileges: string[],  area: string[]): any => {
+// * ACTUALIZA UN USUARIO POR SU ID * //
+export const startUpdateUser = ({ ...user }): any => {
+  console.log("🚀 ~ startUpdateUser ~ user:", user);
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/user`, { _id, user, userName, lastName, privileges, area }, { headers: { accessToken: token } })
+      .put(
+        `${process.env.NEXT_PUBLIC_API_URL}/user`,
+        { ...user },
+        { headers: { accessToken: token } }
+      )
       .then(() => {
-        dispatch(updateUser(user, userName, lastName, privileges, area));
+        dispatch(updateUser(user));
         dispatch(usersStartLoading());
         Toast.fire({
           icon: "success",
-          title: "Usuario Actualizado",
+          title: "Usuario Actualizado"
         });
       })
       .catch((error: AxiosError) => {
@@ -43,17 +54,20 @@ export const startUpdateUser = (_id: string, user: string, userName: string, las
   };
 };
 
-export const startDeleteUser = (user: string): any => {
+// * ELIMINA UN USUARIO POR SU USERNAME * //
+export const startDeleteUser = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .patch(`${process.env.NEXT_PUBLIC_API_URL}/user`, { user }, { headers: { accessToken: token } })
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/user?id=${id}`, {
+        headers: { accessToken: token }
+      })
       .then(() => {
-        dispatch(deleteUser(user));
+        dispatch(deleteUser(id));
         dispatch(usersStartLoading());
         Toast.fire({
           icon: "success",
-          title: "Usuario Eliminado",
+          title: "Usuario Eliminado"
         });
       })
       .catch((error: AxiosError) => {
@@ -63,6 +77,7 @@ export const startDeleteUser = (user: string): any => {
   };
 };
 
+// * CARGA TODOS LOS USUARIOS * //
 export const usersStartLoading = () => {
   const token = localStorage.getItem("accessToken");
 
@@ -82,36 +97,26 @@ export const usersStartLoading = () => {
 
 export const usersLoaded = (users: any) => ({
   type: types.usersLoaded,
-  payload: users,
+  payload: users
 });
 
-const addUser = (user: string, userName: string, lastName: string, privileges: string[], password: string, area: string[]) => ({
+const addUser = ({ ...user }) => ({
   type: types.addUser,
   payload: {
-    user,
-    userName,
-    lastName,
-    privileges,
-    password,
-    area,
-  },
+    user
+  }
 });
 
-const updateUser = (user: string, userName: string, lastName: string, privileges: string[],  area: string[]) => ({
+const updateUser = ({ ...user }) => ({
   type: types.updateUser,
   payload: {
-    user,
-    userName,
-    lastName,
-    privileges,
-    area,
-  },
+    user
+  }
 });
 
-const deleteUser = (user: string) => ({
+const deleteUser = (id: string) => ({
   type: types.deleteUser,
   payload: {
-    user,
-  },
+    id
+  }
 });
-

@@ -1,10 +1,10 @@
 import React from "react";
 
-export const ShieldSvg = () => {
+export const ShieldSvg = ({ width = 24, height = 24 }) => {
   return (
     <svg
-      width="24"
-      height="24"
+      width={`${width}`}
+      height={`${height}`}
       viewBox="0 0 24 24"
       strokeWidth="2"
       stroke="currentColor"

@@ -30,7 +30,9 @@ export const ProjectView = () => {
     dispatch(loadSelectedProject(selectedProjectId));
   }, [dispatch, selectedProjectId]);
 
-  const { selectedProject }: { selectedProject: IProject } = useAppSelector((state: RootState) => state?.project);
+  const { selectedProject }: { selectedProject: IProject } = useAppSelector(
+    (state: RootState) => state?.project
+  );
 
   // const fields: any = [
   //   {
@@ -70,8 +72,8 @@ export const ProjectView = () => {
     router.push(`/dashboard/project/editProject`);
   };
   const handleCreateOffer = (): void => {
-    dispatch(clearOffer())
-    
+    dispatch(clearOffer());
+
     router.push(`/dashboard/offer/createOffer`);
   };
 
@@ -190,12 +192,6 @@ export const ProjectView = () => {
               ) : (
                 <></>
               )}
-            </div>
-          </article>
-          <article>
-            <div className="flex gap-1">
-              <span className="font-bold mr-2 ">Teléfono: ________________________</span>
-              <p></p>
             </div>
           </article>
         </article>
