@@ -3,12 +3,12 @@ import { Form } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-import { AddActivityModal } from "./AddActivity";
 import { FormSection } from "@/app/dashboard/serviceFees/createServiceFee/CreateServiceFeeForm";
 import { IActivity } from "@/models/offer";
 import { setCurrentItem } from "@/actions/offer";
 import { useAppDispatch } from "@/hooks/hooks";
 import TextArea from "antd/es/input/TextArea";
+import { AddActivityModal } from "../../createOffer/createItem/AddActivity";
 
 export const CreateItemForm = () => {
   const dispatch = useAppDispatch();
@@ -94,7 +94,7 @@ export const CreateItemForm = () => {
                   })
                 );
                 form.resetFields();
-                router.push("/dashboard/offer/createOffer");
+                router.push("/dashboard/offer/editOffer");
               })
               .catch((error) => {
                 console.log("Validate Failed:", error);

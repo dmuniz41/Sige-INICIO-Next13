@@ -7,13 +7,11 @@ export interface IActivity {
   unitMeasure: string;
   value: number;
 }
-
 export interface IOfferItem {
   description: string;
   activities: IActivity[];
   value: number;
 }
-
 export interface IOffer {
   _id: string;
   itemsList: IOfferItem[];

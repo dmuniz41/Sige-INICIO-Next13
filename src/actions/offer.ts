@@ -119,28 +119,33 @@ export const loadSelectedOffer = (projectId: string) => {
       });
   };
 };
+
 export const offersLoaded = (offers: IOffer[]) => ({
   type: types.offersLoaded,
   payload: offers,
 });
+
 const addOffer = (offer: IOffer) => ({
   type: types.addOffer,
   payload: {
     offer,
   },
 });
+
 const updateOffer = (offer: IOffer) => ({
   type: types.updateOffer,
   payload: {
     offer,
   },
 });
+
 const deleteOffer = (id: string) => ({
   type: types.deleteOffer,
   payload: {
     id,
   },
 });
+
 const selectedOffer = (offer: IOffer) => ({
   type: types.selectedOffer,
   payload: offer,
@@ -148,5 +153,11 @@ const selectedOffer = (offer: IOffer) => ({
 
 export const setCurrentItem = (item: IOfferItem) => ({
   type: types.setCurrentItem,
+  payload: item,
+});
+
+// * ELIMINA UN ITEM DE LA LISTA DE LA LISTA DE ITEMS EN LA OFERTA * //
+export const deleteItem = (item: IOfferItem) => ({
+  type: types.deleteItem,
   payload: item,
 });

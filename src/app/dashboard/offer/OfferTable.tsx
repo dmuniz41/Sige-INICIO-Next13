@@ -11,7 +11,11 @@ import type { InputRef } from "antd";
 
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { INomenclator } from "@/models/nomenclator";
-import { loadSelectedServiceFee, serviceFeeStartLoading, startDeleteServiceFee } from "@/actions/serviceFee";
+import {
+  loadSelectedServiceFee,
+  serviceFeeStartLoading,
+  startDeleteServiceFee
+} from "@/actions/serviceFee";
 import { nomenclatorsStartLoading, startDeleteNomenclator } from "@/actions/nomenclator";
 import { PDFSvg } from "@/app/global/PDFSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
@@ -23,8 +27,8 @@ import { useAppDispatch } from "@/hooks/hooks";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
-import { IOffer } from '@/models/offer';
-import { loadSelectedOffer, offersStartLoading, startDeleteOffer } from '../../../actions/offer';
+import { IOffer } from "@/models/offer";
+import { loadSelectedOffer, offersStartLoading, startDeleteOffer } from "../../../actions/offer";
 import { IProject } from "@/models/project";
 
 // const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
@@ -75,15 +79,16 @@ const OfferTable: React.FC = () => {
   //     width: "10",
   //   },
   // ];
-  
-  const { selectedProject }: {selectedProject: IProject} = useAppSelector((state: RootState) => state?.project);
-  
-  useEffect(() => {
-    dispatch(offersStartLoading(selectedProject._id ));
-  }, [dispatch, selectedProject]);
-  
-  const { offers }: any = useAppSelector((state: RootState) => state?.offer);
 
+  const { selectedProject }: { selectedProject: IProject } = useAppSelector(
+    (state: RootState) => state?.project
+  );
+
+  useEffect(() => {
+    dispatch(offersStartLoading(selectedProject._id));
+  }, [dispatch, selectedProject]);
+
+  const { offers }: any = useAppSelector((state: RootState) => state?.offer);
 
   // let PDFReportData: ICostSheet[] = [];
 
@@ -100,39 +105,37 @@ const OfferTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione una oferta para ver",
+        title: "Seleccione una oferta para ver"
       });
     }
   };
 
-  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
 
   const handleDelete = (record: any) => {
-    if (record) {
-      Swal.fire({
-        title: "Eliminar Oferta de Servicio",
-        text: "La oferta seleccionada se borrará de forma permanente",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Eliminar",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          dispatch(startDeleteOffer(record._id));
-        }
-      });
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione una oferta a eliminar",
-      });
-    }
+    Swal.fire({
+      title: "Eliminar Oferta de Servicio",
+      text: "La oferta seleccionada se borrará de forma permanente",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Eliminar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(startDeleteOffer(record._id));
+        dispatch(offersStartLoading(selectedProject._id));
+      }
+    });
   };
 
   const handleReset = (clearFilters: () => void) => {
@@ -167,7 +170,11 @@ const OfferTable: React.FC = () => {
           >
             Search
           </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
           <Button
@@ -193,10 +200,11 @@ const OfferTable: React.FC = () => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
+    ),
     onFilter: (value, record) =>
-      record[dataIndex]!
-        .toString()
+      record[dataIndex]!.toString()
         .toLowerCase()
         .includes((value as string).toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
@@ -206,10 +214,15 @@ const OfferTable: React.FC = () => {
     },
     render: (text) =>
       searchedColumn === dataIndex ? (
-        <Highlighter highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }} searchWords={[searchText]} autoEscape textToHighlight={text ? text.toString() : ""} />
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
       ) : (
         text
-      ),
+      )
   });
 
   const columns: ColumnsType<IOffer> = [
@@ -219,13 +232,14 @@ const OfferTable: React.FC = () => {
       key: "projectName",
       width: "60%",
       sorter: (a: any, b: any) => a.projectName.localeCompare(b.projectName),
-      ...getColumnSearchProps("projectName"),
+      ...getColumnSearchProps("projectName")
     },
     {
       title: "Valor",
       dataIndex: "value",
       key: "value",
       width: "10%",
+      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>
     },
 
     {
@@ -233,25 +247,15 @@ const OfferTable: React.FC = () => {
       key: "actions",
       width: "5%",
       render: (_, record) => (
-        <div className="flex gap-1">
-
-  
-            <Tooltip placement="top" title={"Ver"} arrow={{ pointAtCenter: true }}>
-              <button  onClick={() => handleView(record._id)} className="table-see-action-btn">
-                <SeeSvg width={20} height={20} />
-              </button>
-            </Tooltip>
-          
-
-            <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-              <button  className="table-delete-action-btn" onClick={() => handleDelete(record)}>
-                <DeleteSvg width={20} height={20} />
-              </button>
-            </Tooltip>
-
+        <div className="flex gap-1 justify-center">
+          <Tooltip placement="top" title={"Ver"} arrow={{ pointAtCenter: true }}>
+            <button onClick={() => handleView(record._id)} className="table-see-action-btn">
+              <SeeSvg width={20} height={20} />
+            </button>
+          </Tooltip>
         </div>
-      ),
-    },
+      )
+    }
   ];
 
   return (
@@ -284,7 +288,14 @@ const OfferTable: React.FC = () => {
         </div>
       </div>
 
-      <Table size="small" columns={columns} dataSource={offers} onChange={onChange} pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }} className="shadow-md" />
+      <Table
+        size="small"
+        columns={columns}
+        dataSource={offers}
+        onChange={onChange}
+        pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
+        className="shadow-md"
+      />
     </>
   );
 };
