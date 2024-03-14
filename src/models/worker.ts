@@ -1,51 +1,45 @@
 import { Model, Schema, Types, model, models } from "mongoose";
 
-interface IWorker {
-  key         : string,
-  name        : string,
-  CI          : number,
-  role        : string[],
-  address?    : string,
-  phoneNumber : number,
-  bankAccount?: number,
-  // salary?     : number,
-  taxes?      : number
+export interface IWorker {
+  _id: string;
+  key: string;
+  name: string;
+  CI: number;
+  role: string[];
+  address?: string;
+  phoneNumber: number;
+  bankAccount?: number;
+  taxes?: number;
 }
 
 const WorkerSchema = new Schema<IWorker, Model<IWorker>>({
   key: {
-    type: String,
+    type: String
   },
   name: {
     type: String,
-    required: [true, "El nombre es requerido"],
-    unique: true,
+    required: true,
+    unique: true
   },
   CI: {
     type: Number,
-    required: [true, "El carnet de identidad es requerido"],
-    unique: true,
+    required: true,
+    unique: true
   },
   role: {
     type: [String],
-    required: [true, "El cargo es requerido"],
+    required: true
   },
   address: {
-    type: String,
+    type: String
   },
   phoneNumber: {
     type: Number,
-    required: [true, "El número de teléfono es requerido"],
+    required: true
   },
   bankAccount: {
-    type: Number,
-  },
-  // salary: {
-  //   type: Number,
-  // },
-  // taxes: {
-  //   type: Number,
-  // },
+    type: Number
+  }
 });
 
 const Worker = models.Worker || model("Worker", WorkerSchema);

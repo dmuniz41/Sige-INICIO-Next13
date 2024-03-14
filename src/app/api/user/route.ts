@@ -53,15 +53,7 @@ export async function POST(request: NextRequest) {
 
     const newKey = generateRandomString(26);
 
-    const newUser = new User({
-      area: user.area,
-      key: newKey,
-      lastName: user.lastName,
-      password: hashedPassword,
-      privileges: user.privileges,
-      user: user.user,
-      userName: user.userName,
-    });
+    const newUser = new User({ ...user, key: newKey });
 
     await newUser.save();
 
@@ -78,7 +70,7 @@ export async function POST(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.log("🚀 ~ POST ~ error:", error)
+    console.log("🚀 ~ POST ~ error:", error);
     if (error instanceof Error) {
       return NextResponse.json(
         {
@@ -107,6 +99,7 @@ export async function GET(request: NextRequest) {
         }
       );
     }
+
     await connectDB();
     const listOfUsers = (await User.find()).reverse();
     return new NextResponse(
@@ -122,6 +115,7 @@ export async function GET(request: NextRequest) {
       }
     );
   } catch (error) {
+    console.log("🚀 ~ GET ~ error:", error);
     if (error instanceof Error) {
       return NextResponse.json(
         {
@@ -138,7 +132,6 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   const { ...user }: IUser = await request.json();
-  console.log("🚀 ~ PUT ~ user:", user)
   const accessToken = request.headers.get("accessToken");
 
   try {
@@ -168,17 +161,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const updatedUser = await User.findByIdAndUpdate(
-      user._id,
-      {
-        user: user.user,
-        userName: user.userName,
-        lastName: user.lastName,
-        privileges: user.privileges,
-        area: user.area
-      },
-      { new: true }
-    );
+    const updatedUser = await User.findByIdAndUpdate(user._id, { ...user }, { new: true });
 
     return new NextResponse(
       JSON.stringify({
@@ -193,7 +176,7 @@ export async function PUT(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.log("🚀 ~ PUT ~ error:", error)
+    console.log("🚀 ~ PUT ~ error:", error);
     if (error instanceof Error) {
       return NextResponse.json(
         {
@@ -202,7 +185,7 @@ export async function PUT(request: NextRequest) {
             "Error al actualizar el usuario (Revise que los datos introducidos son correctos)"
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
@@ -255,6 +238,7 @@ export async function DELETE(request: NextRequest) {
       }
     );
   } catch (error) {
+    console.log("🚀 ~ DELETE ~ error:", error);
     if (error instanceof Error) {
       return NextResponse.json(
         {

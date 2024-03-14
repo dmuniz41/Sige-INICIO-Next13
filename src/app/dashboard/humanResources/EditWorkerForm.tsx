@@ -1,27 +1,25 @@
 "use client";
 
-import { INomenclator } from "@/models/nomenclator";
-import { RootState, useAppSelector } from "@/store/store";
-import { InfoCircleOutlined } from "@ant-design/icons";
 import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
 
-interface Values {
-  _id: string;
-  CI: number;
-  name: string;
-  address: string;
-  bankAccount: number;
-  phoneNumber: number;
-  role: string[];
-}
+import { INomenclator } from "@/models/nomenclator";
+import { IWorker } from "@/models/worker";
+import { RootState, useAppSelector } from "@/store/store";
+
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: Values) => void;
+  onCreate: (values: IWorker) => void;
   onCancel: () => void;
-  defaultValues?: Values;
+  defaultValues?: IWorker;
 }
 
-export const EditWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
+export const EditWorkerForm: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel,
+  defaultValues
+}) => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
   const workerRole: string[] | undefined = [];
   nomenclators.map((nomenclator: INomenclator) => {
@@ -33,7 +31,7 @@ export const EditWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
   const options: SelectProps["options"] = workerRole.map((role) => {
     return {
       label: `${role}`,
-      value: `${role}`,
+      value: `${role}`
     };
   });
 
@@ -82,7 +80,7 @@ export const EditWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
           >
             Editar
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form
@@ -93,31 +91,35 @@ export const EditWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
         fields={[
           {
             name: "CI",
-            value: defaultValues?.CI,
+            value: defaultValues?.CI
           },
           {
             name: "address",
-            value: defaultValues?.address,
+            value: defaultValues?.address
           },
           {
             name: "name",
-            value: defaultValues?.name,
+            value: defaultValues?.name
           },
           {
             name: "bankAccount",
-            value: defaultValues?.bankAccount,
+            value: defaultValues?.bankAccount
           },
           {
             name: "phoneNumber",
-            value: defaultValues?.phoneNumber,
+            value: defaultValues?.phoneNumber
           },
           {
             name: "role",
-            value: defaultValues?.role,
-          },
+            value: defaultValues?.role
+          }
         ]}
       >
-        <Form.Item name="name" label="Nombre y Apellidos" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="name"
+          label="Nombre y Apellidos"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Input />
         </Form.Item>
         <Form.Item
@@ -129,10 +131,18 @@ export const EditWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
         >
           <InputNumber className="w-full" />
         </Form.Item>
-        <Form.Item name="role" label="Cargos" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="role"
+          label="Cargos"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={options} />
         </Form.Item>
-        <Form.Item name="address" label="Dirección" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="address"
+          label="Dirección"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Input />
         </Form.Item>
         <Form.Item
@@ -149,7 +159,10 @@ export const EditWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, onCr
           name="bankAccount"
           label="Cuenta Bancaria"
           rules={[{ required: true, message: "${bankAccount} debe tener 16 números" }]}
-          tooltip={{ title: "La cuenta bancaria debe tener 16 números", icon: <InfoCircleOutlined /> }}
+          tooltip={{
+            title: "La cuenta bancaria debe tener 16 números",
+            icon: <InfoCircleOutlined />
+          }}
         >
           <InputNumber className="w-full" />
         </Form.Item>
