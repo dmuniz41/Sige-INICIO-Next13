@@ -5,7 +5,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import type { ColumnType, ColumnsType } from "antd/es/table";
-import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
+import type { FilterConfirmProps } from "antd/es/table/interface";
 import type { InputRef } from "antd";
 
 import { costSheetsStartLoading } from "@/actions/costSheet";
@@ -21,7 +21,6 @@ import { RefreshSvg } from "../../global/RefreshSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { ShieldSvg } from "@/app/global/ShieldSvg";
 import { startAddUser, startDeleteUser, startUpdateUser, usersStartLoading } from "@/actions/users";
-import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
@@ -36,7 +35,6 @@ const UserTable: React.FC = () => {
   const [editModal, setEditModal] = useState(false);
   const [privilegesModal, setPrivilegesModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<IUser>();
-  const [selectedRow, setSelectedRow] = useState<IUser>();
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
 

@@ -1,19 +1,25 @@
+import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
+
 import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
-import axios, { AxiosError } from "axios";
 
-export const startAddWorker = (name: string, CI: number, address: string, role: string[], phoneNumber: number, bankAccount: number): any => {
+// * CREA UN NUEVO TRABAJADOR *//
+export const startAddWorker = ({ ...worker }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/worker`, { name, CI, address, role, phoneNumber, bankAccount }, { headers: { accessToken: token } })
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/worker`,
+        { ...worker },
+        { headers: { accessToken: token } }
+      )
       .then(() => {
-        dispatch(addWorker(name, CI, address, role, phoneNumber, bankAccount));
-        dispatch(workersStartLoading())
+        dispatch(addWorker(worker));
+        dispatch(workersStartLoading());
         Toast.fire({
           icon: "success",
-          title: "Trabajador Creado",
+          title: "Trabajador Creado"
         });
       })
       .catch((error: AxiosError) => {
@@ -22,17 +28,23 @@ export const startAddWorker = (name: string, CI: number, address: string, role: 
       });
   };
 };
-export const startUpdateWorker = (_id: string ,name: string, CI: number, address: string, role: string[], phoneNumber: number, bankAccount: number): any => {
+// * ACTUALIZA UN TRABAJADOR POR SU ID * //
+export const startUpdateWorker = ({ ...worker }): any => {
+  console.log("🚀 ~ startUpdateWorker ~ worker:", worker)
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/worker`, { _id, name, CI, address, role, phoneNumber, bankAccount },{ headers: { accessToken: token } })
+      .put(
+        `${process.env.NEXT_PUBLIC_API_URL}/worker`,
+        { ...worker },
+        { headers: { accessToken: token } }
+      )
       .then(() => {
-        dispatch(updateWorker(name, CI, address, role, phoneNumber, bankAccount));
-        dispatch(workersStartLoading())
+        dispatch(updateWorker(worker));
+        dispatch(workersStartLoading());
         Toast.fire({
           icon: "success",
-          title: "Trabajador Actualizado",
+          title: "Trabajador Actualizado"
         });
       })
       .catch((error: AxiosError) => {
@@ -41,17 +53,21 @@ export const startUpdateWorker = (_id: string ,name: string, CI: number, address
       });
   };
 };
-export const startDeleteWorker = (CI: number): any => {
+
+// * ELIMINA UN TRABAJADOR POR SU ID * //
+export const startDeleteWorker = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .patch(`${process.env.NEXT_PUBLIC_API_URL}/worker`, { CI }, { headers: { accessToken: token } })
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/worker?id=${id}`, {
+        headers: { accessToken: token }
+      })
       .then(() => {
-        dispatch(deleteWorker(CI));
-        dispatch(workersStartLoading())
+        dispatch(deleteWorker(id));
+        dispatch(workersStartLoading());
         Toast.fire({
           icon: "success",
-          title: "Trabajador Eliminado",
+          title: "Trabajador Eliminado"
         });
       })
       .catch((error: AxiosError) => {
@@ -60,6 +76,8 @@ export const startDeleteWorker = (CI: number): any => {
       });
   };
 };
+
+// *  CARGA TODOS LOS TRABAJADORES * //
 export const workersStartLoading = () => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -77,34 +95,25 @@ export const workersStartLoading = () => {
 };
 export const workersLoaded = (workers: any) => ({
   type: types.workersLoaded,
-  payload: workers,
+  payload: workers
 });
 
-const addWorker = (name: string, CI: number, address: string, role: string[], phoneNumber: number, bankAccount: number) => ({
+const addWorker = ({ ...worker }) => ({
   type: types.addWorker,
   payload: {
-    name,
-    CI,
-    address,
-    role,
-    phoneNumber,
-    bankAccount,
-  },
+    worker
+  }
 });
-const updateWorker = (name: string, CI: number, address: string, role: string[], phoneNumber: number, bankAccount: number) => ({
+
+const updateWorker = ({ ...worker }) => ({
   type: types.updateWorker,
   payload: {
-    name,
-    CI,
-    address,
-    role,
-    phoneNumber,
-    bankAccount,
-  },
+    worker
+  }
 });
-const deleteWorker = (CI: number) => ({
+const deleteWorker = (id: string) => ({
   type: types.deleteWorker,
   payload: {
-    CI,
-  },
+    id
+  }
 });

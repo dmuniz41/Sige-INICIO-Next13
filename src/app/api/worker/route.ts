@@ -1,183 +1,236 @@
+import { generateRandomString } from "@/helpers/randomStrings";
+import { verifyJWT } from "@/libs/jwt";
 import { connectDB } from "@/libs/mongodb";
-import Worker from "@/models/worker";
-import { NextResponse } from "next/server";
+import Worker, { IWorker } from "@/models/worker";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: Request) {
-  const { name, CI, role, address, phoneNumber, bankAccount } = await request.json();
-
+export async function POST(request: NextRequest) {
+  const { ...worker }: IWorker = await request.json();
+  const accessToken = request.headers.get("accessToken");
   try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
+        },
+        {
+          status: 401
+        }
+      );
+    }
     await connectDB();
-    const BDworker = await Worker.findOne({ CI });
+    const BDworker = await Worker.findOne({ $or: [{ CI: worker.CI }, { name: worker.name }] });
 
     if (BDworker) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Ya existe un trabajador con ese carnet de identidad",
+          message: "Ya existe un trabajador con ese carnet de identidad o nombre"
         },
         {
-          status: 409,
+          status: 409
         }
       );
     }
 
-    const newWorker = new Worker({
-      name,
-      CI,
-      role,
-      address,
-      phoneNumber,
-      bankAccount,
-      key: name,
-    });
+    const newKey = generateRandomString(26);
+
+    const newWorker = new Worker({ ...worker, key: newKey });
 
     await newWorker.save();
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        newWorker,
+        newWorker
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
+    console.log("🚀 ~ POST ~ error:", error);
     if (error instanceof Error) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al crear el trabajador",
+          message: "Error al crear el trabajador"
         },
         {
-          status: 400,
+          status: 400
         }
       );
     }
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const accessToken = request.headers.get("accessToken");
   try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
+        },
+        {
+          status: 401
+        }
+      );
+    }
+
     await connectDB();
     const listOfWorkers = (await Worker.find()).reverse();
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        listOfWorkers,
+        listOfWorkers
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
+    console.log("🚀 ~ GET ~ error:", error);
     if (error instanceof Error) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al listar los trabajadores",
+          message: "Error al listar los trabajadores"
         },
         {
-          status: 400,
+          status: 400
         }
       );
     }
   }
 }
 
-export async function PUT(request: Request) {
-  const { _id, name, CI, role, address, phoneNumber, bankAccount } = await request.json();
-
+export async function PUT(request: NextRequest) {
+  const { ...worker } = await request.json();
+  const accessToken = request.headers.get("accessToken");
   try {
-    await connectDB();
-    const workerToUpdate = await Worker.findById(_id);
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
+        },
+        {
+          status: 401
+        }
+      );
+    }
 
+    await connectDB();
+    const workerToUpdate = await Worker.findById(worker._id);
 
     if (!workerToUpdate) {
       return NextResponse.json(
         {
           ok: false,
-          message: "El trabajador a actualizar no existe",
+          message: "El trabajador a actualizar no existe"
         },
         {
-          status: 409,
+          status: 409
         }
       );
     }
-  
 
-    const updatedWorker =  await Worker.findByIdAndUpdate( _id , { name, CI, role, address, phoneNumber, bankAccount }, { new: true });
+    const updatedWorker = await Worker.findByIdAndUpdate(worker._id, { ...worker }, { new: true });
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        updatedWorker,
+        updatedWorker
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
+    console.log("🚀 ~ PUT ~ error:", error);
     if (error instanceof Error) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al actualizar el trabajador (Revise que los datos introducidos son correctos)",
+          message:
+            "Error al actualizar el trabajador (Revise que los datos introducidos son correctos)"
         },
         {
-          status: 400,
+          status: 400
         }
       );
     }
   }
 }
 
-export async function PATCH(request: Request) {
-  const { CI } = await request.json();
+export async function DELETE(request: NextRequest) {
+  const params = request.nextUrl.searchParams;
+  const accessToken = request.headers.get("accessToken");
 
   try {
-    await connectDB();
-    const workerToDelete = await Worker.findOne({ CI });
-
-    if (!workerToDelete) {
-      return NextResponse.json({
-        ok: true,
-        message: "El trabajador a borrar no existe",
-      });
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
+        },
+        {
+          status: 401
+        }
+      );
     }
 
-    const deletedWorker = await Worker.findOneAndDelete({ CI });
+    await connectDB();
+    const workerToDelete = await Worker.findById(params.get("id"));
+
+    if (!workerToDelete) {
+      return NextResponse.json(
+        {
+          ok: true,
+          message: "El trabajador a borrar no existe"
+        },
+        {
+          status: 404
+        }
+      );
+    }
+
+    const deletedWorker = await Worker.findByIdAndDelete(params.get("id"));
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        deletedWorker,
+        deletedWorker
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
+    console.log("🚀 ~ DELETE ~ error:", error)
     if (error instanceof Error) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al eliminar el trabajador",
+          message: "Error al eliminar el trabajador"
         },
         {
-          status: 400,
+          status: 500
         }
       );
     }
