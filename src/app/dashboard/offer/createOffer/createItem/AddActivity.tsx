@@ -72,7 +72,6 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
               form
                 .validateFields()
                 .then((values) => {
-                  console.log("🚀 ~ .then ~ values:", values);
                   onCreate(
                     !currentUnitMeasure.includes("u")
                       ? {

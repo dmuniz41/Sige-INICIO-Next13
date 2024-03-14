@@ -23,6 +23,7 @@ export const EditItemForm = () => {
   const [description, setDescription] = useState(selectedItem?.description);
   const [addActivitiesModal, setAddActivitiesModal] = useState(false);
   const activities = useMemo(() => activitiesValues, [activitiesValues]);
+  const newItemList = selectedOffer?.itemsList;
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
@@ -106,7 +107,7 @@ export const EditItemForm = () => {
                     value: activitiesValues
                       .map((activity) => activity.value)
                       .reduce((total, current) => total + current, 0)
-                  })
+                  },true)
                 );
 
                 form.resetFields();

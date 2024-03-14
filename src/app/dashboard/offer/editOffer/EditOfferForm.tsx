@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { EditSvg } from "@/app/global/EditSvg";
 import { useAppDispatch } from "@/hooks/hooks";
-import { deleteItem, selectedItem, startAddOffer } from "@/actions/offer";
+import { deleteItem, editItem, selectedItem, startAddOffer } from "@/actions/offer";
 import { IOffer, IOfferItem } from "@/models/offer";
 import { RootState, useAppSelector } from "@/store/store";
 import { Item } from "../[id]/Item";
@@ -18,20 +18,34 @@ export const EditOfferForm = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const { selectedOffer, offers }: { selectedOffer: IOffer; offers: IOffer[] } = useAppSelector(
-    (state: RootState) => state?.offer
-  );
+  const {
+    selectedOffer,
+    offers,
+    itemUpdated,
+    isItemUpdated
+  }: { selectedOffer: IOffer; offers: IOffer[]; itemUpdated: IOfferItem; isItemUpdated: boolean } =
+    useAppSelector((state: RootState) => state?.offer);
+
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
     (state: RootState) => state?.project
   );
 
+  if (isItemUpdated) {
+    selectedOffer.itemsList.forEach((item, index, itemList) => {
+      if (item.description === itemUpdated.description) {
+        itemList[index] = itemUpdated;
+        dispatch(editItem({ _id: "", description: "", activities: [], value: 0 }, false));
+      }
+      return itemList[index];
+    });
+  }
+
   const handleEdit = (item: IOfferItem) => {
     dispatch(selectedItem(item));
     router.push("/dashboard/offer/editOffer/editItem");
-    console.log("🚀 ~ handleEdit ~ item:", item);
   };
   const handleDeleteItem = (item: IOfferItem) => {
-    dispatch(deleteItem(item))
+    dispatch(deleteItem(item));
   };
 
   const handleEditOffer = () => {

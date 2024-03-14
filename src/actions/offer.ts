@@ -7,7 +7,7 @@ import { types } from "../types/types";
 
 // * CREA UN NUEVO PROYECTO * //
 export const startAddOffer = ({ ...offer }: any) => {
-  console.log("🚀 ~ startAddOffer ~ offer:", offer)
+  console.log("🚀 ~ startAddOffer ~ offer:", offer);
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
@@ -18,7 +18,7 @@ export const startAddOffer = ({ ...offer }: any) => {
           name: offer?.name,
           projectName: offer?.projectName,
           projectId: offer?.projectId,
-          value: offer?.value,
+          value: offer?.value
         },
         { headers: { accessToken: token } }
       )
@@ -26,7 +26,7 @@ export const startAddOffer = ({ ...offer }: any) => {
         dispatch(addOffer(offer));
         Toast.fire({
           icon: "success",
-          title: "Oferta Creada",
+          title: "Oferta Creada"
         });
       })
       .catch((error: AxiosError) => {
@@ -42,13 +42,17 @@ export const startUpdateOffer = ({ ...offer }: any) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/offer`, { ...offer }, { headers: { accessToken: token } })
+      .put(
+        `${process.env.NEXT_PUBLIC_API_URL}/offer`,
+        { ...offer },
+        { headers: { accessToken: token } }
+      )
       .then(() => {
         dispatch(updateOffer(offer));
         dispatch(offersStartLoading(offer.projectId));
         Toast.fire({
           icon: "success",
-          title: "Oferta Actualizada",
+          title: "Oferta Actualizada"
         });
       })
       .catch((error: AxiosError) => {
@@ -64,12 +68,16 @@ export const startDeleteOffer = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .patch(`${process.env.NEXT_PUBLIC_API_URL}/offer`, { id }, { headers: { accessToken: token } })
+      .patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/offer`,
+        { id },
+        { headers: { accessToken: token } }
+      )
       .then(() => {
         dispatch(deleteOffer(id));
         Toast.fire({
           icon: "success",
-          title: "Oferta Eliminada",
+          title: "Oferta Eliminada"
         });
       })
       .catch((error: AxiosError) => {
@@ -82,14 +90,16 @@ export const startDeleteOffer = (id: string): any => {
 
 // * CARGA TODAS LAS OFERTAS CORRESPONDIENTES A UN PROYECTO POR SI ID * //
 export const offersStartLoading = (projectId: string) => {
-  console.log("🚀 ~ offersStartLoading ~ projectId:", projectId)
+  console.log("🚀 ~ offersStartLoading ~ projectId:", projectId);
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/offer`, { headers: { accessToken: token, projectId: projectId } })
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/offer`, {
+        headers: { accessToken: token, projectId: projectId }
+      })
       .then((resp) => {
         let { listOfOffers } = resp.data;
-        console.log("🚀 ~ .then ~ listOfOffers:", listOfOffers)
+        console.log("🚀 ~ .then ~ listOfOffers:", listOfOffers);
         dispatch(offersLoaded(listOfOffers));
       })
       .catch((error: AxiosError) => {
@@ -102,14 +112,14 @@ export const offersStartLoading = (projectId: string) => {
 
 // * CARGA LA INFORMACION DE UNA OFERTA * //
 export const loadSelectedOffer = (projectId: string) => {
-  console.log("🚀 ~ loadSelectedOffer ~ projectId:", projectId)
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/offer/${projectId}`, { headers: { accessToken: token } })
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/offer/${projectId}`, {
+        headers: { accessToken: token }
+      })
       .then((resp) => {
         let { BDOffer } = resp.data;
-        console.log("🚀 ~ .then ~ BDOffer:", BDOffer)
         dispatch(selectedOffer(BDOffer));
       })
       .catch((error: AxiosError) => {
@@ -122,54 +132,54 @@ export const loadSelectedOffer = (projectId: string) => {
 
 export const offersLoaded = (offers: IOffer[]) => ({
   type: types.offersLoaded,
-  payload: offers,
+  payload: offers
 });
 
 const addOffer = (offer: IOffer) => ({
   type: types.addOffer,
   payload: {
-    offer,
-  },
+    offer
+  }
 });
 
 const updateOffer = (offer: IOffer) => ({
   type: types.updateOffer,
   payload: {
-    offer,
-  },
+    offer
+  }
 });
 
 const deleteOffer = (id: string) => ({
   type: types.deleteOffer,
   payload: {
-    id,
-  },
+    id
+  }
 });
 
 const selectedOffer = (offer: IOffer) => ({
   type: types.selectedOffer,
-  payload: offer,
+  payload: offer
 });
 
 export const selectedItem = (item: IOfferItem) => ({
   type: types.selectedItem,
-  payload: item,
+  payload: item
 });
 
 // * AÑADE UN NUEVO ITEM A LA OFERTA * //
 export const setCurrentItem = (item: IOfferItem) => ({
   type: types.setCurrentItem,
-  payload: item,
+  payload: item
 });
 
 // * ELIMINA UN ITEM DE LA LISTA DE LA LISTA DE ITEMS EN LA OFERTA * //
 export const deleteItem = (item: IOfferItem) => ({
   type: types.deleteItem,
-  payload: item,
+  payload: item
 });
 
 // * EDITA UN ITEM SELECCIONADO * //
-export const editItem = (item: IOfferItem) => ({
+export const editItem = (item: IOfferItem, isItemUpdated: boolean) => ({
   type: types.editItem,
-  payload: item,
+  payload: { item: item, isItemUpdated: isItemUpdated }
 });
