@@ -93,6 +93,13 @@ export const CreateItemForm = () => {
                       .reduce((total, current) => total + current, 0)
                   })
                 );
+                console.log({
+                  ...values,
+                  value: activitiesValues
+                    .map((activity) => activity.value)
+                    .reduce((total, current) => total + current, 0)
+                });
+
                 form.resetFields();
                 router.push("/dashboard/offer/editOffer");
               })

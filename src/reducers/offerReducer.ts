@@ -2,7 +2,13 @@ import { IOffer, IOfferItem } from "@/models/offer";
 import { types } from "../types/types";
 import { selectedItem } from "@/actions/offer";
 
-const initialState: { offers: IOffer[]; selectedOffer: IOffer; selectedItem: IOfferItem } = {
+const initialState: {
+  offers: IOffer[];
+  selectedOffer: IOffer;
+  selectedItem: IOfferItem;
+  isItemUpdated: boolean;
+  itemUpdated: IOfferItem;
+} = {
   offers: [],
   selectedOffer: {
     _id: "",
@@ -16,11 +22,17 @@ const initialState: { offers: IOffer[]; selectedOffer: IOffer; selectedItem: IOf
     description: "",
     activities: [],
     value: 0
-  }
+  },
+  itemUpdated: {
+    _id: "",
+    description: "",
+    activities: [],
+    value: 0
+  },
+  isItemUpdated: false
 };
 
 export const offerReducer = (state = initialState, action: any) => {
-  console.log("🚀 ~ offerReducer ~ action:", action.payload);
   switch (action.type) {
     case types.addOffer:
       return {
@@ -65,12 +77,8 @@ export const offerReducer = (state = initialState, action: any) => {
     case types.editItem:
       return {
         ...state,
-        itemsList: state.selectedOffer.itemsList.map((item, index, itemList) => {
-          if (itemList[index].description === action.payload.description) {
-            itemList[index] = { ...action.payload };
-            return itemList[index];
-          }
-        })
+        itemUpdated: action.payload.item,
+        isItemUpdated: action.payload.isItemUpdated
       };
     case types.selectedItem:
       return {
