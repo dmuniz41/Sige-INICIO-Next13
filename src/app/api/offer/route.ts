@@ -3,35 +3,49 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
-import Offer, { IOffer } from "@/models/offer";
+import Offer, { IActivity, IOffer } from "@/models/offer";
+import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 
 export async function POST(request: Request) {
   const { ...offer }: IOffer = await request.json();
-  console.log("🚀 ~ POST ~ offer:", offer)
+  const activitiesList: IActivity[] = [];
+
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
     await connectDB();
+
+    // // ? SEPARA LA LISTA DE TODAS LAS ACTIVIDADES DE LA NUEVA OFERTA
+    // offer.itemsList.map((item) => item.activities.map((act) => activitiesList.push(act)));
+    // // ? BUSCAR EN LA BD LOS MATERIALES DE CADA UNA DE LAS ACTIVIDADES
+    // const serviceFeeList = activitiesList.map(async (act) => {
+    //   return await ServiceFee.where(`taskName`)
+    //     .equals(act.description)
+    //     .exec()
+    //     .then((result) => result.map((r) => r.rawMaterials))
+    //     .catch((err) => console.log(err));
+    // });
+
     let DBOffer = await Offer.findOne({ projectName: offer.projectName });
 
     if (DBOffer) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Ya existe una oferta con ese nombre",
+          message: "Ya existe una oferta con ese nombre"
         },
         {
-          status: 409,
+          status: 409
         }
       );
     }
@@ -43,7 +57,7 @@ export async function POST(request: Request) {
       key: newKey,
       projectId: offer.projectId,
       projectName: offer.projectName,
-      value: offer.value,
+      value: offer.value
     });
 
     await newOffer.save();
@@ -51,25 +65,25 @@ export async function POST(request: Request) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        newOffer,
+        newOffer
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
-    console.log("🚀 ~ POST ~ error:", error)
+    console.log("🚀 ~ POST ~ error:", error);
     if (error instanceof Error) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: error.message
         },
         {
-          status: 400,
+          status: 400
         }
       );
     }
@@ -84,26 +98,26 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
     await connectDB();
-    const listOfOffers = (await Offer.find({projectId: projectId})).reverse();
+    const listOfOffers = (await Offer.find({ projectId: projectId })).reverse();
     return new NextResponse(
       JSON.stringify({
         ok: true,
         counter: listOfOffers.length,
-        listOfOffers,
+        listOfOffers
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
@@ -111,10 +125,10 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: error.message
         },
         {
-          status: 400,
+          status: 400
         }
       );
     }
@@ -130,10 +144,10 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
@@ -143,7 +157,7 @@ export async function PUT(request: Request) {
     if (!offerToUpdate) {
       return NextResponse.json({
         ok: false,
-        message: "La oferta a actualizar no existe",
+        message: "La oferta a actualizar no existe"
       });
     }
 
@@ -152,7 +166,7 @@ export async function PUT(request: Request) {
       {
         itemsList: offer.itemsList,
         projectName: offer.projectName,
-        value: offer.value,
+        value: offer.value
       },
       { new: true }
     );
@@ -160,13 +174,13 @@ export async function PUT(request: Request) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        updatedOffer,
+        updatedOffer
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
@@ -174,10 +188,10 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: error.message
         },
         {
-          status: 400,
+          status: 400
         }
       );
     }
@@ -192,10 +206,10 @@ export async function PATCH(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
@@ -205,7 +219,7 @@ export async function PATCH(request: Request) {
     if (!offerToDelete) {
       return NextResponse.json({
         ok: true,
-        message: "La oferta a borrar no existe",
+        message: "La oferta a borrar no existe"
       });
     }
 
@@ -214,13 +228,13 @@ export async function PATCH(request: Request) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        deletedOffer,
+        deletedOffer
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
@@ -228,10 +242,10 @@ export async function PATCH(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: error.message
         },
         {
-          status: 400,
+          status: 400
         }
       );
     }
