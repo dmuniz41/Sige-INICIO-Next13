@@ -8,7 +8,7 @@ export interface IActivity {
   value: number;
 }
 export interface IOfferItem {
-  _id: string
+  _id: string;
   description: string;
   activities: IActivity[];
   value: number;
@@ -17,15 +17,16 @@ export interface IOffer {
   _id: string;
   itemsList: IOfferItem[];
   key: string;
-  projectName: string;
+  materialsList?: { description: string; amount: number }[];
   projectId: string;
+  projectName: string;
   value?: number;
 }
 
 const OfferSchema = new Schema<IOffer, Model<IOffer>>({
   key: {
     type: String,
-    unique: true,
+    unique: true
   },
   itemsList: {
     type: [
@@ -37,26 +38,35 @@ const OfferSchema = new Schema<IOffer, Model<IOffer>>({
             description: String,
             unitMeasure: String,
             price: Number,
-            value: Number,
-          },
+            value: Number
+          }
         ],
-        value: Number,
-      },
+        value: Number
+      }
     ],
-    required: false,
+    required: false
+  },
+  materialsList: {
+    type: [
+      {
+        description: String,
+        amount: Number
+      }
+    ],
+    required: false
   },
   projectName: {
     type: String,
-    required: true,
+    required: true
   },
   projectId: {
     type: String,
-    required: true,
+    required: true
   },
   value: {
     type: Number,
-    required: false,
-  },
+    required: false
+  }
 });
 
 const Offer = models.Offer || model("Offer", OfferSchema);

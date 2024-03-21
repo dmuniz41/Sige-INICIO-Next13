@@ -5,7 +5,7 @@ import { IOffer, IOfferItem } from "@/models/offer";
 import { Toast } from "../helpers/customAlert";
 import { types } from "../types/types";
 
-// * CREA UN NUEVO PROYECTO * //
+// * CREA UNA NUEVA OFERTA * //
 export const startAddOffer = ({ ...offer }: any) => {
   console.log("🚀 ~ startAddOffer ~ offer:", offer);
   const token = localStorage.getItem("accessToken");

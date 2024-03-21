@@ -4,14 +4,15 @@ import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
 import Offer, { IActivity, IOffer } from "@/models/offer";
-import ServiceFee, { IServiceFee } from "@/models/serviceFees";
+import ServiceFee, { IServiceFee, IServiceFeeSubItem } from "@/models/serviceFees";
+import Material from "@/models/material";
 
 export async function POST(request: Request) {
   const { ...offer }: IOffer = await request.json();
-  const activitiesList: [{ description: string; amount: number }] = [
-    { description: "", amount: 0 }
-  ];
-  const aux: [{ description: string; amount: number }] = [{ description: "", amount: 0 }];
+  const activitiesList: { description: string; amount: number }[] = [];
+  const uniqueActivities: { description: string; amount: number }[] = [];
+  const activitiesMaterials: { description: string; amount: number }[] = [];
+  const uniqueMaterials: { description: string; amount: number }[] = [];
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -38,8 +39,8 @@ export async function POST(request: Request) {
     );
     // ?  AGRUPA TODAS LAS ACTIVIDADES EN UN NUEVO ARRAY DONDE LAS ACTIVIDADES NO SE REPITEN (SI LA ACTIVIDAD EXISTE SUMA LAS CANTIDADES)
     activitiesList.map((activity) => {
-      if (aux.some((value) => value.description === activity.description)) {
-        aux.forEach((value, index, arr) => {
+      if (uniqueActivities?.some((value) => value.description === activity.description)) {
+        uniqueActivities?.forEach((value, index, arr) => {
           if (value.description === activity.description) {
             arr[index] = {
               ...value,
@@ -49,21 +50,49 @@ export async function POST(request: Request) {
           }
         });
       } else {
-        aux.push({
+        uniqueActivities?.push({
           description: activity.description,
           amount: activity.amount
         });
       }
     });
-    console.log("🚀 ~ activitiesList.map ~ aux:", aux);
-    // // ? BUSCAR EN LA BD LOS MATERIALES DE CADA UNA DE LAS ACTIVIDADES
-    // const serviceFeeList = activitiesList.map(async (act) => {
-    //   return await ServiceFee.where(`taskName`)
-    //     .equals(act.description)
-    //     .exec()
-    //     .then((result) => result.map((r) => r.rawMaterials))
-    //     .catch((err) => console.log(err));
-    // });
+
+    /* SE UTILIZA Promise.all() PARA PODER ESPERAR A QUE TERMINEN TODAS LAS PETICIONES ASINCRONAS A LA BD ANTES DE CONTINUAR FUERA DEL BUCLE
+     DE LO CONTRARIO RETORNA UN ARRAY VACIO */
+    // ? BUSCA EN LA BD TODOS LOS MATERIALES ASOCIADOS A CADA ACTIVIDAD Y MULTIPLICA SU CANTIDAD POR LA CANTIDAD DE VECES QUE SE REPITE LA ACTIVIDAD
+    await Promise.all(
+      uniqueActivities.map(async (ua) => {
+        const actMaterials = await ServiceFee.findOne({ taskName: `${ua.description}` });
+        if (actMaterials?.rawMaterials) {
+          actMaterials?.rawMaterials?.forEach((material: IServiceFeeSubItem) => {
+            activitiesMaterials.push({
+              description: material.description,
+              amount: material.amount * ua.amount
+            });
+          });
+        }
+      })
+    );
+
+    // ? AGRUPA TODOS LOS MATERIALES EN UN NUEVO ARRAY DONDE LOS MATERIALES NO SE REPITEN (SI EL MATERIAL EXISTE SUMA LAS CANTIDADES)
+    activitiesMaterials.map((material) => {
+      if (uniqueMaterials?.some((e) => e.description === material.description)) {
+        uniqueMaterials?.forEach((um, index, arr) => {
+          if (um.description === material.description) {
+            arr[index] = {
+              ...um,
+              amount: um.amount + material.amount
+            };
+            return arr[index];
+          }
+        });
+      } else {
+        uniqueMaterials?.push({
+          description: material.description,
+          amount: material.amount
+        });
+      }
+    });
 
     let DBOffer = await Offer.findOne({ projectName: offer.projectName });
 
@@ -83,6 +112,7 @@ export async function POST(request: Request) {
 
     const newOffer = new Offer({
       itemsList: offer.itemsList,
+      materialsList: uniqueMaterials,
       key: newKey,
       projectId: offer.projectId,
       projectName: offer.projectName,
