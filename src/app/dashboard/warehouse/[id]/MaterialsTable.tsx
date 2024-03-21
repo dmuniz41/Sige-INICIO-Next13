@@ -164,6 +164,7 @@ const MaterialsTable: React.FC = () => {
   const handleNew = (): void => {
     setCreateNewModal(true);
   };
+
   const handleAdd = (): void => {
     if (selectedRow) {
       setAddModal(true);
@@ -174,6 +175,7 @@ const MaterialsTable: React.FC = () => {
       });
     }
   };
+
   const handleMinus = (): void => {
     if (selectedRow) {
       setMinusModal(true);
@@ -184,6 +186,7 @@ const MaterialsTable: React.FC = () => {
       });
     }
   };
+
   const handleShowOperations = (): void => {
     if (selectedRow) {
       setShowOperationModal(true);
@@ -194,6 +197,7 @@ const MaterialsTable: React.FC = () => {
       });
     }
   };
+
   const handleEditMaterial = (): void => {
     if (selectedRow) {
       setEditMaterialModal(true);
@@ -204,14 +208,17 @@ const MaterialsTable: React.FC = () => {
       });
     }
   };
+
   const handleRefresh = (): void => {
     dispatch(materialsStartLoading(selectedWarehouse));
   };
+
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
+
   const handleDelete = (): void => {
     if (selectedRow) {
       Swal.fire({
@@ -235,10 +242,12 @@ const MaterialsTable: React.FC = () => {
       });
     }
   };
+
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText("");
   };
+
   const onCreate = (values: any): void => {
     let operation: IOperation = {
       date: currentDate,
@@ -262,6 +271,7 @@ const MaterialsTable: React.FC = () => {
     );
     setCreateNewModal(false);
   };
+
   const onAdd = (values: any): void => {
     console.log("🚀 ~ file: MaterialsTable.tsx:232 ~ onAdd ~ values:", values);
     let operation: IOperation = {
@@ -285,6 +295,7 @@ const MaterialsTable: React.FC = () => {
     );
     setAddModal(false);
   };
+
   const onMinus = (values: any): void => {
     let operation: IOperation = {
       date: currentDate,
@@ -307,20 +318,24 @@ const MaterialsTable: React.FC = () => {
     );
     setMinusModal(false);
   };
+
   const onEditMaterial = (values: any): void => {
     dispatch(editMaterial(selectedRow?.category!, values.code, values.description, values.materialName, values.minimumExistence, selectedWarehouse));
     setEditMaterialModal(false);
   };
+
   const onChange: TableProps<DataType>["onChange"] = (pagination, filters, sorter, extra) => {
     setFilteredData(extra.currentDataSource);
     console.log(filteredData);
   };
+
   const rowSelection: TableRowSelection<DataType> = {
     onChange: async (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
       setSelectedRow(selectedRows[0]);
       console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows);
     },
   };
+
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
@@ -387,6 +402,7 @@ const MaterialsTable: React.FC = () => {
         text
       ),
   });
+  
   const columns: ColumnsType<DataType> = [
     {
       title: "Código",
