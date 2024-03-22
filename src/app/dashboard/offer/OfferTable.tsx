@@ -28,8 +28,15 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { IOffer } from "@/models/offer";
-import { loadSelectedOffer, offersStartLoading, startDeleteOffer } from "../../../actions/offer";
+import {
+  loadSelectedOffer,
+  offersStartLoading,
+  setFinalOffer,
+  startDeleteOffer,
+  startUpdateOffer
+} from "../../../actions/offer";
 import { IProject } from "@/models/project";
+import { CheckSvg } from "@/app/global/CheckSvg";
 
 // const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
 //   ssr: false,
@@ -45,7 +52,6 @@ const OfferTable: React.FC = () => {
   const [filteredData, setFilteredData] = useState<IOffer[]>();
   const searchInput = useRef<InputRef>(null);
   const router = useRouter();
-  const { data: sessionData } = useSession();
 
   // const fields = [
   //   {
@@ -88,7 +94,7 @@ const OfferTable: React.FC = () => {
     dispatch(offersStartLoading(selectedProject._id));
   }, [dispatch, selectedProject]);
 
-  const { offers }: any = useAppSelector((state: RootState) => state?.offer);
+  const { offers, finalOfferId }: {offers: IOffer[], finalOfferId: string} = useAppSelector((state: RootState) => state?.offer);
 
   // let PDFReportData: ICostSheet[] = [];
 
@@ -99,15 +105,17 @@ const OfferTable: React.FC = () => {
   // }
 
   const handleView = (projectId: string): void => {
-    if (projectId) {
-      dispatch(loadSelectedOffer(projectId));
-      router.push(`/dashboard/offer/${projectId}`);
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione una oferta para ver"
-      });
-    }
+    dispatch(loadSelectedOffer(projectId));
+    router.push(`/dashboard/offer/${projectId}`);
+  };
+
+  const handleCheckOffer = (record: IOffer): void => {
+    const offerToUncheck: IOffer | undefined = offers?.find((offer)=> offer._id === finalOfferId)
+    console.log("🚀 ~ handleCheckOffer ~ offerToUncheck:", offerToUncheck)
+    dispatch(startUpdateOffer({ ...offerToUncheck, isFinalOffer: false }));
+    dispatch(setFinalOffer(record._id));
+    dispatch(startUpdateOffer({ ...record, isFinalOffer: true }));
+    dispatch(offersStartLoading(selectedProject._id));
   };
 
   const handleSearch = (
@@ -118,24 +126,6 @@ const OfferTable: React.FC = () => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
-  };
-
-  const handleDelete = (record: any) => {
-    Swal.fire({
-      title: "Eliminar Oferta de Servicio",
-      text: "La oferta seleccionada se borrará de forma permanente",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      cancelButtonText: "Cancelar",
-      confirmButtonText: "Eliminar"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(startDeleteOffer(record._id));
-        dispatch(offersStartLoading(selectedProject._id));
-      }
-    });
   };
 
   const handleReset = (clearFilters: () => void) => {
@@ -253,6 +243,18 @@ const OfferTable: React.FC = () => {
               <SeeSvg width={20} height={20} />
             </button>
           </Tooltip>
+          {!record.isFinalOffer ? (
+            <Tooltip placement="top" title={"Marcar como Final"} arrow={{ pointAtCenter: true }}>
+              <button
+                onClick={() => handleCheckOffer(record)}
+                className="table-check-action-btn text-white-300 "
+              >
+                <CheckSvg width={20} height={20} />
+              </button>
+            </Tooltip>
+          ) : (
+            <></>
+          )}
         </div>
       )
     }
