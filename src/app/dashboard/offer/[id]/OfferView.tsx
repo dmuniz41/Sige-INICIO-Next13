@@ -11,6 +11,10 @@ import { Item } from "./Item";
 import { MaterialsListModal } from "./MaterialsTable";
 import { Tooltip } from "antd";
 import { ListSvg } from "@/app/global/ListSvg";
+import { CheckSvg } from "@/app/global/CheckSvg";
+import { CircleCheckSvg } from "@/app/global/CircleCheckSvg";
+import { setFinalOfferId } from "@/actions/project";
+import { IProject } from "@/models/project";
 
 export const OfferView = () => {
   const url = usePathname().split("/");
@@ -30,6 +34,15 @@ export const OfferView = () => {
   const { selectedOffer }: { selectedOffer: IOffer } = useAppSelector(
     (state: RootState) => state?.offer
   );
+  const { selectedProject }: { selectedProject: IProject } = useAppSelector(
+    (state: RootState) => state?.project
+  );
+
+  const setOfferAsFinal = () => {
+    dispatch(setFinalOfferId(selectedProject, selectedOffer));
+    
+    router.push(`/dashboard/offer`);
+  };
 
   return (
     <>
@@ -48,23 +61,42 @@ export const OfferView = () => {
               )}
             </PDFDownloadLink> */}
           </div>
-          <Tooltip
-            placement="top"
-            title={"Historial de Operaciones"}
-            arrow={{ pointAtCenter: true }}
-          >
-            <button
-              className="toolbar-secondary-icon-btn"
-              onClick={() => setMaterialsTableModal(true)}
+          <div className="flex gap-1">
+            <Tooltip
+              placement="top"
+              title={"Listado de Materiales"}
+              arrow={{ pointAtCenter: true }}
             >
-              <ListSvg />
-              Materiales
-            </button>
-          </Tooltip>
+              <button
+                className="toolbar-auxiliary-icon"
+                onClick={() => setMaterialsTableModal(true)}
+              >
+                <ListSvg />
+              </button>
+            </Tooltip>
+            {!selectedOffer?.isFinalOffer ? (
+              <Tooltip placement="top" title={"Marcar como final"} arrow={{ pointAtCenter: true }}>
+                <button className="toolbar-auxiliary-icon" onClick={setOfferAsFinal}>
+                  <CheckSvg />
+                </button>
+              </Tooltip>
+            ) : (
+              <></>
+            )}
+          </div>
         </div>
       </article>
       <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-4">
-        <h1 className="pl-2 text-xl font-bold mb-2">{selectedOffer?.projectName}</h1>
+        <h1 className="pl-2 flex gap-4 text-xl font-bold mb-2">
+          {selectedOffer?.projectName}
+          {selectedOffer.isFinalOffer ? (
+            <div className="text-success-500 flex items-center">
+              <CircleCheckSvg />
+            </div>
+          ) : (
+            <></>
+          )}
+        </h1>
         {selectedOffer?.itemsList?.map((item, index) => (
           <div key={item.description}>
             <Item number={index + 1} item={item} />

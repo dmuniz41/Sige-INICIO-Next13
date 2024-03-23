@@ -4,39 +4,19 @@ import { SearchOutlined } from "@ant-design/icons";
 import dynamic from "next/dynamic";
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import Swal from "sweetalert2";
 import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import type { InputRef } from "antd";
 
-import { DeleteSvg } from "@/app/global/DeleteSvg";
-import { INomenclator } from "@/models/nomenclator";
-import {
-  loadSelectedServiceFee,
-  serviceFeeStartLoading,
-  startDeleteServiceFee
-} from "@/actions/serviceFee";
-import { nomenclatorsStartLoading, startDeleteNomenclator } from "@/actions/nomenclator";
 import { PDFSvg } from "@/app/global/PDFSvg";
-import { PlusSvg } from "@/app/global/PlusSvg";
-import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { SeeSvg } from "@/app/global/SeeSvg";
-import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { IOffer } from "@/models/offer";
-import {
-  loadSelectedOffer,
-  offersStartLoading,
-  setFinalOffer,
-  startDeleteOffer,
-  startUpdateOffer
-} from "../../../actions/offer";
+import { loadSelectedOffer, offersStartLoading } from "../../../actions/offer";
 import { IProject } from "@/models/project";
-import { CheckSvg } from "@/app/global/CheckSvg";
+import { CircleCheckSvg } from "@/app/global/CircleCheckSvg";
 
 // const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
 //   ssr: false,
@@ -94,7 +74,9 @@ const OfferTable: React.FC = () => {
     dispatch(offersStartLoading(selectedProject._id));
   }, [dispatch, selectedProject]);
 
-  const { offers, finalOfferId }: {offers: IOffer[], finalOfferId: string} = useAppSelector((state: RootState) => state?.offer);
+  const { offers, finalOfferId }: { offers: IOffer[]; finalOfferId: string } = useAppSelector(
+    (state: RootState) => state?.offer
+  );
 
   // let PDFReportData: ICostSheet[] = [];
 
@@ -107,15 +89,6 @@ const OfferTable: React.FC = () => {
   const handleView = (projectId: string): void => {
     dispatch(loadSelectedOffer(projectId));
     router.push(`/dashboard/offer/${projectId}`);
-  };
-
-  const handleCheckOffer = (record: IOffer): void => {
-    const offerToUncheck: IOffer | undefined = offers?.find((offer)=> offer._id === finalOfferId)
-    console.log("🚀 ~ handleCheckOffer ~ offerToUncheck:", offerToUncheck)
-    dispatch(startUpdateOffer({ ...offerToUncheck, isFinalOffer: false }));
-    dispatch(setFinalOffer(record._id));
-    dispatch(startUpdateOffer({ ...record, isFinalOffer: true }));
-    dispatch(offersStartLoading(selectedProject._id));
   };
 
   const handleSearch = (
@@ -221,8 +194,20 @@ const OfferTable: React.FC = () => {
       dataIndex: "projectName",
       key: "projectName",
       width: "60%",
-      sorter: (a: any, b: any) => a.projectName.localeCompare(b.projectName),
-      ...getColumnSearchProps("projectName")
+      render: (_, record) => (
+        <div className="flex gap-4 ">
+          <span>{record.projectName}</span>
+          {record.isFinalOffer ? (
+            <div className=" text-success-500">
+              <CircleCheckSvg />
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
+      ),
+      sorter: (a: any, b: any) => a.projectName.localeCompare(b.projectName)
+      // ...getColumnSearchProps("projectName")
     },
     {
       title: "Valor",
@@ -243,18 +228,6 @@ const OfferTable: React.FC = () => {
               <SeeSvg width={20} height={20} />
             </button>
           </Tooltip>
-          {!record.isFinalOffer ? (
-            <Tooltip placement="top" title={"Marcar como Final"} arrow={{ pointAtCenter: true }}>
-              <button
-                onClick={() => handleCheckOffer(record)}
-                className="table-check-action-btn text-white-300 "
-              >
-                <CheckSvg width={20} height={20} />
-              </button>
-            </Tooltip>
-          ) : (
-            <></>
-          )}
         </div>
       )
     }

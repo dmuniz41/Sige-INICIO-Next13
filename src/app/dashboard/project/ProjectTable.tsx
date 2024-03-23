@@ -106,6 +106,7 @@ const ProjectTable: React.FC = () => {
   serviceFeeAuxiliary?.payMethod?.map((payMethod) =>
     payMethodNomenclator.push(payMethod.representative)
   );
+
   nomenclators.map((nomenclator: INomenclator) => {
     if (nomenclator.category === "Nombre de Cliente")
       clientNamesNomenclators.push(nomenclator.code);
@@ -119,6 +120,7 @@ const ProjectTable: React.FC = () => {
       value: `${payMethod}`
     });
   });
+
   const clientNameFilter: any[] = [];
   clientNamesNomenclators.map((clientName: string) => {
     clientNameFilter.push({
@@ -126,6 +128,7 @@ const ProjectTable: React.FC = () => {
       value: `${clientName}`
     });
   });
+
   const currencyFilter: any[] = [];
   currencyNomenclators.map((currency: string) => {
     currencyFilter.push({
@@ -133,6 +136,7 @@ const ProjectTable: React.FC = () => {
       value: `${currency}`
     });
   });
+
   const statusFilter: any[] = [
     {
       text: "Terminado",
@@ -171,6 +175,7 @@ const ProjectTable: React.FC = () => {
       });
     }
   };
+
   const handleViewOffer = (projectId: string): void => {
     if (projectId) {
       dispatch(loadSelectedProject(projectId));
@@ -283,7 +288,7 @@ const ProjectTable: React.FC = () => {
       <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
     onFilter: (value, record) =>
-      record[dataIndex]
+      record[dataIndex]!
         .toString()
         .toLowerCase()
         .includes((value as string).toLowerCase()),
@@ -432,7 +437,7 @@ const ProjectTable: React.FC = () => {
           {record.status === "Pendiente de Oferta" ? (
             <></>
           ) : (
-            <Tooltip placement="top" title={"Ver Oferta"} arrow={{ pointAtCenter: true }}>
+            <Tooltip placement="top" title={"Ver Ofertas"} arrow={{ pointAtCenter: true }}>
               <button
                 disabled={!canList}
                 onClick={() => handleViewOffer(record._id)}

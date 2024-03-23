@@ -13,6 +13,7 @@ export interface IProject {
   currency: string;
   deliveryDate: string;
   expenses: number;
+  finalOfferId?: string
   initDate: string;
   itemsList: IItem[];
   key: string;
@@ -27,58 +28,62 @@ export interface IProject {
 const ProjectSchema = new Schema<IProject, Model<IProject>>({
   key: {
     type: String,
-    unique: true,
+    unique: true
   },
   clientNumber: {
     type: Number,
-    required: true,
+    required: true
   },
   clientName: {
     type: String,
-    required: true,
+    required: true
   },
   projectName: {
     type: String,
     required: true,
-    unique: true,
+    unique: true
   },
   payMethod: {
     type: String,
-    required: true,
+    required: true
   },
   currency: {
     type: String,
-    required: true,
+    required: true
   },
   initDate: {
     type: String,
-    required: true,
+    required: true
+  },
+  finalOfferId: {
+    type: String,
+    required: String
   },
   deliveryDate: {
-    type: String,
+    type: String
   },
   projectNumber: {
-    type: String,
+    type: String
   },
   itemsList: [
     {
       key: String,
       idNumber: Number,
-      description: String,
-    },
+      description: String
+    }
   ],
   status: {
-    type: String,
+    type: String
   },
   expenses: {
-    type: Number,
+    type: Number
   },
   profits: {
-    type: Number,
+    type: Number
   },
   totalValue: {
-    type: Number,
-  },
+    type: Number
+  }
 });
 
 const Project = models.Project || model("Project", ProjectSchema);
