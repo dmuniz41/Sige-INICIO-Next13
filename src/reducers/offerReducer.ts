@@ -8,6 +8,7 @@ const initialState: {
   selectedItem: IOfferItem;
   isItemUpdated: boolean;
   itemUpdated: IOfferItem;
+  finalOfferId: string;
 } = {
   offers: [],
   selectedOffer: {
@@ -29,7 +30,8 @@ const initialState: {
     activities: [],
     value: 0
   },
-  isItemUpdated: false
+  isItemUpdated: false,
+  finalOfferId: ""
 };
 
 export const offerReducer = (state = initialState, action: any) => {
@@ -89,6 +91,11 @@ export const offerReducer = (state = initialState, action: any) => {
       return {
         ...state,
         selectedOffer: initialState.selectedOffer
+      };
+    case types.setFinalOffer:
+      return {
+        ...state,
+        finalOfferId: action.payload
       };
 
     default:

@@ -54,10 +54,11 @@ export const OfferView = () => {
             arrow={{ pointAtCenter: true }}
           >
             <button
-              // className={}
+              className="toolbar-secondary-icon-btn"
               onClick={() => setMaterialsTableModal(true)}
             >
               <ListSvg />
+              Materiales
             </button>
           </Tooltip>
         </div>

@@ -21,6 +21,7 @@ export interface IOffer {
   projectId: string;
   projectName: string;
   value?: number;
+  isFinalOffer?: boolean;
 }
 
 const OfferSchema = new Schema<IOffer, Model<IOffer>>({
@@ -65,6 +66,10 @@ const OfferSchema = new Schema<IOffer, Model<IOffer>>({
   },
   value: {
     type: Number,
+    required: false
+  },
+  isFinalOffer: {
+    type: Boolean,
     required: false
   }
 });

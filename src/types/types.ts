@@ -69,6 +69,7 @@ export const types = {
   editItem:                "[Offer] Edit an Item From the Offer",
   selectedItem:            "[Offer] Item Selected",
   clearOffer:              "[Offer] Clear Offer",
+  setFinalOffer:           "[Offer] Set Offer as Final",
 
   setCurrencyChange:       "[Global] Set Currency Change",
 

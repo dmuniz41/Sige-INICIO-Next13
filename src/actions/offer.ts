@@ -183,3 +183,9 @@ export const editItem = (item: IOfferItem, isItemUpdated: boolean) => ({
   type: types.editItem,
   payload: { item: item, isItemUpdated: isItemUpdated }
 });
+
+// * ESTABLECE EN EL ESTADO GLOBAL EL ID DE LA OFERTA FINAL DEL PROYECTO SELECCIONADO * //
+export const setFinalOffer = (id: string) => ({
+  type: types.setFinalOffer,
+  payload: id
+});

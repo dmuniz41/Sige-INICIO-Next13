@@ -1,13 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
-import Offer, { IActivity, IOffer } from "@/models/offer";
-import ServiceFee, { IServiceFee, IServiceFeeSubItem } from "@/models/serviceFees";
-import Material from "@/models/material";
+import Offer, { IOffer } from "@/models/offer";
+import ServiceFee, { IServiceFeeSubItem } from "@/models/serviceFees";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const { ...offer }: IOffer = await request.json();
   const activitiesList: { description: string; amount: number }[] = [];
   const uniqueActivities: { description: string; amount: number }[] = [];
@@ -116,7 +115,8 @@ export async function POST(request: Request) {
       key: newKey,
       projectId: offer.projectId,
       projectName: offer.projectName,
-      value: offer.value
+      value: offer.value,
+      isFinalOffer: offer.isFinalOffer ?? false
     });
 
     await newOffer.save();
@@ -149,7 +149,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const accessToken = request.headers.get("accessToken");
   const projectId = request.headers.get("projectId");
   try {
@@ -194,7 +194,7 @@ export async function GET(request: Request) {
   }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   const { ...offer }: IOffer = await request.json();
   const accessToken = request.headers.get("accessToken");
 
@@ -223,9 +223,8 @@ export async function PUT(request: Request) {
     const updatedOffer = await Offer.findByIdAndUpdate(
       offer._id,
       {
-        itemsList: offer.itemsList,
-        projectName: offer.projectName,
-        value: offer.value
+        ...offer,
+        isFinalOffer: offer.isFinalOffer 
       },
       { new: true }
     );
@@ -257,7 +256,7 @@ export async function PUT(request: Request) {
   }
 }
 
-export async function PATCH(request: Request) {
+export async function PATCH(request: NextRequest) {
   const { id } = await request.json();
   const accessToken = request.headers.get("accessToken");
   try {
