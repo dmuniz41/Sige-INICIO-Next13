@@ -4,6 +4,8 @@ import Swal from "sweetalert2";
 import { IProject } from "@/models/project";
 import { Toast } from "@/helpers/customAlert";
 import { types } from "@/types/types";
+import { offersStartLoading, startUpdateOffer } from "./offer";
+import { IOffer } from "@/models/offer";
 
 //* CREA UN NUEVO PROYECTO *//
 export const startAddProject = ({ ...project }) => {
@@ -24,7 +26,7 @@ export const startAddProject = ({ ...project }) => {
           profits: project.profits,
           projectName: project.projectName,
           status: project.status,
-          totalValue: project.totalValue,
+          totalValue: project.totalValue
         },
         { headers: { accessToken: token } }
       )
@@ -33,7 +35,7 @@ export const startAddProject = ({ ...project }) => {
         dispatch(projectsStartLoading());
         Toast.fire({
           icon: "success",
-          title: "Proyecto Creado",
+          title: "Proyecto Creado"
         });
       })
       .catch((error: AxiosError) => {
@@ -64,16 +66,16 @@ export const startUpdateProject = ({ ...project }) => {
           profits: project.profits,
           projectName: project.projectName,
           status: project.status,
-          totalValue: project.totalValue,
+          totalValue: project.totalValue
         },
         { headers: { accessToken: token } }
       )
-      .then((project) => {
-        dispatch(updateProject(project));
+      .then((resp) => {
+        dispatch(updateProject(resp.data.updatedProject));
         dispatch(projectsStartLoading());
         Toast.fire({
           icon: "success",
-          title: `Proyecto Actualizado`,
+          title: `Proyecto Actualizado`
         });
       })
       .catch((error: AxiosError) => {
@@ -92,20 +94,8 @@ export const changeProjectStatus = (project: IProject, newStatus: string) => {
       .put(
         `${process.env.NEXT_PUBLIC_API_URL}/project`,
         {
-          _id: project._id,
-          clientName: project.clientName,
-          clientNumber: project.clientNumber,
-          currency: project.currency,
-          deliveryDate: project.deliveryDate,
-          expenses: project.expenses,
-          initDate: project.initDate,
-          itemsList: project.itemsList,
-          payMethod: project.payMethod,
-          profits: project.profits,
-          projectName: project.projectName,
-          projectNumber: project.projectNumber,
-          status: newStatus,
-          totalValue: project.totalValue,
+          ...project,
+          status: newStatus
         },
         { headers: { accessToken: token } }
       )
@@ -114,14 +104,39 @@ export const changeProjectStatus = (project: IProject, newStatus: string) => {
         dispatch(projectsStartLoading());
         Toast.fire({
           icon: "success",
-          title: `Proyecto Actualizado`,
+          title: `Proyecto Actualizado`
         });
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: project.ts:120 ~ return ~ message:", message);
+        console.log("🚀 ~ file: project.ts:112 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cambiar el estado del proyecto", "error");
       });
+  };
+};
+
+// * ESTABLECE EN EL PROYECTO EL ID DE LA OFERTA FINAL *//
+export const setFinalOfferId = (project: IProject, offer: IOffer) => {
+  const token = localStorage.getItem("accessToken");
+  return async (dispatch: any) => {
+    if (project.finalOfferId !== "") {
+      await axios
+        .get(`${process.env.NEXT_PUBLIC_API_URL}/offer/${project.finalOfferId}`, {
+          headers: { accessToken: token }
+        })
+        .then((resp) => {
+          let { BDOffer } = resp.data;
+          dispatch( ({ ...BDOffer, isFinalOffer: false }));
+          dispatch(offersStartLoading(project._id));
+        })
+        .catch((error: AxiosError) => {
+          let { message }: any = error.response?.data;
+          console.log("🚀 ~ file: project.ts:133 ~ return ~ message:", message);
+          Swal.fire("Error", "Error establecer la oferta como final", "error");
+        });
+    }
+    dispatch(startUpdateProject({ ...project, finalOfferId: offer._id }));
+    dispatch(startUpdateOffer({ ...offer, isFinalOffer: true }));
   };
 };
 
@@ -143,18 +158,22 @@ export const projectsStartLoading = () => {
   };
 };
 
-//* ELIMINA UN PROYECTO POR SI ID *// 
+//* ELIMINA UN PROYECTO POR SI ID *//
 export const startDeleteProject = (id: string) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .patch(`${process.env.NEXT_PUBLIC_API_URL}/project`, { id }, { headers: { accessToken: token } })
+      .patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/project`,
+        { id },
+        { headers: { accessToken: token } }
+      )
       .then(() => {
         dispatch(deleteProject(id));
         dispatch(projectsStartLoading());
         Toast.fire({
           icon: "success",
-          title: "Proyecto Eliminado",
+          title: "Proyecto Eliminado"
         });
       })
       .catch((error: AxiosError) => {
@@ -187,33 +206,34 @@ const addProject = ({ ...project }) => ({
   type: types.addProject,
   payload: {
     project
-  },
+  }
 });
 
 export const updateProject = ({ ...project }) => ({
   type: types.updateProject,
   payload: {
     project
-  },
+  }
 });
 
 export const projectLoaded = (projects: IProject[]) => ({
   type: types.projectsLoaded,
-  payload: projects,
+  payload: projects
 });
 export const clearOffer = () => {
-  console.log('Clear')
+  console.log("Clear");
   return {
-  type: types.clearOffer,
-}};
+    type: types.clearOffer
+  };
+};
 
 const deleteProject = (id: string) => ({
   type: types.deleteProject,
   payload: {
-    id,
-  },
+    id
+  }
 });
 const selectedProject = (project: any) => ({
   type: types.selectedProject,
-  payload: project,
+  payload: project
 });

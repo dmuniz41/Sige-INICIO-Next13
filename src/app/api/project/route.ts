@@ -1,13 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import moment from "moment";
 
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
-import Project, { IProject } from "@/models/project";
 import Offer from "@/models/offer";
+import Project, { IProject } from "@/models/project";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const { ...project }: IProject = await request.json();
   const accessToken = request.headers.get("accessToken");
   let newProjectNumber = "";
@@ -58,6 +58,7 @@ export async function POST(request: Request) {
       currency: project.currency,
       deliveryDate: project.deliveryDate,
       expenses: project.expenses ?? 0,
+      finalOfferId: project.finalOfferId ?? "",
       initDate: project.initDate,
       itemsList: project.itemsList,
       key: newKey,
@@ -97,7 +98,8 @@ export async function POST(request: Request) {
     }
   }
 }
-export async function PUT(request: Request) {
+
+export async function PUT(request: NextRequest) {
   const { ...project }: IProject = await request.json();
   const accessToken = request.headers.get("accessToken");
   try {
@@ -130,18 +132,19 @@ export async function PUT(request: Request) {
     const updatedProject = await Project.findByIdAndUpdate(
       project._id,
       {
-        clientNumber: project.clientNumber,
         clientName: project.clientName,
-        projectName: project.projectName,
-        payMethod: project.payMethod,
+        clientNumber: project.clientNumber,
         currency: project.currency,
-        initDate: project.initDate,
         deliveryDate: project.deliveryDate,
+        expenses: project.expenses ?? 0,
+        finalOfferId: project.finalOfferId ?? "",
+        initDate: project.initDate,
         itemsList: project.itemsList,
+        payMethod: project.payMethod,
+        profits: project.profits ?? 0,
+        projectName: project.projectName,
         status: project.status,
-        expenses: project.expenses,
-        profits: project.profits,
-        totalValue: project.totalValue
+        totalValue: project.totalValue ?? 0
       },
       { new: true }
     );
@@ -172,7 +175,8 @@ export async function PUT(request: Request) {
     }
   }
 }
-export async function GET(request: Request) {
+
+export async function GET(request: NextRequest) {
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -216,7 +220,8 @@ export async function GET(request: Request) {
     }
   }
 }
-export async function PATCH(request: Request) {
+
+export async function PATCH(request: NextRequest) {
   const { id } = await request.json();
   const accessToken = request.headers.get("accessToken");
 
