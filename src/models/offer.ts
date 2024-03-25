@@ -1,4 +1,5 @@
 import { Schema, model, models, Model } from "mongoose";
+import { IRepresentationCoefficients } from "./serviceFeeAuxiliary";
 
 export interface IActivity {
   amount: number;
@@ -22,6 +23,7 @@ export interface IOffer {
   projectName: string;
   value?: number;
   isFinalOffer?: boolean;
+  representationCoef: IRepresentationCoefficients;
 }
 
 const OfferSchema = new Schema<IOffer, Model<IOffer>>({
@@ -71,6 +73,13 @@ const OfferSchema = new Schema<IOffer, Model<IOffer>>({
   isFinalOffer: {
     type: Boolean,
     required: false
+  },
+  representationCoef: {
+    type: {
+      representative: String,
+      coefficientValue: Number
+    },
+    required: true
   }
 });
 

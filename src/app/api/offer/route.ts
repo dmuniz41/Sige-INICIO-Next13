@@ -8,6 +8,7 @@ import ServiceFee, { IServiceFeeSubItem } from "@/models/serviceFees";
 
 export async function POST(request: NextRequest) {
   const { ...offer }: IOffer = await request.json();
+  console.log("🚀 ~ POST ~ offer:", offer)
   const activitiesList: { description: string; amount: number }[] = [];
   const uniqueActivities: { description: string; amount: number }[] = [];
   const activitiesMaterials: { description: string; amount: number }[] = [];
@@ -110,13 +111,10 @@ export async function POST(request: NextRequest) {
     let newKey = generateRandomString(26);
 
     const newOffer = new Offer({
-      itemsList: offer.itemsList,
+      ...offer,
       materialsList: uniqueMaterials,
       key: newKey,
-      projectId: offer.projectId,
-      projectName: offer.projectName,
-      value: offer.value,
-      isFinalOffer: offer.isFinalOffer ?? false
+      isFinalOffer: offer.isFinalOffer ?? false,
     });
 
     await newOffer.save();
@@ -224,7 +222,6 @@ export async function PUT(request: NextRequest) {
       offer._id,
       {
         ...offer,
-        isFinalOffer: offer.isFinalOffer 
       },
       { new: true }
     );
