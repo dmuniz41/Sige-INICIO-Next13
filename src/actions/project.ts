@@ -137,7 +137,7 @@ export const setFinalOfferId = (project: IProject, offer: IOffer) => {
           Swal.fire("Error", "Error establecer la oferta como final", "error");
         });
     }
-    dispatch(startUpdateProject({ ...project, finalOfferId: offer._id }));
+    dispatch(startUpdateProject({ ...project,totalValue: offer.value, finalOfferId: offer._id }));
     dispatch(loadSelectedProject(project._id))
     dispatch(startUpdateOffer({ ...offer, isFinalOffer: true }));
   };
