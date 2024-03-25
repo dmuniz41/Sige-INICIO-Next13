@@ -5,15 +5,11 @@
 * {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
-.ant-table .ant-table-container .ant-table-content table thead.ant-table-thead .ant-table-cell {
-  background-color: #f4f6f9;
-}
+
 .ant-btn-primary {
   background-color: #0958d9;
 }
-.ant-table-row:hover {
-  cursor: pointer;
-}
+
 @layer components {
   .modal-btn-primary {
     @apply mt-4 select-none rounded-lg bg-success-500 py-2 px-6 text-center align-middle text-xs font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
