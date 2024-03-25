@@ -109,16 +109,18 @@ export async function POST(request: NextRequest) {
     }
 
     let newKey = generateRandomString(26);
-
+    const finalValue = offer.value! * offer?.representationCoef?.coefficientValue
+    
     const newOffer = new Offer({
       ...offer,
       materialsList: uniqueMaterials,
       key: newKey,
       isFinalOffer: offer.isFinalOffer ?? false,
+      value: finalValue
     });
-
+    
     await newOffer.save();
-
+    
     return new NextResponse(
       JSON.stringify({
         ok: true,

@@ -288,8 +288,7 @@ const ProjectTable: React.FC = () => {
       <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
     onFilter: (value, record) =>
-      record[dataIndex]!
-        .toString()
+      record[dataIndex]!.toString()
         .toLowerCase()
         .includes((value as string).toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
@@ -394,7 +393,11 @@ const ProjectTable: React.FC = () => {
       dataIndex: "totalValue",
       key: "totalValue",
       width: "5%",
-      render: (text) => <span>$ {parseFloat(text).toLocaleString("DE")}</span>,
+      render: (value) => (
+        <span>
+          $ {value.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}
+        </span>
+      ),
       sorter: {
         compare: (a, b) => a.totalValue - b.totalValue
       }
@@ -404,7 +407,11 @@ const ProjectTable: React.FC = () => {
       dataIndex: "expenses",
       key: "expenses",
       width: "5%",
-      render: (text) => <span>$ {parseFloat(text).toLocaleString("DE")}</span>,
+      render: (value) => (
+        <span>
+          $ {value.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}
+        </span>
+      ),
       sorter: {
         compare: (a, b) => a.expenses - b.expenses
       }
@@ -414,7 +421,11 @@ const ProjectTable: React.FC = () => {
       dataIndex: "profits",
       key: "profits",
       width: "5%",
-      render: (text) => <span>$ {parseFloat(text).toLocaleString("DE")}</span>,
+      render: (value) => (
+        <span>
+          $ {value.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}
+        </span>
+      ),
       sorter: {
         compare: (a, b) => a.profits - b.profits
       }
