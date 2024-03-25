@@ -216,6 +216,13 @@ const OfferTable: React.FC = () => {
       width: "10%",
       render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>
     },
+    {
+      title: "Representación",
+      dataIndex: "representationCoef",
+      key: "representationCoef",
+      width: "10%",
+      render: (representationCoef) => <span>{representationCoef?.representative}</span>
+    },
 
     {
       title: "Acciones",
