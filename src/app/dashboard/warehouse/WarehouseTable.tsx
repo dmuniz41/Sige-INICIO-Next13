@@ -11,7 +11,13 @@ import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interf
 import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
-import { startAddWarehouse, startDeleteWarehouse, startUpdateWarehouse, warehousesStartLoading, selectedWarehouse } from "@/actions/warehouse";
+import {
+  startAddWarehouse,
+  startDeleteWarehouse,
+  startUpdateWarehouse,
+  warehousesStartLoading,
+  selectedWarehouse
+} from "@/actions/warehouse";
 import { CreateWarehouseForm } from "./CreateWarehouseForm";
 import { EditWarehouseForm } from "./EditWarehouseForm";
 import { materialsStartLoading } from "@/actions/material";
@@ -40,7 +46,7 @@ const WarehousesTable: React.FC = () => {
   const [selectedRow, setSelectedRow] = useState<DataType>();
   const { data: sessionData } = useSession();
   const dispatch = useAppDispatch();
-  const router = useRouter()
+  const router = useRouter();
   const searchInput = useRef<InputRef>(null);
 
   const canList = sessionData?.user.role.includes("Listar Almacén");
@@ -60,35 +66,44 @@ const WarehousesTable: React.FC = () => {
   const handleNew = (): void => {
     setCreateNewModal(true);
   };
+
   const handleEdit = (): void => {
     if (selectedRow) {
       setEditModal(true);
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione un almacén a editar",
+        title: "Seleccione un almacén a editar"
       });
     }
   };
+
   const onCreate = (values: any): void => {
     dispatch(startAddWarehouse(values.name));
     setCreateNewModal(false);
   };
+
   const onEdit = (values: any): void => {
     dispatch(startUpdateWarehouse(selectedRow?._id!, values.name));
     setSelectedRow(undefined);
     setEditModal(false);
   };
-  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
+
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
 
-  const handleRowClick = async(record: any)=>{
+  const handleView = async (record: any) => {
     await dispatch(materialsStartLoading(record?._id!));
-    router.push(`/dashboard/warehouse/${record === undefined ? " " : record?._id}`)
-  }
+    router.push(`/dashboard/warehouse/${record === undefined ? " " : record?._id}`);
+  };
+
   const handleDelete = () => {
     if (selectedRow) {
       Swal.fire({
@@ -99,7 +114,7 @@ const WarehousesTable: React.FC = () => {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         cancelButtonText: "Cancelar",
-        confirmButtonText: "Eliminar",
+        confirmButtonText: "Eliminar"
       }).then((result) => {
         if (result.isConfirmed) {
           dispatch(startDeleteWarehouse(selectedRow?.name));
@@ -108,7 +123,7 @@ const WarehousesTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione un almacén a eliminar",
+        title: "Seleccione un almacén a eliminar"
       });
     }
   };
@@ -140,7 +155,11 @@ const WarehousesTable: React.FC = () => {
           >
             Search
           </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
           <Button
@@ -166,7 +185,9 @@ const WarehousesTable: React.FC = () => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
+    ),
     onFilter: (value, record) =>
       record[dataIndex]
         .toString()
@@ -179,10 +200,15 @@ const WarehousesTable: React.FC = () => {
     },
     render: (text) =>
       searchedColumn === dataIndex ? (
-        <Highlighter highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }} searchWords={[searchText]} autoEscape textToHighlight={text ? text.toString() : ""} />
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
       ) : (
         text
-      ),
+      )
   });
 
   const columns: ColumnsType<DataType> = [
@@ -199,6 +225,28 @@ const WarehousesTable: React.FC = () => {
       key: "totalValue",
       width: "25%",
       render: (text) => <span>$ {parseFloat(text).toLocaleString("DE")}</span>
+    },
+    {
+      title: "Acciones",
+      key: "actions",
+      width: "5%",
+      render: (_, { ...record }) => (
+        <div className="flex gap-1 justify-center">
+          {!canList ? (
+            <></>
+          ) : (
+            <Tooltip placement="top" title={"Ver Almacén"} arrow={{ pointAtCenter: true }}>
+              <button
+                disabled={!canList}
+                onClick={() => handleView(record)}
+                className="table-see-action-btn"
+              >
+                <SeeSvg width={20} height={20} />
+              </button>
+            </Tooltip>
+          )}
+        </div>
+      )
     }
   ];
 
@@ -216,7 +264,9 @@ const WarehousesTable: React.FC = () => {
             <button
               disabled={!canEdit}
               className={`${
-                canEdit ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canEdit
+                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                  : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleEdit}
             >
@@ -227,7 +277,9 @@ const WarehousesTable: React.FC = () => {
             <button
               disabled={!canDelete}
               className={`${
-                canDelete ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canDelete
+                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                  : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleDelete}
             >
@@ -238,7 +290,9 @@ const WarehousesTable: React.FC = () => {
             <button
               disabled={!canList}
               className={`${
-                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canList
+                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                  : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={() => dispatch(warehousesStartLoading())}
             >
@@ -248,17 +302,23 @@ const WarehousesTable: React.FC = () => {
         </div>
       </div>
 
-      <CreateWarehouseForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
-      <EditWarehouseForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />
+      <CreateWarehouseForm
+        open={createNewModal}
+        onCancel={() => setCreateNewModal(false)}
+        onCreate={onCreate}
+      />
+      <EditWarehouseForm
+        open={editModal}
+        onCancel={() => setEditModal(false)}
+        onCreate={onEdit}
+        defaultValues={selectedRow}
+      />
 
       <Table
         size="middle"
         columns={columns}
         dataSource={data}
         pagination={{ position: ["bottomCenter"], pageSize: 10 }}
-        onRow={(record=>({
-          onClick: () => handleRowClick(record),
-        }))}
         className="shadow-md"
       />
     </>

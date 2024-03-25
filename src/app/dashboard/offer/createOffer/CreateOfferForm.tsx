@@ -1,7 +1,7 @@
 "use client";
-import { Form } from "antd";
+import { Form, Select, SelectProps } from "antd";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { changeProjectStatus, clearOffer } from "@/actions/project";
 import { IOffer } from "@/models/offer";
@@ -12,18 +12,37 @@ import { PlusSvg } from "@/app/global/PlusSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { startAddOffer } from "@/actions/offer";
 import { useAppDispatch } from "@/hooks/hooks";
+import { IRepresentationCoefficients, IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
+import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 
 export const CreateOfferForm = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const router = useRouter();
+  const representatives: IRepresentationCoefficients[] | undefined = [];
+
+  useEffect(() => {
+    dispatch(startLoadServiceFeeAuxiliary());
+  }, [dispatch]);
 
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
-    (state: RootState) => state?.project,
+    (state: RootState) => state?.project
   );
   const { selectedOffer }: { selectedOffer: IOffer } = useAppSelector(
-    (state: RootState) => state?.offer,
+    (state: RootState) => state?.offer
   );
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
+    (state: RootState) => state?.serviceFee
+  );
+
+  serviceFeeAuxiliary?.payMethod?.map((payMethod) => representatives.push(payMethod));
+
+  const representativeOptions: SelectProps["options"] = representatives.map((payMethod) => {
+    return {
+      label: `${payMethod.representative}`,
+      value: `${payMethod.representative}`
+    };
+  });
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
@@ -42,9 +61,28 @@ export const CreateOfferForm = () => {
       requiredMark={"optional"}
       size="middle"
     >
-      <div className="font-black mb-2">
-        <h1>NOMBRE: {selectedProject.projectName}</h1>
+      <div className="font-bold mb-2">
+        <h1>Nombre: {selectedProject.projectName}</h1>
       </div>
+      <Form.Item
+        className="mb-3 w-[30%]"
+        label={<span className="font-bold text-md">Representación</span>}
+        name="representationCoef"
+        rules={[{ required: true, message: "Campo requerido" }]}
+      >
+        <Select
+          allowClear
+          options={representativeOptions}
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input: any, option: any) =>
+            (option?.label ?? "").toLowerCase().includes(input)
+          }
+          filterSort={(optionA: any, optionB: any) =>
+            (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
+          }
+        />
+      </Form.Item>
       <section className=" flex w-full gap-2 mb-4 ">
         {selectedOffer?.itemsList?.length == 0 ? (
           <article className="flex justify-center border border-border_light grow py-4 rounded-md">
@@ -133,15 +171,18 @@ export const CreateOfferForm = () => {
                     itemsList: selectedOffer?.itemsList,
                     projectName: selectedProject?.projectName,
                     projectId: selectedProject?._id,
+                    representationCoef: serviceFeeAuxiliary?.payMethod?.find(
+                      (value) => value.representative === values.representationCoef
+                    ),
                     value: selectedOffer?.itemsList
                       ?.map((item) => item.value)
-                      .reduce((total, current) => total + current, 0),
-                  }),
+                      .reduce((total, current) => total + current, 0)
+                  })
                 );
                 dispatch(changeProjectStatus(selectedProject, "Calculado"));
                 dispatch(clearOffer());
-                form.resetFields();
                 router.push(`/dashboard/project`);
+                form.resetFields();
               })
               .catch((error) => {
                 console.log("Validate Failed:", error);

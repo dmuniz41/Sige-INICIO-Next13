@@ -1,12 +1,6 @@
 "use client";
 
-import { Form, InputNumber, Modal, Radio, Select, SelectProps, Table } from "antd";
-import { IActivity } from "@/models/offer";
-import { IServiceFee } from "@/models/serviceFees";
-import { RootState, useAppSelector } from "@/store/store";
-import { serviceFeeStartLoading } from "@/actions/serviceFee";
-import { useAppDispatch } from "@/hooks/hooks";
-import { useEffect, useMemo, useState } from "react";
+import { Modal, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 
 interface CollectionCreateFormProps {

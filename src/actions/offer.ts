@@ -18,7 +18,8 @@ export const startAddOffer = ({ ...offer }: any) => {
           name: offer?.name,
           projectName: offer?.projectName,
           projectId: offer?.projectId,
-          value: offer?.value
+          value: offer?.value,
+          representationCoef: offer?.representationCoef
         },
         { headers: { accessToken: token } }
       )
