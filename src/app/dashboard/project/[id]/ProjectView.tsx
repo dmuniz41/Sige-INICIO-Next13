@@ -146,22 +146,18 @@ export const ProjectView = () => {
         </article>
 
         <article className="w-full flex justify-between p-2">
-          <article>
-            {/* <div className="flex gap-1">
-              <span className="font-bold mr-2 ">Solicitado por:</span>
-              <p></p>
+          <article className="grid gap-1">
+            <div className="flex gap-1">
+              <span className="font-bold mr-2 ">Precio:</span>
+              <p>${selectedProject.expenses === undefined ? 0 : selectedProject?.totalValue?.toLocaleString('DE')}</p>
             </div>
             <div className="flex gap-1">
-              <span className="font-bold mr-2 ">Recibido por:</span>
-              <p></p>
-            </div> */}
-            <div className="flex gap-1">
               <span className="font-bold mr-2 ">Gastos:</span>
-              <p>${selectedProject.expenses === undefined ? 0 : selectedProject.expenses}</p>
+              <p>${selectedProject.expenses === undefined ? 0 : selectedProject?.expenses}</p>
             </div>
             <div className="flex gap-1">
               <span className="font-bold mr-2 ">Ganancias:</span>
-              <p>${selectedProject.profits === undefined ? 0 : selectedProject.profits}</p>
+              <p>${selectedProject.profits === undefined ? 0 : selectedProject?.profits}</p>
             </div>
             <div className="flex gap-1">
               <span className="font-bold mr-2 ">Estado:</span>

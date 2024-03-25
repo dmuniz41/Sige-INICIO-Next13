@@ -450,21 +450,18 @@ const MaterialsTable: React.FC = () => {
       sorter: {
         compare: (a, b) => a.unitsTotal - b.unitsTotal,
       },
-      ...getColumnSearchProps("unitsTotal"),
     },
     {
       title: "Unidad de Medida",
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "10%",
-      ...getColumnSearchProps("unitMeasure"),
     },
     {
       title: "Existencias Mínimas",
       dataIndex: "minimumExistence",
       key: "minimumExistence",
       width: "5%",
-      ...getColumnSearchProps("minimumExistence"),
     },
     {
       title: "Proveedor",

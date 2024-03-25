@@ -137,7 +137,7 @@ export async function PUT(request: NextRequest) {
         currency: project.currency,
         deliveryDate: project.deliveryDate,
         expenses: project.expenses ?? 0,
-        finalOfferId: project.finalOfferId ?? "",
+        finalOfferId: project.finalOfferId,
         initDate: project.initDate,
         itemsList: project.itemsList,
         payMethod: project.payMethod,

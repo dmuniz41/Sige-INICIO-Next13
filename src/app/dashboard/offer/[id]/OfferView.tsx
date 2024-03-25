@@ -40,7 +40,6 @@ export const OfferView = () => {
 
   const setOfferAsFinal = () => {
     dispatch(setFinalOfferId(selectedProject, selectedOffer));
-    
     router.push(`/dashboard/offer`);
   };
 
