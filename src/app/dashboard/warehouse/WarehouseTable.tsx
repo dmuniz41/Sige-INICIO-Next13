@@ -14,7 +14,6 @@ import { Toast } from "@/helpers/customAlert";
 import { startAddWarehouse, startDeleteWarehouse, startUpdateWarehouse, warehousesStartLoading, selectedWarehouse } from "@/actions/warehouse";
 import { CreateWarehouseForm } from "./CreateWarehouseForm";
 import { EditWarehouseForm } from "./EditWarehouseForm";
-import Link from "next/link";
 import { materialsStartLoading } from "@/actions/material";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
@@ -34,15 +33,15 @@ interface DataType {
 type DataIndex = keyof DataType;
 
 const WarehousesTable: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const [searchText, setSearchText] = useState("");
   const [selectedRow, setSelectedRow] = useState<DataType>();
-  const searchInput = useRef<InputRef>(null);
-  const router = useRouter()
   const { data: sessionData } = useSession();
+  const dispatch = useAppDispatch();
+  const router = useRouter()
+  const searchInput = useRef<InputRef>(null);
 
   const canList = sessionData?.user.role.includes("Listar Almacén");
   const canCreate = sessionData?.user.role.includes("Crear Almacén");
@@ -113,17 +112,12 @@ const WarehousesTable: React.FC = () => {
       });
     }
   };
+
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText("");
   };
-  const rowSelection: TableRowSelection<DataType> = {
-    onChange: async (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-      setSelectedRow(selectedRows[0]);
-      dispatch(selectedWarehouse(selectedRows[0]._id));
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows);
-    },
-  };
+
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
@@ -190,21 +184,22 @@ const WarehousesTable: React.FC = () => {
         text
       ),
   });
+
   const columns: ColumnsType<DataType> = [
     {
       title: "Nombre",
       dataIndex: "name",
       key: "name",
       width: "75%",
-      ...getColumnSearchProps("name"),
+      ...getColumnSearchProps("name")
     },
     {
       title: "Valor Total",
       dataIndex: "totalValue",
       key: "totalValue",
       width: "25%",
-      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
-    },
+      render: (text) => <span>$ {parseFloat(text).toLocaleString("DE")}</span>
+    }
   ];
 
   return (
