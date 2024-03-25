@@ -30,8 +30,8 @@ export const startAddProject = ({ ...project }) => {
         },
         { headers: { accessToken: token } }
       )
-      .then((project) => {
-        dispatch(addProject(project));
+      .then((resp) => {
+        dispatch(addProject(resp.data.newProject));
         dispatch(projectsStartLoading());
         Toast.fire({
           icon: "success",
@@ -60,6 +60,7 @@ export const startUpdateProject = ({ ...project }) => {
           currency: project.currency,
           deliveryDate: project.deliveryDate,
           expenses: project.expenses,
+          finalOfferId: project.finalOfferId,
           initDate: project.initDate,
           itemsList: project.itemsList,
           payMethod: project.payMethod,
@@ -99,8 +100,8 @@ export const changeProjectStatus = (project: IProject, newStatus: string) => {
         },
         { headers: { accessToken: token } }
       )
-      .then((project) => {
-        dispatch(updateProject(project));
+      .then((resp) => {
+        dispatch(updateProject(resp.data.updatedProject));
         dispatch(projectsStartLoading());
         Toast.fire({
           icon: "success",
@@ -126,8 +127,9 @@ export const setFinalOfferId = (project: IProject, offer: IOffer) => {
         })
         .then((resp) => {
           let { BDOffer } = resp.data;
-          dispatch( ({ ...BDOffer, isFinalOffer: false }));
+          dispatch(startUpdateOffer({ ...BDOffer, isFinalOffer: false }));
           dispatch(offersStartLoading(project._id));
+          dispatch(loadSelectedProject(project._id));
         })
         .catch((error: AxiosError) => {
           let { message }: any = error.response?.data;
@@ -136,6 +138,7 @@ export const setFinalOfferId = (project: IProject, offer: IOffer) => {
         });
     }
     dispatch(startUpdateProject({ ...project, finalOfferId: offer._id }));
+    dispatch(loadSelectedProject(project._id))
     dispatch(startUpdateOffer({ ...offer, isFinalOffer: true }));
   };
 };
@@ -152,7 +155,7 @@ export const projectsStartLoading = () => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: project.ts:99 ~ return ~ message:", message);
+        console.log("🚀 ~ file: project.ts:157 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar los proyectos", "error");
       });
   };
@@ -220,8 +223,8 @@ export const projectLoaded = (projects: IProject[]) => ({
   type: types.projectsLoaded,
   payload: projects
 });
+
 export const clearOffer = () => {
-  console.log("Clear");
   return {
     type: types.clearOffer
   };

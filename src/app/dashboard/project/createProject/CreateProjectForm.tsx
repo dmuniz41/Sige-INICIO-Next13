@@ -217,7 +217,6 @@ export const CreateProjectForm = () => {
                     initDate: values.initDate.format("MM/DD/YYYY")
                   })
                 );
-                form.resetFields();
                 router.push("/dashboard/project");
               })
               .catch((error) => {
