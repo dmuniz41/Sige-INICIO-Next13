@@ -17,7 +17,7 @@ export interface IProject {
   initDate: string;
   itemsList: IItem[];
   key: string;
-  payMethod: string;
+  payMethod?: string;
   profits: number;
   projectName: string;
   projectNumber: string;
@@ -45,7 +45,7 @@ const ProjectSchema = new Schema<IProject, Model<IProject>>({
   },
   payMethod: {
     type: String,
-    required: true
+    required: false
   },
   currency: {
     type: String,
