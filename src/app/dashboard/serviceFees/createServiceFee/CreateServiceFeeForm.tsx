@@ -600,6 +600,7 @@ export const FormSection = (props: any) => {
                       name={[name, "price"]}
                       className="w-[88px]"
                       rules={[{ required: true }]}
+                      
                     >
                       <Input
                         disabled

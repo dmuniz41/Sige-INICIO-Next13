@@ -19,7 +19,6 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
   onCreate,
   onCancel
 }) => {
-  // const [activityValue, setActivityValue] = useState<number>(0);
   const [size, setSize] = useState<number>(0);
   const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>("");
   const [currentPrice, setCurrentPrice] = useState<number>(0);
@@ -58,7 +57,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
       onCancel={onCancel}
       okType="default"
       okText="Crear"
-      width={"600px"}
+      width={"1000px"}
       cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
@@ -90,7 +89,6 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                         }
                   );
                   form.resetFields();
-                  // setActivityValue(0);
                   setCurrentPrice(0);
                   setSize(0);
                   setCurrentUnitMeasure("");
@@ -124,7 +122,6 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
               setSelectedServiceFee(currentServiceFee!);
               setCurrentUnitMeasure(currentServiceFee?.valuePerUnitMeasure!);
               setCurrentPrice(0);
-              // setActivityValue(0);
 
               form.setFieldsValue({
                 unitMeasure: selectedServiceFee?.valuePerUnitMeasure,
@@ -238,7 +235,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
           <div className=" flex gap-2 pl-2 mb-4">
             <span className="font-bold">Tamaño:</span>
             <span>
-              {!size ? 0 : size.toLocaleString("DE")} {currentUnitMeasure?.replace("$/", "")}
+              {!size ? 0 : size.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}
             </span>
           </div>
         ) : (
@@ -247,7 +244,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
             <span>
               {!form.getFieldValue("amount")
                 ? 0
-                : form.getFieldValue("amount").toLocaleString("DE")}{" "}
+                : form.getFieldValue("amount").toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}{" "}
             </span>
           </div>
         )}
@@ -257,11 +254,11 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Precio:</span>
-          <span>${currentPrice?.toLocaleString("DE")}</span>
+          <span>${currentPrice?.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}</span>
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Importe:</span>
-          <span>${activityValue?.toLocaleString("DE")}</span>
+          <span>${activityValue?.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}</span>
         </div>
       </Form>
     </Modal>

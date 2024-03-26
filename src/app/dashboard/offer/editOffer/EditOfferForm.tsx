@@ -140,7 +140,7 @@ export const EditOfferForm = () => {
             ))}
           </div>
           <button
-            className="toolbar-primary-icon-btn"
+            className="add-item-form-btn"
             onClick={() => {
               router.push("/dashboard/offer/editOffer/createItem");
             }}
@@ -149,34 +149,36 @@ export const EditOfferForm = () => {
             Añadir Item
           </button>
         </section>
-        <button
-          type="submit"
-          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
-          onClick={() => {
-            form
-              .validateFields()
-              .then((values) => {
-                dispatch(
-                  startAddOffer({
-                    ...selectedOffer,
-                    representationCoef: serviceFeeAuxiliary?.payMethod?.find(
-                      (value) => value.representative === values.representationCoef
-                    ),
-                    projectName: `${selectedProject.projectName} v${offers.length + 1}`,
-                    value: selectedOffer?.itemsList
-                      ?.map((item) => item.value)
-                      .reduce((total, current) => total + current, 0)
-                  })
-                );
-                router.push(`/dashboard/offer`);
-              })
-              .catch((error) => {
-                console.log("Validate Failed:", error);
-              });
-          }}
-        >
-          Editar
-        </button>
+        <Form.Item>
+          <button
+            type="submit"
+            className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
+            onClick={() => {
+              form
+                .validateFields()
+                .then((values) => {
+                  dispatch(
+                    startAddOffer({
+                      ...selectedOffer,
+                      representationCoef: serviceFeeAuxiliary?.payMethod?.find(
+                        (value) => value.representative === values.representationCoef
+                      ),
+                      projectName: `${selectedProject.projectName} v${offers.length + 1}`,
+                      value: selectedOffer?.itemsList
+                        ?.map((item) => item.value)
+                        .reduce((total, current) => total + current, 0)
+                    })
+                  );
+                  router.push(`/dashboard/offer`);
+                })
+                .catch((error) => {
+                  console.log("Validate Failed:", error);
+                });
+            }}
+          >
+            Editar
+          </button>
+        </Form.Item>
       </Form>
     </>
   );

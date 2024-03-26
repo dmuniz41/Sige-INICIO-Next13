@@ -96,7 +96,10 @@ export const OfferView = () => {
             <></>
           )}
         </h1>
-        <h1>Representación: {selectedOffer?.representationCoef?.representative}</h1>
+        <div className="flex gap-1 mb-2">
+          <h2 className="font-bold">Representación: </h2>
+          <span>{selectedOffer?.representationCoef?.representative}</span>
+        </div>
         {selectedOffer?.itemsList?.map((item, index) => (
           <div key={item.description}>
             <Item number={index + 1} item={item} />

@@ -112,7 +112,7 @@ export const CreateOfferForm = () => {
               ))}
             </article>
             <button
-              className="toolbar-primary-icon-btn"
+              className="add-item-form-btn"
               onClick={() => {
                 router.push("/dashboard/offer/createOffer/createItem");
               }}
