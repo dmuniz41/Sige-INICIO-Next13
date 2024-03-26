@@ -14,6 +14,7 @@ import { AddItemModal } from "./AddItem";
 import { INomenclator } from "@/models/nomenclator";
 import { IClientNomenclator } from "@/models/nomenclators/client";
 import { clientNomenclatorsStartLoading } from "@/actions/nomenclators/client";
+import TextArea from "antd/es/input/TextArea";
 
 export const CreateProjectForm = () => {
   const dispatch = useAppDispatch();
@@ -122,7 +123,7 @@ export const CreateProjectForm = () => {
               name="projectName"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
-              <Input />
+              <TextArea rows={3}/>
             </Form.Item>
 
             <Form.Item
