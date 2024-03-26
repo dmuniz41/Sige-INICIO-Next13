@@ -23,13 +23,12 @@ export const startAddServiceFee = ({ ...serviceFee }): any => {
           hiredPersonalExpenses: serviceFee.hiredPersonalExpenses ?? [],
           nomenclatorId: serviceFee.nomenclatorId,
           ONAT: serviceFee.ONAT,
-          payMethodCoef: serviceFee.payMethodCoef,
           rawMaterials: serviceFee.rawMaterials ?? [],
           taskList: serviceFee.taskList ?? [],
           taskName: serviceFee.taskName,
           transportationExpenses: serviceFee.transportationExpenses ?? [],
           valuePerUnitMeasure: serviceFee.valuePerUnitMeasure,
-          workersAmount: serviceFee.workersAmount,
+          workersAmount: serviceFee.workersAmount
         },
         { headers: { accessToken: token } }
       )
@@ -39,7 +38,7 @@ export const startAddServiceFee = ({ ...serviceFee }): any => {
         dispatch(serviceFeeStartLoading());
         Toast.fire({
           icon: "success",
-          title: "Tarifa de Servicio Creada",
+          title: "Tarifa de Servicio Creada"
         });
       })
       .catch((error: AxiosError) => {
@@ -69,13 +68,12 @@ export const startUpdateServiceFee = ({ ...serviceFee }): any => {
           hiredPersonalExpenses: serviceFee.hiredPersonalExpenses ?? [],
           nomenclatorId: serviceFee.nomenclatorId,
           ONAT: serviceFee.ONAT,
-          payMethodCoef: serviceFee.payMethodCoef,
           rawMaterials: serviceFee.rawMaterials ?? [],
           taskList: serviceFee.taskList ?? [],
           taskName: serviceFee.taskName,
           transportationExpenses: serviceFee.transportationExpenses ?? [],
           valuePerUnitMeasure: serviceFee.valuePerUnitMeasure,
-          workersAmount: serviceFee.workersAmount,
+          workersAmount: serviceFee.workersAmount
         },
         { headers: { accessToken: token } }
       )
@@ -84,7 +82,7 @@ export const startUpdateServiceFee = ({ ...serviceFee }): any => {
         dispatch(serviceFeeStartLoading());
         Toast.fire({
           icon: "success",
-          title: `Tarifa de Servicio Actualizada`,
+          title: `Tarifa de Servicio Actualizada`
         });
       })
       .catch((error: AxiosError) => {
@@ -116,13 +114,17 @@ export const startDeleteServiceFee = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .patch(`${process.env.NEXT_PUBLIC_API_URL}/serviceFee`, { id }, { headers: { accessToken: token } })
+      .patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/serviceFee`,
+        { id },
+        { headers: { accessToken: token } }
+      )
       .then(() => {
         dispatch(deleteServiceFee(id));
         dispatch(serviceFeeStartLoading());
         Toast.fire({
           icon: "success",
-          title: "Tarifa de Servicio Eliminada",
+          title: "Tarifa de Servicio Eliminada"
         });
       })
       .catch((error: AxiosError) => {
@@ -137,7 +139,9 @@ export const loadSelectedServiceFee = (id: string) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/serviceFee/${id}`, { headers: { accessToken: token } })
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/serviceFee/${id}`, {
+        headers: { accessToken: token }
+      })
       .then((resp) => {
         let { BDServiceFee } = resp.data;
         dispatch(selectedServiceFee(BDServiceFee));
@@ -153,64 +157,30 @@ export const loadSelectedServiceFee = (id: string) => {
 const addServiceFee = ({ ...serviceFee }) => ({
   type: types.addServiceFee,
   payload: {
-    administrativeExpenses: serviceFee.administrativeExpenses ?? [],
-    artisticTalent: serviceFee.artisticTalentValue,
-    category: serviceFee.category,
-    commercialMargin: serviceFee.commercialMargin,
-    complexity: serviceFee.complexity,
-    currencyChange: serviceFee.currencyChange,
-    equipmentDepreciation: serviceFee.equipmentDepreciation ?? [],
-    equipmentMaintenance: serviceFee.equipmentMaintenance ?? [],
-    hiredPersonalExpenses: serviceFee.hiredPersonalExpenses ?? [],
-    nomenclatorId: serviceFee.nomenclatorId,
-    ONAT: serviceFee.ONAT,
-    payMethodCoef: serviceFee.payMethodCoef,
-    rawMaterials: serviceFee.rawMaterials ?? [],
-    taskList: serviceFee.taskList ?? [],
-    taskName: serviceFee.taskName,
-    transportationExpenses: serviceFee.transportationExpenses ?? [],
-    valuePerUnitMeasure: serviceFee.valuePerUnitMeasure,
-    workersAmount: serviceFee.workersAmount,
-  },
+    serviceFee
+  }
 });
 
 export const updateServiceFee = ({ ...serviceFee }) => ({
   type: types.updateServiceFee,
   payload: {
-    administrativeExpenses: serviceFee.administrativeExpenses ?? [],
-    artisticTalent: serviceFee.artisticTalentValue,
-    category: serviceFee.category,
-    commercialMargin: serviceFee.commercialMargin,
-    complexity: serviceFee.complexity,
-    currencyChange: serviceFee.currencyChange,
-    equipmentDepreciation: serviceFee.equipmentDepreciation ?? [],
-    equipmentMaintenance: serviceFee.equipmentMaintenance ?? [],
-    hiredPersonalExpenses: serviceFee.hiredPersonalExpenses ?? [],
-    nomenclatorId: serviceFee.nomenclatorId,
-    ONAT: serviceFee.ONAT,
-    payMethodCoef: serviceFee.payMethodCoef,
-    rawMaterials: serviceFee.rawMaterials ?? [],
-    taskList: serviceFee.taskList ?? [],
-    taskName: serviceFee.taskName,
-    transportationExpenses: serviceFee.transportationExpenses ?? [],
-    valuePerUnitMeasure: serviceFee.valuePerUnitMeasure,
-    workersAmount: serviceFee.workersAmount,
-  },
+    serviceFee
+  }
 });
 
 export const serviceFeeLoaded = (serviceFees: any) => ({
   type: types.serviceFeesLoaded,
-  payload: serviceFees,
+  payload: serviceFees
 });
 
 const deleteServiceFee = (id: string) => ({
   type: types.deleteServiceFee,
   payload: {
-    id,
-  },
+    id
+  }
 });
 
 const selectedServiceFee = (serviceFee: any) => ({
   type: types.selectedServiceFee,
-  payload: serviceFee,
+  payload: serviceFee
 });

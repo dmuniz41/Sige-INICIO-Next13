@@ -11,7 +11,7 @@ import { AddRawMaterialModal } from "./AddRawMaterial";
 import { AddTaskListModal } from "./AddTaskList";
 import { AddTransportationExpensesModal } from "./AddTransportationExpenses";
 import { INomenclator } from "@/models/nomenclator";
-import { IRepresentationCoefficients, IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
+import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
 import { startAddServiceFee } from "@/actions/serviceFee";
@@ -26,7 +26,6 @@ export const CreateServiceFeeForm = () => {
   const [form] = Form.useForm();
   const serviceFeeCategory: string[] | undefined = [];
   const valuePerUM: string[] | undefined = [];
-  const payMethods: IRepresentationCoefficients[] | undefined = [];
   const router = useRouter();
 
   const [addRawMaterialModal, setAddRawMaterialModal] = useState(false);
@@ -55,7 +54,6 @@ export const CreateServiceFeeForm = () => {
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
     (state: RootState) => state?.serviceFee
   );
-  serviceFeeAuxiliary?.payMethod?.map((payMethod) => payMethods.push(payMethod));
 
   nomenclators.map((nomenclator: INomenclator) => {
     if (nomenclator.category === "Categoría de ficha de costo")
@@ -69,27 +67,25 @@ export const CreateServiceFeeForm = () => {
       value: `${serviceFeeCategory}`
     };
   });
+
   const valuePerUMOptions: SelectProps["options"] = valuePerUM.map((valuePerUM) => {
     return {
       label: `${valuePerUM}`,
       value: `${valuePerUM}`
     };
   });
-  const payMethodOptions: SelectProps["options"] = payMethods.map((payMethod) => {
-    return {
-      label: `${payMethod.representative}`,
-      value: payMethod.coefficientValue
-    };
-  });
+
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
+
   const onAddRawMaterial = (values: any) => {
     console.log("🚀 ~ onAddRawMaterial ~ values:", values);
     setRawMaterialsValues([values, ...rawMaterialsValues]);
     form.setFieldValue("rawMaterials", [...rawMaterialsValues, values]);
     setAddRawMaterialModal(false);
   };
+
   const onAddTaskList = (values: any) => {
     console.log("🚀 ~ onAddTaskList ~ values:", values);
     setTaskListValues([
@@ -114,30 +110,35 @@ export const CreateServiceFeeForm = () => {
     ]);
     setAddTaskListModal(false);
   };
+
   const onAddEquipmentDepreciation = (values: any) => {
     console.log("🚀 ~ onAddEquipmentDepreciation ~ values:", values);
     setEquipmentDepreciationValues([values, ...equipmentDepreciationValues]);
     form.setFieldValue("equipmentDepreciation", [...equipmentDepreciationValues, values]);
     setAddEquipmentDepreciationModal(false);
   };
+
   const onAddEquipmentMaintenance = (values: any) => {
     console.log("🚀 ~ onAddEquipmentMaintenance ~ values:", values);
     setEquipmentMaintenanceValues([values, ...equipmentMaintenanceValues]);
     form.setFieldValue("equipmentMaintenance", [...equipmentMaintenanceValues, values]);
     setAddEquipmentMaintenanceModal(false);
   };
+
   const onAddAdministrativeExpenses = (values: any) => {
     console.log("🚀 ~ onAddAdministrativeExpenses ~ values:", values);
     setAdministrativeExpensesValues([values, ...administrativeExpensesValues]);
     form.setFieldValue("administrativeExpenses", [...administrativeExpensesValues, values]);
     setAddAdministrativeExpensesModal(false);
   };
+
   const onAddTransportationExpenses = (values: any) => {
     console.log("🚀 ~ onAddTransportationExpenses ~ values:", values);
     setTransportationExpensesValues([values, ...transportationExpensesValues]);
     form.setFieldValue("transportationExpenses", [...transportationExpensesValues, values]);
     setAddTransportationExpensesModal(false);
   };
+
   const onAddHiredPersonalExpenses = (values: any) => {
     console.log("🚀 ~ onAddHiredPersonalExpenses ~ values:", values);
     setHiredPersonalExpensesValues([
@@ -279,27 +280,6 @@ export const CreateServiceFeeForm = () => {
               rules={[{ required: true, message: "Campo requerido" }]}
             >
               <InputNumber disabled className="w-full" />
-            </Form.Item>
-            <Form.Item
-              className="mb-3"
-              label={<span className="font-bold text-md">Representación</span>}
-              name="payMethodCoef"
-              rules={[{ required: true, message: "Campo requerido" }]}
-            >
-              <Select
-                allowClear
-                options={payMethodOptions}
-                showSearch
-                optionFilterProp="children"
-                filterOption={(input: any, option: any) =>
-                  (option?.label ?? "").toLowerCase().includes(input)
-                }
-                filterSort={(optionA: any, optionB: any) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
-                }
-              />
             </Form.Item>
           </article>
         </div>
@@ -465,7 +445,6 @@ export const CreateServiceFeeForm = () => {
                     nomenclatorId: values.nomenclatorId,
                     // PORCIENTO
                     ONAT: values.ONAT,
-                    payMethodCoef: values.payMethodCoef,
                     rawMaterials: values.rawMaterials,
                     taskList: values.taskList,
                     taskName: values.taskName,
