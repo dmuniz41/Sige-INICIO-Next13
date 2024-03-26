@@ -13,10 +13,7 @@ import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { AddItemModal } from "./AddItem";
 import { INomenclator } from "@/models/nomenclator";
 import { IClientNomenclator } from "@/models/nomenclators/client";
-import {
-  clientNomenclatorsLoaded,
-  clientNomenclatorsStartLoading
-} from "@/actions/nomenclators/client";
+import { clientNomenclatorsStartLoading } from "@/actions/nomenclators/client";
 
 export const CreateProjectForm = () => {
   const dispatch = useAppDispatch();
@@ -127,27 +124,7 @@ export const CreateProjectForm = () => {
             >
               <Input />
             </Form.Item>
-            <Form.Item
-              className="mb-3"
-              label={<span className="font-bold text-md">Representación</span>}
-              name="payMethod"
-              rules={[{ required: true, message: "Campo requerido" }]}
-            >
-              <Select
-                allowClear
-                options={payMethodOptions}
-                showSearch
-                optionFilterProp="children"
-                filterOption={(input: any, option: any) =>
-                  (option?.label ?? "").toLowerCase().includes(input)
-                }
-                filterSort={(optionA: any, optionB: any) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
-                }
-              />
-            </Form.Item>
+
             <Form.Item
               className="mb-3"
               label={<span className="font-bold text-md">Fecha de creación</span>}

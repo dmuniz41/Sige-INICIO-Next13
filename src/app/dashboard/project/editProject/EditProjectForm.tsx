@@ -26,9 +26,15 @@ export const EditProjectForm = () => {
   const [itemsValues, setItemsValues]: any = useState([]);
   const [addItemModal, setAddItemModal] = useState(false);
 
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
-  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
-  const { selectedProject }: { selectedProject: IProject } = useAppSelector((state: RootState) => state.project);
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
+    (state: RootState) => state?.serviceFee
+  );
+  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector(
+    (state: RootState) => state?.nomenclator
+  );
+  const { selectedProject }: { selectedProject: IProject } = useAppSelector(
+    (state: RootState) => state.project
+  );
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
@@ -38,26 +44,27 @@ export const EditProjectForm = () => {
 
   serviceFeeAuxiliary?.payMethod?.map((payMethod) => payMethodNomenclator.push(payMethod));
   nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Nombre de Cliente") clientNamesNomenclators.push(nomenclator.code);
+    if (nomenclator.category === "Nombre de Cliente")
+      clientNamesNomenclators.push(nomenclator.code);
     if (nomenclator.category === "Moneda") currencyNomenclators.push(nomenclator.code);
   });
 
   const payMethodOptions: SelectProps["options"] = payMethodNomenclator.map((payMethod) => {
     return {
       label: payMethod.representative,
-      value: payMethod.representative,
+      value: payMethod.representative
     };
   });
   const clientNameOptions: SelectProps["options"] = clientNamesNomenclators.map((clientName) => {
     return {
       label: `${clientName}`,
-      value: `${clientName}`,
+      value: `${clientName}`
     };
   });
   const currencyOptions: SelectProps["options"] = currencyNomenclators.map((currency) => {
     return {
       label: `${currency}`,
-      value: `${currency}`,
+      value: `${currency}`
     };
   });
 
@@ -77,7 +84,6 @@ export const EditProjectForm = () => {
       labelCol={{ span: 0 }}
       wrapperCol={{ span: 0 }}
       className="w-full flex flex-col gap-0"
-      // initialValues={initialValues}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
       requiredMark={"optional"}
@@ -85,95 +91,106 @@ export const EditProjectForm = () => {
       fields={[
         {
           name: "clientNumber",
-          value: selectedProject.clientNumber,
+          value: selectedProject.clientNumber
         },
         {
           name: "projectNumber",
-          value: selectedProject.projectNumber,
+          value: selectedProject.projectNumber
         },
         {
           name: "clientName",
-          value: selectedProject.clientName,
+          value: selectedProject.clientName
         },
         {
           name: "projectName",
-          value: selectedProject.projectName,
+          value: selectedProject.projectName
         },
         {
           name: "payMethod",
-          value: selectedProject.payMethod,
+          value: selectedProject.payMethod
         },
-        // {
-        //   name: "initDate",
-        //   value: moment(selectedProject.initDate),
-        // },
-        // {
-        //   name: "deliveryDate",
-        //   value: selectedProject.deliveryDate,
-        // },
         {
           name: "currency",
-          value: selectedProject.currency,
+          value: selectedProject.currency
         },
         {
           name: "itemList",
-          value: itemsValues,
-        },
+          value: itemsValues
+        }
       ]}
     >
       <section className=" flex-col mb-4">
         <article className="grid gap-4">
           <div className="grid w-[50%]">
-            <Form.Item className="mb-3" name="clientNumber" label={<span className="font-bold text-md">No. de Cliente</span>} rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3"
+              name="clientNumber"
+              label={<span className="font-bold text-md">No. de Cliente</span>}
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <InputNumber />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Nombre del Cliente</span>} name="clientName" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3"
+              label={<span className="font-bold text-md">Nombre del Cliente</span>}
+              name="clientName"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <Select
                 allowClear
                 options={clientNameOptions}
                 showSearch
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-                filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                filterOption={(input: any, option: any) =>
+                  (option?.label ?? "").toLowerCase().includes(input)
+                }
+                filterSort={(optionA: any, optionB: any) =>
+                  (optionA?.label ?? "")
+                    .toLowerCase()
+                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                }
               />
-            </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Proyecto</span>} name="projectName" rules={[{ required: true, message: "Campo requerido" }]}>
-              <Input />
-            </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Método de pago </span>} name="payMethod" rules={[{ required: true, message: "Campo requerido" }]}>
-              <Select
-                allowClear
-                options={payMethodOptions}
-                showSearch
-                optionFilterProp="children"
-                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-                filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
-              />
-            </Form.Item>
-            {/* <Form.Item className="mb-3" label={<span className="font-bold text-md">Fecha de creación</span>} name="initDate" rules={[{ required: true, message: "Campo requerido" }]}>
-              <DatePicker defaultValue={parsedDate}/>
             </Form.Item>
             <Form.Item
               className="mb-3"
-              label={<span className="font-bold text-md">Fecha en la que se necesita el servicio</span>}
-              name="deliveryDate"
+              label={<span className="font-bold text-md">Proyecto</span>}
+              name="projectName"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
-              <DatePicker />
-            </Form.Item> */}
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Moneda </span>} name="currency" rules={[{ required: true, message: "Campo requerido" }]}>
+              <Input />
+            </Form.Item>
+            <Form.Item
+              className="mb-3"
+              label={<span className="font-bold text-md">Moneda </span>}
+              name="currency"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <Select
                 allowClear
                 options={currencyOptions}
                 showSearch
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-                filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                filterOption={(input: any, option: any) =>
+                  (option?.label ?? "").toLowerCase().includes(input)
+                }
+                filterSort={(optionA: any, optionB: any) =>
+                  (optionA?.label ?? "")
+                    .toLowerCase()
+                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                }
               />
             </Form.Item>
           </div>
         </article>
-        <FormSection sectionName="Servicios" values={itemsValues} formName="itemList" valuesSetter={setItemsValues} modalSetter={setAddItemModal} buttonText="Añadir Servicio" form={form} />
+        <FormSection
+          sectionName="Servicios"
+          values={itemsValues}
+          formName="itemList"
+          valuesSetter={setItemsValues}
+          modalSetter={setAddItemModal}
+          buttonText="Añadir Servicio"
+          form={form}
+        />
       </section>
       <Form.Item>
         <button
@@ -184,7 +201,13 @@ export const EditProjectForm = () => {
               .validateFields()
               .then((values) => {
                 console.log("🚀 ~ .then ~ values:", values);
-                dispatch(startUpdateProject({ ...values, _id: selectedProject._id, itemsList: itemsValues }));
+                dispatch(
+                  startUpdateProject({
+                    ...values,
+                    _id: selectedProject._id,
+                    itemsList: itemsValues
+                  })
+                );
                 form.resetFields();
                 router.push(`/dashboard/project/${selectedProject._id}`);
               })
@@ -196,7 +219,12 @@ export const EditProjectForm = () => {
           Editar
         </button>
       </Form.Item>
-      <AddItemModal open={addItemModal} onCancel={() => setAddItemModal(false)} onCreate={onAddItem} listLength={itemsValues.length}/>
+      <AddItemModal
+        open={addItemModal}
+        onCancel={() => setAddItemModal(false)}
+        onCreate={onAddItem}
+        listLength={itemsValues.length}
+      />
     </Form>
   );
 };

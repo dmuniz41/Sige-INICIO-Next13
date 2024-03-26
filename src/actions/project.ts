@@ -22,7 +22,6 @@ export const startAddProject = ({ ...project }) => {
           expenses: project.expenses,
           initDate: project.initDate,
           itemsList: project.itemsList,
-          payMethod: project.payMethod,
           profits: project.profits,
           projectName: project.projectName,
           status: project.status,
@@ -48,6 +47,7 @@ export const startAddProject = ({ ...project }) => {
 
 //* ACTUALIZA UN PROYECTO  *//
 export const startUpdateProject = ({ ...project }) => {
+  console.log("🚀 ~ startUpdateProject ~ project:", project);
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
@@ -63,11 +63,11 @@ export const startUpdateProject = ({ ...project }) => {
           finalOfferId: project.finalOfferId,
           initDate: project.initDate,
           itemsList: project.itemsList,
-          payMethod: project.payMethod,
           profits: project.profits,
           projectName: project.projectName,
           status: project.status,
-          totalValue: project.totalValue
+          totalValue: project.totalValue,
+          payMethod: project.payMethod
         },
         { headers: { accessToken: token } }
       )
@@ -137,8 +137,19 @@ export const setFinalOfferId = (project: IProject, offer: IOffer) => {
           Swal.fire("Error", "Error establecer la oferta como final", "error");
         });
     }
-    dispatch(startUpdateProject({ ...project,totalValue: offer.value, finalOfferId: offer._id }));
-    dispatch(loadSelectedProject(project._id))
+    console.log(
+      "🚀 ~ return ~ offer?.representationCoef?.representative:",
+      offer?.representationCoef?.representative
+    );
+    dispatch(
+      startUpdateProject({
+        ...project,
+        totalValue: offer?.value,
+        finalOfferId: offer?._id,
+        payMethod: offer?.representationCoef?.representative
+      })
+    );
+    dispatch(loadSelectedProject(project._id));
     dispatch(startUpdateOffer({ ...offer, isFinalOffer: true }));
   };
 };

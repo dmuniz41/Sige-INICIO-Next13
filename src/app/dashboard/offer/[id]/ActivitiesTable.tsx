@@ -24,21 +24,21 @@ export const ActivitiesTable = (props: any) => {
       dataIndex: "amount",
       key: "amount",
       width: "5%",
-      render: (text) => <span>$ {parseFloat(text).toLocaleString("DE")}</span>,
+      render: (value) => <span>$ {value.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}</span>,
     },
     {
       title: "Precio CUP",
       dataIndex: "price",
       key: "price",
       width: "5%",
-      render: (text) => <span>$ {parseFloat(text).toLocaleString("DE")}</span>,
+      render: (value) => <span>$ {value.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}</span>,
     },
     {
       title: "Importe CUP",
       dataIndex: "value",
       key: "value",
       width: "5%",
-      render: (text) => <span>$ {parseFloat(text).toLocaleString("DE")}</span>,
+      render: (value) => <span>$ {value.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}</span>,
     },
   ];
   return (
