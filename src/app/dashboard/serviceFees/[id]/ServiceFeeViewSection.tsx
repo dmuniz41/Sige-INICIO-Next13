@@ -12,34 +12,42 @@ export const ServiceFeeViewTableSection = (props: any) => {
       title: "Descripción",
       dataIndex: "description",
       key: "description",
-      width: "55%",
+      width: "55%"
     },
     {
       title: "Unidad de Medida",
       dataIndex: "unitMeasure",
       key: "unitMeasure",
-      width: "15%",
+      width: "15%"
     },
     {
       title: "Cantidad",
       dataIndex: "amount",
       key: "amount",
-      width: "10%",
+      width: "10%"
     },
     {
       title: "Precio",
       dataIndex: "price",
       key: "price",
       width: "10%",
-      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
+      render: (value) => (
+        <span>
+          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+        </span>
+      )
     },
     {
       title: "Importe",
       dataIndex: "value",
       key: "value",
       width: "25%",
-      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
-    },
+      render: (value) => (
+        <span>
+          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+        </span>
+      )
+    }
   ];
   return (
     <section className="flex flex-1 mt-2">
@@ -59,7 +67,13 @@ export const ServiceFeeViewTableSection = (props: any) => {
               <span>Subtotal: </span>
             </div>
             <div className="flex w-[9%] pl-1 justify-start">
-              <span>$ {subtotal?.toFixed(2)}</span>
+              <span>
+                ${" "}
+                {subtotal?.toLocaleString("DE", {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2
+                })}
+              </span>
             </div>
           </footer>
         )}

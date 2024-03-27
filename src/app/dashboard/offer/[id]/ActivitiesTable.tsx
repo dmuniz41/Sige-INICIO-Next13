@@ -10,7 +10,7 @@ export const ActivitiesTable = (props: any) => {
       title: "Descripción",
       dataIndex: "description",
       key: "description",
-      width: "50%",
+      width: "45%",
     },
     {
       title: "Unidad de Medida",
@@ -24,21 +24,21 @@ export const ActivitiesTable = (props: any) => {
       dataIndex: "amount",
       key: "amount",
       width: "5%",
-      render: (value) => <span>$ {value.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}</span>,
+      render: (value) => <span>$ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>,
     },
     {
       title: "Precio CUP",
       dataIndex: "price",
       key: "price",
       width: "5%",
-      render: (value) => <span>$ {value.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}</span>,
+      render: (value) => <span>$ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>,
     },
     {
       title: "Importe CUP",
       dataIndex: "value",
       key: "value",
       width: "5%",
-      render: (value) => <span>$ {value.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}</span>,
+      render: (value) => <span>$ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>,
     },
   ];
   return (

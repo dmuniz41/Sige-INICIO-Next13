@@ -291,7 +291,11 @@ const ServiceFeeTable: React.FC = () => {
       dataIndex: "salePrice",
       key: "salePrice",
       width: "10%",
-      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
+      render: (value) => (
+        <span>
+          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+        </span>
+      ),
       sorter: {
         compare: (a, b) => a.salePrice - b.salePrice
       }
@@ -301,7 +305,15 @@ const ServiceFeeTable: React.FC = () => {
       dataIndex: "salePriceUSD",
       key: "salePriceUSD",
       width: "10%",
-      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
+      render: (value) => (
+        <span>
+          $ 
+          {value.toLocaleString("DE", {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })}
+        </span>
+      ),
       sorter: {
         compare: (a, b) => a.salePriceUSD - b.salePriceUSD
       }

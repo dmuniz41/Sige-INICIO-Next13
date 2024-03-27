@@ -224,7 +224,15 @@ const WarehousesTable: React.FC = () => {
       dataIndex: "totalValue",
       key: "totalValue",
       width: "25%",
-      render: (text) => <span>$ {parseFloat(text).toLocaleString("DE")}</span>
+      render: (value) => (
+        <span>
+          ${" "}
+          {value.toLocaleString("DE", {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })}
+        </span>
+      )
     },
     {
       title: "Acciones",

@@ -5,8 +5,8 @@ import dynamic from "next/dynamic";
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Swal from "sweetalert2";
-import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
-import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
+import type { ColumnType, ColumnsType } from "antd/es/table";
+import type { FilterConfirmProps } from "antd/es/table/interface";
 import type { InputRef } from "antd";
 
 import { CreateServiceFeeTaskForm } from "./CreateServiceFeeTask";
@@ -20,7 +20,12 @@ import { PDFSvg } from "@/app/global/PDFSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { RootState, useAppSelector } from "@/store/store";
-import { startAddServiceFeeTask, startDeleteServiceFeeTask, startLoadServiceFeesTasks, startUpdateServiceFeeTask } from "@/actions/serviceFeeTask";
+import {
+  startAddServiceFeeTask,
+  startDeleteServiceFeeTask,
+  startLoadServiceFeesTasks,
+  startUpdateServiceFeeTask
+} from "@/actions/serviceFeeTask";
 import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useSession } from "next-auth/react";
@@ -86,7 +91,9 @@ const ServiceFeeTaskTable: React.FC = () => {
     dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
-  const { serviceFeeTasks }: { serviceFeeTasks: IServiceFeeTask[] } = useAppSelector((state: RootState) => state?.serviceFee);
+  const { serviceFeeTasks }: { serviceFeeTasks: IServiceFeeTask[] } = useAppSelector(
+    (state: RootState) => state?.serviceFee
+  );
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
 
   let data: IServiceFeeTask[] = useMemo(() => serviceFeeTasks, [serviceFeeTasks]);
@@ -101,13 +108,13 @@ const ServiceFeeTaskTable: React.FC = () => {
   taskCategory.map((taskCategory: string) => {
     taskCategoryFilter.push({
       text: `${taskCategory}`,
-      value: `${taskCategory}`,
+      value: `${taskCategory}`
     });
   });
   unitMeasures.map((unitMeasure: string) => {
     unitMeasureFilter.push({
       text: `${unitMeasure}`,
-      value: `${unitMeasure}`,
+      value: `${unitMeasure}`
     });
   });
 
@@ -133,35 +140,31 @@ const ServiceFeeTaskTable: React.FC = () => {
   //   });
   // });
 
-
-  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
 
   const handleDelete = (record: IServiceFeeTask) => {
-    if (record) {
-      Swal.fire({
-        title: "Eliminar Tarifa de Servicio",
-        text: "La tarea seleccionada se borrará de forma permanente",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Eliminar",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          dispatch(startDeleteServiceFeeTask(record._id));
-        }
-      });
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione una tarea a eliminar",
-      });
-    }
+    Swal.fire({
+      title: "Eliminar Tarea ",
+      text: "La tarea seleccionada se borrará de forma permanente",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Eliminar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(startDeleteServiceFeeTask(record._id));
+      }
+    });
   };
 
   const handleReset = (clearFilters: () => void) => {
@@ -177,7 +180,7 @@ const ServiceFeeTaskTable: React.FC = () => {
         amount: values.amount,
         price: values.price,
         unitMeasure: values.unitMeasure,
-        complexityLevels: values.complexityLevels,
+        complexityLevels: values.complexityLevels
       })
     );
     setCreateTaskModal(false);
@@ -192,7 +195,7 @@ const ServiceFeeTaskTable: React.FC = () => {
         amount: values.amount,
         price: values.price,
         unitMeasure: values.unitMeasure,
-        complexityLevels: values.complexityLevels,
+        complexityLevels: values.complexityLevels
       })
     );
     setEditTaskModal(false);
@@ -205,7 +208,7 @@ const ServiceFeeTaskTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione una tarea a editar",
+        title: "Seleccione una tarea a editar"
       });
     }
   };
@@ -237,7 +240,11 @@ const ServiceFeeTaskTable: React.FC = () => {
           >
             Search
           </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
           <Button
@@ -263,7 +270,9 @@ const ServiceFeeTaskTable: React.FC = () => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
+    ),
     onFilter: (value, record: any) =>
       record[dataIndex]
         .toString()
@@ -276,10 +285,15 @@ const ServiceFeeTaskTable: React.FC = () => {
     },
     render: (text) =>
       searchedColumn === dataIndex ? (
-        <Highlighter highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }} searchWords={[searchText]} autoEscape textToHighlight={text ? text.toString() : ""} />
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
       ) : (
         text
-      ),
+      )
   });
 
   const columns: ColumnsType<IServiceFeeTask> = [
@@ -287,45 +301,61 @@ const ServiceFeeTaskTable: React.FC = () => {
       title: "Descripción",
       dataIndex: "description",
       key: "description",
-      width: "45%",
+      width: "50%",
       sorter: (a: any, b: any) => a.description.localeCompare(b.description),
-      ...getColumnSearchProps("description"),
+      ...getColumnSearchProps("description")
     },
     {
       title: "Categoría",
       dataIndex: "category",
       key: "category",
-      width: "20%",
+      width: "13%",
       filters: taskCategoryFilter,
       onFilter: (value: any, record: any) => record.category.startsWith(value),
-      filterSearch: true,
+      filterSearch: true
     },
     {
       title: "Cantidad",
       dataIndex: "amount",
       key: "amount",
-      width: "10%",
+      width: "8%",
       filterSearch: true,
+      render: (value) => (
+        <span>
+          {value.toLocaleString("DE", {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })}
+        </span>
+      )
     },
     {
       title: "Unidad de Medida",
       dataIndex: "unitMeasure",
       key: "unitMeasure",
-      width: "20%",
+      width: "15%",
       filters: unitMeasureFilter,
       onFilter: (value: any, record: any) => record.unitMeasure.startsWith(value),
-      filterSearch: true,
+      filterSearch: true
     },
 
     {
       title: "Precio",
       dataIndex: "price",
       key: "price",
-      width: "15%",
-      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
+      width: "10%",
+      render: (value) => (
+        <span>
+          ${" "}
+          {value.toLocaleString("DE", {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })}
+        </span>
+      ),
       sorter: {
-        compare: (a, b) => a.price - b.price,
-      },
+        compare: (a, b) => a.price - b.price
+      }
     },
     {
       title: "Acciones",
@@ -337,7 +367,9 @@ const ServiceFeeTaskTable: React.FC = () => {
             <button
               disabled={!canEdit}
               className={`${
-                canDelete ? "cursor-pointer hover:bg-secondary-400-400 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canDelete
+                  ? "cursor-pointer hover:bg-secondary-400-400 ease-in-out duration-300"
+                  : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2rem] h-[2rem] text-xl rounded-md bg-secondary-600 text-white-100`}
               onClick={() => handleEdit(record)}
             >
@@ -348,7 +380,9 @@ const ServiceFeeTaskTable: React.FC = () => {
             <button
               disabled={!canDelete}
               className={`${
-                canDelete ? "cursor-pointer hover:bg-danger-400 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canDelete
+                  ? "cursor-pointer hover:bg-danger-400 ease-in-out duration-300"
+                  : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2rem] h-[2rem] text-xl rounded-md bg-danger-600 text-white-100`}
               onClick={() => handleDelete(record)}
             >
@@ -356,15 +390,19 @@ const ServiceFeeTaskTable: React.FC = () => {
             </button>
           </Tooltip>
         </div>
-      ),
-    },
+      )
+    }
   ];
 
   return (
     <>
       <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <div className="flex gap-2">
-          <button disabled={!canCreate} onClick={() => setCreateTaskModal(true)} className="toolbar-primary-icon-btn">
+          <button
+            disabled={!canCreate}
+            onClick={() => setCreateTaskModal(true)}
+            className="toolbar-primary-icon-btn"
+          >
             <PlusSvg />
             Nuevo
           </button>
@@ -381,7 +419,9 @@ const ServiceFeeTaskTable: React.FC = () => {
             <button
               disabled={!canList}
               className={`${
-                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canList
+                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                  : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={() => dispatch(startLoadServiceFeesTasks())}
             >
@@ -391,8 +431,17 @@ const ServiceFeeTaskTable: React.FC = () => {
         </div>
       </div>
 
-      <CreateServiceFeeTaskForm open={createTaskModal} onCancel={() => setCreateTaskModal(false)} onCreate={onCreate} />
-      <EditServiceFeeTaskForm open={editTaskModal} onCancel={() => setEditTaskModal(false)} onCreate={onEdit} defaultValues={selectedRow!} />
+      <CreateServiceFeeTaskForm
+        open={createTaskModal}
+        onCancel={() => setCreateTaskModal(false)}
+        onCreate={onCreate}
+      />
+      <EditServiceFeeTaskForm
+        open={editTaskModal}
+        onCancel={() => setEditTaskModal(false)}
+        onCreate={onEdit}
+        defaultValues={selectedRow!}
+      />
 
       <Table
         size="small"
