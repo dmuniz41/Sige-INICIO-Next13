@@ -33,12 +33,8 @@ const category: SelectProps["options"] = [
     value: "Proveedor",
   },
   {
-    label: "Categoría de ficha de costo",
-    value: "Categoría de ficha de costo",
-  },
-  {
-    label: "Precio/UM en ficha de costo",
-    value: "Precio/UM en ficha de costo",
+    label: "Categoría de tarifas",
+    value: "Categoría de tarifas",
   },
   {
     label: "Categoría de tarea",

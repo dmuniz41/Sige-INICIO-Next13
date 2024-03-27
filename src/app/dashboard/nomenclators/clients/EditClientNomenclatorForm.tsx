@@ -80,10 +80,6 @@ export const EditClientNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
             value: defaultValues?.email
           },
           {
-            name: "idNumber",
-            value: defaultValues?.idNumber
-          },
-          {
             name: "phoneNumber",
             value: defaultValues?.phoneNumber
           }
@@ -100,13 +96,6 @@ export const EditClientNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
           <Input />
         </Form.Item>
         <Form.Item name="email" label="Correo Electrónico" rules={[{ required: false }]}>
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="idNumber"
-          label="Número de Cliente"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
           <Input />
         </Form.Item>
         <Form.Item name="phoneNumber" label="Teléfono" rules={[{ required: false }]}>

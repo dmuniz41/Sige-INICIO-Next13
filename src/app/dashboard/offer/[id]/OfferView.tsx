@@ -86,7 +86,7 @@ export const OfferView = () => {
         </div>
       </article>
       <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-4">
-        <h1 className="pl-2 flex gap-4 text-xl font-bold mb-2">
+        <h1 className="flex gap-4 text-xl font-bold mb-2">
           {selectedOffer?.projectName}
           {selectedOffer.isFinalOffer ? (
             <div className="text-success-500 flex items-center">
@@ -106,10 +106,10 @@ export const OfferView = () => {
           </div>
         ))}
         <article className="flex items-center justify-end h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-lg">
-          <div className="flex w-[90%] justify-end pr-4 font-bold">
-            <h2>VALOR TOTAL: </h2>
+          <div className="flex w-[90%] justify-end font-bold">
+            <h2>VALOR TOTAL : </h2>
           </div>
-          <div className="flex w-[100px] py-4">$ {selectedOffer?.value?.toLocaleString("DE")}</div>
+          <div className="flex px-4">$ {selectedOffer?.value?.toLocaleString("DE")}</div>
         </article>
       </section>
       <MaterialsListModal

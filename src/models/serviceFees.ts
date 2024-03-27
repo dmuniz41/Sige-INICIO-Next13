@@ -21,9 +21,8 @@ export interface IServiceFee {
   key: string;
   workersAmount: number;
   taskName: string;
-  payMethodCoef: number;
   currencyChange: number;
-  valuePerUnitMeasure: string;
+  unitMeasure: string;
   //* MATERIAS PRIMAS
   rawMaterials: IServiceFeeSubItem[];
   rawMaterialsSubtotal: number;
@@ -78,13 +77,10 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
     type: String,
     unique: true,
   },
-  payMethodCoef: {
-    type: Number,
-  },
   currencyChange: {
     type: Number,
   },
-  valuePerUnitMeasure: {
+  unitMeasure: {
     type: String,
   },
 

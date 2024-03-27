@@ -26,8 +26,7 @@ export const EditServiceFeeForm = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const serviceFeeCategory: string[] | undefined = [];
-  const valuePerUM: string[] | undefined = [];
-  const payMethods: IRepresentationCoefficients[] | undefined = [];
+  const unitMeasureNomenclators: string[] | undefined = [];
   const router = useRouter();
 
   const [addRawMaterialModal, setAddRawMaterialModal] = useState(false);
@@ -47,9 +46,12 @@ export const EditServiceFeeForm = () => {
   const [hiredPersonalExpensesValues, setHiredPersonalExpensesValues]: any = useState([]);
 
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-  const { selectedServiceFee }: { selectedServiceFee: IServiceFee } = useAppSelector((state: RootState) => state?.serviceFee);
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
-  serviceFeeAuxiliary?.payMethod?.map((payMethod) => payMethods.push(payMethod));
+  const { selectedServiceFee }: { selectedServiceFee: IServiceFee } = useAppSelector(
+    (state: RootState) => state?.serviceFee
+  );
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
+    (state: RootState) => state?.serviceFee
+  );
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
@@ -65,28 +67,22 @@ export const EditServiceFeeForm = () => {
   }, [dispatch, selectedServiceFee]);
 
   nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Categoría de ficha de costo") serviceFeeCategory.push(nomenclator.code);
-    if (nomenclator.category === "Precio/UM en ficha de costo") valuePerUM.push(nomenclator.code);
+    if (nomenclator.category === "Categoría de tarifas")
+      serviceFeeCategory.push(nomenclator.code);
+    if (nomenclator.category === "Unidad de medida") unitMeasureNomenclators.push(nomenclator.code);
   });
 
   const categoriesOptions: SelectProps["options"] = serviceFeeCategory.map((serviceFeeCategory) => {
     return {
       label: `${serviceFeeCategory}`,
-      value: `${serviceFeeCategory}`,
+      value: `${serviceFeeCategory}`
     };
   });
 
-  const valuePerUMOptions: SelectProps["options"] = valuePerUM.map((valuePerUM) => {
+  const unitMeasureOptions: SelectProps["options"] = unitMeasureNomenclators.map((unitMeasure) => {
     return {
-      label: `${valuePerUM}`,
-      value: `${valuePerUM}`,
-    };
-  });
-
-  const payMethodOptions: SelectProps["options"] = payMethods.map((payMethod) => {
-    return {
-      label: `${payMethod.representative}`,
-      value: payMethod.coefficientValue,
+      label: `${unitMeasure}`,
+      value: `${unitMeasure}`
     };
   });
 
@@ -95,23 +91,21 @@ export const EditServiceFeeForm = () => {
   };
 
   const onAddRawMaterial = (values: any) => {
-    console.log("🚀 ~ onAddRawMaterial ~ values:", values);
     setRawMaterialsValues([values, ...rawMaterialsValues]);
     form.setFieldValue("rawMaterials", [...rawMaterialsValues, values]);
     setAddRawMaterialModal(false);
   };
 
   const onAddTaskList = (values: any) => {
-    console.log("🚀 ~ onAddTaskList ~ values:", values);
     setTaskListValues([
       {
         description: values.description,
         unitMeasure: values.unitMeasure,
         amount: values.amount,
         price: values.price,
-        value: values.value,
+        value: values.value
       },
-      ...taskListValues,
+      ...taskListValues
     ]);
     form.setFieldValue("taskList", [
       ...taskListValues,
@@ -120,57 +114,52 @@ export const EditServiceFeeForm = () => {
         unitMeasure: values.unitMeasure,
         amount: values.amount,
         price: values.price,
-        value: values.value,
-      },
+        value: values.value
+      }
     ]);
     setAddTaskListModal(false);
   };
 
   const onAddEquipmentDepreciation = (values: any) => {
-    console.log("🚀 ~ onAddEquipmentDepreciation ~ values:", values);
     setEquipmentDepreciationValues([values, ...equipmentDepreciationValues]);
     form.setFieldValue("equipmentDepreciation", [...equipmentDepreciationValues, values]);
     setAddEquipmentDepreciationModal(false);
   };
 
   const onAddEquipmentMaintenance = (values: any) => {
-    console.log("🚀 ~ onAddEquipmentMaintenance ~ values:", values);
     setEquipmentMaintenanceValues([values, ...equipmentMaintenanceValues]);
     form.setFieldValue("equipmentMaintenance", [...equipmentMaintenanceValues, values]);
     setAddEquipmentMaintenanceModal(false);
   };
 
   const onAddAdministrativeExpenses = (values: any) => {
-    console.log("🚀 ~ onAddAdministrativeExpenses ~ values:", values);
     setAdministrativeExpensesValues([values, ...administrativeExpensesValues]);
     form.setFieldValue("administrativeExpenses", [...administrativeExpensesValues, values]);
     setAddAdministrativeExpensesModal(false);
   };
 
   const onAddTransportationExpenses = (values: any) => {
-    console.log("🚀 ~ onAddTransportationExpenses ~ values:", values);
     setTransportationExpensesValues([values, ...transportationExpensesValues]);
     form.setFieldValue("transportationExpenses", [...transportationExpensesValues, values]);
     setAddTransportationExpensesModal(false);
   };
 
   const onAddHiredPersonalExpenses = (values: any) => {
-    console.log("🚀 ~ onAddHiredPersonalExpenses ~ values:", values);
     setHiredPersonalExpensesValues([
       {
         description: "Gasto de salarios indirectos",
         price: values.indirectSalariesPrice,
         unitMeasure: " ",
         amount: values.indirectSalariesAmount,
-        value: values.indirectSalariesValue,
+        value: values.indirectSalariesValue
       },
       {
         description: "Subcontratación",
         price: values.subcontractPrice,
         unitMeasure: " ",
         amount: values.subcontractAmount,
-        value: values.subcontractExpensesValue,
-      },
+        value: values.subcontractExpensesValue
+      }
     ]);
     form.setFieldValue("hiredPersonalExpenses", [
       {
@@ -178,15 +167,15 @@ export const EditServiceFeeForm = () => {
         price: values.indirectSalariesPrice,
         unitMeasure: " ",
         amount: values.indirectSalariesAmount,
-        value: values.indirectSalariesValue,
+        value: values.indirectSalariesValue
       },
       {
         description: "Subcontratación",
         price: values.subcontractPrice,
         unitMeasure: " ",
         amount: values.subcontractAmount,
-        value: values.subcontractExpensesValue,
-      },
+        value: values.subcontractExpensesValue
+      }
     ]);
     setAddHiredPersonalExpensesModal(false);
   };
@@ -206,137 +195,170 @@ export const EditServiceFeeForm = () => {
       fields={[
         {
           name: "taskName",
-          value: selectedServiceFee?.taskName,
+          value: selectedServiceFee?.taskName
         },
         {
           name: "nomenclatorId",
-          value: selectedServiceFee?.nomenclatorId,
+          value: selectedServiceFee?.nomenclatorId
         },
         {
           name: "category",
-          value: selectedServiceFee?.category,
+          value: selectedServiceFee?.category
         },
         {
           name: "workersAmount",
-          value: selectedServiceFee?.workersAmount,
+          value: selectedServiceFee?.workersAmount
         },
         {
-          name: "valuePerUnitMeasure",
-          value: selectedServiceFee?.valuePerUnitMeasure,
+          name: "unitMeasure",
+          value: selectedServiceFee?.unitMeasure
         },
         {
           name: "currencyChange",
-          value: serviceFeeAuxiliary?.currencyChange,
-        },
-        {
-          name: "payMethodCoef",
-          value: selectedServiceFee?.payMethodCoef,
+          value: serviceFeeAuxiliary?.currencyChange
         },
         {
           name: "rawMaterials",
-          value: rawMaterialsValues,
+          value: rawMaterialsValues
         },
         {
           name: "taskList",
-          value: taskListValues,
+          value: taskListValues
         },
         {
           name: "equipmentDepreciation",
-          value: equipmentDepreciationValues,
+          value: equipmentDepreciationValues
         },
         {
           name: "equipmentMaintenance",
-          value: equipmentMaintenanceValues,
+          value: equipmentMaintenanceValues
         },
         {
           name: "administrativeExpenses",
-          value: administrativeExpensesValues,
+          value: administrativeExpensesValues
         },
         {
           name: "transportationExpenses",
-          value: transportationExpensesValues,
+          value: transportationExpensesValues
         },
         {
           name: "hiredPersonalExpenses",
-          value: hiredPersonalExpensesValues,
+          value: hiredPersonalExpensesValues
         },
         {
           name: "ONAT",
-          value: selectedServiceFee?.ONAT,
+          value: selectedServiceFee?.ONAT
         },
         {
           name: "commercialMargin",
-          value: selectedServiceFee?.commercialMargin,
+          value: selectedServiceFee?.commercialMargin
         },
         {
           name: "artisticTalentValue",
-          value: selectedServiceFee?.artisticTalent,
+          value: selectedServiceFee?.artisticTalent
         },
         {
           name: "highComplexity",
-          value: selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Alta")?.coefficient,
+          value: selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Alta")
+            ?.coefficient
         },
         {
           name: "mediumComplexity",
-          value: selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Media")?.coefficient,
+          value: selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Media")
+            ?.coefficient
         },
         {
           name: "lowComplexity",
-          value: selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Baja")?.coefficient,
-        },
+          value: selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Baja")
+            ?.coefficient
+        }
       ]}
     >
       <section className=" flex-col mb-4">
         <div className="flex flex-row gap-4">
-          <Form.Item className="mb-3 w-[35%]" name="taskName" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            className="mb-3 w-[35%]"
+            name="taskName"
+            label={<span className="font-bold text-md">Descripción</span>}
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <TextArea rows={3} />
           </Form.Item>
-          <article className="flex flex-col w-[300px]">
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Nomenclador</span>} name="nomenclatorId" rules={[{ required: true, message: "Campo requerido" }]}>
+          <article className="flex flex-col flex-1">
+            <Form.Item
+              className="mb-3"
+              label={<span className="font-bold text-md">Nomenclador</span>}
+              name="nomenclatorId"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <Input />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Categoría</span>} name="category" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3"
+              label={<span className="font-bold text-md">Categoría</span>}
+              name="category"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <Select
                 allowClear
                 options={categoriesOptions}
                 showSearch
                 onSelect={(value) => {
-                  value === "Trabajo Pladur" ? form.setFieldValue("commercialMargin", 20) : form.setFieldValue("commercialMargin", 50);
+                  value === "Trabajo Pladur"
+                    ? form.setFieldValue("commercialMargin", 20)
+                    : form.setFieldValue("commercialMargin", 50);
                 }}
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-                filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                filterOption={(input: any, option: any) =>
+                  (option?.label ?? "").toLowerCase().includes(input)
+                }
+                filterSort={(optionA: any, optionB: any) =>
+                  (optionA?.label ?? "")
+                    .toLowerCase()
+                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                }
               />
             </Form.Item>
           </article>
-          <article className="flex flex-col w-[300px]">
-            <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cantidad de empleados</span>} name="workersAmount" rules={[{ required: true, message: "Campo requerido" }]}>
+          <article className="flex flex-col flex-1">
+            <Form.Item
+              className="mb-3 "
+              label={<span className="font-bold text-md">Cantidad de empleados</span>}
+              name="workersAmount"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <InputNumber className="w-full" />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Precio/UM</span>} name="valuePerUnitMeasure" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3"
+              label={<span className="font-bold text-md">Unidad de Medida</span>}
+              name="unitMeasure"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <Select
                 allowClear
-                options={valuePerUMOptions}
+                options={unitMeasureOptions}
                 showSearch
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-                filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                filterOption={(input: any, option: any) =>
+                  (option?.label ?? "").toLowerCase().includes(input)
+                }
+                filterSort={(optionA: any, optionB: any) =>
+                  (optionA?.label ?? "")
+                    .toLowerCase()
+                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                }
               />
             </Form.Item>
           </article>
-          <article className="flex flex-col w-[300px]">
-            <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cambio $ </span>} name="currencyChange" rules={[{ required: true, message: "Campo requerido" }]}>
+          <article className="flex flex-col w-[150px]">
+            <Form.Item
+              className="mb-3 "
+              label={<span className="font-bold text-md">Cambio (USD)</span>}
+              name="currencyChange"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <InputNumber disabled className="w-full" />
-            </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Representación</span>} name="payMethodCoef" rules={[{ required: true, message: "Campo requerido" }]}>
-              <Select
-                allowClear
-                options={payMethodOptions}
-                showSearch
-                optionFilterProp="children"
-                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-                filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
-              />
             </Form.Item>
           </article>
         </div>
@@ -410,27 +432,57 @@ export const EditServiceFeeForm = () => {
           <span>Coeficientes de Complejidad</span>
         </div>
         <div className="flex gap-2 pt-3 items-center">
-          <Form.Item className="mb-3" label={<span className="font-bold text-md">Alta</span>} name="highComplexity" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            className="mb-3"
+            label={<span className="font-bold text-md">Alta</span>}
+            name="highComplexity"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <InputNumber />
           </Form.Item>
-          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Media</span>} name="mediumComplexity" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            className="mb-3 "
+            label={<span className="font-bold text-md">Media</span>}
+            name="mediumComplexity"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <InputNumber />
           </Form.Item>
-          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Baja</span>} name="lowComplexity" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            className="mb-3 "
+            label={<span className="font-bold text-md">Baja</span>}
+            name="lowComplexity"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <InputNumber />
           </Form.Item>
         </div>
       </article>
       <section className="flex gap-4 mt-4">
         {/* ONAT */}
-        <Form.Item className="mb-3 " label={<span className="font-bold text-md">ONAT (%)</span>} name="ONAT" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          className="mb-3 "
+          label={<span className="font-bold text-md">ONAT (%)</span>}
+          name="ONAT"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <InputNumber />
         </Form.Item>
         {/* commercialMargin */}
-        <Form.Item className="mb-3 " label={<span className="font-bold text-md">Margen Comercial (%)</span>} name="commercialMargin" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          className="mb-3 "
+          label={<span className="font-bold text-md">Margen Comercial (%)</span>}
+          name="commercialMargin"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <InputNumber />
         </Form.Item>
-        <Form.Item className="mb-3 " label={<span className="font-bold text-md">Talento Artístico</span>} name="artisticTalentValue" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          className="mb-3 "
+          label={<span className="font-bold text-md">Talento Artístico</span>}
+          name="artisticTalentValue"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <InputNumber />
         </Form.Item>
       </section>
@@ -455,16 +507,16 @@ export const EditServiceFeeForm = () => {
                     complexity: [
                       {
                         name: "Alta",
-                        coefficient: values.highComplexity,
+                        coefficient: values.highComplexity
                       },
                       {
                         name: "Media",
-                        coefficient: values.mediumComplexity,
+                        coefficient: values.mediumComplexity
                       },
                       {
                         name: "Baja",
-                        coefficient: values.lowComplexity,
-                      },
+                        coefficient: values.lowComplexity
+                      }
                     ],
                     currencyChange: values.currencyChange,
                     equipmentDepreciation: values.equipmentDepreciation,
@@ -478,8 +530,8 @@ export const EditServiceFeeForm = () => {
                     taskList: values.taskList,
                     taskName: values.taskName,
                     transportationExpenses: values.transportationExpenses,
-                    valuePerUnitMeasure: values.valuePerUnitMeasure,
-                    workersAmount: values.workersAmount,
+                    unitMeasure: values.unitMeasure,
+                    workersAmount: values.workersAmount
                   })
                 );
                 form.resetFields();
@@ -493,13 +545,41 @@ export const EditServiceFeeForm = () => {
           Editar
         </button>
       </Form.Item>
-      <AddRawMaterialModal open={addRawMaterialModal} onCancel={() => setAddRawMaterialModal(false)} onCreate={onAddRawMaterial} />
-      <AddTaskListModal open={addTaskListModal} onCancel={() => setAddTaskListModal(false)} onCreate={onAddTaskList} />
-      <AddEquipmentDepreciationModal open={addEquipmentDepreciationModal} onCancel={() => setAddEquipmentDepreciationModal(false)} onCreate={onAddEquipmentDepreciation} />
-      <AddEquipmentMaintenanceModal open={addEquipmentMaintenanceModal} onCancel={() => setAddEquipmentMaintenanceModal(false)} onCreate={onAddEquipmentMaintenance} />
-      <AddAdministrativeExpensesModal open={addAdministrativeExpensesModal} onCancel={() => setAddAdministrativeExpensesModal(false)} onCreate={onAddAdministrativeExpenses} />
-      <AddTransportationExpensesModal open={addTransportationExpensesModal} onCancel={() => setAddTransportationExpensesModal(false)} onCreate={onAddTransportationExpenses} />
-      <AddHiredPersonalExpensesModal open={addHiredPersonalExpensesModal} onCancel={() => setAddHiredPersonalExpensesModal(false)} onCreate={onAddHiredPersonalExpenses} />
+      <AddRawMaterialModal
+        open={addRawMaterialModal}
+        onCancel={() => setAddRawMaterialModal(false)}
+        onCreate={onAddRawMaterial}
+      />
+      <AddTaskListModal
+        open={addTaskListModal}
+        onCancel={() => setAddTaskListModal(false)}
+        onCreate={onAddTaskList}
+      />
+      <AddEquipmentDepreciationModal
+        open={addEquipmentDepreciationModal}
+        onCancel={() => setAddEquipmentDepreciationModal(false)}
+        onCreate={onAddEquipmentDepreciation}
+      />
+      <AddEquipmentMaintenanceModal
+        open={addEquipmentMaintenanceModal}
+        onCancel={() => setAddEquipmentMaintenanceModal(false)}
+        onCreate={onAddEquipmentMaintenance}
+      />
+      <AddAdministrativeExpensesModal
+        open={addAdministrativeExpensesModal}
+        onCancel={() => setAddAdministrativeExpensesModal(false)}
+        onCreate={onAddAdministrativeExpenses}
+      />
+      <AddTransportationExpensesModal
+        open={addTransportationExpensesModal}
+        onCancel={() => setAddTransportationExpensesModal(false)}
+        onCreate={onAddTransportationExpenses}
+      />
+      <AddHiredPersonalExpensesModal
+        open={addHiredPersonalExpensesModal}
+        onCancel={() => setAddHiredPersonalExpensesModal(false)}
+        onCreate={onAddHiredPersonalExpenses}
+      />
     </Form>
   );
 };
@@ -539,19 +619,60 @@ const FormSection = (props: any) => {
               {fields.map(({ key, name, ...restField }) => (
                 <div key={key} className="w-full">
                   <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="grow" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
-                      <Input disabled placeholder="Descripción" className="w-full disabled:bg-white-100  disabled:text-white-900" />
+                    <Form.Item
+                      className="grow"
+                      {...restField}
+                      name={[name, "description"]}
+                      rules={[{ required: true }]}
+                    >
+                      <Input
+                        disabled
+                        placeholder="Descripción"
+                        className="w-full disabled:bg-white-100  disabled:text-white-900"
+                      />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "unitMeasure"]} className="w-[200px]" rules={[{ required: false }]}>
-                      <Input disabled placeholder="Unidad de Medida" className=" disabled:bg-white-100 disabled:text-white-900" />
+                    <Form.Item
+                      {...restField}
+                      name={[name, "unitMeasure"]}
+                      className="w-[200px]"
+                      rules={[{ required: false }]}
+                    >
+                      <Input
+                        disabled
+                        placeholder="Unidad de Medida"
+                        className=" disabled:bg-white-100 disabled:text-white-900"
+                      />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "amount"]} className="w-[88px]" rules={[{ required: true }]}>
-                      <Input disabled placeholder="Cantidad" className=" disabled:bg-white-100  disabled:text-white-900" />
+                    <Form.Item
+                      {...restField}
+                      name={[name, "amount"]}
+                      className="w-[88px]"
+                      rules={[{ required: true }]}
+                    >
+                      <Input
+                        disabled
+                        placeholder="Cantidad"
+                        className=" disabled:bg-white-100  disabled:text-white-900"
+                      />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "price"]} className="w-[88px]" rules={[{ required: true }]}>
-                      <Input disabled placeholder="Precio" className=" disabled:bg-white-100  disabled:text-white-900" />
+                    <Form.Item
+                      {...restField}
+                      name={[name, "price"]}
+                      className="w-[88px]"
+                      rules={[{ required: true }]}
+                    >
+                      <Input
+                        disabled
+                        placeholder="Precio"
+                        className=" disabled:bg-white-100  disabled:text-white-900"
+                      />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "value"]} className="w-[88px]" rules={[{ required: true }]}>
+                    <Form.Item
+                      {...restField}
+                      name={[name, "value"]}
+                      className="w-[88px]"
+                      rules={[{ required: true }]}
+                    >
                       <Input disabled className=" disabled:bg-white-100  disabled:text-white-900" />
                     </Form.Item>
                     <MinusCircleOutlined
@@ -565,7 +686,13 @@ const FormSection = (props: any) => {
                 </div>
               ))}
               <Form.Item className="justify-center w-full">
-                <Button className="flex flex-row justify-center items-center" block type="dashed" onClick={() => modalSetter(true)} icon={<PlusOutlined />}>
+                <Button
+                  className="flex flex-row justify-center items-center"
+                  block
+                  type="dashed"
+                  onClick={() => modalSetter(true)}
+                  icon={<PlusOutlined />}
+                >
                   {buttonText}
                 </Button>
               </Form.Item>

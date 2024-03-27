@@ -12,7 +12,11 @@ import type { InputRef } from "antd";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { INomenclator } from "@/models/nomenclator";
 import { IServiceFee } from "@/models/serviceFees";
-import { loadSelectedServiceFee, serviceFeeStartLoading, startDeleteServiceFee } from "@/actions/serviceFee";
+import {
+  loadSelectedServiceFee,
+  serviceFeeStartLoading,
+  startDeleteServiceFee
+} from "@/actions/serviceFee";
 import { nomenclatorsStartLoading, startDeleteNomenclator } from "@/actions/nomenclator";
 import { PDFSvg } from "@/app/global/PDFSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
@@ -25,10 +29,13 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 
-const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
-  ssr: false,
-  loading: () => <p>Loading...</p>,
-});
+const PDFDownloadLink = dynamic(
+  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+  {
+    ssr: false,
+    loading: () => <p>Loading...</p>
+  }
+);
 
 type DataIndex = keyof IServiceFee;
 
@@ -52,32 +59,32 @@ const ServiceFeeTable: React.FC = () => {
       title: "Nomenclador",
       custom: true,
       component: (item: any) => `${item.nomenclatorId}`,
-      width: "10",
+      width: "10"
     },
     {
       title: " Nombre de la tarea",
       custom: true,
       component: (item: any) => `${item.taskName}`,
-      width: "50",
+      width: "50"
     },
     {
       title: " Categoría",
       custom: true,
       component: (item: any) => `${item.category}`,
-      width: "20",
+      width: "20"
     },
     {
       title: " Precio",
       custom: true,
       component: (item: any) => `$ ${item.salePrice}`,
-      width: "10",
+      width: "10"
     },
     {
       title: " Precio/UM",
       custom: true,
       component: (item: any) => `${item.valuePerUnitMeasure}`,
-      width: "10",
-    },
+      width: "10"
+    }
   ];
 
   useEffect(() => {
@@ -110,7 +117,7 @@ const ServiceFeeTable: React.FC = () => {
   serviceFeeNomenclator.map((nomenclator: string) => {
     costSheetNomenclatorFilter.push({
       text: `${nomenclator}`,
-      value: `${nomenclator}`,
+      value: `${nomenclator}`
     });
   });
 
@@ -121,12 +128,16 @@ const ServiceFeeTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione una ficha de costo para ver",
+        title: "Seleccione una ficha de costo para ver"
       });
     }
   };
 
-  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -142,10 +153,12 @@ const ServiceFeeTable: React.FC = () => {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         cancelButtonText: "Cancelar",
-        confirmButtonText: "Eliminar",
+        confirmButtonText: "Eliminar"
       }).then((result) => {
         if (result.isConfirmed) {
-          const nomenclatorToDelete = nomenclators.find((nomenclator: INomenclator) => nomenclator?.code === record?.nomenclatorId);
+          const nomenclatorToDelete = nomenclators.find(
+            (nomenclator: INomenclator) => nomenclator?.code === record?.nomenclatorId
+          );
           dispatch(startDeleteServiceFee(record._id));
           dispatch(startDeleteNomenclator(nomenclatorToDelete?._id));
         }
@@ -153,7 +166,7 @@ const ServiceFeeTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione una tarifa de servicio a eliminar",
+        title: "Seleccione una tarifa de servicio a eliminar"
       });
     }
   };
@@ -190,7 +203,11 @@ const ServiceFeeTable: React.FC = () => {
           >
             Search
           </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
           <Button
@@ -216,7 +233,9 @@ const ServiceFeeTable: React.FC = () => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
+    ),
     onFilter: (value, record) =>
       record[dataIndex]
         .toString()
@@ -229,10 +248,15 @@ const ServiceFeeTable: React.FC = () => {
     },
     render: (text) =>
       searchedColumn === dataIndex ? (
-        <Highlighter highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }} searchWords={[searchText]} autoEscape textToHighlight={text ? text.toString() : ""} />
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
       ) : (
         text
-      ),
+      )
   });
 
   const columns: ColumnsType<IServiceFee> = [
@@ -242,7 +266,7 @@ const ServiceFeeTable: React.FC = () => {
       key: "taskName",
       width: "40%",
       sorter: (a: any, b: any) => a.taskName.localeCompare(b.taskName),
-      ...getColumnSearchProps("taskName"),
+      ...getColumnSearchProps("taskName")
     },
     {
       title: "Nomenclador",
@@ -252,14 +276,14 @@ const ServiceFeeTable: React.FC = () => {
       filters: costSheetNomenclatorFilter,
       onFilter: (value: any, record: any) => record.nomenclatorId.startsWith(value),
       filterSearch: true,
-      sorter: (a: any, b: any) => a.nomenclatorId.localeCompare(b.nomenclatorId),
+      sorter: (a: any, b: any) => a.nomenclatorId.localeCompare(b.nomenclatorId)
     },
     {
       title: "Categoría",
       dataIndex: "category",
       key: "category",
-      width: "20%",
-      filterSearch: true,
+      width: "15%",
+      filterSearch: true
     },
 
     {
@@ -269,8 +293,8 @@ const ServiceFeeTable: React.FC = () => {
       width: "10%",
       render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
       sorter: {
-        compare: (a, b) => a.salePrice - b.salePrice,
-      },
+        compare: (a, b) => a.salePrice - b.salePrice
+      }
     },
     {
       title: "Precio USD",
@@ -279,14 +303,14 @@ const ServiceFeeTable: React.FC = () => {
       width: "10%",
       render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
       sorter: {
-        compare: (a, b) => a.salePriceUSD - b.salePriceUSD,
-      },
+        compare: (a, b) => a.salePriceUSD - b.salePriceUSD
+      }
     },
     {
-      title: "$/UM",
-      dataIndex: "valuePerUnitMeasure",
-      key: "valuePerUnitMeasure",
-      width: "10%",
+      title: "Unidad de Medida",
+      dataIndex: "unitMeasure",
+      key: "unitMeasure",
+      width: "15%"
     },
     {
       title: "Acciones",
@@ -298,7 +322,11 @@ const ServiceFeeTable: React.FC = () => {
             <></>
           ) : (
             <Tooltip placement="top" title={"Ver"} arrow={{ pointAtCenter: true }}>
-              <button disabled={!canList} onClick={() => handleView(record._id)} className="table-see-action-btn">
+              <button
+                disabled={!canList}
+                onClick={() => handleView(record._id)}
+                className="table-see-action-btn"
+              >
                 <SeeSvg width={20} height={20} />
               </button>
             </Tooltip>
@@ -307,21 +335,29 @@ const ServiceFeeTable: React.FC = () => {
             <></>
           ) : (
             <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-              <button disabled={!canDelete} className="table-delete-action-btn" onClick={() => handleDelete(record)}>
+              <button
+                disabled={!canDelete}
+                className="table-delete-action-btn"
+                onClick={() => handleDelete(record)}
+              >
                 <DeleteSvg width={20} height={20} />
               </button>
             </Tooltip>
           )}
         </div>
-      ),
-    },
+      )
+    }
   ];
 
   return (
     <>
       <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <div className="flex gap-2">
-          <button disabled={!canCreate} onClick={() => router.push("/dashboard/serviceFees/createServiceFee")} className={`${canCreate ? "toolbar-primary-icon-btn" : "bg-success-200"} `}>
+          <button
+            disabled={!canCreate}
+            onClick={() => router.push("/dashboard/serviceFees/createServiceFee")}
+            className={`${canCreate ? "toolbar-primary-icon-btn" : "bg-success-200"} `}
+          >
             <PlusSvg />
             Nuevo
           </button>
@@ -338,7 +374,9 @@ const ServiceFeeTable: React.FC = () => {
             <button
               disabled={!canList}
               className={`${
-                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canList
+                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                  : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={() => dispatch(serviceFeeStartLoading())}
             >
@@ -348,7 +386,14 @@ const ServiceFeeTable: React.FC = () => {
         </div>
       </div>
 
-      <Table size="small" columns={columns} dataSource={data} onChange={onChange} pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }} className="shadow-md" />
+      <Table
+        size="small"
+        columns={columns}
+        dataSource={data}
+        onChange={onChange}
+        pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
+        className="shadow-md"
+      />
     </>
   );
 };

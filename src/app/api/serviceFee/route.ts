@@ -1,12 +1,12 @@
 import { connectDB } from "@/libs/mongodb";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
 import Nomenclator, { INomenclator } from "@/models/nomenclator";
-import ServiceFee, { IServiceFee, IServiceFeeComplexityItem } from "@/models/serviceFees";
+import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const { ...serviceFee }: IServiceFee = await request.json();
 
   const accessToken = request.headers.get("accessToken");
@@ -108,35 +108,20 @@ export async function POST(request: Request) {
       await newNomenclator.save();
     }
     const newServiceFee = new ServiceFee({
-      category: serviceFee.category,
-      nomenclatorId: serviceFee.nomenclatorId,
+      ...serviceFee,
       key: newKey,
-      workersAmount: serviceFee.workersAmount,
-      taskName: serviceFee.taskName,
-      payMethodCoef: serviceFee.payMethodCoef,
-      valuePerUnitMeasure: serviceFee.valuePerUnitMeasure,
-      rawMaterials: serviceFee.rawMaterials,
       rawMaterialsSubtotal,
-      taskList: serviceFee.taskList,
       taskListSubtotal,
-      equipmentDepreciation: serviceFee.equipmentDepreciation,
       equipmentDepreciationSubtotal,
-      equipmentMaintenance: serviceFee.equipmentMaintenance,
       equipmentMaintenanceSubtotal,
-      administrativeExpenses: serviceFee.administrativeExpenses,
       administrativeExpensesSubtotal,
-      transportationExpenses: serviceFee.transportationExpenses,
       transportationExpensesSubtotal,
-      hiredPersonalExpenses: serviceFee.hiredPersonalExpenses,
       hiredPersonalExpensesSubtotal,
       complexity: complexityValues,
       expensesTotalValue,
       ONAT: serviceFee.ONAT,
       ONATValue: ONATValue,
-      currencyChange: serviceFee.currencyChange,
-      commercialMargin: serviceFee.commercialMargin,
       commercialMarginValue: comercialMarginValue,
-      artisticTalent: serviceFee.artisticTalent,
       artisticTalentValue: artisticTalentValue,
       salePrice: salePrice,
       salePriceUSD: salePrice / serviceFee?.currencyChange
@@ -170,7 +155,8 @@ export async function POST(request: Request) {
     }
   }
 }
-export async function PUT(request: Request) {
+
+export async function PUT(request: NextRequest) {
   const { ...serviceFee }: IServiceFee = await request.json();
 
   const accessToken = request.headers.get("accessToken");
@@ -286,34 +272,19 @@ export async function PUT(request: Request) {
     const updatedServiceFee = await ServiceFee.findByIdAndUpdate(
       serviceFee._id,
       {
-        category: serviceFee.category,
-        nomenclatorId: serviceFee.nomenclatorId,
-        workersAmount: serviceFee.workersAmount,
-        taskName: serviceFee.taskName,
-        payMethodCoef: serviceFee.payMethodCoef,
-        valuePerUnitMeasure: serviceFee.valuePerUnitMeasure,
-        rawMaterials: serviceFee.rawMaterials,
+        ...serviceFee,
         rawMaterialsSubtotal,
-        taskList: serviceFee.taskList,
         taskListSubtotal,
-        equipmentDepreciation: serviceFee.equipmentDepreciation,
         equipmentDepreciationSubtotal,
-        equipmentMaintenance: serviceFee.equipmentMaintenance,
         equipmentMaintenanceSubtotal,
-        administrativeExpenses: serviceFee.administrativeExpenses,
         administrativeExpensesSubtotal,
-        transportationExpenses: serviceFee.transportationExpenses,
         transportationExpensesSubtotal,
-        hiredPersonalExpenses: serviceFee.hiredPersonalExpenses,
         hiredPersonalExpensesSubtotal,
         complexity: complexityValues,
         expensesTotalValue,
         ONAT: serviceFee.ONAT,
         ONATValue: ONATValue,
-        currencyChange: serviceFee.currencyChange,
-        commercialMargin: serviceFee.commercialMargin,
         commercialMarginValue: comercialMarginValue,
-        artisticTalent: serviceFee.artisticTalent,
         artisticTalentValue: artisticTalentValue,
         salePrice: salePrice,
         salePriceUSD: salePrice / serviceFee?.currencyChange
@@ -348,7 +319,8 @@ export async function PUT(request: Request) {
     }
   }
 }
-export async function GET(request: Request) {
+
+export async function GET(request: NextRequest) {
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -391,7 +363,8 @@ export async function GET(request: Request) {
     }
   }
 }
-export async function PATCH(request: Request) {
+
+export async function PATCH(request: NextRequest) {
   const { id } = await request.json();
   const accessToken = request.headers.get("accessToken");
 

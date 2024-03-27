@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { Schema, model, models, Model } from "mongoose";
 
 export interface IClientNomenclator {
@@ -18,7 +19,7 @@ const ClientNomenclatorSchema = new Schema<IClientNomenclator, Model<IClientNome
   name: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   address: {
     type: String,
@@ -36,7 +37,7 @@ const ClientNomenclatorSchema = new Schema<IClientNomenclator, Model<IClientNome
     type: Number,
     required: true,
     unique: true
-  },
+  }
 });
 
 const ClientNomenclator = models.ClientNomenclator || model("ClientNomenclator", ClientNomenclatorSchema);

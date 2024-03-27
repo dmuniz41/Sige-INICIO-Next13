@@ -1,7 +1,7 @@
 "use client";
 
 import { RootState, useAppSelector } from "@/store/store";
-import { Divider, Tooltip } from "antd";
+import { Divider } from "antd";
 import { useAppDispatch } from "@/hooks/hooks";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -99,27 +99,27 @@ export const ServiceFeeView = () => {
 
       <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-2">
         <article className="w-full flex flex-row p-4 ">
-          <label className="font-bold mr-6 ">Descripción del servicio:</label>
+          <label className="font-bold mr-3 ">Descripción del servicio:</label>
           <p className="w-[25%]">{selectedServiceFee.taskName}</p>
-          <div className="w-[25%] flex flex-col pl-10">
+          <div className="w-[20%] flex flex-col pl-10">
             <label className="font-bold">
               Creador: <span className="font-normal">INICIO</span>
             </label>
             <label className="font-bold">
-              Cantidad de trabajadores: <span className="font-normal">{selectedServiceFee.workersAmount}</span>
+              Cantidad de trabajadores: <span className="font-normal">{selectedServiceFee?.workersAmount}</span>
             </label>
           </div>
-          <div className="flex w-[25%] flex-col pl-10">
+          <div className="flex w-[20%] flex-col">
             <label className="font-bold">
-              Nomenclador: <span className="font-normal">{selectedServiceFee.nomenclatorId}</span>
+              Nomenclador: <span className="font-normal">{selectedServiceFee?.nomenclatorId}</span>
             </label>
             <label className="font-bold">
-              Categoría: <span className="font-normal">{selectedServiceFee.category}</span>
+              Categoría: <span className="font-normal">{selectedServiceFee?.category}</span>
             </label>
           </div>
-          <div className="flex flex-1 flex-col pl-10">
+          <div className="flex flex-1 flex-col">
             <label className="font-bold">
-              Precio/UM: <span className="font-normal">{selectedServiceFee.valuePerUnitMeasure}</span>
+              Unidad de Medida: <span className="font-normal">{selectedServiceFee?.unitMeasure}</span>
             </label>
           </div>
         </article>

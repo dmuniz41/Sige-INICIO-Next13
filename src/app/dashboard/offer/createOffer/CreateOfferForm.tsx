@@ -54,7 +54,7 @@ export const CreateOfferForm = () => {
       name="createOfferForm"
       labelCol={{ span: 0 }}
       wrapperCol={{ span: 0 }}
-      className="w-full flex flex-col gap-0"
+      className="w-full flex flex-col"
       initialValues={{ remember: true }}
       onFinishFailed={onFinishFailed}
       autoComplete="off"

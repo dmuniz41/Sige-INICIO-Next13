@@ -81,7 +81,7 @@ export const EditOfferForm = () => {
         name="createOfferForm"
         labelCol={{ span: 0 }}
         wrapperCol={{ span: 0 }}
-        className="w-full flex flex-col gap-0"
+        className="w-full flex flex-col"
         initialValues={{ remember: true }}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
@@ -96,7 +96,7 @@ export const EditOfferForm = () => {
       >
         <section className="flex gap-4 flex-col w-full overflow-none rounded-md shadow-md p-4">
           <div className="grid gap-2">
-            <h1 className="pl-2 text-xl font-bold mb-2">{selectedOffer?.projectName}</h1>
+            <h1 className="text-xl font-bold mb-2">{selectedOffer?.projectName}</h1>
             <Form.Item
               className="mb-3 w-[30%]"
               label={<span className="font-bold text-md">Representación</span>}
