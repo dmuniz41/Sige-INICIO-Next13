@@ -37,7 +37,6 @@ const ClientNomenclatorsTable: React.FC = () => {
   const [editModal, setEditModal] = useState(false);
   const [selectedNomenclator, setSelectedNomenclator] = useState<IClientNomenclator>();
   const searchInput = useRef<InputRef>(null);
-  const router = useRouter();
   const { data: sessionData } = useSession();
 
   const canList = sessionData?.user.role.includes("Listar Nomencladores");
@@ -74,7 +73,6 @@ const ClientNomenclatorsTable: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-    if (id) {
       Swal.fire({
         title: "Eliminar Nomenclador",
         text: "El nomenclador seleccionado se borrará de forma permanente",
@@ -89,12 +87,6 @@ const ClientNomenclatorsTable: React.FC = () => {
           dispatch(startDeleteClientNomenclator(id));
         }
       });
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un proyecto a eliminar"
-      });
-    }
   };
 
   const handleReset = (clearFilters: () => void) => {

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import Nomenclator from "@/models/nomenclator";
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
@@ -22,15 +21,25 @@ export async function POST(request: Request) {
       );
     }
     await connectDB();
-    let DBNomenclator = await ClientNomenclator.findOne({
-      $or: [{ name: clientNomenclator.name }, { idNumber: clientNomenclator.idNumber }]
+    const DBNomenclator = await ClientNomenclator.findOne({
+      name: clientNomenclator.name
     });
+
+    // ? LOS NUMEROS DE LOS CLIENTES SE CREAN DE FORMA CONSECUTIVA, DE NO EXISTIR CLIENTES EL PRIMER NUMERO SERÁ 1 //
+    const clients = (await ClientNomenclator.find()) as IClientNomenclator[];
+    console.log("🚀 ~ POST ~ clients.length:", clients.length == 0);
+    let newId = 0;
+    if (clients.length == 0) {
+      newId = 1;
+    } else {
+      newId = clients.at(-1)?.idNumber! + 1;
+    }
 
     if (DBNomenclator) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Ya existe un nomenclador con ese nombre o número de cliente"
+          message: "Ya existe un nomenclador de cliente con ese nombre"
         },
         {
           status: 409
@@ -43,7 +52,7 @@ export async function POST(request: Request) {
     const newClientNomenclator = new ClientNomenclator({
       address: clientNomenclator.address,
       email: clientNomenclator.email,
-      idNumber: clientNomenclator.idNumber,
+      idNumber: newId,
       key: newKey,
       name: clientNomenclator.name,
       phoneNumber: clientNomenclator.phoneNumber
@@ -140,9 +149,6 @@ export async function PUT(request: Request) {
     }
     await connectDB();
     const nomenclatorToUpdate = await ClientNomenclator.findById(clientNomenclator._id);
-    const existNumberOrName = await ClientNomenclator.find({
-      $or: [{ name: clientNomenclator.name }, { idNumber: clientNomenclator.idNumber }]
-    });
 
     if (!nomenclatorToUpdate) {
       return NextResponse.json(
@@ -156,23 +162,11 @@ export async function PUT(request: Request) {
       );
     }
 
-    if (existNumberOrName) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "Ya existe un nomenclador con ese nombre o número de cliente"
-        },
-        {
-          status: 409
-        }
-      );
-    }
     const updatedNomenclator = await ClientNomenclator.findByIdAndUpdate(
       clientNomenclator._id,
       {
         address: clientNomenclator.address,
         email: clientNomenclator.email,
-        idNumber: clientNomenclator.idNumber,
         name: clientNomenclator.name,
         phoneNumber: clientNomenclator.phoneNumber
       },

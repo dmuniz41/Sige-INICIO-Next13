@@ -12,11 +12,7 @@ export const startAddClientNomenclator = ({ ...clientNomenclator }): any => {
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/client`,
         {
-          address: clientNomenclator.address,
-          email: clientNomenclator.email,
-          idNumber: clientNomenclator.idNumber,
-          name: clientNomenclator.name,
-          phoneNumber: clientNomenclator.phoneNumber
+          ...clientNomenclator
         },
         { headers: { accessToken: token } }
       )
@@ -30,7 +26,12 @@ export const startAddClientNomenclator = ({ ...clientNomenclator }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ return ~ message:", message);
+        Swal.fire(
+          "Error",
+          "Error al crear el nomenclador de cliente. (El nombre del cliente debe ser único)",
+          "error"
+        );
       });
   };
 };
@@ -46,7 +47,6 @@ export const startUpdateClientNomenclator = ({ ...clientNomenclator }): any => {
           _id: clientNomenclator._id,
           address: clientNomenclator.address,
           email: clientNomenclator.email,
-          idNumber: clientNomenclator.idNumber,
           name: clientNomenclator.name,
           phoneNumber: clientNomenclator.phoneNumber
         },
@@ -62,7 +62,12 @@ export const startUpdateClientNomenclator = ({ ...clientNomenclator }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ return ~ message:", message);
+        Swal.fire(
+          "Error",
+          "Error al actualizar el nomenclador de cliente. (El nombre del cliente debe ser único)",
+          "error"
+        );
       });
   };
 };
@@ -85,7 +90,8 @@ export const startDeleteClientNomenclator = (id: string): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ return ~ message:", message);
+        Swal.fire("Error", "Error al eliminar el nomenclador de cliente", "error");
       });
   };
 };
@@ -104,7 +110,8 @@ export const clientNomenclatorsStartLoading = () => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ return ~ message:", message);
+        Swal.fire("Error", "Error al cargar los nomencladores de clientes", "error");
       });
   };
 };
