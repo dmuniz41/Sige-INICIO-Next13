@@ -62,9 +62,9 @@ export const AuxiliaryView = () => {
       dataIndex: "coefficientValue",
       key: "coefficientValue",
       width: "150px",
-      render: (value: any) => (
+      render: (value: number) => (
         <span>
-          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
         </span>
       )
     }
@@ -83,7 +83,7 @@ export const AuxiliaryView = () => {
       width: "150px",
       render: (value: number) => (
         <span>
-          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
         </span>
       )
     }
