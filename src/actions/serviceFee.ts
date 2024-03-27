@@ -27,7 +27,7 @@ export const startAddServiceFee = ({ ...serviceFee }): any => {
           taskList: serviceFee.taskList ?? [],
           taskName: serviceFee.taskName,
           transportationExpenses: serviceFee.transportationExpenses ?? [],
-          valuePerUnitMeasure: serviceFee.valuePerUnitMeasure,
+          unitMeasure: serviceFee.unitMeasure,
           workersAmount: serviceFee.workersAmount
         },
         { headers: { accessToken: token } }
@@ -72,7 +72,7 @@ export const startUpdateServiceFee = ({ ...serviceFee }): any => {
           taskList: serviceFee.taskList ?? [],
           taskName: serviceFee.taskName,
           transportationExpenses: serviceFee.transportationExpenses ?? [],
-          valuePerUnitMeasure: serviceFee.valuePerUnitMeasure,
+          unitMeasure: serviceFee.unitMeasure,
           workersAmount: serviceFee.workersAmount
         },
         { headers: { accessToken: token } }

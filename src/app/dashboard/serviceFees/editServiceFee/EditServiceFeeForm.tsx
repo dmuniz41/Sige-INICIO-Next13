@@ -26,7 +26,7 @@ export const EditServiceFeeForm = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const serviceFeeCategory: string[] | undefined = [];
-  const valuePerUM: string[] | undefined = [];
+  const unitMeasureNomenclators: string[] | undefined = [];
   const router = useRouter();
 
   const [addRawMaterialModal, setAddRawMaterialModal] = useState(false);
@@ -67,9 +67,9 @@ export const EditServiceFeeForm = () => {
   }, [dispatch, selectedServiceFee]);
 
   nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Categoría de ficha de costo")
+    if (nomenclator.category === "Categoría de tarifas")
       serviceFeeCategory.push(nomenclator.code);
-    if (nomenclator.category === "Precio/UM en ficha de costo") valuePerUM.push(nomenclator.code);
+    if (nomenclator.category === "Unidad de medida") unitMeasureNomenclators.push(nomenclator.code);
   });
 
   const categoriesOptions: SelectProps["options"] = serviceFeeCategory.map((serviceFeeCategory) => {
@@ -79,10 +79,10 @@ export const EditServiceFeeForm = () => {
     };
   });
 
-  const valuePerUMOptions: SelectProps["options"] = valuePerUM.map((valuePerUM) => {
+  const unitMeasureOptions: SelectProps["options"] = unitMeasureNomenclators.map((unitMeasure) => {
     return {
-      label: `${valuePerUM}`,
-      value: `${valuePerUM}`
+      label: `${unitMeasure}`,
+      value: `${unitMeasure}`
     };
   });
 
@@ -210,8 +210,8 @@ export const EditServiceFeeForm = () => {
           value: selectedServiceFee?.workersAmount
         },
         {
-          name: "valuePerUnitMeasure",
-          value: selectedServiceFee?.valuePerUnitMeasure
+          name: "unitMeasure",
+          value: selectedServiceFee?.unitMeasure
         },
         {
           name: "currencyChange",
@@ -284,7 +284,7 @@ export const EditServiceFeeForm = () => {
           >
             <TextArea rows={3} />
           </Form.Item>
-          <article className="flex flex-col w-[300px]">
+          <article className="flex flex-col flex-1">
             <Form.Item
               className="mb-3"
               label={<span className="font-bold text-md">Nomenclador</span>}
@@ -320,7 +320,7 @@ export const EditServiceFeeForm = () => {
               />
             </Form.Item>
           </article>
-          <article className="flex flex-col w-[300px]">
+          <article className="flex flex-col flex-1">
             <Form.Item
               className="mb-3 "
               label={<span className="font-bold text-md">Cantidad de empleados</span>}
@@ -331,13 +331,13 @@ export const EditServiceFeeForm = () => {
             </Form.Item>
             <Form.Item
               className="mb-3"
-              label={<span className="font-bold text-md">Precio/UM</span>}
-              name="valuePerUnitMeasure"
+              label={<span className="font-bold text-md">Unidad de Medida</span>}
+              name="unitMeasure"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
               <Select
                 allowClear
-                options={valuePerUMOptions}
+                options={unitMeasureOptions}
                 showSearch
                 optionFilterProp="children"
                 filterOption={(input: any, option: any) =>
@@ -351,10 +351,10 @@ export const EditServiceFeeForm = () => {
               />
             </Form.Item>
           </article>
-          <article className="flex flex-col w-[300px]">
+          <article className="flex flex-col w-[150px]">
             <Form.Item
               className="mb-3 "
-              label={<span className="font-bold text-md">Cambio $ </span>}
+              label={<span className="font-bold text-md">Cambio (USD)</span>}
               name="currencyChange"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -530,7 +530,7 @@ export const EditServiceFeeForm = () => {
                     taskList: values.taskList,
                     taskName: values.taskName,
                     transportationExpenses: values.transportationExpenses,
-                    valuePerUnitMeasure: values.valuePerUnitMeasure,
+                    unitMeasure: values.unitMeasure,
                     workersAmount: values.workersAmount
                   })
                 );
