@@ -120,11 +120,11 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                 (serviceFee) => serviceFee.taskName === value.label
               );
               setSelectedServiceFee(currentServiceFee!);
-              setCurrentUnitMeasure(currentServiceFee?.valuePerUnitMeasure!);
+              setCurrentUnitMeasure(currentServiceFee?.unitMeasure!);
               setCurrentPrice(0);
 
               form.setFieldsValue({
-                unitMeasure: selectedServiceFee?.valuePerUnitMeasure,
+                unitMeasure: selectedServiceFee?.unitMeasure,
                 price: form.getFieldValue("description")?.value,
                 height: 0,
                 width: 0,
@@ -149,7 +149,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
         <Form.Item
           name="amount"
           label="Cantidad"
-          className={`w-[12rem] ${currentUnitMeasure?.includes("u") || currentUnitMeasure === "" ? "" : "hidden"}`}
+          className={`w-[12rem] ${currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)") ? "" : "hidden"}`}
           rules={[{ required: true, message: "Campo requerido" }]}
         >
           <InputNumber
@@ -161,7 +161,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
         <Form.Item
           name="width"
           label="Largo"
-          className={`w-[12rem] ${(currentUnitMeasure?.includes("u") || currentUnitMeasure === "") && "hidden"}`}
+          className={`w-[12rem] ${(!currentUnitMeasure?.includes("u") || currentUnitMeasure === "") && "hidden"}`}
           rules={[{ required: true, message: "Campo vacío o incorrecto" }]}
         >
           <InputNumber
@@ -179,7 +179,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
         <Form.Item
           name="height"
           label="Ancho"
-          className={`w-[12rem] ${(currentUnitMeasure?.includes("u") || currentUnitMeasure === "") && "hidden"}`}
+          className={`w-[12rem] ${(!currentUnitMeasure?.includes("u") || currentUnitMeasure === "") && "hidden"}`}
           rules={[{ required: true, message: "Campo vacío o incorrecto" }]}
         >
           <InputNumber
@@ -231,20 +231,25 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
         >
           <InputNumber precision={2} disabled className="w-full" />
         </Form.Item>
-        {!currentUnitMeasure?.includes("u") ? (
-          <div className=" flex gap-2 pl-2 mb-4">
-            <span className="font-bold">Tamaño:</span>
-            <span>
-              {!size ? 0 : size.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}
-            </span>
-          </div>
-        ) : (
+        {currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)") ? (
           <div className={`flex gap-2 pl-2 mb-4 ${currentUnitMeasure.includes("u") && "hidden"}`}>
             <span className="font-bold">Cantidad:</span>
             <span>
               {!form.getFieldValue("amount")
                 ? 0
-                : form.getFieldValue("amount").toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}{" "}
+                : form.getFieldValue("amount").toLocaleString("DE", {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2
+                  })}{" "}
+            </span>
+          </div>
+        ) : (
+          <div className=" flex gap-2 pl-2 mb-4">
+            <span className="font-bold">Tamaño:</span>
+            <span>
+              {!size
+                ? 0
+                : size.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
             </span>
           </div>
         )}
@@ -254,11 +259,23 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Precio:</span>
-          <span>${currentPrice?.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}</span>
+          <span>
+            $
+            {currentPrice?.toLocaleString("DE", {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2
+            })}
+          </span>
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Importe:</span>
-          <span>${activityValue?.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}</span>
+          <span>
+            $
+            {activityValue?.toLocaleString("DE", {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2
+            })}
+          </span>
         </div>
       </Form>
     </Modal>
