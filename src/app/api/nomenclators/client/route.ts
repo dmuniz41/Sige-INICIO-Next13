@@ -27,7 +27,6 @@ export async function POST(request: Request) {
 
     // ? LOS NUMEROS DE LOS CLIENTES SE CREAN DE FORMA CONSECUTIVA, DE NO EXISTIR CLIENTES EL PRIMER NUMERO SERÁ 1 //
     const clients = (await ClientNomenclator.find()) as IClientNomenclator[];
-    console.log("🚀 ~ POST ~ clients.length:", clients.length == 0);
     let newId = 0;
     if (clients.length == 0) {
       newId = 1;
