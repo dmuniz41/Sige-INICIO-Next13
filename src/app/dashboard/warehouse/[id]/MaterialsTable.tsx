@@ -15,7 +15,12 @@ import type { InputRef } from "antd";
 
 import { AddMaterialForm } from "./AddMaterialForm";
 import { DeleteSvg } from "../../../global/DeleteSvg";
-import { editMaterial, materialsStartLoading, startAddMaterial, startDeleteMaterial } from "@/actions/material";
+import {
+  editMaterial,
+  materialsStartLoading,
+  startAddMaterial,
+  startDeleteMaterial
+} from "@/actions/material";
 import { EditMaterialForm } from "./EditMaterialForm";
 import { EditSvg } from "../../../global/EditSvg";
 import { INomenclator } from "@/models/nomenclator";
@@ -34,10 +39,13 @@ import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
 import PDFReport from "@/helpers/PDFReport";
 
-const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
-  ssr: false,
-  loading: () => <p>Loading...</p>,
-});
+const PDFDownloadLink = dynamic(
+  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+  {
+    ssr: false,
+    loading: () => <p>Loading...</p>
+  }
+);
 interface DataType {
   _id: string;
   category: string;
@@ -93,44 +101,44 @@ const MaterialsTable: React.FC = () => {
       title: " Categoría",
       custom: true,
       component: (item: any) => `${item.category}`,
-      width: "20",
+      width: "20"
     },
     {
       title: " Nombre",
       custom: true,
       component: (item: any) => `${item.materialName}`,
-      width: "20",
+      width: "20"
     },
     {
       title: " Descripción",
       custom: true,
       component: (item: any) => `${item.description}`,
-      width: "20",
+      width: "20"
     },
     {
       title: " Coste Unitario",
       custom: true,
       component: (item: any) => `$ ${item.costPerUnit.toFixed(2)}`,
-      width: "10",
+      width: "10"
     },
     {
       title: " Existencias",
       custom: true,
       component: (item: any) => `${item.unitsTotal}`,
-      width: "10",
+      width: "10"
     },
     {
       title: " Proveedor",
       custom: true,
       component: (item: any) => `${item.provider}`,
-      width: "10",
+      width: "10"
     },
     {
       title: " Unidad de Medida",
       custom: true,
       component: (item: any) => `${item.unitMeasure}`,
-      width: "10",
-    },
+      width: "10"
+    }
   ];
 
   const { materials } = useAppSelector((state: RootState) => state?.material);
@@ -149,7 +157,7 @@ const MaterialsTable: React.FC = () => {
   materialCategory.map((category: string) => {
     categoryFilter.push({
       text: `${category}`,
-      value: `${category}`,
+      value: `${category}`
     });
   });
 
@@ -171,7 +179,7 @@ const MaterialsTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione un material para añadir",
+        title: "Seleccione un material para añadir"
       });
     }
   };
@@ -182,7 +190,7 @@ const MaterialsTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione un material para sustraer",
+        title: "Seleccione un material para sustraer"
       });
     }
   };
@@ -193,7 +201,7 @@ const MaterialsTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione el material que desea ver sus operaciones",
+        title: "Seleccione el material que desea ver sus operaciones"
       });
     }
   };
@@ -204,7 +212,7 @@ const MaterialsTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione un material a editar",
+        title: "Seleccione un material a editar"
       });
     }
   };
@@ -213,7 +221,11 @@ const MaterialsTable: React.FC = () => {
     dispatch(materialsStartLoading(selectedWarehouse));
   };
 
-  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -229,7 +241,7 @@ const MaterialsTable: React.FC = () => {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         cancelButtonText: "Cancelar",
-        confirmButtonText: "Eliminar",
+        confirmButtonText: "Eliminar"
       }).then((result) => {
         if (result.isConfirmed) {
           dispatch(startDeleteMaterial(selectedRow?.code, selectedWarehouse));
@@ -238,7 +250,7 @@ const MaterialsTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione un material a eliminar",
+        title: "Seleccione un material a eliminar"
       });
     }
   };
@@ -252,7 +264,7 @@ const MaterialsTable: React.FC = () => {
     let operation: IOperation = {
       date: currentDate,
       tipo: "Añadir",
-      amount: values.unitsTotal,
+      amount: values.unitsTotal
     };
 
     dispatch(
@@ -266,7 +278,7 @@ const MaterialsTable: React.FC = () => {
         operation: operation,
         provider: values.provider,
         unitMeasure: values.unitMeasure,
-        warehouse: selectedWarehouse,
+        warehouse: selectedWarehouse
       })
     );
     setCreateNewModal(false);
@@ -277,7 +289,7 @@ const MaterialsTable: React.FC = () => {
     let operation: IOperation = {
       date: currentDate,
       tipo: "Añadir",
-      amount: values.unitsTotal,
+      amount: values.unitsTotal
     };
     dispatch(
       startAddMaterial({
@@ -290,7 +302,7 @@ const MaterialsTable: React.FC = () => {
         operation: operation,
         provider: values.provider,
         unitMeasure: values.unitMeasure,
-        warehouse: selectedWarehouse,
+        warehouse: selectedWarehouse
       })
     );
     setAddModal(false);
@@ -300,7 +312,7 @@ const MaterialsTable: React.FC = () => {
     let operation: IOperation = {
       date: currentDate,
       tipo: "Sustraer",
-      amount: values.unitsTotal,
+      amount: values.unitsTotal
     };
     dispatch(
       startAddMaterial({
@@ -313,14 +325,23 @@ const MaterialsTable: React.FC = () => {
         operation: operation,
         provider: values.provider,
         unitMeasure: values.unitMeasure,
-        warehouse: selectedWarehouse,
+        warehouse: selectedWarehouse
       })
     );
     setMinusModal(false);
   };
 
   const onEditMaterial = (values: any): void => {
-    dispatch(editMaterial(selectedRow?.category!, values.code, values.description, values.materialName, values.minimumExistence, selectedWarehouse));
+    dispatch(
+      editMaterial(
+        selectedRow?.category!,
+        values.code,
+        values.description,
+        values.materialName,
+        values.minimumExistence,
+        selectedWarehouse
+      )
+    );
     setEditMaterialModal(false);
   };
 
@@ -333,7 +354,7 @@ const MaterialsTable: React.FC = () => {
     onChange: async (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
       setSelectedRow(selectedRows[0]);
       console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows);
-    },
+    }
   };
 
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
@@ -358,7 +379,11 @@ const MaterialsTable: React.FC = () => {
           >
             Search
           </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
           <Button
@@ -384,7 +409,9 @@ const MaterialsTable: React.FC = () => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
+    ),
     onFilter: (value, record) =>
       record[dataIndex]
         .toString()
@@ -397,18 +424,23 @@ const MaterialsTable: React.FC = () => {
     },
     render: (text) =>
       searchedColumn === dataIndex ? (
-        <Highlighter highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }} searchWords={[searchText]} autoEscape textToHighlight={text ? text.toString() : ""} />
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
       ) : (
         text
-      ),
+      )
   });
-  
+
   const columns: ColumnsType<DataType> = [
     {
       title: "Código",
       dataIndex: "code",
       key: "code",
-      width: "5%",
+      width: "5%"
     },
     {
       title: "Categoría",
@@ -417,20 +449,20 @@ const MaterialsTable: React.FC = () => {
       filters: categoryFilter,
       onFilter: (value: any, record: any) => record.category.startsWith(value),
       filterSearch: true,
-      width: "15%",
+      width: "15%"
     },
     {
       title: "Nombre",
       dataIndex: "materialName",
       key: "materialName",
       width: "15%",
-      ...getColumnSearchProps("materialName"),
+      ...getColumnSearchProps("materialName")
     },
     {
       title: "Descripción",
       dataIndex: "description",
       key: "description",
-      width: "15%",
+      width: "15%"
     },
     {
       title: "Coste Unitario",
@@ -438,30 +470,54 @@ const MaterialsTable: React.FC = () => {
       key: "costPerUnit",
       width: "10%",
       sorter: {
-        compare: (a, b) => a.costPerUnit - b.costPerUnit,
+        compare: (a, b) => a.costPerUnit - b.costPerUnit
       },
-      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
+      render: (value) => (
+        <span>
+          ${" "}
+          {value.toLocaleString("DE", {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })}
+        </span>
+      )
     },
     {
       title: "Existencias",
       dataIndex: "unitsTotal",
       key: "unitsTotal",
       width: "5%",
+      render: (value) => (
+        <span>
+          {value.toLocaleString("DE", {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })}
+        </span>
+      ),
       sorter: {
-        compare: (a, b) => a.unitsTotal - b.unitsTotal,
-      },
+        compare: (a, b) => a.unitsTotal - b.unitsTotal
+      }
     },
     {
       title: "Unidad de Medida",
       dataIndex: "unitMeasure",
       key: "unitMeasure",
-      width: "10%",
+      width: "10%"
     },
     {
       title: "Existencias Mínimas",
       dataIndex: "minimumExistence",
       key: "minimumExistence",
       width: "5%",
+      render: (value) => (
+        <span>
+          {value.toLocaleString("DE", {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })}
+        </span>
+      )
     },
     {
       title: "Proveedor",
@@ -469,15 +525,15 @@ const MaterialsTable: React.FC = () => {
       key: "provider",
       width: "10%",
       sorter: (a: any, b: any) => a.provider.localeCompare(b.provider),
-      ...getColumnSearchProps("provider"),
+      ...getColumnSearchProps("provider")
     },
     {
       title: "Fecha de Entrada",
       dataIndex: "enterDate",
       key: "enterDate",
       width: "8%",
-      ...getColumnSearchProps("enterDate"),
-    },
+      ...getColumnSearchProps("enterDate")
+    }
   ];
 
   return (
@@ -498,7 +554,9 @@ const MaterialsTable: React.FC = () => {
             <button
               disabled={!canCreate}
               className={`${
-                canCreate ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canCreate
+                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                  : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleNew}
             >
@@ -509,7 +567,9 @@ const MaterialsTable: React.FC = () => {
             <button
               disabled={!canEditMaterial}
               className={`${
-                canEditMaterial ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canEditMaterial
+                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                  : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleEditMaterial}
             >
@@ -521,7 +581,9 @@ const MaterialsTable: React.FC = () => {
             <button
               disabled={!canDelete}
               className={`${
-                canDelete ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canDelete
+                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                  : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleDelete}
             >
@@ -532,18 +594,26 @@ const MaterialsTable: React.FC = () => {
             <button
               disabled={!canList}
               className={`${
-                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canList
+                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                  : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleRefresh}
             >
               <RefreshSvg />
             </button>
           </Tooltip>
-          <Tooltip placement="top" title={"Historial de Operaciones"} arrow={{ pointAtCenter: true }}>
+          <Tooltip
+            placement="top"
+            title={"Historial de Operaciones"}
+            arrow={{ pointAtCenter: true }}
+          >
             <button
               disabled={!canList}
               className={`${
-                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canList
+                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                  : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleShowOperations}
             >
@@ -551,17 +621,27 @@ const MaterialsTable: React.FC = () => {
             </button>
           </Tooltip>
           <Tooltip placement="top" title={"Generar Reporte"} arrow={{ pointAtCenter: true }}>
-            <PDFDownloadLink document={<PDFReport fields={fields} data={PDFReportData} title={"Reporte de almacén "} />} fileName="Reporte de almacén">
+            <PDFDownloadLink
+              document={
+                <PDFReport fields={fields} data={PDFReportData} title={"Reporte de almacén "} />
+              }
+              fileName="Reporte de almacén"
+            >
               {({ blob, url, loading, error }) =>
                 loading ? (
-                  <button disabled className={`opacity-20 pt-2 pl-2" flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}>
+                  <button
+                    disabled
+                    className={`opacity-20 pt-2 pl-2" flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+                  >
                     <PDFSvg />
                   </button>
                 ) : (
                   <button
                     disabled={!canList}
                     className={`${
-                      canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                      canList
+                        ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                        : "opacity-20 pt-2 pl-2"
                     } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
                   >
                     <PDFSvg />
@@ -573,11 +653,35 @@ const MaterialsTable: React.FC = () => {
         </div>
       </div>
 
-      <NewMaterialForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
-      <AddMaterialForm open={addModal} onCancel={() => setAddModal(false)} onCreate={onAdd} defaultValues={selectedRow} />
-      <MinusMaterialForm open={minusModal} onCancel={() => setMinusModal(false)} onCreate={onMinus} defaultValues={selectedRow} />
-      <EditMaterialForm open={editMaterialModal} onCancel={() => setEditMaterialModal(false)} onCreate={onEditMaterial} defaultValues={selectedRow} />
-      <OperationsList open={showOperationsModal} onCancel={() => setShowOperationModal(false)} onCreate={onMinus} defaultValues={selectedRow} />
+      <NewMaterialForm
+        open={createNewModal}
+        onCancel={() => setCreateNewModal(false)}
+        onCreate={onCreate}
+      />
+      <AddMaterialForm
+        open={addModal}
+        onCancel={() => setAddModal(false)}
+        onCreate={onAdd}
+        defaultValues={selectedRow}
+      />
+      <MinusMaterialForm
+        open={minusModal}
+        onCancel={() => setMinusModal(false)}
+        onCreate={onMinus}
+        defaultValues={selectedRow}
+      />
+      <EditMaterialForm
+        open={editMaterialModal}
+        onCancel={() => setEditMaterialModal(false)}
+        onCreate={onEditMaterial}
+        defaultValues={selectedRow}
+      />
+      <OperationsList
+        open={showOperationsModal}
+        onCancel={() => setShowOperationModal(false)}
+        onCreate={onMinus}
+        defaultValues={selectedRow}
+      />
 
       <Table
         size="small"
@@ -587,7 +691,7 @@ const MaterialsTable: React.FC = () => {
         onChange={onChange}
         rowSelection={{
           type: "radio",
-          ...rowSelection,
+          ...rowSelection
         }}
         className="shadow-md"
       />

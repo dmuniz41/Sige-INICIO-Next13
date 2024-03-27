@@ -109,7 +109,13 @@ export const OfferView = () => {
           <div className="flex w-[90%] justify-end font-bold">
             <h2>VALOR TOTAL : </h2>
           </div>
-          <div className="flex px-4">$ {selectedOffer?.value?.toLocaleString("DE")}</div>
+          <div className="flex px-4">
+            ${" "}
+            {selectedOffer?.value?.toLocaleString("DE", {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2
+            })}
+          </div>
         </article>
       </section>
       <MaterialsListModal

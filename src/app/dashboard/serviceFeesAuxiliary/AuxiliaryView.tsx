@@ -55,28 +55,38 @@ export const AuxiliaryView = () => {
       title: "Representante",
       dataIndex: "representative",
       key: "representative",
-      width: "300px",
+      width: "300px"
     },
     {
       title: "Porcentaje",
       dataIndex: "coefficientValue",
       key: "coefficientValue",
       width: "150px",
-    },
+      render: (value: number) => (
+        <span>
+          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+        </span>
+      )
+    }
   ];
   const columns = [
     {
       title: "Nombre",
       dataIndex: "name",
       key: "name",
-      width: "300px",
+      width: "300px"
     },
     {
       title: "Valor",
       dataIndex: "value",
       key: "value",
       width: "150px",
-    },
+      render: (value: number) => (
+        <span>
+          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+        </span>
+      )
+    }
   ];
 
   return (

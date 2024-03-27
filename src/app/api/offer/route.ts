@@ -8,11 +8,11 @@ import ServiceFee, { IServiceFeeSubItem } from "@/models/serviceFees";
 
 export async function POST(request: NextRequest) {
   const { ...offer }: IOffer = await request.json();
-  console.log("🚀 ~ POST ~ offer:", offer)
+  console.log("🚀 ~ POST ~ offer:", offer);
   const activitiesList: { description: string; amount: number }[] = [];
   const uniqueActivities: { description: string; amount: number }[] = [];
-  const activitiesMaterials: { description: string; amount: number }[] = [];
-  const uniqueMaterials: { description: string; amount: number }[] = [];
+  const activitiesMaterials: { description: string; amount: number; unitMeasure: string }[] = [];
+  const uniqueMaterials: { description: string; amount: number; unitMeasure: string }[] = [];
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -66,8 +66,9 @@ export async function POST(request: NextRequest) {
         if (actMaterials?.rawMaterials) {
           actMaterials?.rawMaterials?.forEach((material: IServiceFeeSubItem) => {
             activitiesMaterials.push({
-              description: material.description,
-              amount: material.amount * ua.amount
+              description: material?.description,
+              amount: material?.amount * ua.amount,
+              unitMeasure: material?.unitMeasure ?? ""
             });
           });
         }
@@ -89,7 +90,8 @@ export async function POST(request: NextRequest) {
       } else {
         uniqueMaterials?.push({
           description: material.description,
-          amount: material.amount
+          amount: material.amount,
+          unitMeasure: material.unitMeasure ?? ""
         });
       }
     });
@@ -109,8 +111,8 @@ export async function POST(request: NextRequest) {
     }
 
     let newKey = generateRandomString(26);
-    const finalValue = offer.value! * offer?.representationCoef?.coefficientValue
-    
+    const finalValue = offer.value! * offer?.representationCoef?.coefficientValue;
+
     const newOffer = new Offer({
       ...offer,
       materialsList: uniqueMaterials,
@@ -118,9 +120,9 @@ export async function POST(request: NextRequest) {
       isFinalOffer: offer.isFinalOffer ?? false,
       value: finalValue
     });
-    
+
     await newOffer.save();
-    
+
     return new NextResponse(
       JSON.stringify({
         ok: true,
@@ -223,7 +225,7 @@ export async function PUT(request: NextRequest) {
     const updatedOffer = await Offer.findByIdAndUpdate(
       offer._id,
       {
-        ...offer,
+        ...offer
       },
       { new: true }
     );

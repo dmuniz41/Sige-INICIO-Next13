@@ -15,8 +15,8 @@ export const Item = (props: any) => {
           <div className="font-bold items-center p-2 w-[160px] justify-center flex">
             ${" "}
             {item?.value?.toLocaleString("DE", {
-              maximumFractionDigits: 0,
-              minimumFractionDigits: 0
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2
             })}
           </div>
         </div>

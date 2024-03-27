@@ -395,7 +395,7 @@ const ProjectTable: React.FC = () => {
       width: "5%",
       render: (value) => (
         <span>
-          $ {value.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}
+          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
         </span>
       ),
       sorter: {
@@ -409,7 +409,7 @@ const ProjectTable: React.FC = () => {
       width: "5%",
       render: (value) => (
         <span>
-          $ {value.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}
+          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
         </span>
       ),
       sorter: {
@@ -423,7 +423,7 @@ const ProjectTable: React.FC = () => {
       width: "5%",
       render: (value) => (
         <span>
-          $ {value.toLocaleString("DE", { maximumFractionDigits: 0, minimumFractionDigits: 0 })}
+          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
         </span>
       ),
       sorter: {

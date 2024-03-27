@@ -72,16 +72,17 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                 .validateFields()
                 .then((values) => {
                   onCreate(
-                    !currentUnitMeasure.includes("u")
+                    currentUnitMeasure.includes("Unidades (U)") ||
+                      currentUnitMeasure.includes("Metro (m)")
                       ? {
-                          amount: size,
+                          amount: values.amount,
                           description: values.description.value,
                           price: Number(currentPrice.toFixed(2)),
                           unitMeasure: currentUnitMeasure,
                           value: Number(activityValue.toFixed(2))
                         }
                       : {
-                          amount: values.amount,
+                          amount: size,
                           description: values.description.value,
                           price: Number(currentPrice.toFixed(2)),
                           unitMeasure: currentUnitMeasure,
@@ -161,7 +162,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
         <Form.Item
           name="width"
           label="Largo"
-          className={`w-[12rem] ${(!currentUnitMeasure?.includes("u") || currentUnitMeasure === "") && "hidden"}`}
+          className={`w-[12rem] ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
           rules={[{ required: true, message: "Campo vacío o incorrecto" }]}
         >
           <InputNumber
@@ -179,7 +180,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
         <Form.Item
           name="height"
           label="Ancho"
-          className={`w-[12rem] ${(!currentUnitMeasure?.includes("u") || currentUnitMeasure === "") && "hidden"}`}
+          className={`w-[12rem] ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
           rules={[{ required: true, message: "Campo vacío o incorrecto" }]}
         >
           <InputNumber

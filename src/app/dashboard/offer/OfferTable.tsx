@@ -27,10 +27,7 @@ type DataIndex = keyof IOffer;
 
 const OfferTable: React.FC = () => {
   const dispatch = useAppDispatch();
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
   const [filteredData, setFilteredData] = useState<IOffer[]>();
-  const searchInput = useRef<InputRef>(null);
   const router = useRouter();
 
   // const fields = [
@@ -91,102 +88,10 @@ const OfferTable: React.FC = () => {
     router.push(`/dashboard/offer/${projectId}`);
   };
 
-  const handleSearch = (
-    selectedKeys: string[],
-    confirm: (param?: FilterConfirmProps) => void,
-    dataIndex: DataIndex
-  ) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
-
-  const handleReset = (clearFilters: () => void) => {
-    clearFilters();
-    setSearchText("");
-  };
-
   const onChange: TableProps<IOffer>["onChange"] = (pagination, filters, sorter, extra) => {
     setFilteredData(extra.currentDataSource);
     console.log(filteredData);
   };
-
-  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<IOffer> => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
-      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-          style={{ marginBottom: 8, display: "block" }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90 }}
-            className="bg-blue-500 items-center flex"
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({ closeDropdown: false });
-              setSearchText((selectedKeys as string[])[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            Filter
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex]!.toString()
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ""}
-        />
-      ) : (
-        text
-      )
-  });
 
   const columns: ColumnsType<IOffer> = [
     {
@@ -195,7 +100,7 @@ const OfferTable: React.FC = () => {
       key: "projectName",
       width: "60%",
       render: (_, record) => (
-        <div className="flex gap-4 ">
+        <div className="flex gap-4">
           <span>{record.projectName}</span>
           {record.isFinalOffer ? (
             <div className=" text-success-500">
@@ -207,14 +112,21 @@ const OfferTable: React.FC = () => {
         </div>
       ),
       sorter: (a: any, b: any) => a.projectName.localeCompare(b.projectName)
-      // ...getColumnSearchProps("projectName")
     },
     {
       title: "Valor",
       dataIndex: "value",
       key: "value",
       width: "10%",
-      render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>
+      render: (value) => (
+        <span>
+          ${" "}
+          {value.toLocaleString("DE", {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })}
+        </span>
+      )
     },
     {
       title: "Representación",
@@ -223,7 +135,6 @@ const OfferTable: React.FC = () => {
       width: "10%",
       render: (representationCoef) => <span>{representationCoef?.representative}</span>
     },
-
     {
       title: "Acciones",
       key: "actions",
@@ -239,6 +150,10 @@ const OfferTable: React.FC = () => {
       )
     }
   ];
+
+  const isFinalOfferRow = (rowObject: IOffer) => {
+    return rowObject.isFinalOffer ? 'bg-success-100' : '';
+};
 
   return (
     <>
@@ -277,6 +192,7 @@ const OfferTable: React.FC = () => {
         onChange={onChange}
         pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
         className="shadow-md"
+        rowClassName={(record) => isFinalOfferRow(record)}
       />
     </>
   );

@@ -16,20 +16,21 @@ export const EditItemForm = () => {
   const [form] = Form.useForm();
   const router = useRouter();
 
-  const { selectedItem, selectedOffer }: { selectedOffer: IOffer; selectedItem: IOfferItem } =
-    useAppSelector((state: RootState) => state?.offer);
+  const { selectedItem }: { selectedItem: IOfferItem } = useAppSelector(
+    (state: RootState) => state?.offer
+  );
 
   const [activitiesValues, setActivitiesValues] = useState<IActivity[]>(selectedItem.activities);
   const [description, setDescription] = useState(selectedItem?.description);
   const [addActivitiesModal, setAddActivitiesModal] = useState(false);
   const activities = useMemo(() => activitiesValues, [activitiesValues]);
-  const newItemList = selectedOffer?.itemsList;
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
 
   const onAddActivity = (values: IActivity) => {
+    console.log("🚀 ~ onAddActivity ~ values:", values);
     setActivitiesValues([values, ...activitiesValues]);
     form.setFieldValue("activities", [values, ...activitiesValues]);
     setAddActivitiesModal(false);
@@ -102,12 +103,15 @@ export const EditItemForm = () => {
               .validateFields()
               .then((values) => {
                 dispatch(
-                  editItem({
-                    ...values,
-                    value: activitiesValues
-                      .map((activity) => activity.value)
-                      .reduce((total, current) => total + current, 0)
-                  },true)
+                  editItem(
+                    {
+                      ...values,
+                      value: activitiesValues
+                        .map((activity) => activity.value)
+                        .reduce((total, current) => total + current, 0)
+                    },
+                    true
+                  )
                 );
 
                 form.resetFields();
