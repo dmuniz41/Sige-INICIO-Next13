@@ -29,6 +29,7 @@ import { EditSvg } from "../../global/EditSvg";
 import { DeleteSvg } from "../../global/DeleteSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { useRouter } from "next/navigation";
+import { IWarehouse } from "@/models/warehouse";
 interface DataType {
   _id: string;
   key: string;
@@ -104,8 +105,7 @@ const WarehousesTable: React.FC = () => {
     router.push(`/dashboard/warehouse/${record === undefined ? " " : record?._id}`);
   };
 
-  const handleDelete = () => {
-    if (selectedRow) {
+  const handleDelete = (record: IWarehouse) => {
       Swal.fire({
         title: "Eliminar Almacén",
         text: "El Almacén seleccionado se borrará de forma permanente",
@@ -117,15 +117,9 @@ const WarehousesTable: React.FC = () => {
         confirmButtonText: "Eliminar"
       }).then((result) => {
         if (result.isConfirmed) {
-          dispatch(startDeleteWarehouse(selectedRow?.name));
+          dispatch(startDeleteWarehouse(record?._id));
         }
       });
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un almacén a eliminar"
-      });
-    }
   };
 
   const handleReset = (clearFilters: () => void) => {
@@ -227,7 +221,7 @@ const WarehousesTable: React.FC = () => {
       render: (value) => (
         <span>
           ${" "}
-          {value.toLocaleString("DE", {
+          {value?.toLocaleString("DE", {
             maximumFractionDigits: 2,
             minimumFractionDigits: 2
           })}

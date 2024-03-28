@@ -59,10 +59,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          message: error
+          message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
@@ -104,10 +104,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          message: error
+          message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
@@ -165,10 +165,10 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          message: error
+          message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
@@ -227,7 +227,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          message: error
+          message: error.message
         },
         {
           status: 500

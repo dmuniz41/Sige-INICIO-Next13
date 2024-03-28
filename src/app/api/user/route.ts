@@ -71,13 +71,14 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ POST ~ error:", error)
       return NextResponse.json(
         {
           ok: false,
-          message: error
+          message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
@@ -115,13 +116,14 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ GET ~ error:", error)
       return NextResponse.json(
         {
           ok: false,
-          message: error
+          message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
@@ -175,10 +177,11 @@ export async function PUT(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ PUT ~ error:", error)
       return NextResponse.json(
         {
           ok: false,
-          message: error
+          message: error.message
         },
         {
           status: 500
@@ -235,10 +238,11 @@ export async function DELETE(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ DELETE ~ error:", error)
       return NextResponse.json(
         {
           ok: false,
-          message: error
+          message: error.message
         },
         {
           status: 500

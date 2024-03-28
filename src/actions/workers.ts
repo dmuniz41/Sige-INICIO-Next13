@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
 
-// * CREA UN NUEVO TRABAJADOR *//
+// * CREA UN NUEVO TRABAJADOR * //
 export const startAddWorker = ({ ...worker }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {

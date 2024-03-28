@@ -3,7 +3,7 @@ import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
 import axios, { AxiosError } from "axios";
 
-// * CREA UN NUEVO USUARIO DEL SISTEMA *//
+// * CREA UN NUEVO USUARIO DEL SISTEMA * //
 export const startAddUser = ({ ...user }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
