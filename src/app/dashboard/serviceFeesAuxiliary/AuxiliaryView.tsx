@@ -33,17 +33,17 @@ export const AuxiliaryView = () => {
     dispatch(
       startUpdateServiceFeeAuxiliary({
         _id: serviceFeeAuxiliary?._id,
+        administrativeExpensesCoefficients: values.administrativeExpenses,
         calculationCoefficient: values.calculationCoefficient,
         currency: serviceFeeAuxiliary?.currency,
         currencyChange: values?.currencyChange,
+        equipmentDepreciationCoefficients: values.equipmentDepreciation,
+        equipmentMaintenanceCoefficients: values.equipmentMaintenance,
         informalCurrencyChange: values.informalCurrencyChange,
         key: serviceFeeAuxiliary?.key,
         mermaCoefficient: values.mermaCoefficient,
         officialCurrencyChangeCoefficient: values.officialCurrencyChangeCoefficient,
         payMethod: values.payMethod,
-        administrativeExpensesCoefficients: values.administrativeExpenses,
-        equipmentDepreciationCoefficients: values.equipmentDepreciation,
-        equipmentMaintenanceCoefficients: values.equipmentMaintenance,
         transportationExpensesCoefficients: values.transportationExpenses,
       })
     );

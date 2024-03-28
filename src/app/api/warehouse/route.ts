@@ -1,10 +1,11 @@
-import { verifyJWT } from "@/libs/jwt";
-import { connectDB } from "@/libs/mongodb";
-import Warehouse from "@/models/warehouse";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: Request) {
-  const { name, totalValue = 0, } = await request.json();
+import { connectDB } from "@/libs/mongodb";
+import { verifyJWT } from "@/libs/jwt";
+import Warehouse, { IWarehouse } from "@/models/warehouse";
+
+export async function POST(request: NextRequest) {
+  const { ...warehouse }: IWarehouse = await request.json();
   const accessToken = request.headers.get("accessToken");
 
   try {
@@ -35,8 +36,7 @@ export async function POST(request: Request) {
     }
 
     const newWarehouse = new Warehouse({
-      name,
-      totalValue,
+      ...warehouse,
       key: name,
     });
 
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: 'Error al crear el almacén',
+          message: error,
         },
         {
           status: 400,
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -112,7 +112,7 @@ export async function GET(request: Request) {
   }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   const { _id, name} = await request.json();
   const accessToken = request.headers.get("accessToken");
 
@@ -171,7 +171,7 @@ export async function PUT(request: Request) {
   }
 }
 
-export async function PATCH(request: Request) {
+export async function PATCH(request: NextRequest) {
   const { name } = await request.json();
   const accessToken = request.headers.get("accessToken");
 

@@ -1,8 +1,9 @@
+import { NextRequest, NextResponse } from "next/server";
+
+import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
-import { connectDB } from "@/libs/mongodb";
 import Worker, { IWorker } from "@/models/worker";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   const { ...worker }: IWorker = await request.json();
@@ -53,12 +54,12 @@ export async function POST(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.log("🚀 ~ POST ~ error:", error);
     if (error instanceof Error) {
+      console.log("🚀 ~ POST ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al crear el trabajador"
+          message: error
         },
         {
           status: 400
@@ -98,12 +99,12 @@ export async function GET(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.log("🚀 ~ GET ~ error:", error);
     if (error instanceof Error) {
+      console.log("🚀 ~ GET ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al listar los trabajadores"
+          message: error
         },
         {
           status: 400
@@ -159,13 +160,12 @@ export async function PUT(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.log("🚀 ~ PUT ~ error:", error);
     if (error instanceof Error) {
+      console.log("🚀 ~ PUT ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
-          message:
-            "Error al actualizar el trabajador (Revise que los datos introducidos son correctos)"
+          message: error
         },
         {
           status: 400
@@ -222,12 +222,12 @@ export async function DELETE(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.log("🚀 ~ DELETE ~ error:", error)
     if (error instanceof Error) {
+      console.log("🚀 ~ DELETE ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al eliminar el trabajador"
+          message: error
         },
         {
           status: 500
