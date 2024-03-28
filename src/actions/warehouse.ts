@@ -54,7 +54,7 @@ export const startDeleteWarehouse = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .delete(`${process.env.NEXT_PUBLIC_API_URL}/warehouse?${id}`, { headers: { accessToken: token } })
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/warehouse?id=${id}`, { headers: { accessToken: token } })
       .then(() => {
         dispatch(deleteWarehouse(id));
         dispatch(warehousesStartLoading());

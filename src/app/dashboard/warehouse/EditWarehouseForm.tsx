@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, Modal, Select, SelectProps } from "antd";
+import { Form, Input, Modal } from "antd";
 
 interface Values {
   name: string;
@@ -12,7 +12,12 @@ interface CollectionCreateFormProps {
   defaultValues?: Values;
 }
 
-export const EditWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
+export const EditWarehouseForm: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel,
+  defaultValues
+}) => {
   const [form] = Form.useForm();
   return (
     <Modal
@@ -32,11 +37,7 @@ export const EditWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open, o
       cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button
-            key="2"
-            className="modal-btn-danger"
-            onClick={onCancel}
-          >
+          <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
           <button
@@ -47,7 +48,6 @@ export const EditWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open, o
                 .validateFields()
                 .then((values) => {
                   onCreate(values);
-                  console.log("🚀 ~ file: CreateNomenclatorForm.tsx:51 ~ .then ~ values:", values);
                   form.resetFields();
                 })
                 .catch((error) => {
@@ -55,9 +55,9 @@ export const EditWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open, o
                 });
             }}
           >
-            Crear
+            Editar
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form
@@ -68,11 +68,15 @@ export const EditWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open, o
         fields={[
           {
             name: "name",
-            value: defaultValues?.name,
-          },
+            value: defaultValues?.name
+          }
         ]}
       >
-        <Form.Item name="name" label="Nombre de Almacén" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="name"
+          label="Nombre de Almacén"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Input />
         </Form.Item>
       </Form>

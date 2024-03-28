@@ -6,7 +6,6 @@ import Warehouse, { IWarehouse } from "@/models/warehouse";
 
 export async function POST(request: NextRequest) {
   const { ...warehouse }: IWarehouse = await request.json();
-  console.log("🚀 ~ POST ~ warehouse:", warehouse)
   const accessToken = request.headers.get("accessToken");
 
   try {
