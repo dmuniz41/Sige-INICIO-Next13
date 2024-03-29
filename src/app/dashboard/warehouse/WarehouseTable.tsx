@@ -29,21 +29,16 @@ import { EditSvg } from "../../global/EditSvg";
 import { DeleteSvg } from "../../global/DeleteSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { useRouter } from "next/navigation";
-interface DataType {
-  _id: string;
-  key: string;
-  name: string;
-  totalValue: number;
-}
+import { IWarehouse } from "@/models/warehouse";
 
-type DataIndex = keyof DataType;
+type DataIndex = keyof IWarehouse;
 
 const WarehousesTable: React.FC = () => {
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [searchedColumn, setSearchedColumn] = useState("");
   const [searchText, setSearchText] = useState("");
-  const [selectedRow, setSelectedRow] = useState<DataType>();
+  const [selectedWarehouse, setSelectedWarehouse] = useState<IWarehouse>();
   const { data: sessionData } = useSession();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -59,7 +54,7 @@ const WarehousesTable: React.FC = () => {
   }, [dispatch]);
 
   const { warehouses } = useAppSelector((state: RootState) => state?.warehouse);
-  let data: DataType[] = useMemo(() => warehouses, [warehouses]);
+  let data: IWarehouse[] = useMemo(() => warehouses, [warehouses]);
   if (!canList) {
     data = [];
   }
@@ -67,15 +62,9 @@ const WarehousesTable: React.FC = () => {
     setCreateNewModal(true);
   };
 
-  const handleEdit = (): void => {
-    if (selectedRow) {
-      setEditModal(true);
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un almacén a editar"
-      });
-    }
+  const handleEdit = (record: IWarehouse): void => {
+    setSelectedWarehouse(record);
+    setEditModal(true);
   };
 
   const onCreate = (values: any): void => {
@@ -84,8 +73,7 @@ const WarehousesTable: React.FC = () => {
   };
 
   const onEdit = (values: any): void => {
-    dispatch(startUpdateWarehouse(selectedRow?._id!, values.name));
-    setSelectedRow(undefined);
+    dispatch(startUpdateWarehouse(selectedWarehouse?._id!, values.name));
     setEditModal(false);
   };
 
@@ -99,33 +87,26 @@ const WarehousesTable: React.FC = () => {
     setSearchedColumn(dataIndex);
   };
 
-  const handleView = async (record: any) => {
+  const handleView = async (record: IWarehouse) => {
     await dispatch(materialsStartLoading(record?._id!));
     router.push(`/dashboard/warehouse/${record === undefined ? " " : record?._id}`);
   };
 
-  const handleDelete = () => {
-    if (selectedRow) {
-      Swal.fire({
-        title: "Eliminar Almacén",
-        text: "El Almacén seleccionado se borrará de forma permanente",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Eliminar"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          dispatch(startDeleteWarehouse(selectedRow?.name));
-        }
-      });
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un almacén a eliminar"
-      });
-    }
+  const handleDelete = (record: IWarehouse) => {
+    Swal.fire({
+      title: "Eliminar Almacén",
+      text: "El almacén seleccionado se borrará de forma permanente",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Eliminar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(startDeleteWarehouse(record?._id));
+      }
+    });
   };
 
   const handleReset = (clearFilters: () => void) => {
@@ -133,7 +114,7 @@ const WarehousesTable: React.FC = () => {
     setSearchText("");
   };
 
-  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<IWarehouse> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
@@ -189,8 +170,7 @@ const WarehousesTable: React.FC = () => {
       <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
     onFilter: (value, record) =>
-      record[dataIndex]
-        .toString()
+      record[dataIndex]!.toString()
         .toLowerCase()
         .includes((value as string).toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
@@ -211,7 +191,7 @@ const WarehousesTable: React.FC = () => {
       )
   });
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<IWarehouse> = [
     {
       title: "Nombre",
       dataIndex: "name",
@@ -227,7 +207,7 @@ const WarehousesTable: React.FC = () => {
       render: (value) => (
         <span>
           ${" "}
-          {value.toLocaleString("DE", {
+          {value?.toLocaleString("DE", {
             maximumFractionDigits: 2,
             minimumFractionDigits: 2
           })}
@@ -253,6 +233,26 @@ const WarehousesTable: React.FC = () => {
               </button>
             </Tooltip>
           )}
+          {canEdit ? (
+            <>
+              <Tooltip placement="top" title={"Editar Almacén"} arrow={{ pointAtCenter: true }}>
+                <button onClick={() => handleEdit(record)} className="table-see-offer-action-btn">
+                  <EditSvg width={20} height={20} />
+                </button>
+              </Tooltip>
+            </>
+          ) : (
+            <></>
+          )}
+          {canDelete ? (
+            <Tooltip placement="top" title={"Eliminar Almacén"} arrow={{ pointAtCenter: true }}>
+              <button onClick={() => handleDelete(record)} className="table-delete-action-btn">
+                <DeleteSvg width={20} height={20} />
+              </button>
+            </Tooltip>
+          ) : (
+            <></>
+          )}
         </div>
       )
     }
@@ -268,32 +268,6 @@ const WarehousesTable: React.FC = () => {
           </button>
         </div>
         <div className="flex">
-          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canEdit}
-              className={`${
-                canEdit
-                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                  : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={handleEdit}
-            >
-              <EditSvg />
-            </button>
-          </Tooltip>
-          <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canDelete}
-              className={`${
-                canDelete
-                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                  : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={handleDelete}
-            >
-              <DeleteSvg />
-            </button>
-          </Tooltip>
           <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canList}
@@ -319,7 +293,7 @@ const WarehousesTable: React.FC = () => {
         open={editModal}
         onCancel={() => setEditModal(false)}
         onCreate={onEdit}
-        defaultValues={selectedRow}
+        defaultValues={selectedWarehouse}
       />
 
       <Table

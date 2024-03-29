@@ -3,7 +3,7 @@ import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
 import axios, { AxiosError } from "axios";
 
-// * CREA UN NUEVO USUARIO DEL SISTEMA *//
+// * CREA UN NUEVO USUARIO DEL SISTEMA * //
 export const startAddUser = ({ ...user }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -23,7 +23,8 @@ export const startAddUser = ({ ...user }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ return ~  message:",  message)
+        Swal.fire("Error", "Error al crear el usuario", "error");
       });
   };
 };
@@ -49,7 +50,8 @@ export const startUpdateUser = ({ ...user }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ return ~ message:", message)
+        Swal.fire("Error", "Error al actualizar el usuario", "error");
       });
   };
 };
@@ -72,7 +74,8 @@ export const startDeleteUser = (id: string): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ return ~ message:", message)
+        Swal.fire("Error", "Error al eliminar el usuario", "error");
       });
   };
 };
@@ -90,7 +93,8 @@ export const usersStartLoading = () => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ return ~ message:", message)
+        Swal.fire("Error", "Error al cargar los usuarios", "error");
       });
   };
 };

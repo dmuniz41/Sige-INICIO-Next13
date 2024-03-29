@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
 
-// * CREA UN NUEVO TRABAJADOR *//
+// * CREA UN NUEVO TRABAJADOR * //
 export const startAddWorker = ({ ...worker }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -24,13 +24,14 @@ export const startAddWorker = ({ ...worker }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ return ~ message:", message)
+        Swal.fire("Error", "Error al crear trabajador", "error");
       });
   };
 };
+
 // * ACTUALIZA UN TRABAJADOR POR SU ID * //
 export const startUpdateWorker = ({ ...worker }): any => {
-  console.log("🚀 ~ startUpdateWorker ~ worker:", worker)
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
@@ -49,7 +50,8 @@ export const startUpdateWorker = ({ ...worker }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ return ~ message:", message)
+        Swal.fire("Error", "Error al actualizar el trabajador ", "error");
       });
   };
 };
@@ -72,7 +74,8 @@ export const startDeleteWorker = (id: string): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ return ~ message:", message)
+        Swal.fire("Error", "Error al eliminar el trabajador", "error");
       });
   };
 };
@@ -89,10 +92,12 @@ export const workersStartLoading = () => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        Swal.fire("Error", message, "error");
+        console.log("🚀 ~ return ~ message:", message)
+        Swal.fire("Error", "Error al cargar el trabajador ", "error");
       });
   };
 };
+
 export const workersLoaded = (workers: any) => ({
   type: types.workersLoaded,
   payload: workers

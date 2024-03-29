@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
 
     const newKey = generateRandomString(26);
 
-    const newUser = new User({ ...user, key: newKey });
+    const newUser = new User({ ...user, password: hashedPassword, key: newKey });
 
     await newUser.save();
 
@@ -70,15 +70,15 @@ export async function POST(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.log("🚀 ~ POST ~ error:", error);
     if (error instanceof Error) {
+      console.log("🚀 ~ POST ~ error:", error)
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al crear el usuario"
+          message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
@@ -115,15 +115,15 @@ export async function GET(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.log("🚀 ~ GET ~ error:", error);
     if (error instanceof Error) {
+      console.log("🚀 ~ GET ~ error:", error)
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al listar los usuarios"
+          message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
@@ -176,13 +176,12 @@ export async function PUT(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.log("🚀 ~ PUT ~ error:", error);
     if (error instanceof Error) {
+      console.log("🚀 ~ PUT ~ error:", error)
       return NextResponse.json(
         {
           ok: false,
-          message:
-            "Error al actualizar el usuario (Revise que los datos introducidos son correctos)"
+          message: error.message
         },
         {
           status: 500
@@ -238,12 +237,12 @@ export async function DELETE(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.log("🚀 ~ DELETE ~ error:", error);
     if (error instanceof Error) {
+      console.log("🚀 ~ DELETE ~ error:", error)
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al eliminar el usuario"
+          message: error.message
         },
         {
           status: 500
