@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
     }
     await connectDB();
     const listOfMaterials = (await Material.find({ warehouse })).reverse();
+
     return new NextResponse(
       JSON.stringify({
         ok: true,
@@ -36,13 +37,14 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ GET ~ error:", error)
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al listar los materiales",
+          message: error.message
         },
         {
-          status: 400,
+          status: 500,
         }
       );
     }
