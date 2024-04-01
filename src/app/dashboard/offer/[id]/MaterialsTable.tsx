@@ -15,7 +15,7 @@ interface CollectionCreateFormProps {
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
   {
-    ssr: false,
+    ssr: true,
     loading: () => <p>Loading...</p>
   }
 );

@@ -24,7 +24,7 @@ export const ActivitiesTable = (props: any) => {
       dataIndex: "amount",
       key: "amount",
       width: "5%",
-      render: (value) => <span>$ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>,
+      render: (value) => <span>{value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>,
     },
     {
       title: "Precio CUP",

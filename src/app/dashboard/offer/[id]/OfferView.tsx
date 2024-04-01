@@ -2,19 +2,32 @@
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-import { EditSvg } from "@/app/global/EditSvg";
-import { useAppDispatch } from "@/hooks/hooks";
-import { loadSelectedOffer } from "@/actions/offer";
-import { IOffer } from "@/models/offer";
-import { RootState, useAppSelector } from "@/store/store";
-import { Item } from "./Item";
-import { MaterialsListModal } from "./MaterialsTable";
-import { Tooltip } from "antd";
-import { ListSvg } from "@/app/global/ListSvg";
 import { CheckSvg } from "@/app/global/CheckSvg";
 import { CircleCheckSvg } from "@/app/global/CircleCheckSvg";
-import { setFinalOfferId } from "@/actions/project";
+import { clientNomenclatorsStartLoading } from "@/actions/nomenclators/client";
+import { EditSvg } from "@/app/global/EditSvg";
+import { IClientNomenclator } from "@/models/nomenclators/client";
+import { IOffer } from "@/models/offer";
 import { IProject } from "@/models/project";
+import { Item } from "./Item";
+import { ListSvg } from "@/app/global/ListSvg";
+import { loadSelectedOffer } from "@/actions/offer";
+import { MaterialsListModal } from "./MaterialsTable";
+import { PDFSvg } from "@/app/global/PDFSvg";
+import { RootState, useAppSelector } from "@/store/store";
+import { setFinalOfferId } from "@/actions/project";
+import { Tooltip } from "antd";
+import { useAppDispatch } from "@/hooks/hooks";
+import OfferPDFReport from "@/helpers/OfferPDFReport";
+import dynamic from "next/dynamic";
+
+const PDFDownloadLink = dynamic(
+  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+  {
+    ssr: true,
+    loading: () => <p>Loading...</p>
+  }
+);
 
 export const OfferView = () => {
   const url = usePathname().split("/");
@@ -29,6 +42,7 @@ export const OfferView = () => {
 
   useEffect(() => {
     dispatch(loadSelectedOffer(projectId));
+    dispatch(clientNomenclatorsStartLoading());
   }, [dispatch, projectId]);
 
   const { selectedOffer }: { selectedOffer: IOffer } = useAppSelector(
@@ -37,6 +51,11 @@ export const OfferView = () => {
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
     (state: RootState) => state?.project
   );
+  const { clientNomenclators }: { clientNomenclators: IClientNomenclator[] } = useAppSelector(
+    (state: RootState) => state?.nomenclator
+  );
+
+  const clientInfo = clientNomenclators.find((cn) => cn.name === selectedProject?.clientName);
 
   const setOfferAsFinal = () => {
     dispatch(setFinalOfferId(selectedProject, selectedOffer));
@@ -52,13 +71,6 @@ export const OfferView = () => {
               <EditSvg />
               Editar
             </button>
-            {/* <PDFDownloadLink document={<CostSheetPDFReport fields={fields} data={PDFReportData} title={`Ficha de costo`} />} fileName={`Ficha de costo ${selectedCostSheet.taskName}`}>
-              {({ blob, url, loading, error }) => (
-                <button disabled={loading} className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 rounded-full w-[2.5rem] h-[2.5rem] flex justify-center items-center">
-                  <PDFSvg />
-                </button>
-              )}
-            </PDFDownloadLink> */}
           </div>
           <div className="flex gap-1">
             <Tooltip
@@ -73,6 +85,33 @@ export const OfferView = () => {
                 <ListSvg />
               </button>
             </Tooltip>
+            <PDFDownloadLink
+              className=" flex w-[2.5rem] h-[2.5rem]"
+              document={
+                <OfferPDFReport
+                  clientInfo={clientInfo}
+                  data={selectedOffer?.itemsList}
+                  title={`${selectedOffer?.projectName}`}
+                  totalValue={selectedOffer?.value}
+                />
+              }
+              fileName={`Oferta ${selectedOffer?.projectName}  `}
+            >
+              {({ blob, url, loading, error }) =>
+                loading ? (
+                  <button
+                    disabled
+                    className={`opacity-20 pt-2 pl-2" flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+                  >
+                    <PDFSvg />
+                  </button>
+                ) : (
+                  <button className={"toolbar-auxiliary-icon"}>
+                    <PDFSvg />
+                  </button>
+                )
+              }
+            </PDFDownloadLink>
             {!selectedOffer?.isFinalOffer ? (
               <Tooltip placement="top" title={"Marcar como final"} arrow={{ pointAtCenter: true }}>
                 <button className="toolbar-auxiliary-icon" onClick={setOfferAsFinal}>
