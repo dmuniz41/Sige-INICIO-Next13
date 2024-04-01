@@ -91,6 +91,7 @@ const MaterialsTable: React.FC = () => {
 
   const url = usePathname().split("/");
   const selectedWarehouse: string = url[3];
+  
   useEffect(() => {
     dispatch(materialsStartLoading(selectedWarehouse));
     dispatch(nomenclatorsStartLoading());

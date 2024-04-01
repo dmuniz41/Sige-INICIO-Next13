@@ -121,7 +121,7 @@ export const OfferView = () => {
       <MaterialsListModal
         open={materialsTableModal}
         onCancel={() => setMaterialsTableModal(false)}
-        values={selectedOffer?.materialsList}
+        values={{ values: selectedOffer?.materialsList!, name: selectedOffer?.projectName }}
       />
     </>
   );

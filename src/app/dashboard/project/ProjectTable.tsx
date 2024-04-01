@@ -322,7 +322,7 @@ const ProjectTable: React.FC = () => {
       title: "Cliente",
       dataIndex: "clientName",
       key: "clientName",
-      width: "15%",
+      width: "10%",
       filters: clientNameFilter,
       onFilter: (value: any, record: any) => record.clientName.startsWith(value),
       filterSearch: true
@@ -392,7 +392,7 @@ const ProjectTable: React.FC = () => {
       title: "Precio",
       dataIndex: "totalValue",
       key: "totalValue",
-      width: "5%",
+      width: "10%",
       render: (value) => (
         <span>
           $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
