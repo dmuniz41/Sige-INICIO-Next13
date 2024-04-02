@@ -38,8 +38,22 @@ const styles = StyleSheet.create({
 
   // ? ESTILOS DE LA SECCION DE LA LISTA DE ITEMS //
 
-  offerNameContainer:{
-    paddingHorizontal: 4
+  offerNameContainer: {
+    borderStyle: BORDER_STYLE,
+    borderColor: BORDER_COLOR,
+    borderBottomWidth: "1px"
+  },
+
+  // ? ESTILOS DE UN ITEM //
+  itemContainer: {
+    width: "100%",
+    borderStyle: BORDER_STYLE,
+    borderColor: BORDER_COLOR,
+    borderRightWidth: 0,
+    borderTopWidth: 0,
+    borderBottomWidth: "1px",
+    display: "flex",
+    flexDirection: "row"
   },
 
   // ? ESTILOS DE LAS TABLAS DE ITEMS //
@@ -103,13 +117,96 @@ export default function OfferPDFReport(props) {
             width: "100%",
             borderStyle: BORDER_STYLE,
             borderColor: BORDER_COLOR,
-            borderWidth: "1px",
+            borderLeftWidth: "1px",
+            borderRightWidth: "1px",
+            borderTopWidth: "1px",
+            borderBottomWidth: "0px",
             display: "flex",
             flexDirection: "column"
           }}
         >
           <View style={styles.offerNameContainer}>
-            <Text style={styles.clientInfoElementHeader}>{title}</Text>
+            <View
+              style={{ borderBottomWidth: "1px", borderBottomStyle: "solid", paddingHorizontal: 4 }}
+            >
+              <Text style={styles.clientInfoElementHeader}>{title}</Text>
+            </View>
+            {/* LISTA DE ITEMS */}
+            {data.map((item, index) => {
+              return (
+                <View key={index} style={styles.itemContainer}>
+                  {/* NUMERO DE ITEM */}
+                  <View
+                    style={{
+                      backgroundColor: "#f4f6f9",
+                      width: "15px",
+                      borderRightWidth: "1px",
+                      borderRightStyle: "solid",
+                      justifyContent: "center",
+                      display: "flex"
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        fontFamily: "Arial",
+                        fontWeight: "bold",
+                        textAlign: "center"
+                      }}
+                    >
+                      {index + 1}
+                    </Text>
+                  </View>
+                  {/* DESCRIPCION, LISTA DE ACTIVIDADES Y VALOR DEL ITEM */}
+                  <View style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+                    {/* DESCRIPCION Y VALOR DEL ITEM */}
+                    <View style={{ display: "flex", flexDirection: "row" }}>
+                      <View
+                        wrap
+                        style={{
+                          display: "flex",
+                          backgroundColor: "#f4f6f9",
+                          borderRightWidth: "1px",
+                          borderStyle: "solid",
+                          width: "90%",
+                          padding: 2
+                        }}
+                      >
+                        <Text style={{ fontFamily: "Arial", fontWeight: "bold", fontSize: "10pt" }}>
+                          {item.description}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          display: "flex",
+                          backgroundColor: "#f4f6f9",
+                          alignItems: "center",
+                          width: "80px"
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontFamily: "Arial",
+                            fontWeight: "bold",
+                            textAlign: "center",
+                            fontSize: 10
+                          }}
+                        >
+                          ${" "}
+                          {item.value.toLocaleString("DE", {
+                            maximumFractionDigits: 2,
+                            minimumFractionDigits: 2
+                          })}
+                        </Text>
+                      </View>
+                    </View>
+                    {/* LISTA DE ACTIVIDADES */}
+                    <View>TABLA DE ACTIVIDADES</View>
+                  </View>
+                </View>
+              );
+            })}
+            <View></View>
           </View>
         </View>
       </Page>
