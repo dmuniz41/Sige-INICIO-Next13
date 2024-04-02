@@ -15,6 +15,8 @@ import { INomenclator } from "@/models/nomenclator";
 import { IProject } from "@/models/project";
 import { AddItemModal } from "../createProject/AddItem";
 import { FormSection } from "../createProject/CreateProjectForm";
+import { IClientNomenclator } from "@/models/nomenclators/client";
+import { clientNomenclatorsStartLoading } from "@/actions/nomenclators/client";
 
 export const EditProjectForm = () => {
   const dispatch = useAppDispatch();
@@ -35,32 +37,30 @@ export const EditProjectForm = () => {
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
     (state: RootState) => state.project
   );
+  const { clientNomenclators }: { clientNomenclators: IClientNomenclator[] } = useAppSelector(
+    (state: RootState) => state?.nomenclator
+  );
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
+    dispatch(clientNomenclatorsStartLoading())
     dispatch(startLoadServiceFeeAuxiliary());
     setItemsValues(selectedProject.itemsList);
   }, [dispatch, selectedProject]);
 
   serviceFeeAuxiliary?.payMethod?.map((payMethod) => payMethodNomenclator.push(payMethod));
   nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Nombre de Cliente")
-      clientNamesNomenclators.push(nomenclator.code);
     if (nomenclator.category === "Moneda") currencyNomenclators.push(nomenclator.code);
   });
 
-  const payMethodOptions: SelectProps["options"] = payMethodNomenclator.map((payMethod) => {
+  const clientNameOptions: SelectProps["options"] = clientNomenclators.map((client) => {
     return {
-      label: payMethod.representative,
-      value: payMethod.representative
+      label: `${client.name}`,
+      value: `${client.name}`
     };
   });
-  const clientNameOptions: SelectProps["options"] = clientNamesNomenclators.map((clientName) => {
-    return {
-      label: `${clientName}`,
-      value: `${clientName}`
-    };
-  });
+
+
   const currencyOptions: SelectProps["options"] = currencyNomenclators.map((currency) => {
     return {
       label: `${currency}`,
@@ -228,58 +228,3 @@ export const EditProjectForm = () => {
     </Form>
   );
 };
-
-// const FormSection = (props: any) => {
-//   const { sectionName, values, formName, valuesSetter, modalSetter, buttonText, form } = props;
-//   return (
-//     <section className=" flex w-[50%] bg-white-100 rounded shadow-[0px_0px_5px_0px_#00000024] ">
-//       <div className="flex w-[15%] justify-center items-center text-center gap-1 ">
-//         <span className="text-base font-bold">{sectionName}</span>
-//       </div>
-//       <div className="flex pl-2 w-full flex-col">
-//         {values?.length == 0 ? (
-//           <div></div>
-//         ) : (
-//           <div className="flex w-full pr-9 gap-1 pt-4 font-bold">
-//             <div className="w-[50px]">
-//               <span>No.</span>
-//             </div>
-//             <div className="">
-//               <span>Descripción del servicio</span>
-//             </div>
-//           </div>
-//         )}
-//         <Form.List name={formName}>
-//           {(fields, { add, remove }) => (
-//             <div className="flex flex-col pr-4 flex-1 pt-6">
-//               {fields.map(({ key, name, ...restField }) => (
-//                 <div key={key} className="w-full">
-//                   <div className="flex items-center flex-row mb-0 h-9  gap-1">
-//                     <Form.Item className="w-[50px]" {...restField} name={[name, "idNumber"]} rules={[{ required: true }]}>
-//                       <InputNumber disabled placeholder="No." className="w-full disabled:bg-white-100  disabled:text-white-900" />
-//                     </Form.Item>
-//                     <Form.Item className="grow" {...restField} name={[name, "description"]} rules={[{ required: true }]}>
-//                       <Input disabled placeholder="No." className="w-full disabled:bg-white-100  disabled:text-white-900" />
-//                     </Form.Item>
-//                     <MinusCircleOutlined
-//                       className="mb-auto"
-//                       onClick={() => {
-//                         remove(name);
-//                         valuesSetter(form.getFieldValue(`${formName}`));
-//                       }}
-//                     />
-//                   </div>
-//                 </div>
-//               ))}
-//               <Form.Item className="justify-center w-full">
-//                 <Button className="flex flex-row justify-center items-center" block type="dashed" onClick={() => modalSetter(true)} icon={<PlusOutlined />}>
-//                   {buttonText}
-//                 </Button>
-//               </Form.Item>
-//             </div>
-//           )}
-//         </Form.List>
-//       </div>
-//     </section>
-//   );
-// };

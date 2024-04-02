@@ -47,18 +47,13 @@ export const CreateProjectForm = () => {
     if (nomenclator.category === "Moneda") currencyNomenclators.push(nomenclator.code);
   });
 
-  const payMethodOptions: SelectProps["options"] = payMethodNomenclator.map((payMethod) => {
-    return {
-      label: payMethod.representative,
-      value: payMethod.representative
-    };
-  });
   const clientNameOptions: SelectProps["options"] = clientNomenclators.map((client) => {
     return {
       label: `${client.name}`,
       value: `${client.name}`
     };
   });
+  
   const currencyOptions: SelectProps["options"] = currencyNomenclators.map((currency) => {
     return {
       label: `${currency}`,

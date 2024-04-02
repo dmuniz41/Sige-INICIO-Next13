@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   body: {
     paddingTop: 25,
     paddingBottom: 10,
-    paddingHorizontal: 35
+    paddingHorizontal: 25
   },
 
   // ? ESTILOS DE LA SECCION DE LA INFO DEL CLIENTE //
@@ -21,9 +21,10 @@ const styles = StyleSheet.create({
     borderWidth: "1px",
     display: "flex",
     flexDirection: "column",
-    gap: "4px",
+    gap: "2px",
     width: "100%",
-    padding: "4px"
+    padding: 4,
+    marginBottom: 5
   },
   clientInfoElementHeader: {
     fontSize: "12pt",
@@ -33,6 +34,12 @@ const styles = StyleSheet.create({
   },
   clientInfoElementText: {
     fontSize: "12pt"
+  },
+
+  // ? ESTILOS DE LA SECCION DE LA LISTA DE ITEMS //
+
+  offerNameContainer:{
+    paddingHorizontal: 4
   },
 
   // ? ESTILOS DE LAS TABLAS DE ITEMS //
@@ -91,7 +98,20 @@ export default function OfferPDFReport(props) {
           </View>
         </View>
         {/* SECCION DONDE VAN LOS ITEMS Y EL NOMBRE DEL PROYECTO */}
-        <View></View>
+        <View
+          style={{
+            width: "100%",
+            borderStyle: BORDER_STYLE,
+            borderColor: BORDER_COLOR,
+            borderWidth: "1px",
+            display: "flex",
+            flexDirection: "column"
+          }}
+        >
+          <View style={styles.offerNameContainer}>
+            <Text style={styles.clientInfoElementHeader}>{title}</Text>
+          </View>
+        </View>
       </Page>
     </Document>
   );
