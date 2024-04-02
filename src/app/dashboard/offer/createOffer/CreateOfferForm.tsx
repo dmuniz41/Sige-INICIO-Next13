@@ -85,8 +85,8 @@ export const CreateOfferForm = () => {
       </Form.Item>
       <section className=" flex w-full gap-2 mb-4 ">
         {selectedOffer?.itemsList?.length == 0 ? (
-          <article className="flex justify-center border border-border_light grow py-4 rounded-md">
-            <div className="grid">
+          <article className="flex justify-center items-center border border-border_light grow py-4 rounded-md">
+            <div className="grid h-[50%]">
               <div className="grid place-content-center">
                 <NoDataSvg width={100} height={100} />
               </div>

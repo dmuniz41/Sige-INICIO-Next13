@@ -7,39 +7,51 @@ export const ActivitiesTable = (props: any) => {
 
   const columns: ColumnsType<IOfferItem> = [
     {
-      title: "Descripción",
+      title: <span className="font-bold">Descripción</span>,
       dataIndex: "description",
       key: "description",
-      width: "45%",
+      width: "45%"
     },
     {
-      title: "Unidad de Medida",
+      title: <span className="font-bold">U/M</span>,
       dataIndex: "unitMeasure",
       key: "unitMeasure",
-      width: "8%",
-      render: (text) => <span>{text.replace("$/", "")}</span>,
+      width: "10%",
+      render: (text) => <span>{text.replace("$/", "")}</span>
     },
     {
-      title: "Cantidad",
+      title: <span className="font-bold">Cantidad</span>,
       dataIndex: "amount",
       key: "amount",
       width: "5%",
-      render: (value) => <span>{value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>,
+      render: (value) => (
+        <span>
+          {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+        </span>
+      )
     },
     {
-      title: "Precio CUP",
+      title: <span className="font-bold">Precio CUP</span>,
       dataIndex: "price",
       key: "price",
       width: "5%",
-      render: (value) => <span>$ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>,
+      render: (value) => (
+        <span>
+          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+        </span>
+      )
     },
     {
-      title: "Importe CUP",
+      title: <span className="font-bold">Importe CUP</span>,
       dataIndex: "value",
       key: "value",
       width: "5%",
-      render: (value) => <span>$ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>,
-    },
+      render: (value) => (
+        <span>
+          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+        </span>
+      )
+    }
   ];
   return (
     <Table
