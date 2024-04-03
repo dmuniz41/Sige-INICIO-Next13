@@ -91,7 +91,7 @@ const MaterialsTable: React.FC = () => {
 
   const url = usePathname().split("/");
   const selectedWarehouse: string = url[3];
-  
+
   useEffect(() => {
     dispatch(materialsStartLoading(selectedWarehouse));
     dispatch(nomenclatorsStartLoading());
@@ -99,45 +99,53 @@ const MaterialsTable: React.FC = () => {
 
   const fields = [
     {
-      title: " Categoría",
+      title: "Categoría",
       custom: true,
       component: (item: any) => `${item.category}`,
       width: "20"
     },
     {
-      title: " Nombre",
+      title: "Nombre",
       custom: true,
       component: (item: any) => `${item.materialName}`,
       width: "20"
     },
     {
-      title: " Descripción",
+      title: "Descripción",
       custom: true,
       component: (item: any) => `${item.description}`,
       width: "20"
     },
     {
-      title: " Coste Unitario",
+      title: "Coste Unitario",
       custom: true,
-      component: (item: any) => `$ ${item.costPerUnit.toFixed(2)}`,
+      component: (item: any) =>
+        `$ ${item.costPerUnit.toLocaleString("DE", {
+          maximumFractionDigits: 2,
+          minimumFractionDigits: 2
+        })}`,
       width: "10"
     },
     {
-      title: " Existencias",
+      title: "Existencias",
       custom: true,
-      component: (item: any) => `${item.unitsTotal}`,
+      component: (item: any) =>
+        `${item.unitsTotal.toLocaleString("DE", {
+          maximumFractionDigits: 2,
+          minimumFractionDigits: 2
+        })}`,
       width: "10"
     },
     {
-      title: " Proveedor",
-      custom: true,
-      component: (item: any) => `${item.provider}`,
-      width: "10"
-    },
-    {
-      title: " Unidad de Medida",
+      title: "U/M",
       custom: true,
       component: (item: any) => `${item.unitMeasure}`,
+      width: "10"
+    },
+    {
+      title: "Proveedor",
+      custom: true,
+      component: (item: any) => `${item.provider}`,
       width: "10"
     }
   ];
@@ -286,7 +294,6 @@ const MaterialsTable: React.FC = () => {
   };
 
   const onAdd = (values: any): void => {
-    console.log("🚀 ~ file: MaterialsTable.tsx:232 ~ onAdd ~ values:", values);
     let operation: IOperation = {
       date: currentDate,
       tipo: "Añadir",
@@ -438,13 +445,13 @@ const MaterialsTable: React.FC = () => {
 
   const columns: ColumnsType<DataType> = [
     {
-      title: "Código",
+      title: <span className="font-bold">Código</span>,
       dataIndex: "code",
       key: "code",
       width: "5%"
     },
     {
-      title: "Categoría",
+      title: <span className="font-bold">Categoría</span>,
       dataIndex: "category",
       key: "category",
       filters: categoryFilter,
@@ -453,20 +460,20 @@ const MaterialsTable: React.FC = () => {
       width: "15%"
     },
     {
-      title: "Nombre",
+      title: <span className="font-bold">Nombre</span>,
       dataIndex: "materialName",
       key: "materialName",
       width: "15%",
       ...getColumnSearchProps("materialName")
     },
     {
-      title: "Descripción",
+      title: <span className="font-bold">Descripción</span>,
       dataIndex: "description",
       key: "description",
       width: "15%"
     },
     {
-      title: "Coste Unitario",
+      title: <span className="font-bold">Coste Unitario</span>,
       dataIndex: "costPerUnit",
       key: "costPerUnit",
       width: "10%",
@@ -484,7 +491,7 @@ const MaterialsTable: React.FC = () => {
       )
     },
     {
-      title: "Existencias",
+      title: <span className="font-bold">Existencias</span>,
       dataIndex: "unitsTotal",
       key: "unitsTotal",
       width: "5%",
@@ -501,13 +508,13 @@ const MaterialsTable: React.FC = () => {
       }
     },
     {
-      title: "Unidad de Medida",
+      title: <span className="font-bold">Unidad de Medida</span>,
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "10%"
     },
     {
-      title: "Existencias Mínimas",
+      title: <span className="font-bold">Existencias Mínimas</span>,
       dataIndex: "minimumExistence",
       key: "minimumExistence",
       width: "5%",
@@ -521,7 +528,7 @@ const MaterialsTable: React.FC = () => {
       )
     },
     {
-      title: "Proveedor",
+      title: <span className="font-bold">Proveedor</span>,
       dataIndex: "provider",
       key: "provider",
       width: "10%",
@@ -529,7 +536,7 @@ const MaterialsTable: React.FC = () => {
       ...getColumnSearchProps("provider")
     },
     {
-      title: "Fecha de Entrada",
+      title: <span className="font-bold">Fecha de Entrada</span>,
       dataIndex: "enterDate",
       key: "enterDate",
       width: "8%",
@@ -624,9 +631,9 @@ const MaterialsTable: React.FC = () => {
           <Tooltip placement="top" title={"Generar Reporte"} arrow={{ pointAtCenter: true }}>
             <PDFDownloadLink
               document={
-                <PDFReport fields={fields} data={PDFReportData} title={"Reporte de almacén "} />
+                <PDFReport fields={fields} data={PDFReportData} title={"REPORTE DE ALMACEN "} />
               }
-              fileName="Reporte de almacén"
+              fileName={`Reporte de almacén (${currentDate})`}
             >
               {({ blob, url, loading, error }) =>
                 loading ? (

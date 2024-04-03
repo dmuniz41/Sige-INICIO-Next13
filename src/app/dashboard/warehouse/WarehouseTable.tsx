@@ -193,14 +193,14 @@ const WarehousesTable: React.FC = () => {
 
   const columns: ColumnsType<IWarehouse> = [
     {
-      title: "Nombre",
+      title: <span className="font-bold">Nombre</span>,
       dataIndex: "name",
       key: "name",
       width: "75%",
       ...getColumnSearchProps("name")
     },
     {
-      title: "Valor Total",
+      title: <span className="font-bold">Valor Total</span>,
       dataIndex: "totalValue",
       key: "totalValue",
       width: "25%",
@@ -215,7 +215,7 @@ const WarehousesTable: React.FC = () => {
       )
     },
     {
-      title: "Acciones",
+      title: <span className="font-bold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, { ...record }) => (
