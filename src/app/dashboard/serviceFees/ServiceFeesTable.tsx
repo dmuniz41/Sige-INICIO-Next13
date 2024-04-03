@@ -12,22 +12,24 @@ import type { InputRef } from "antd";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { INomenclator } from "@/models/nomenclator";
 import { IServiceFee } from "@/models/serviceFees";
-import {
-  loadSelectedServiceFee,
-  serviceFeeStartLoading,
-  startDeleteServiceFee
-} from "@/actions/serviceFee";
 import { nomenclatorsStartLoading, startDeleteNomenclator } from "@/actions/nomenclator";
 import { PDFSvg } from "@/app/global/PDFSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { SeeSvg } from "@/app/global/SeeSvg";
+import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
+import {
+  loadSelectedServiceFee,
+  serviceFeeStartLoading,
+  startDeleteServiceFee
+} from "@/actions/serviceFee";
+import moment from "moment";
+import PDFReport from "@/helpers/PDFReport";
 
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
@@ -38,6 +40,9 @@ const PDFDownloadLink = dynamic(
 );
 
 type DataIndex = keyof IServiceFee;
+
+let date = moment();
+let currentDate = date.format("L");
 
 const ServiceFeeTable: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -51,39 +56,33 @@ const ServiceFeeTable: React.FC = () => {
 
   const canList = sessionData?.user.role.includes("Listar Tarifas de Servicio");
   const canCreate = sessionData?.user.role.includes("Crear Tarifas de Servicio");
-  const canEdit = sessionData?.user.role.includes("Editar Tarifas de Servicio");
   const canDelete = sessionData?.user.role.includes("Eliminar Tarifas de Servicio");
 
   const fields = [
     {
-      title: "Nomenclador",
-      custom: true,
-      component: (item: any) => `${item.nomenclatorId}`,
-      width: "10"
-    },
-    {
-      title: " Nombre de la tarea",
+      title: "Descripción",
       custom: true,
       component: (item: any) => `${item.taskName}`,
-      width: "50"
+      width: "40"
     },
     {
-      title: " Categoría",
+      title: "Categoría",
       custom: true,
       component: (item: any) => `${item.category}`,
       width: "20"
     },
     {
-      title: " Precio",
+      title: "Precio",
       custom: true,
-      component: (item: any) => `$ ${item.salePrice}`,
-      width: "10"
+      component: (item: any) =>
+        `$ ${item.salePrice.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}`,
+      width: "20"
     },
     {
-      title: " Precio/UM",
+      title: "Unidad de Medida",
       custom: true,
-      component: (item: any) => `${item.valuePerUnitMeasure}`,
-      width: "10"
+      component: (item: any) => `${item.unitMeasure}`,
+      width: "20s"
     }
   ];
 
@@ -99,23 +98,24 @@ const ServiceFeeTable: React.FC = () => {
     data = [];
   }
 
-  // let PDFReportData: ICostSheet[] = [];
+  let PDFReportData: IServiceFee[] = [];
 
-  // if (filteredData) {
-  //   PDFReportData = filteredData;
-  // } else {
-  //   PDFReportData = data;
-  // }
+  if (filteredData) {
+    PDFReportData = filteredData;
+  } else {
+    PDFReportData = data;
+  }
 
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
 
   nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Tarifa de Servicio") serviceFeeNomenclator.push(nomenclator.code);
+    if (nomenclator.category === "Categoría de tarifas")
+      serviceFeeNomenclator.push(nomenclator.code);
   });
 
-  const costSheetNomenclatorFilter: any[] = [];
+  const categoryFilter: any[] = [];
   serviceFeeNomenclator.map((nomenclator: string) => {
-    costSheetNomenclatorFilter.push({
+    categoryFilter.push({
       text: `${nomenclator}`,
       value: `${nomenclator}`
     });
@@ -144,31 +144,24 @@ const ServiceFeeTable: React.FC = () => {
   };
 
   const handleDelete = (record: any) => {
-    if (record) {
-      Swal.fire({
-        title: "Eliminar Tarifa de Servicio",
-        text: "La tarifa de servicio seleccionada se borrará de forma permanente",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Eliminar"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          const nomenclatorToDelete = nomenclators.find(
-            (nomenclator: INomenclator) => nomenclator?.code === record?.nomenclatorId
-          );
-          dispatch(startDeleteServiceFee(record._id));
-          dispatch(startDeleteNomenclator(nomenclatorToDelete?._id));
-        }
-      });
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione una tarifa de servicio a eliminar"
-      });
-    }
+    Swal.fire({
+      title: "Eliminar Tarifa de Servicio",
+      text: "La tarifa de servicio seleccionada se borrará de forma permanente",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Eliminar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const nomenclatorToDelete = nomenclators.find(
+          (nomenclator: INomenclator) => nomenclator?.code === record?.nomenclatorId
+        );
+        dispatch(startDeleteServiceFee(record._id));
+        dispatch(startDeleteNomenclator(nomenclatorToDelete?._id));
+      }
+    });
   };
 
   const handleReset = (clearFilters: () => void) => {
@@ -261,33 +254,33 @@ const ServiceFeeTable: React.FC = () => {
 
   const columns: ColumnsType<IServiceFee> = [
     {
-      title: "Nombre de la Tarea",
+      title: <span className="font-bold">Nombre de la Tarifa</span>,
       dataIndex: "taskName",
       key: "taskName",
-      width: "40%",
+      width: "45%",
       sorter: (a: any, b: any) => a.taskName.localeCompare(b.taskName),
       ...getColumnSearchProps("taskName")
     },
     {
-      title: "Nomenclador",
+      title: <span className="font-bold">Nomenclador</span>,
       dataIndex: "nomenclatorId",
       key: "nomenclatorId",
-      width: "15%",
-      filters: costSheetNomenclatorFilter,
-      onFilter: (value: any, record: any) => record.nomenclatorId.startsWith(value),
+      width: "10%",
       filterSearch: true,
       sorter: (a: any, b: any) => a.nomenclatorId.localeCompare(b.nomenclatorId)
     },
     {
-      title: "Categoría",
+      title: <span className="font-bold">Categoría</span>,
       dataIndex: "category",
       key: "category",
       width: "15%",
+      filters: categoryFilter,
+      onFilter: (value: any, record: any) => record.category.startsWith(value),
       filterSearch: true
     },
 
     {
-      title: "Precio",
+      title: <span className="font-bold">Precio</span>,
       dataIndex: "salePrice",
       key: "salePrice",
       width: "10%",
@@ -301,13 +294,13 @@ const ServiceFeeTable: React.FC = () => {
       }
     },
     {
-      title: "Precio USD",
+      title: <span className="font-bold">Precio USD</span>,
       dataIndex: "salePriceUSD",
       key: "salePriceUSD",
       width: "10%",
       render: (value) => (
         <span>
-          $ 
+          ${" "}
           {value.toLocaleString("DE", {
             maximumFractionDigits: 2,
             minimumFractionDigits: 2
@@ -319,13 +312,13 @@ const ServiceFeeTable: React.FC = () => {
       }
     },
     {
-      title: "Unidad de Medida",
+      title: <span className="font-bold">Unidad de Medida</span>,
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "15%"
     },
     {
-      title: "Acciones",
+      title: <span className="font-bold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, record) => (
@@ -375,13 +368,28 @@ const ServiceFeeTable: React.FC = () => {
           </button>
         </div>
         <div className="flex">
-          {/* <PDFDownloadLink document={<CostSheetTablePDFReport fields={fields} data={PDFReportData} title={`Fichas de costo`} />} fileName={`Listado de fichas de costo `}>
-            {({ blob, url, loading, error }) => (
-              <button disabled={loading} className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 rounded-full w-[2.5rem] h-[2.5rem] flex justify-center items-center">
-                <PDFSvg />
-              </button>
-            )}
-          </PDFDownloadLink> */}
+          <PDFDownloadLink
+            className=" flex w-[2.5rem] h-[2.5rem]"
+            document={
+              <PDFReport fields={fields} data={PDFReportData} title={`LISTADO DE TARIFAS `} />
+            }
+            fileName={`Listado de Tarifas (${currentDate})`}
+          >
+            {({ blob, url, loading, error }) =>
+              loading ? (
+                <button
+                  disabled
+                  className={`opacity-20 pt-2 pl-2" flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+                >
+                  <PDFSvg />
+                </button>
+              ) : (
+                <button className={"toolbar-auxiliary-icon"}>
+                  <PDFSvg />
+                </button>
+              )
+            }
+          </PDFDownloadLink>
           <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canList}

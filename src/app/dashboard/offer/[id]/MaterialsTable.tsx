@@ -4,7 +4,7 @@ import { PDFSvg } from "@/app/global/PDFSvg";
 import { Modal, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import dynamic from "next/dynamic";
-import MaterialsPerOfferPDFReport from "@/helpers/MaterialsPerOfferPDFReport";
+import PDFReport from "@/helpers/PDFReport";
 
 interface CollectionCreateFormProps {
   open: boolean;
@@ -105,10 +105,10 @@ export const MaterialsListModal: React.FC<CollectionCreateFormProps> = ({
         <PDFDownloadLink
           className=" flex w-[2.5rem] h-[2.5rem]"
           document={
-            <MaterialsPerOfferPDFReport
+            <PDFReport
               fields={fields}
               data={PDFReportData}
-              title={`Listado de Materiales ${values?.name} `}
+              title={`LISTA DE MATERIALES (${values?.name})  `}
             />
           }
           fileName={`Listado de Materiales ${values?.name}  `}

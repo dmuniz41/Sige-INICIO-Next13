@@ -1,5 +1,8 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Page, Text, Document, StyleSheet, View, Svg } from "@react-pdf/renderer";
+import { Page, Text, Document, StyleSheet, View, Font } from "@react-pdf/renderer";
+import font from "../assets/arial-font/arialceb.ttf";
+
+Font.register({ family: "Arial", src: font, fontStyle: "normal", fontWeight: "bold" });
 
 const BORDER_COLOR = "#000";
 const BORDER_STYLE = "solid";
@@ -8,11 +11,11 @@ const styles = StyleSheet.create({
   body: {
     paddingTop: 25,
     paddingBottom: 10,
-    paddingHorizontal: 35,
+    paddingHorizontal: 35
   },
   header: {
     marginBottom: 20,
-    textAlign: "center",
+    textAlign: "center"
   },
   subheader: {
     fontSize: 14,
@@ -22,7 +25,7 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 12,
-    color: "gray",
+    color: "gray"
   },
   pageNumber: {
     position: "absolute",
@@ -31,11 +34,11 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     textAlign: "center",
-    color: "grey",
+    color: "grey"
   },
   headerBg: {
     fontWeight: "black",
-    backgroundColor: "#aaa",
+    backgroundColor: "#aaa"
   },
   table: {
     display: "table",
@@ -43,23 +46,26 @@ const styles = StyleSheet.create({
     borderStyle: BORDER_STYLE,
     borderColor: BORDER_COLOR,
     borderWidth: 1,
+    borderTopWidth: 0,
+    borderRightWidth: 0
   },
   tableRow: {
     margin: "auto",
-    flexDirection: "row",
+    flexDirection: "row"
   },
   tableCellHeader: {
     margin: 2,
-    fontSize: 10,
+    fontSize: "10pt",
     fontWeight: "bold",
+    fontFamily: "Arial"
   },
   tableCell: {
     margin: 2,
-    fontSize: 10,
+    fontSize: 10
   },
   textCenter: {
-    textAlign: "center",
-  },
+    textAlign: "center"
+  }
 });
 
 function checkStrEmpty(str) {
@@ -72,13 +78,13 @@ const CustomTablePDF = (props) => {
     borderStyle: BORDER_STYLE,
     borderColor: BORDER_COLOR,
     borderBottomColor: "#000",
-    borderWidth: 1,
+    borderRightWidth: 1,
     borderLeftWidth: 0,
-    borderTopWidth: 0,
+    borderTopWidth: 1
   };
   return (
     <View style={styles.table}>
-      <View style={[styles.tableRow, styles.headerBg]}>
+      <View fixed style={[styles.tableRow, styles.headerBg]}>
         {fields.map((_item, _idx) => (
           <View key={_idx} style={[tableCol, { width: _item.width + "%" }]}>
             <Text style={[styles.tableCellHeader, { textAlign: "center" }]}>{_item.title}</Text>
@@ -96,14 +102,22 @@ const CustomTablePDF = (props) => {
 
                 if (_item.custom) {
                   return (
-                    <View key={_idx} style={[tableCol, { width: _item.width + "%" }]}>
-                      <Text style={[styles.tableCell, item.style ? item.style : {}]}>{_item.component(item)}</Text>
+                    <View wrap={false} key={_idx} style={[tableCol, { width: _item.width + "%" }]}>
+                      <Text style={[styles.tableCell, item.style ? item.style : {}]}>
+                        {_item.component(item)}
+                      </Text>
                     </View>
                   );
                 } else {
                   return (
-                    <View key={_idx} style={[styles.tableCol, { width: _item.width + "%" }]}>
-                      <Text style={[styles.tableCell, item.style ? item.style : {}]}>{checkStrEmpty(val) ? value_alt : val || "-"}</Text>
+                    <View
+                      wrap={false}
+                      key={_idx}
+                      style={[styles.tableCol, { width: _item.width + "%" }]}
+                    >
+                      <Text style={[styles.tableCell, item.style ? item.style : {}]}>
+                        {checkStrEmpty(val) ? value_alt : val || "-"}
+                      </Text>
                     </View>
                   );
                 }
@@ -116,12 +130,16 @@ const CustomTablePDF = (props) => {
 };
 
 export default function PDFReport(props) {
-  const date = new Date().toLocaleDateString("es-DO", { year: "numeric", month: "short", day: "numeric" });
+  const date = new Date().toLocaleDateString("es-DO", {
+    year: "numeric",
+    month: "short",
+    day: "numeric"
+  });
   const { fields = [], data = [], title = "" } = props;
   return (
     <Document>
       <Page wrap orientation="landscape" size={"LETTER"} style={styles.body}>
-        <Text  style={styles.header}>  
+        <Text style={styles.header}>
           <Text style={styles.subheader}>{title}</Text>
           <Text style={styles.date}>{date}</Text>
         </Text>
