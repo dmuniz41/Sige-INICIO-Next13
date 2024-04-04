@@ -10,18 +10,18 @@ export const ProjectViewTable = (props: any) => {
 
   const columns: ColumnsType<IItem> = [
     {
-      title: "No.",
+      title: <span className="font-bold">No.</span>,
       dataIndex: "idNumber",
       key: "idNumber",
       width: "1%",
-      align: 'center'
+      align: "center"
     },
     {
-      title: "Descripción del servicio ",
+      title: <span className="font-bold">Descripción del servicio</span>,
       dataIndex: "description",
       key: "description",
-      width: "55%",
-    },
+      width: "55%"
+    }
   ];
   return (
       <Table

@@ -20,14 +20,14 @@ export default function Login() {
       user: formData.get("user"),
       password: formData.get("password"),
       redirect: false,
-      callbackUrl: "/dashboard",
+      callbackUrl: "/dashboard"
     });
 
     if (res?.error) {
       console.log(error);
       Toast.fire({
         icon: "error",
-        title: "Usuario o contraseña incorrecto",
+        title: "Usuario o contraseña incorrecto"
       });
 
       return setError(res.error as string);
@@ -41,7 +41,10 @@ export default function Login() {
       <div className="mb-[3rem] w-[15rem]">
         <Image src={logo} width={500} height={300} alt="Inicio logo" priority={true} />
       </div>
-      <form onSubmit={handleSubmit} className="grid w-[380px] p-[30px] h-[300px] border-t-[4px] border-solid border-t-primary-500 font-bold bg-white-100 rounded-[5px] shadow-xl">
+      <form
+        onSubmit={handleSubmit}
+        className="grid w-[380px] p-[30px] h-[300px] border-t-[4px] border-solid border-t-primary-500 font-bold bg-white-100 rounded-[5px] shadow-xl"
+      >
         <h5 className="h-[15px] mb-0">Usuario</h5>
         <input
           className="w-full h-[50px] font-medium pl-[10px] outline-none border-solid border-[1px] rounded-md border-border_input  focus:border-primary-500 "
