@@ -9,16 +9,20 @@ import dynamic from "next/dynamic";
 import React, { useEffect } from "react";
 
 import { EditSvg } from "@/app/global/EditSvg";
-import CostSheetPDFReport from "@/helpers/CostSheetPDFReport";
-import { changeProjectStatus, clearOffer, loadSelectedProject } from "@/actions/project";
+import { clearOffer, loadSelectedProject } from "@/actions/project";
 import { IProject } from "@/models/project";
 import { ProjectViewTable } from "./ProjectViewTable";
 import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
+import ProjectPDFReport from "@/helpers/ProjectPDFReport";
+import { PDFSvg } from "@/app/global/PDFSvg";
 
-// const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
-//   ssr: false,
-//   loading: () => <p>Loading...</p>,
-// });
+const PDFDownloadLink = dynamic(
+  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+  {
+    ssr: false,
+    loading: () => <p>Loading...</p>
+  }
+);
 
 export const ProjectView = () => {
   const url = usePathname().split("/");
@@ -33,40 +37,6 @@ export const ProjectView = () => {
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
     (state: RootState) => state?.project
   );
-
-  // const fields: any = [
-  //   {
-  //     title: "Descripción",
-  //     custom: true,
-  //     component: (item: any) => `${item.description}`,
-  //     width: "40",
-  //   },
-  //   {
-  //     title: "U/M",
-  //     custom: true,
-  //     component: (item: any) => `${item.unitMeasure}`,
-  //     width: "20",
-  //   },
-  //   {
-  //     title: "Cant",
-  //     custom: true,
-  //     component: (item: any) => `${item.amount}`,
-  //     width: "10",
-  //   },
-  //   {
-  //     title: "Precio CUP",
-  //     custom: true,
-  //     component: (item: any) => `$ ${item.price.toFixed(2)}`,
-  //     width: "15",
-  //   },
-  //   {
-  //     title: "Importe CUP",
-  //     custom: true,
-  //     component: (item: any) => `$ ${item.value.toFixed(2)}`,
-  //     width: "15",
-  //   },
-  // ];
-  // const PDFReportData: ICostSheet = selectedCostSheet;
 
   const handleEdit = (): void => {
     router.push(`/dashboard/project/editProject`);
@@ -92,13 +62,30 @@ export const ProjectView = () => {
                 Crear Oferta
               </button>
             )}
-            {/* <PDFDownloadLink document={<CostSheetPDFReport fields={fields} data={PDFReportData} title={`Ficha de costo`} />} fileName={`Ficha de costo ${selectedCostSheet.taskName}`}>
-              {({ blob, url, loading, error }) => (
-                <button disabled={loading} className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 rounded-full w-[2.5rem] h-[2.5rem] flex justify-center items-center">
-                  <PDFSvg />
-                </button>
-              )}
-            </PDFDownloadLink> */}
+            <PDFDownloadLink
+              className=" flex w-[2.5rem] h-[2.5rem]"
+              document={
+                <ProjectPDFReport
+                  data={selectedProject}
+                />
+              }
+              fileName={`${selectedProject?.projectName}`}
+            >
+              {({ blob, url, loading, error }) =>
+                loading ? (
+                  <button
+                    disabled
+                    className={`opacity-20 pt-2 pl-2" flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+                  >
+                    <PDFSvg />
+                  </button>
+                ) : (
+                  <button className={"toolbar-auxiliary-icon"}>
+                    <PDFSvg />
+                  </button>
+                )
+              }
+            </PDFDownloadLink>
           </div>
         </div>
       </article>
@@ -149,7 +136,12 @@ export const ProjectView = () => {
           <article className="grid gap-1">
             <div className="flex gap-1">
               <span className="font-bold mr-2 ">Precio:</span>
-              <p>${selectedProject.expenses === undefined ? 0 : selectedProject?.totalValue?.toLocaleString('DE')}</p>
+              <p>
+                $
+                {selectedProject.expenses === undefined
+                  ? 0
+                  : selectedProject?.totalValue?.toLocaleString("DE")}
+              </p>
             </div>
             <div className="flex gap-1">
               <span className="font-bold mr-2 ">Gastos:</span>

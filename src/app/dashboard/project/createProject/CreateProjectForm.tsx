@@ -187,7 +187,8 @@ export const CreateProjectForm = () => {
                     status: "Pendiente de Oferta",
                     expenses: 0,
                     profits: 0,
-                    initDate: values.initDate.format("MM/DD/YYYY")
+                    initDate: values.initDate.format("MM/DD/YYYY"),
+                    deliveryDate: values.deliveryDate.format("MM/DD/YYYY")
                   })
                 );
                 router.push("/dashboard/project");
