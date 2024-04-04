@@ -45,13 +45,14 @@ const styles = StyleSheet.create({
   // ? ESTILOS DE LA SECCION DEL HEADER DONDE ESTA LA INFO DEL PROYECTO //
   headerSection: {
     display: "flex",
-    flexShrink: 1,
-    width: "100%"
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between"
   },
 
   subtitleHeaderContainer: {
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "row"
   },
 
   labelText: {
@@ -157,12 +158,17 @@ const CustomTablePDF = (props) => {
 };
 
 export default function ProjectPDFReport(props) {
-  const { data = [], title = "" } = props;
+  const { data = {} } = props;
+  console.log("🚀 ~ ProjectPDFReport ~ data:", data);
   return (
     <Document>
       <Page wrap orientation="portrait" size={"LETTER"} style={styles.body}>
-        <View style={{display:'flex', width: '100%', justifyContent: 'center', flexDirection: 'row'}}>
-          <Text style={{fontFamily:'Arial', fontSize: '14pt', fontWeight: 'bold'}}>SOLICITUD DE SERVICIO</Text>
+        <View
+          style={{ display: "flex", width: "100%", justifyContent: "center", flexDirection: "row" }}
+        >
+          <Text style={{ fontFamily: "Arial", fontSize: "14pt", fontWeight: "bold" }}>
+            SOLICITUD DE SERVICIO
+          </Text>
         </View>
         <View style={styles.headerSection}>
           {/* SECCION DONDE VA NO. DE CLIENTE, NOMBRE, PROYECTO, REPRESENTANTE, FECHA DE ENTREGA */}
@@ -220,9 +226,89 @@ export default function ProjectPDFReport(props) {
             </View>
           </View>
           {/* SECCION DONDE VA : FECHA DE CREACION, NO. DE SOLICITUD, MONEDA */}
-          <View></View>
+          <View style={{ display: "flex", width: "15%" }}>
+            <View style={{ display: "flex", border: 1, marginBottom: 4 }}>
+              {/* FECHA DE CREACION */}
+              <View
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  height: "12px",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "Arial",
+                    fontSize: "10pt",
+                    fontWeight: "bold",
+                    textAlign: "center"
+                  }}
+                >
+                  FECHA
+                </Text>
+              </View>
+              <View
+                style={{
+                  display: "flex",
+                  border: 1,
+                  height: "20px",
+                  width: "100%",
+                  borderLeft: 0,
+                  borderRight: 0,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: "10pt",
+                    textAlign: "center"
+                  }}
+                >
+                  {data?.initDate}
+                </Text>
+              </View>
+              {/* NO. DE SOLICITUD */}
+              <View
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  height: "12px",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: "10pt",
+                    fontWeight: "bold",
+                    fontFamily: "Arial",
+                    textAlign: "center"
+                  }}
+                >
+                  {data?.projectNumber}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.subtitleHeaderContainer}>
+              <View style={{ display: "flex" }}>
+                <Text style={styles.labelText}>Moneda: </Text>
+              </View>
+              <View style={styles.infoText}>
+                <Text>{data?.currency}</Text>
+              </View>
+            </View>
+          </View>
         </View>
-
+        {/* SECCION DE LA LISTA DE ITEMS */}
+        <View>
+          
+        </View>
         {/* <CustomTablePDF fields={fields} data={data} /> */}
       </Page>
     </Document>

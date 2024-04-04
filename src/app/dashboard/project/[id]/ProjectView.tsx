@@ -67,7 +67,6 @@ export const ProjectView = () => {
               document={
                 <ProjectPDFReport
                   data={selectedProject}
-                  title={`SOLICITUD DE SERVICIO`}
                 />
               }
               fileName={`${selectedProject?.projectName}`}
