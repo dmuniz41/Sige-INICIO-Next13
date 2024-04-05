@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   headerBg: {
     fontWeight: "black",
-    backgroundColor: "#aaa"
+    backgroundColor: "#F3DEBE"
   },
 
   // ? ESTILOS DE LA SECCION DEL HEADER DONDE ESTA LA INFO DEL PROYECTO //
@@ -49,25 +49,29 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-between"
   },
-
   subtitleHeaderContainer: {
     display: "flex",
     flexDirection: "row"
   },
-
   labelText: {
     fontFamily: "Arial",
     fontWeight: "bold",
-    fontSize: "10pt"
+    fontSize: "8pt"
   },
-
   infoText: {
-    fontSize: "10pt",
+    fontSize: "8pt",
     display: "flex",
     flex: 1
   },
 
   // ? ESTILOS DE LA TABLA DE ITEMS //
+
+  itemListContainer: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "row",
+    marginTop: 8
+  },
   table: {
     display: "table",
     width: "auto",
@@ -83,22 +87,55 @@ const styles = StyleSheet.create({
   },
   tableCellHeader: {
     margin: 2,
-    fontSize: "10pt",
+    fontSize: "8pt",
     fontWeight: "bold",
     fontFamily: "Arial"
   },
   tableCell: {
     margin: 2,
-    fontSize: 10
-  },
-  textCenter: {
-    textAlign: "center"
+    fontSize: "8pt"
   }
 });
 
 function checkStrEmpty(str) {
   return !(str && str.length > 1 && str.split(" ").join("").length > 0);
 }
+
+const fields = [
+  {
+    title: "No.",
+    custom: true,
+    component: (item) => (
+      <View
+        style={{
+          display: "flex",
+          flex: 1,
+          flexDirection: "column",
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          backgroundColor: "red"
+        }}
+      >
+        <Text
+          style={{
+            fontSize: "8pt"
+          }}
+        >
+          {item?.idNumber}
+        </Text>
+      </View>
+    ),
+    width: "5"
+  },
+  {
+    title: "DESCRIPCIÓN DEL SERVICIO",
+    custom: true,
+    component: (item) => `${item?.description}`,
+    width: "95"
+  }
+];
 
 const CustomTablePDF = (props) => {
   const { fields = [], data = [] } = props;
@@ -242,7 +279,7 @@ export default function ProjectPDFReport(props) {
                 <Text
                   style={{
                     fontFamily: "Arial",
-                    fontSize: "10pt",
+                    fontSize: "8pt",
                     fontWeight: "bold",
                     textAlign: "center"
                   }}
@@ -265,7 +302,7 @@ export default function ProjectPDFReport(props) {
               >
                 <Text
                   style={{
-                    fontSize: "10pt",
+                    fontSize: "8pt",
                     textAlign: "center"
                   }}
                 >
@@ -285,7 +322,7 @@ export default function ProjectPDFReport(props) {
               >
                 <Text
                   style={{
-                    fontSize: "10pt",
+                    fontSize: "8pt",
                     fontWeight: "bold",
                     fontFamily: "Arial",
                     textAlign: "center"
@@ -306,10 +343,170 @@ export default function ProjectPDFReport(props) {
           </View>
         </View>
         {/* SECCION DE LA LISTA DE ITEMS */}
-        <View>
-          
+        <View style={styles.itemListContainer}>
+          <View style={{ display: "flex", flexDirection: "column", width: "85%" }}>
+            <CustomTablePDF fields={fields} data={data?.itemsList} />
+          </View>
+          {/* PRECIO */}
+          <View
+            style={{
+              display: "flex",
+              width: "15%",
+              flexDirection: "column",
+              borderStyle: "solid",
+              borderBottom: 1,
+              borderRight: 1,
+              borderTop: 1
+            }}
+          >
+            <View
+              style={{
+                display: "flex",
+                backgroundColor: "#F3DEBE",
+                width: "100%",
+                borderStyle: "solid",
+                borderBottom: 1
+              }}
+            >
+              <Text
+                style={{
+                  margin: 2,
+                  fontFamily: "Arial",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  fontSize: "8pt"
+                }}
+              >
+                Precio
+              </Text>
+            </View>
+            <View
+              style={{
+                display: "flex",
+                flex: 1,
+                flexDirection: "column",
+                width: "100%",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Arial",
+                  fontWeight: "bold",
+                  fontSize: "8pt",
+                  textAlign: "center",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                ${" "}
+                {data?.totalValue?.toLocaleString("DE", {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2
+                })}
+              </Text>
+            </View>
+          </View>
         </View>
-        {/* <CustomTablePDF fields={fields} data={data} /> */}
+        <View style={{ display: "flex", flexDirection: "row", width: "100%", marginTop: 8 }}>
+          <View style={{ display: "flex", flexDirection: "column", width: "70%" }}>
+            {/* SOLICITADO POR */}
+            <View style={styles.subtitleHeaderContainer}>
+              <View style={{ display: "flex" }}>
+                <Text style={styles.labelText}>Solicitado por: </Text>
+              </View>
+              <View style={styles.infoText}>
+                <Text>__________</Text>
+              </View>
+            </View>
+            {/* RECIBIDO POR */}
+            <View style={styles.subtitleHeaderContainer}>
+              <View style={{ display: "flex" }}>
+                <Text style={styles.labelText}>Recibido por: </Text>
+              </View>
+              <View style={styles.infoText}>
+                <Text>__________</Text>
+              </View>
+            </View>
+          </View>
+          {/* TELEFONO */}
+          <View style={{ display: "flex", flexDirection: "row", flex: 1 }}>
+            <View style={{ display: "flex" }}>
+              <Text style={styles.labelText}>Teléfono: </Text>
+            </View>
+          </View>
+        </View>
+        <View style={{ display: "flex", flexDirection: "row", width: "100%", marginTop: 8 }}>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              flex: 1,
+              alignItems:'flex-end'
+            }}
+          >
+            {/* TERMINADO */}
+            <View style={{ ...styles.subtitleHeaderContainer, marginRight: 4, width: "30%" }}>
+              <View style={{ display: "flex" }}>
+                <Text style={styles.labelText}>Terminado: </Text>
+              </View>
+              <View style={styles.infoText}>
+                <Text>{`__________`}</Text>
+              </View>
+            </View>
+            {/* COBRADO */}
+            <View style={{ ...styles.subtitleHeaderContainer, marginRight: 4, width: "30%" }}>
+              <View style={{ display: "flex" }}>
+                <Text style={styles.labelText}>Cobrado: </Text>
+              </View>
+              <View style={styles.infoText}>
+                <Text>{`__________`}</Text>
+              </View>
+            </View>
+            {/* CERRADO */}
+            <View style={{ ...styles.subtitleHeaderContainer, marginRight: 4, width: "30%" }}>
+              <View style={{ display: "flex" }}>
+                <Text style={styles.labelText}>Cerrado: </Text>
+              </View>
+              <View style={styles.infoText}>
+                <Text>{`__________`}</Text>
+              </View>
+            </View>
+          </View>
+          <View style={{ display: "flex", flexDirection: "column", width: "20%" }}>
+            {/* GASTOS */}
+            <View style={styles.subtitleHeaderContainer}>
+              <View style={{ display: "flex" }}>
+                <Text style={styles.labelText}>Gastos: </Text>
+              </View>
+              <View style={styles.infoText}>
+                <Text>
+                  ${" "}
+                  {data?.expenses?.toLocaleString("DE", {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2
+                  })}
+                </Text>
+              </View>
+            </View>
+            {/* GANANCIA */}
+            <View style={styles.subtitleHeaderContainer}>
+              <View style={{ display: "flex" }}>
+                <Text style={styles.labelText}>Ganancia: </Text>
+              </View>
+              <View style={styles.infoText}>
+                <Text>
+                  ${" "}
+                  {data?.profits?.toLocaleString("DE", {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2
+                  })}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
       </Page>
     </Document>
   );

@@ -129,7 +129,7 @@ export const ProjectView = () => {
 
         {/* TABLA DE ITEMS */}
         <article className="flex max-w-[50%] pl-2">
-          <ProjectViewTable data={selectedProject.itemsList} />
+          <ProjectViewTable data={selectedProject?.itemsList} />
         </article>
 
         <article className="w-full flex justify-between p-2">
