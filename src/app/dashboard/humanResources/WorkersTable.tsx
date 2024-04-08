@@ -1,16 +1,15 @@
 "use client";
 
+import { Button, Input, Space, Table, Tag, Tooltip } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, Tag, Tooltip } from "antd";
-import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
+import type { InputRef } from "antd";
 
-import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
-import { Toast } from "@/helpers/customAlert";
+import { useAppDispatch } from "@/hooks/hooks";
 import {
   startAddWorker,
   startDeleteWorker,
@@ -18,15 +17,14 @@ import {
   workersStartLoading
 } from "@/actions/workers";
 import { CreateWorkerForm } from "./CreateWorkerForm";
-import { EditWorkerForm } from "./EditWorkerForm";
-import Swal from "sweetalert2";
-import { nomenclatorsStartLoading } from "@/actions/nomenclator";
-import { useSession } from "next-auth/react";
-import { PlusSvg } from "@/app/global/PlusSvg";
-import { EditSvg } from "@/app/global/EditSvg";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
-import { RefreshSvg } from "@/app/global/RefreshSvg";
+import { EditSvg } from "@/app/global/EditSvg";
+import { EditWorkerForm } from "./EditWorkerForm";
 import { IWorker } from "@/models/worker";
+import { nomenclatorsStartLoading } from "@/actions/nomenclator";
+import { PlusSvg } from "@/app/global/PlusSvg";
+import { useSession } from "next-auth/react";
+import Swal from "sweetalert2";
 
 type DataIndex = keyof IWorker;
 
@@ -189,21 +187,21 @@ const WorkersTable: React.FC = () => {
 
   const columns: ColumnsType<IWorker> = [
     {
-      title: "Nombre",
+      title: <span className="font-bold">Nombre</span>,
       dataIndex: "name",
       key: "name",
       width: "25%",
       ...getColumnSearchProps("name")
     },
     {
-      title: "CI",
+      title: <span className="font-bold">CI</span>,
       dataIndex: "CI",
       key: "CI",
       width: "10%",
       ...getColumnSearchProps("CI")
     },
     {
-      title: "Cargo",
+      title: <span className="font-bold">Cargo</span>,
       dataIndex: "role",
       key: "role",
       width: "30%",
@@ -217,28 +215,28 @@ const WorkersTable: React.FC = () => {
       )
     },
     {
-      title: "Dirección",
+      title: <span className="font-bold">Dirección</span>,
       dataIndex: "address",
       key: "address",
       width: "25%",
       ...getColumnSearchProps("address")
     },
     {
-      title: "Cuenta bancaria",
+      title: <span className="font-bold">Cuenta Bancaria</span>,
       dataIndex: "bankAccount",
       key: "bankAccount",
       width: "20%",
       ...getColumnSearchProps("bankAccount")
     },
     {
-      title: "Teléfono",
+      title: <span className="font-bold">Teléfono</span>,
       dataIndex: "phoneNumber",
       key: "phoneNumber",
       width: "10%",
       ...getColumnSearchProps("phoneNumber")
     },
     {
-      title: "Acciones",
+      title: <span className="font-bold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, { ...record }) => (

@@ -3,35 +3,27 @@ import { Button, Input, Space, Table, Tag, Tooltip } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import dynamic from "next/dynamic";
 import Highlighter from "react-highlight-words";
-import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Swal from "sweetalert2";
 import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import type { InputRef } from "antd";
 
 import { DeleteSvg } from "@/app/global/DeleteSvg";
+import { INomenclator } from "@/models/nomenclator";
 import { IProject } from "@/models/project";
+import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 import { loadSelectedProject } from "../../../actions/project";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
-import { PDFSvg } from "@/app/global/PDFSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { projectsStartLoading, startDeleteProject } from "@/actions/project";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
+import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
 import { RootState, useAppSelector } from "@/store/store";
+import { SeeSvg } from "@/app/global/SeeSvg";
 import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
-import { SeeSvg } from "@/app/global/SeeSvg";
-import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
-import { INomenclator } from "@/models/nomenclator";
-import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
-import { loadSelectedOffer } from "@/actions/offer";
-
-// const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
-//   ssr: false,
-//   loading: () => <p>Loading...</p>,
-// });
 
 type DataIndex = keyof IProject;
 
@@ -51,39 +43,6 @@ const ProjectTable: React.FC = () => {
   const canCreate = sessionData?.user.role.includes("Crear Proyectos");
   const canEdit = sessionData?.user.role.includes("Editar Proyectos");
   const canDelete = sessionData?.user.role.includes("Eliminar Proyectos");
-
-  // const fields = [
-  //   {
-  //     title: "Nomenclador",
-  //     custom: true,
-  //     component: (item: any) => `${item.nomenclatorId}`,
-  //     width: "10",
-  //   },
-  //   {
-  //     title: " Nombre de la tarea",
-  //     custom: true,
-  //     component: (item: any) => `${item.taskName}`,
-  //     width: "50",
-  //   },
-  //   {
-  //     title: " Categoría",
-  //     custom: true,
-  //     component: (item: any) => `${item.category}`,
-  //     width: "20",
-  //   },
-  //   {
-  //     title: " Precio",
-  //     custom: true,
-  //     component: (item: any) => `$ ${item.salePrice}`,
-  //     width: "10",
-  //   },
-  //   {
-  //     title: " Precio/UM",
-  //     custom: true,
-  //     component: (item: any) => `${item.valuePerUnitMeasure}`,
-  //     width: "10",
-  //   },
-  // ];
 
   useEffect(() => {
     dispatch(projectsStartLoading());
@@ -155,14 +114,6 @@ const ProjectTable: React.FC = () => {
       value: "Cobrado"
     }
   ];
-
-  // let PDFReportData: ICostSheet[] = [];
-
-  // if (filteredData) {
-  //   PDFReportData = filteredData;
-  // } else {
-  //   PDFReportData = data;
-  // }
 
   const handleView = (id: string): void => {
     if (id) {
@@ -311,7 +262,7 @@ const ProjectTable: React.FC = () => {
 
   const columns: ColumnsType<IProject> = [
     {
-      title: "Nombre del Proyecto",
+      title: <span className="font-bold">Nombre del Proyecto</span>,
       dataIndex: "projectName",
       key: "projectName",
       width: "30%",
@@ -319,7 +270,7 @@ const ProjectTable: React.FC = () => {
       ...getColumnSearchProps("projectName")
     },
     {
-      title: "Cliente",
+      title: <span className="font-bold">Cliente</span>,
       dataIndex: "clientName",
       key: "clientName",
       width: "10%",
@@ -328,7 +279,7 @@ const ProjectTable: React.FC = () => {
       filterSearch: true
     },
     {
-      title: "Cobrado por",
+      title: <span className="font-bold">Cobrado por</span>,
       dataIndex: "payMethod",
       key: "payMethod",
       width: "8%",
@@ -337,7 +288,7 @@ const ProjectTable: React.FC = () => {
       filterSearch: true
     },
     {
-      title: "Moneda",
+      title: <span className="font-bold">Moneda</span>,
       dataIndex: "currency",
       key: "currency",
       width: "5%",
@@ -346,7 +297,7 @@ const ProjectTable: React.FC = () => {
       filterSearch: true
     },
     {
-      title: "Estado",
+      title: <span className="font-bold">Estado</span>,
       dataIndex: "status",
       key: "status",
       width: "5%",
@@ -389,7 +340,7 @@ const ProjectTable: React.FC = () => {
       )
     },
     {
-      title: "Precio",
+      title: <span className="font-bold">Precio</span>,
       dataIndex: "totalValue",
       key: "totalValue",
       width: "10%",
@@ -403,7 +354,7 @@ const ProjectTable: React.FC = () => {
       }
     },
     {
-      title: "Gastos",
+      title: <span className="font-bold">Gastos</span>,
       dataIndex: "expenses",
       key: "expenses",
       width: "5%",
@@ -417,7 +368,7 @@ const ProjectTable: React.FC = () => {
       }
     },
     {
-      title: "Ganancia",
+      title: <span className="font-bold">Ganancia</span>,
       dataIndex: "profits",
       key: "profits",
       width: "5%",
@@ -431,7 +382,7 @@ const ProjectTable: React.FC = () => {
       }
     },
     {
-      title: "Fecha",
+      title: <span className="font-bold">Fecha</span>,
       dataIndex: "initDate",
       key: "initDate",
       width: "5%",
@@ -439,7 +390,7 @@ const ProjectTable: React.FC = () => {
       ...getColumnSearchProps("initDate")
     },
     {
-      title: "Acciones",
+      title: <span className="font-bold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, { ...record }) => (
@@ -502,24 +453,6 @@ const ProjectTable: React.FC = () => {
           </button>
         </div>
         <div className="flex">
-          {/* <PDFDownloadLink document={<CostSheetTablePDFReport fields={fields} data={PDFReportData} title={`Fichas de costo`} />} fileName={`Listado de fichas de costo `}>
-            {({ blob, url, loading, error }) => (
-              <button disabled={loading} className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 rounded-full w-[2.5rem] h-[2.5rem] flex justify-center items-center">
-                <PDFSvg />
-              </button>
-            )}
-          </PDFDownloadLink> */}
-          {/* <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canDelete}
-              className={`${
-                canDelete ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={handleDelete}
-            >
-              <DeleteSvg />
-            </button>
-          </Tooltip> */}
           <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canList}

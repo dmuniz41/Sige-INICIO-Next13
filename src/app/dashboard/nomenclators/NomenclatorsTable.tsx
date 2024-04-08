@@ -5,7 +5,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import type { ColumnType, ColumnsType } from "antd/es/table";
-import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
+import type { FilterConfirmProps } from "antd/es/table/interface";
 import type { InputRef } from "antd";
 
 import { CreateNomenclatorForm } from "./CreateNomenclatorForm";
@@ -18,15 +18,13 @@ import {
   startDeleteNomenclator,
   startUpdateNomenclator
 } from "@/actions/nomenclator";
+import { INomenclator } from "../../../models/nomenclator";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { RootState, useAppSelector } from "@/store/store";
-import { selectedWarehouse } from "@/actions/warehouse";
-import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
-import { INomenclator } from "../../../models/nomenclator";
 
 type DataIndex = keyof INomenclator;
 
@@ -192,7 +190,7 @@ const NomenclatorsTable: React.FC = () => {
 
   const columns: ColumnsType<INomenclator> = [
     {
-      title: "Categoría",
+      title: <span className="font-bold">Categoría</span>,
       dataIndex: "category",
       key: "category",
       filters: [
@@ -243,14 +241,14 @@ const NomenclatorsTable: React.FC = () => {
       sorter: (a: any, b: any) => a.category.localeCompare(b.category)
     },
     {
-      title: "Código",
+      title: <span className="font-bold">Código</span>,
       dataIndex: "code",
       key: "code",
       width: "40%",
       ...getColumnSearchProps("code")
     },
     {
-      title: "Valor",
+      title: <span className="font-bold">Valor</span>,
       dataIndex: "value",
       key: "value",
       width: "35%",

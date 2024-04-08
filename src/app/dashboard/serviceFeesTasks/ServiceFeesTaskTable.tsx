@@ -1,7 +1,6 @@
 "use client";
 import { Button, Input, Space, Table, Tooltip } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import dynamic from "next/dynamic";
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Swal from "sweetalert2";
@@ -16,7 +15,6 @@ import { EditSvg } from "@/app/global/EditSvg";
 import { INomenclator } from "@/models/nomenclator";
 import { IServiceFeeTask } from "@/models/serviceFeeTask";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
-import { PDFSvg } from "@/app/global/PDFSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { RootState, useAppSelector } from "@/store/store";
@@ -33,13 +31,12 @@ import { useSession } from "next-auth/react";
 type DataIndex = keyof IServiceFeeTask;
 
 const ServiceFeeTaskTable: React.FC = () => {
-  const dispatch = useAppDispatch();
   const [createTaskModal, setCreateTaskModal] = useState(false);
   const [editTaskModal, setEditTaskModal] = useState(false);
-  const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [searchText, setSearchText] = useState("");
   const [selectedRow, setSelectedRow] = useState<IServiceFeeTask>();
-  const [filteredData, setFilteredData] = useState<IServiceFeeTask[]>();
+  const dispatch = useAppDispatch();
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
 
@@ -52,39 +49,6 @@ const ServiceFeeTaskTable: React.FC = () => {
   const canCreate = sessionData?.user.role.includes("Crear Tarifas de Servicio");
   const canEdit = sessionData?.user.role.includes("Editar Tarifas de Servicio");
   const canDelete = sessionData?.user.role.includes("Eliminar Tarifas de Servicio");
-
-  // const fields = [
-  //   {
-  //     title: "Nomenclador",
-  //     custom: true,
-  //     component: (item: any) => `${item.nomenclatorId}`,
-  //     width: "10",
-  //   },
-  //   {
-  //     title: " Nombre de la tarea",
-  //     custom: true,
-  //     component: (item: any) => `${item.taskName}`,
-  //     width: "50",
-  //   },
-  //   {
-  //     title: " Categoría",
-  //     custom: true,
-  //     component: (item: any) => `${item.category}`,
-  //     width: "20",
-  //   },
-  //   {
-  //     title: " Precio",
-  //     custom: true,
-  //     component: (item: any) => `$ ${item.salePrice}`,
-  //     width: "10",
-  //   },
-  //   {
-  //     title: " Precio/UM",
-  //     custom: true,
-  //     component: (item: any) => `${item.valuePerUnitMeasure}`,
-  //     width: "10",
-  //   },
-  // ];
 
   useEffect(() => {
     dispatch(startLoadServiceFeesTasks());
@@ -117,28 +81,6 @@ const ServiceFeeTaskTable: React.FC = () => {
       value: `${unitMeasure}`
     });
   });
-
-  // let PDFReportData: ICostSheet[] = [];
-
-  // if (filteredData) {
-  //   PDFReportData = filteredData;
-  // } else {
-  //   PDFReportData = data;
-  // }
-
-  // const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-
-  // nomenclators.map((nomenclator: INomenclator) => {
-  //   if (nomenclator.category === "Tarifa de Servicio") serviceFeeNomenclator.push(nomenclator.code);
-  // });
-
-  // const costSheetNomenclatorFilter: any[] = [];
-  // serviceFeeNomenclator.map((nomenclator: string) => {
-  //   costSheetNomenclatorFilter.push({
-  //     text: `${nomenclator}`,
-  //     value: `${nomenclator}`,
-  //   });
-  // });
 
   const handleSearch = (
     selectedKeys: string[],
@@ -212,11 +154,6 @@ const ServiceFeeTaskTable: React.FC = () => {
       });
     }
   };
-
-  // const onChange: TableProps<IServiceFeeTask>["onChange"] = (pagination, filters, sorter, extra) => {
-  //   setFilteredData(extra.currentDataSource);
-  //   console.log(filteredData);
-  // };
 
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<IServiceFeeTask> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
@@ -298,7 +235,7 @@ const ServiceFeeTaskTable: React.FC = () => {
 
   const columns: ColumnsType<IServiceFeeTask> = [
     {
-      title: "Descripción",
+      title: <span className="font-bold">Descripción</span>,
       dataIndex: "description",
       key: "description",
       width: "50%",
@@ -306,7 +243,7 @@ const ServiceFeeTaskTable: React.FC = () => {
       ...getColumnSearchProps("description")
     },
     {
-      title: "Categoría",
+      title: <span className="font-bold">Categoría</span>,
       dataIndex: "category",
       key: "category",
       width: "13%",
@@ -315,7 +252,7 @@ const ServiceFeeTaskTable: React.FC = () => {
       filterSearch: true
     },
     {
-      title: "Cantidad",
+      title: <span className="font-bold">Cantidad</span>,
       dataIndex: "amount",
       key: "amount",
       width: "8%",
@@ -330,7 +267,7 @@ const ServiceFeeTaskTable: React.FC = () => {
       )
     },
     {
-      title: "Unidad de Medida",
+      title: <span className="font-bold">Unidad de Medida</span>,
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "15%",
@@ -338,9 +275,8 @@ const ServiceFeeTaskTable: React.FC = () => {
       onFilter: (value: any, record: any) => record.unitMeasure.startsWith(value),
       filterSearch: true
     },
-
     {
-      title: "Precio",
+      title: <span className="font-bold">Precio</span>,
       dataIndex: "price",
       key: "price",
       width: "10%",
@@ -358,7 +294,7 @@ const ServiceFeeTaskTable: React.FC = () => {
       }
     },
     {
-      title: "Acciones",
+      title: <span className="font-bold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, record) => (
@@ -408,13 +344,6 @@ const ServiceFeeTaskTable: React.FC = () => {
           </button>
         </div>
         <div className="flex">
-          {/* <PDFDownloadLink document={<CostSheetTablePDFReport fields={fields} data={PDFReportData} title={`Fichas de costo`} />} fileName={`Listado de fichas de costo `}>
-            {({ blob, url, loading, error }) => (
-              <button disabled={loading} className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 rounded-full w-[2.5rem] h-[2.5rem] flex justify-center items-center">
-                <PDFSvg />
-              </button>
-            )}
-          </PDFDownloadLink> */}
           <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canList}
@@ -447,7 +376,6 @@ const ServiceFeeTaskTable: React.FC = () => {
         size="small"
         columns={columns}
         dataSource={data}
-        // onChange={onChange}
         pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
         className="shadow-md"
       />

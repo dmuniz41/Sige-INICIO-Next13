@@ -52,13 +52,13 @@ export const AuxiliaryView = () => {
 
   const payMethodColumns = [
     {
-      title: "Representante",
+      title: <span className="font-bold">Representante</span>,
       dataIndex: "representative",
       key: "representative",
       width: "300px"
     },
     {
-      title: "Porcentaje",
+      title: <span className="font-bold">Porcentaje</span>,
       dataIndex: "coefficientValue",
       key: "coefficientValue",
       width: "150px",
@@ -71,13 +71,13 @@ export const AuxiliaryView = () => {
   ];
   const columns = [
     {
-      title: "Nombre",
+      title: <span className="font-bold">Nombre</span>,
       dataIndex: "name",
       key: "name",
       width: "300px"
     },
     {
-      title: "Valor",
+      title: <span className="font-bold">Valor</span>,
       dataIndex: "value",
       key: "value",
       width: "150px",
