@@ -68,7 +68,8 @@ export async function POST(request: Request) {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
-        }
+        },
+        status: 200
       }
     );
   } catch (error) {
@@ -79,7 +80,7 @@ export async function POST(request: Request) {
           message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
@@ -112,7 +113,8 @@ export async function GET(request: Request) {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
-        }
+        },
+        status: 200
       }
     );
   } catch (error) {
@@ -123,7 +125,7 @@ export async function GET(request: Request) {
           message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
@@ -156,7 +158,7 @@ export async function PUT(request: Request) {
           message: "El nomenclador de cliente a actualizar no existe"
         },
         {
-          status: 409
+          status: 404
         }
       );
     }
@@ -181,7 +183,8 @@ export async function PUT(request: Request) {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
-        }
+        },
+        status: 200
       }
     );
   } catch (error) {
@@ -192,7 +195,7 @@ export async function PUT(request: Request) {
           message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
@@ -218,10 +221,15 @@ export async function DELETE(request: NextRequest) {
     const nomenclatorToDelete = await ClientNomenclator.findById(params.get("id"));
 
     if (!nomenclatorToDelete) {
-      return NextResponse.json({
-        ok: true,
-        message: "El nomenclador a borrar no existe"
-      });
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "El nomenclador a borrar no existe"
+        },
+        {
+          status: 404
+        }
+      );
     }
 
     const deletedNomenclator = await ClientNomenclator.findByIdAndDelete(params.get("id"));
@@ -235,7 +243,8 @@ export async function DELETE(request: NextRequest) {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
-        }
+        },
+        status: 200
       }
     );
   } catch (error) {
@@ -246,7 +255,7 @@ export async function DELETE(request: NextRequest) {
           message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }

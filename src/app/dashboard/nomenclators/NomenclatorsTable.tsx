@@ -12,7 +12,12 @@ import { CreateNomenclatorForm } from "./CreateNomenclatorForm";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { EditNomenclatorForm } from "./EditNomenclatorForm";
 import { EditSvg } from "@/app/global/EditSvg";
-import { nomenclatorsStartLoading, startAddNomenclator, startDeleteNomenclator, startUpdateNomenclator } from "@/actions/nomenclator";
+import {
+  nomenclatorsStartLoading,
+  startAddNomenclator,
+  startDeleteNomenclator,
+  startUpdateNomenclator
+} from "@/actions/nomenclator";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { RootState, useAppSelector } from "@/store/store";
@@ -31,7 +36,7 @@ const NomenclatorsTable: React.FC = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const [selectedRow, setSelectedRow] = useState<INomenclator>();
+  const [selectedNomenclator, setSelectedNomenclator] = useState<INomenclator>();
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
 
@@ -44,26 +49,25 @@ const NomenclatorsTable: React.FC = () => {
     dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
-  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
-  let data: INomenclator[] = useMemo(() => nomenclators.filter((nomenclator) => 
-    nomenclator.category !== "Tarifa de Servicio" 
-    && 
-    nomenclator.category !== "Material"
-    &&
-    nomenclator.category !== "Ficha de costo"
-  ), [nomenclators]);
+  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector(
+    (state: RootState) => state?.nomenclator
+  );
+  let data: INomenclator[] = useMemo(
+    () =>
+      nomenclators.filter(
+        (nomenclator) =>
+          nomenclator.category !== "Tarifa de Servicio" &&
+          nomenclator.category !== "Material" &&
+          nomenclator.category !== "Ficha de costo"
+      ),
+    [nomenclators]
+  );
   if (!canList) {
     data = [];
   }
-  const handleEdit = (): void => {
-    if (selectedRow) {
-      setEditModal(true);
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un nomenclador a editar",
-      });
-    }
+  const handleEdit = (record: INomenclator): void => {
+    setSelectedNomenclator(record);
+    setEditModal(true);
   };
 
   const onCreate = (values: any): void => {
@@ -72,52 +76,40 @@ const NomenclatorsTable: React.FC = () => {
   };
 
   const onEdit = (values: any): void => {
-    dispatch(startUpdateNomenclator(selectedRow?._id!, values.code, values.category));
-    setSelectedRow(undefined);
+    dispatch(startUpdateNomenclator(selectedNomenclator?._id!, values.code, values.category));
     setEditModal(false);
   };
 
-  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
 
-  const handleDelete = () => {
-    if (selectedRow) {
-      Swal.fire({
-        title: "Eliminar Nomenclador",
-        text: "El Nomenclador seleccionado se borrará de forma permanente",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Eliminar",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          dispatch(startDeleteNomenclator(selectedRow?._id));
-        }
-      });
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un nomenclador a eliminar",
-      });
-    }
+  const handleDelete = (record: INomenclator) => {
+    Swal.fire({
+      title: "Eliminar Nomenclador",
+      text: "El nomenclador seleccionado se borrará de forma permanente",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Eliminar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(startDeleteNomenclator(record?._id));
+      }
+    });
   };
 
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText("");
-  };
-
-  const rowSelection: TableRowSelection<INomenclator> = {
-    onChange: async (selectedRowKeys: React.Key[], selectedRows: INomenclator[]) => {
-      setSelectedRow(selectedRows[0]);
-      dispatch(selectedWarehouse(selectedRows[0]._id));
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows);
-    },
   };
 
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<INomenclator> => ({
@@ -142,7 +134,11 @@ const NomenclatorsTable: React.FC = () => {
           >
             Search
           </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
           <Button
@@ -168,7 +164,9 @@ const NomenclatorsTable: React.FC = () => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
+    ),
     onFilter: (value, record: any) =>
       record[dataIndex]
         .toString()
@@ -181,10 +179,15 @@ const NomenclatorsTable: React.FC = () => {
     },
     render: (text) =>
       searchedColumn === dataIndex ? (
-        <Highlighter highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }} searchWords={[searchText]} autoEscape textToHighlight={text ? text.toString() : ""} />
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
       ) : (
         text
-      ),
+      )
   });
 
   const columns: ColumnsType<INomenclator> = [
@@ -195,64 +198,93 @@ const NomenclatorsTable: React.FC = () => {
       filters: [
         {
           text: "Area de usuario",
-          value: "Area de usuario",
+          value: "Area de usuario"
         },
         {
           text: "Cargo de trabajador",
-          value: "Cargo de trabajador",
+          value: "Cargo de trabajador"
         },
         {
           text: "Categoría de material",
-          value: "Categoría de material",
+          value: "Categoría de material"
         },
         {
           text: "Unidad de medida",
-          value: "Unidad de medida",
+          value: "Unidad de medida"
         },
         {
           text: "Proveedor",
-          value: "Proveedor",
+          value: "Proveedor"
         },
         {
           text: "Categoría de ficha de costo",
-          value: "Categoría de ficha de costo",
+          value: "Categoría de ficha de costo"
         },
         {
           text: "Precio/UM en ficha de costo",
-          value: "Precio/UM en ficha de costo",
+          value: "Precio/UM en ficha de costo"
         },
         {
           text: "Categoría de tarea",
-          value: "Categoría de tarea",
+          value: "Categoría de tarea"
         },
         {
           text: "Nombre de Cliente",
-          value: "Nombre de Cliente",
+          value: "Nombre de Cliente"
         },
         {
           text: "Moneda",
-          value: "Moneda",
-        },
+          value: "Moneda"
+        }
       ],
       onFilter: (value: any, record: any) => record.category.startsWith(value),
       filterSearch: true,
       width: "50%",
-      sorter: (a: any, b: any) => a.category.localeCompare(b.category),
+      sorter: (a: any, b: any) => a.category.localeCompare(b.category)
     },
     {
       title: "Código",
       dataIndex: "code",
       key: "code",
       width: "40%",
-      ...getColumnSearchProps("code"),
+      ...getColumnSearchProps("code")
     },
     {
       title: "Valor",
       dataIndex: "value",
       key: "value",
       width: "35%",
-      render: (text) => text && <span>$ {parseFloat(text).toFixed(2)}</span>,
+      render: (text) => text && <span>$ {parseFloat(text).toFixed(2)}</span>
     },
+    {
+      title: <span className="font-bold">Acciones</span>,
+      key: "actions",
+      width: "5%",
+      render: (_, { ...record }) => (
+        <div className="flex gap-1 justify-center">
+          {canEdit ? (
+            <>
+              <Tooltip placement="top" title={"Editar Nomenclador"} arrow={{ pointAtCenter: true }}>
+                <button onClick={() => handleEdit(record)} className="table-see-action-btn">
+                  <EditSvg width={20} height={20} />
+                </button>
+              </Tooltip>
+            </>
+          ) : (
+            <></>
+          )}
+          {canDelete ? (
+            <Tooltip placement="top" title={"Eliminar Nomenclador"} arrow={{ pointAtCenter: true }}>
+              <button onClick={() => handleDelete(record)} className="table-delete-action-btn">
+                <DeleteSvg width={20} height={20} />
+              </button>
+            </Tooltip>
+          ) : (
+            <></>
+          )}
+        </div>
+      )
+    }
   ];
 
   return (
@@ -271,33 +303,13 @@ const NomenclatorsTable: React.FC = () => {
           </button>
         </div>
         <div className="flex">
-          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canEdit}
-              className={`${
-                canEdit ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={handleEdit}
-            >
-              <EditSvg />
-            </button>
-          </Tooltip>
-          <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canDelete}
-              className={`${
-                canDelete ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={handleDelete}
-            >
-              <DeleteSvg />
-            </button>
-          </Tooltip>
           <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canList}
               className={`${
-                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canList
+                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                  : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={() => dispatch(nomenclatorsStartLoading())}
             >
@@ -307,18 +319,23 @@ const NomenclatorsTable: React.FC = () => {
         </div>
       </div>
 
-      <CreateNomenclatorForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
-      <EditNomenclatorForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedRow} />
+      <CreateNomenclatorForm
+        open={createNewModal}
+        onCancel={() => setCreateNewModal(false)}
+        onCreate={onCreate}
+      />
+      <EditNomenclatorForm
+        open={editModal}
+        onCancel={() => setEditModal(false)}
+        onCreate={onEdit}
+        defaultValues={selectedNomenclator}
+      />
 
       <Table
         size="small"
         columns={columns}
         dataSource={data}
         pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
-        rowSelection={{
-          type: "radio",
-          ...rowSelection,
-        }}
         className="shadow-md"
         sortDirections={["ascend"]}
       />
