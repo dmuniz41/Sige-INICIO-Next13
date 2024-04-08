@@ -9,7 +9,6 @@ export async function GET(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const urlParams = pathname.split("/");
   const id = urlParams[3];
-  console.log("🚀 ~ GET ~ projectId:", id)
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(

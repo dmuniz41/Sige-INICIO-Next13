@@ -214,7 +214,7 @@ export const CreateProjectForm = () => {
 export const FormSection = (props: any) => {
   const { sectionName, values, formName, valuesSetter, modalSetter, buttonText, form } = props;
   return (
-    <section className=" flex w-[50%] bg-white-100 items-center rounded-md shadow-[0px_0px_5px_0px_#00000024] ">
+    <section className=" flex full bg-white-100 items-center rounded-md shadow-[0px_0px_5px_0px_#00000024] ">
       <div className="flex w-[15%] min-h-[100px] h-full p-2 text-center items-center justify-center">
         <span className="text-base font-bold">{sectionName.toUpperCase()}</span>
       </div>

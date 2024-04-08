@@ -69,11 +69,9 @@ export const startDeleteOffer = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/offer`,
-        { id },
-        { headers: { accessToken: token } }
-      )
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/offer?id=${id}`, {
+        headers: { accessToken: token }
+      })
       .then(() => {
         dispatch(deleteOffer(id));
         Toast.fire({
