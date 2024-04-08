@@ -5,6 +5,7 @@ import { nomenclatorsStartLoading } from "./nomenclator";
 import { Toast } from "@/helpers/customAlert";
 import { types } from "@/types/types";
 
+// * CREA UNA NUEVA TARIFA DE SERVICIO //
 export const startAddServiceFee = ({ ...serviceFee }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -12,23 +13,7 @@ export const startAddServiceFee = ({ ...serviceFee }): any => {
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/serviceFee`,
         {
-          administrativeExpenses: serviceFee.administrativeExpenses ?? [],
-          artisticTalent: serviceFee.artisticTalentValue,
-          category: serviceFee.category,
-          commercialMargin: serviceFee.commercialMargin,
-          complexity: serviceFee.complexity,
-          currencyChange: serviceFee.currencyChange,
-          equipmentDepreciation: serviceFee.equipmentDepreciation ?? [],
-          equipmentMaintenance: serviceFee.equipmentMaintenance ?? [],
-          hiredPersonalExpenses: serviceFee.hiredPersonalExpenses ?? [],
-          nomenclatorId: serviceFee.nomenclatorId,
-          ONAT: serviceFee.ONAT,
-          rawMaterials: serviceFee.rawMaterials ?? [],
-          taskList: serviceFee.taskList ?? [],
-          taskName: serviceFee.taskName,
-          transportationExpenses: serviceFee.transportationExpenses ?? [],
-          unitMeasure: serviceFee.unitMeasure,
-          workersAmount: serviceFee.workersAmount
+          ...serviceFee
         },
         { headers: { accessToken: token } }
       )
@@ -43,12 +28,13 @@ export const startAddServiceFee = ({ ...serviceFee }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: serviceFee.ts:96 ~ return ~ message:", message);
+        console.log("🚀 ~ file: serviceFee.ts:31 ~ return ~ message:", message);
         Swal.fire("Error", "Error al crear la tarifa de servicio", "error");
       });
   };
 };
 
+// * ACTUALIZA UNA TARIFA DE SERVICIO POR SU ID //
 export const startUpdateServiceFee = ({ ...serviceFee }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -56,24 +42,7 @@ export const startUpdateServiceFee = ({ ...serviceFee }): any => {
       .put(
         `${process.env.NEXT_PUBLIC_API_URL}/serviceFee`,
         {
-          _id: serviceFee._id,
-          administrativeExpenses: serviceFee.administrativeExpenses ?? [],
-          artisticTalent: serviceFee.artisticTalentValue,
-          category: serviceFee.category,
-          commercialMargin: serviceFee.commercialMargin,
-          complexity: serviceFee.complexity,
-          currencyChange: serviceFee.currencyChange,
-          equipmentDepreciation: serviceFee.equipmentDepreciation ?? [],
-          equipmentMaintenance: serviceFee.equipmentMaintenance ?? [],
-          hiredPersonalExpenses: serviceFee.hiredPersonalExpenses ?? [],
-          nomenclatorId: serviceFee.nomenclatorId,
-          ONAT: serviceFee.ONAT,
-          rawMaterials: serviceFee.rawMaterials ?? [],
-          taskList: serviceFee.taskList ?? [],
-          taskName: serviceFee.taskName,
-          transportationExpenses: serviceFee.transportationExpenses ?? [],
-          unitMeasure: serviceFee.unitMeasure,
-          workersAmount: serviceFee.workersAmount
+          ...serviceFee
         },
         { headers: { accessToken: token } }
       )
@@ -87,12 +56,13 @@ export const startUpdateServiceFee = ({ ...serviceFee }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: serviceFee.ts:94 ~ return ~ message:", message);
+        console.log("🚀 ~ file: serviceFee.ts:59 ~ return ~ message:", message);
         Swal.fire("Error", "Error al editar la tarifa de servicio", "error");
       });
   };
 };
 
+// * CARGA TODAS LAS TARIFAS DE SERVICIO //
 export const serviceFeeStartLoading = () => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -104,21 +74,20 @@ export const serviceFeeStartLoading = () => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: serviceFee.ts:111 ~ return ~ message:", message);
+        console.log("🚀 ~ file: serviceFee.ts:77 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar las tarifas de servicio", "error");
       });
   };
 };
 
+// * ELIMINA UNA TARIFA DE SERVICIO //
 export const startDeleteServiceFee = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/serviceFee`,
-        { id },
-        { headers: { accessToken: token } }
-      )
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/serviceFee?id=${id}`, {
+        headers: { accessToken: token }
+      })
       .then(() => {
         dispatch(deleteServiceFee(id));
         dispatch(serviceFeeStartLoading());
@@ -129,12 +98,13 @@ export const startDeleteServiceFee = (id: string): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: serviceFee.ts:132 ~ return ~ message:", message);
+        console.log("🚀 ~ file: serviceFee.ts:101 ~ return ~ message:", message);
         Swal.fire("Error", "Error al eliminar la tarifa de servicio", "error");
       });
   };
 };
 
+// * CARGA UNA TARIFA DE SERVICIO POR SU ID //
 export const loadSelectedServiceFee = (id: string) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -148,7 +118,7 @@ export const loadSelectedServiceFee = (id: string) => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: serviceFee.ts:149 ~ return ~ message:", message);
+        console.log("🚀 ~ file: serviceFee.ts:121 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar tarifa de servicio seleccionada", "error");
       });
   };

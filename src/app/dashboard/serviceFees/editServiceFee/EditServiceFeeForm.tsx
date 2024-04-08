@@ -254,7 +254,7 @@ export const EditServiceFeeForm = () => {
           value: selectedServiceFee?.commercialMargin
         },
         {
-          name: "artisticTalentValue",
+          name: "artisticTalent",
           value: selectedServiceFee?.artisticTalent
         },
         {
@@ -480,7 +480,7 @@ export const EditServiceFeeForm = () => {
         <Form.Item
           className="mb-3 "
           label={<span className="font-bold text-md">Talento Artístico</span>}
-          name="artisticTalentValue"
+          name="artisticTalent"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
           <InputNumber />
@@ -500,7 +500,7 @@ export const EditServiceFeeForm = () => {
                     _id: selectedServiceFee?._id,
                     administrativeExpenses: values.administrativeExpenses,
                     // PORCIENTO
-                    artisticTalentValue: values.artisticTalentValue,
+                    artisticTalent: values.artisticTalent,
                     category: values.category,
                     // PORCIENTO
                     commercialMargin: values.commercialMargin,

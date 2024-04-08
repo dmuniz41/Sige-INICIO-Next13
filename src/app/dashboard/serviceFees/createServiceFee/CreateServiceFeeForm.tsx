@@ -401,7 +401,7 @@ export const CreateServiceFeeForm = () => {
         <Form.Item
           className="mb-3 "
           label={<span className="font-bold text-md">Talento Artístico</span>}
-          name="artisticTalentValue"
+          name="artisticTalent"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
           <InputNumber />
@@ -420,7 +420,7 @@ export const CreateServiceFeeForm = () => {
                   startAddServiceFee({
                     administrativeExpenses: values.administrativeExpenses,
                     // PORCIENTO
-                    artisticTalentValue: values.artisticTalentValue,
+                    artisticTalent: values.artisticTalent,
                     category: values.category,
                     // PORCIENTO
                     commercialMargin: values.commercialMargin,

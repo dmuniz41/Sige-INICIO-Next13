@@ -8,6 +8,7 @@ import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 
 export async function POST(request: NextRequest) {
   const { ...serviceFee }: IServiceFee = await request.json();
+  console.log("🚀 ~ POST ~ serviceFee:", serviceFee);
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -36,7 +37,7 @@ export async function POST(request: NextRequest) {
         }
       );
     }
-    //* Calcula el valor de cada subtotal en cada seccion de la ficha de costo
+    // ? CALCULA EL VALOR DE CADA SUBTOTAL EN CADA SECCION DE LA FICHA DE COSTO //
     const rawMaterialsSubtotal: number = serviceFee?.rawMaterials?.reduce(
       (total, currentValue) => total + currentValue.value,
       0
@@ -67,13 +68,14 @@ export async function POST(request: NextRequest) {
     );
 
     const expensesTotalValue: number =
-      rawMaterialsSubtotal +
-      taskListSubtotal +
-      equipmentDepreciationSubtotal +
-      equipmentMaintenanceSubtotal +
-      transportationExpensesSubtotal +
-      administrativeExpensesSubtotal +
-      hiredPersonalExpensesSubtotal;
+      rawMaterialsSubtotal ??
+      0 + taskListSubtotal ??
+      0 + equipmentDepreciationSubtotal ??
+      0 + equipmentMaintenanceSubtotal ??
+      0 + transportationExpensesSubtotal ??
+      0 + administrativeExpensesSubtotal ??
+      0 + hiredPersonalExpensesSubtotal ??
+      0;
 
     const newKey = generateRandomString(26);
 
@@ -82,19 +84,19 @@ export async function POST(request: NextRequest) {
       code: serviceFee?.nomenclatorId
     })) as INomenclator;
 
-    // * El precio final se calcula (Suma de el valor de todos los gastos + valor del margen comercial() + valor del impuesto de la ONAT())
+    // ? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
     const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
-    const ONATValue = expensesTotalValue * (serviceFee.ONAT / 100);
-    const artisticTalentValue = expensesTotalValue * (serviceFee.artisticTalent / 100);
+    const ONATValue = expensesTotalValue * (serviceFee?.ONAT / 100);
+    const artisticTalentValue = expensesTotalValue * (serviceFee?.artisticTalent / 100);
     const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
 
-    // * Calcula el valor de los 3 niveles de complejidad en dependencia del coeficiente asignado
+    // ? CALCULA EL VALOR DE LOS 3 NIVELES DE COMPLEJIDAD EN DEPENDENCIA DEL COEFICIENTE ASIGNADO //
     const complexityValues = serviceFee?.complexity?.map((complexity) => {
       return {
-        name: complexity.name,
-        coefficient: complexity.coefficient,
-        value: salePrice * complexity.coefficient,
-        USDValue: (salePrice * complexity.coefficient) / serviceFee.currencyChange
+        name: complexity?.name,
+        coefficient: complexity?.coefficient,
+        value: salePrice * complexity?.coefficient,
+        USDValue: (salePrice * complexity?.coefficient) / serviceFee?.currencyChange
       };
     });
 
@@ -138,18 +140,20 @@ export async function POST(request: NextRequest) {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
-        }
+        },
+        status: 200
       }
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ POST ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
           message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
@@ -187,7 +191,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    //* Calcula el valor de cada subtotal en cada seccion de la ficha de costo
+    // ? CALCULA EL VALOR DE CADA SUBTOTAL EN CADA SECCION DE LA FICHA DE COSTO //
     const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce(
       (total, currentValue) => total + currentValue.value,
       0
@@ -218,26 +222,27 @@ export async function PUT(request: NextRequest) {
     );
 
     const expensesTotalValue: number =
-      rawMaterialsSubtotal +
-      taskListSubtotal +
-      equipmentDepreciationSubtotal +
-      equipmentMaintenanceSubtotal +
-      transportationExpensesSubtotal +
-      administrativeExpensesSubtotal +
-      hiredPersonalExpensesSubtotal;
+      rawMaterialsSubtotal ??
+      0 + taskListSubtotal ??
+      0 + equipmentDepreciationSubtotal ??
+      0 + equipmentMaintenanceSubtotal ??
+      0 + transportationExpensesSubtotal ??
+      0 + administrativeExpensesSubtotal ??
+      0 + hiredPersonalExpensesSubtotal ??
+      0;
 
     const BDNomenclator = await Nomenclator.findOne({
       category: "Tarifa de Servicio",
       code: serviceFee.nomenclatorId
     });
 
-    // * El precio final se calcula (Suma de el valor de todos los gastos + valor del margen comercial + el valor del impuesto de la ONAT)
+    // ? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + EL VALOR DEL IMPUESTO DE LA ONAT)
     const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
     const ONATValue = expensesTotalValue * (serviceFee.ONAT / 100);
-    const artisticTalentValue = expensesTotalValue * (serviceFee.artisticTalent / 100);
+    const artisticTalentValue = expensesTotalValue * (serviceFee?.artisticTalent / 100);
     const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
 
-    // * Calcula el valor de los 3 niveles de complejidad en dependencia del coeficiente asignado
+    // ? CALCULA EL VALOR DE LOS 3 NIVELES DE COMPLEJIDAD //
     const complexityValues = serviceFee?.complexity?.map((complexity) => {
       return {
         name: complexity.name,
@@ -247,7 +252,7 @@ export async function PUT(request: NextRequest) {
       };
     });
 
-    //* Si se modifica el valor de una tarifa se modifica tambien el valor del nomenclador asociado
+    // ? SI SE MODIFICA EL VALOR DE UNA TARIFA SE MODIFICA TAMBIEN EL VALOR DEL NOMENCLADOR ASOCIADO //
     if (!BDNomenclator) {
       const newKey = generateRandomString(26);
       const newNomenclator = new Nomenclator({
@@ -301,19 +306,20 @@ export async function PUT(request: NextRequest) {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
-        }
+        },
+        status: 200
       }
     );
   } catch (error) {
-    console.log("🚀 ~ POST ~ error:", error);
     if (error instanceof Error) {
+      console.log("🚀 ~ PUT ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
           message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
@@ -336,6 +342,7 @@ export async function GET(request: NextRequest) {
     }
     await connectDB();
     const listOfServiceFees = (await ServiceFee.find()).reverse();
+
     return new NextResponse(
       JSON.stringify({
         ok: true,
@@ -351,21 +358,22 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ GET ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
           message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
   }
 }
 
-export async function PATCH(request: NextRequest) {
-  const { id } = await request.json();
+export async function DELETE(request: NextRequest) {
+  const params = request.nextUrl.searchParams;
   const accessToken = request.headers.get("accessToken");
 
   try {
@@ -381,17 +389,21 @@ export async function PATCH(request: NextRequest) {
       );
     }
     await connectDB();
-    const serviceFeeToDelete = await ServiceFee.findByIdAndDelete(id);
+    const serviceFeeToDelete = await ServiceFee.findById(params.get("id"));
+
     const BDNomenclator = await Nomenclator.findOne({
       category: "Tarifa de Servicio",
       code: serviceFeeToDelete.nomenclatorId
     });
 
     if (!serviceFeeToDelete) {
-      return NextResponse.json({
-        ok: true,
-        message: "La tarifa de servicio a borrar no existe"
-      });
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "La tarifa de servicio a borrar no existe"
+        },
+        { status: 404 }
+      );
     }
 
     if (BDNomenclator) {
@@ -400,10 +412,13 @@ export async function PATCH(request: NextRequest) {
         code: serviceFeeToDelete.nomenclatorId
       });
     }
+
+    const deletedServiceFee = await ServiceFee.findByIdAndDelete(params.get("id"));
+
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        serviceFeeToDelete
+        deletedServiceFee
       }),
       {
         headers: {
@@ -415,13 +430,14 @@ export async function PATCH(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ DELETE ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
           message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
