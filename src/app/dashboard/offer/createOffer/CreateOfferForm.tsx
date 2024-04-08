@@ -103,7 +103,7 @@ export const CreateOfferForm = () => {
             </div>
           </article>
         ) : (
-          <div className="grid grow gap-2">
+          <div className="flex flex-col w-[60%] gap-2">
             <article className="grid grow gap-2">
               {selectedOffer?.itemsList?.map((item, index) => (
                 <article key={index}>
@@ -136,20 +136,23 @@ export const CreateOfferForm = () => {
             </article>
           </div>
         )}
-        <article className="flex flex-col border border-border_light w-[500px] rounded-md">
+        <article className="flex flex-col border border-border_light w-[40%]  rounded-md">
           <div className="w-full border-b p-2 font-bold border-border_light flex justify-center items-center bg-background_light">
             <span>DESCRIPCIÓN DEL PROYECTO</span>
+          </div>
+          <div className="flex flex-1">
+
           </div>
           <ul className=" flex flex-col">
             {selectedProject?.itemsList?.map((item, index) => (
               <li
                 key={index}
-                className=" flex w-full items-center gap-2 border-b border-border_light"
+                className=" flex  items-center gap-2 border-b border-border_light px-2"
               >
-                <div className=" flex grow justify-center font-bold border-r  border-border_light items-center h-full">
+                <div className=" flex  justify-center font-bold border-r  border-border_light items-center h-full">
                   <p>{index + 1}</p>
                 </div>
-                <div className="flex w-[90%]">
+                <div className="flex ">
                   <p className="w-fit">{item.description}</p>
                 </div>
               </li>
