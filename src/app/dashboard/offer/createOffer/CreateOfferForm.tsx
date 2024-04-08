@@ -85,8 +85,8 @@ export const CreateOfferForm = () => {
       </Form.Item>
       <section className=" flex w-full gap-2 mb-4 ">
         {selectedOffer?.itemsList?.length == 0 ? (
-          <article className="flex justify-center items-center border border-border_light grow py-4 rounded-md">
-            <div className="grid h-[50%]">
+          <article className="flex flex-col w-[60%] justify-center items-center border border-border_light py-4 rounded-md">
+            <div className="grid">
               <div className="grid place-content-center">
                 <NoDataSvg width={100} height={100} />
               </div>
@@ -103,7 +103,7 @@ export const CreateOfferForm = () => {
             </div>
           </article>
         ) : (
-          <div className="flex flex-col w-[60%] gap-2">
+          <div className="flex flex-col w-[80%] gap-2">
             <article className="grid grow gap-2">
               {selectedOffer?.itemsList?.map((item, index) => (
                 <article key={index}>
@@ -147,12 +147,12 @@ export const CreateOfferForm = () => {
             {selectedProject?.itemsList?.map((item, index) => (
               <li
                 key={index}
-                className=" flex  items-center gap-2 border-b border-border_light px-2"
+                className=" flex w-full items-center gap-2 border-b border-border_light"
               >
-                <div className=" flex  justify-center font-bold border-r  border-border_light items-center h-full">
+                <div className=" flex w-10 justify-center font-bold border-r border-border_light items-center h-full">
                   <p>{index + 1}</p>
                 </div>
-                <div className="flex ">
+                <div className="flex bg-red flex-1">
                   <p className="w-fit">{item.description}</p>
                 </div>
               </li>
