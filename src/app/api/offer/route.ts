@@ -8,7 +8,6 @@ import ServiceFee, { IServiceFeeSubItem } from "@/models/serviceFees";
 
 export async function POST(request: NextRequest) {
   const { ...offer }: IOffer = await request.json();
-  console.log("🚀 ~ POST ~ offer:", offer);
   const activitiesList: { description: string; amount: number }[] = [];
   const uniqueActivities: { description: string; amount: number }[] = [];
   const activitiesMaterials: { description: string; amount: number; unitMeasure: string }[] = [];
@@ -132,19 +131,20 @@ export async function POST(request: NextRequest) {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
-        }
+        },
+        status: 200
       }
     );
   } catch (error) {
-    console.log("🚀 ~ POST ~ error:", error);
     if (error instanceof Error) {
+      console.log("🚀 ~ POST ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
           message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
@@ -168,6 +168,7 @@ export async function GET(request: NextRequest) {
     }
     await connectDB();
     const listOfOffers = (await Offer.find({ projectId: projectId })).reverse();
+
     return new NextResponse(
       JSON.stringify({
         ok: true,
@@ -178,18 +179,20 @@ export async function GET(request: NextRequest) {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
-        }
+        },
+        status: 200
       }
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ GET ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
           message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
@@ -216,10 +219,13 @@ export async function PUT(request: NextRequest) {
     const offerToUpdate = await Offer.findById(offer._id);
 
     if (!offerToUpdate) {
-      return NextResponse.json({
-        ok: false,
-        message: "La oferta a actualizar no existe"
-      });
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "La oferta a actualizar no existe"
+        },
+        { status: 404 }
+      );
     }
 
     const updatedOffer = await Offer.findByIdAndUpdate(
@@ -239,7 +245,8 @@ export async function PUT(request: NextRequest) {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
-        }
+        },
+        status: 200
       }
     );
   } catch (error) {
@@ -250,14 +257,15 @@ export async function PUT(request: NextRequest) {
           message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
   }
 }
 
-export async function PATCH(request: NextRequest) {
+export async function DELETE(request: NextRequest) {
+  const params = request.nextUrl.searchParams;
   const { id } = await request.json();
   const accessToken = request.headers.get("accessToken");
   try {
@@ -273,16 +281,19 @@ export async function PATCH(request: NextRequest) {
       );
     }
     await connectDB();
-    const offerToDelete = await Offer.findById(id);
+    const offerToDelete = await Offer.findById(params.get("id"));
 
     if (!offerToDelete) {
-      return NextResponse.json({
-        ok: true,
-        message: "La oferta a borrar no existe"
-      });
+      return NextResponse.json(
+        {
+          ok: true,
+          message: "La oferta a borrar no existe"
+        },
+        { status: 404 }
+      );
     }
 
-    const deletedOffer = await Offer.findByIdAndDelete(id);
+    const deletedOffer = await Offer.findByIdAndDelete(params.get("id"));
 
     return new NextResponse(
       JSON.stringify({
@@ -293,18 +304,20 @@ export async function PATCH(request: NextRequest) {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
-        }
+        },
+        status: 200
       }
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ DELETE ~ error:", error)
       return NextResponse.json(
         {
           ok: false,
           message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }

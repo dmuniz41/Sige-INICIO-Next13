@@ -127,7 +127,7 @@ export const OfferView = () => {
       <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-4">
         <h1 className="flex gap-4 text-xl font-bold mb-2">
           {selectedOffer?.projectName}
-          {selectedOffer.isFinalOffer ? (
+          {selectedOffer?.isFinalOffer ? (
             <div className="text-success-500 flex items-center">
               <CircleCheckSvg />
             </div>

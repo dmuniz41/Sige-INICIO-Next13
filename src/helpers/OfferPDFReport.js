@@ -179,7 +179,7 @@ export default function OfferPDFReport(props) {
             <Text style={styles.clientInfoElementHeader}>{title}</Text>
           </View>
           {/* LISTA DE ITEMS */}
-          {data.map((item, index) => {
+          {data?.map((item, index) => {
             return (
               <View wrap={false} key={index} style={styles.itemContainer}>
                 {/* NUMERO DE ITEM */}
