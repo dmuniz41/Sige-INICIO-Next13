@@ -2,7 +2,8 @@ import { types } from "../types/types";
 
 const initialState = {
   nomenclators: [],
-  clientNomenclators:[]
+  clientNomenclators:[],
+  representativeNomenclators:[]
 };
 
 export const nomenclatorReducer = (state = initialState, action:any) => {
@@ -42,6 +43,25 @@ export const nomenclatorReducer = (state = initialState, action:any) => {
       return {
         ...state,
         clientNomenclators: [...action.payload],
+      };
+
+    // * NOMENCLADORES DE REPRESENTANTES
+    case types.addRepresentativeNomenclator:
+      return {
+        ...state,
+      };
+    case types.deleteRepresentativeNomenclator:
+      return {
+        ...state,
+      };
+    case types.updateRepresentativeNomenclator:
+      return {
+        ...state,
+      };
+    case types.representativeNomenclatorsLoaded:
+      return {
+        ...state,
+        representativeNomenclators: [...action.payload],
       };
 
     default:

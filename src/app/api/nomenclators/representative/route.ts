@@ -102,6 +102,7 @@ export async function GET(request: Request) {
     }
     await connectDB();
     const listOfRepresentativeNomenclators = (await RepresentativeNomenclator.find()).reverse() as IRepresentativeNomenclator[];
+    
     return new NextResponse(
       JSON.stringify({
         ok: true,
