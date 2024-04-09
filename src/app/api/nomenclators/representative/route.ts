@@ -5,7 +5,6 @@ import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
 import RepresentativeNomenclator, { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 
-
 export async function POST(request: Request) {
   const { ...representativeNomenclator }: IRepresentativeNomenclator = await request.json();
   const accessToken = request.headers.get("accessToken");

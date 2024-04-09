@@ -8,8 +8,9 @@ export interface IRepresentativeNomenclator {
   key: string;
   name: string;
   phoneNumber?: number[];
-  contactPerson: string
-}
+  contactPerson: string;
+  percentage: number
+} 
 
 const RepresentativeNomenclatorSchema = new Schema<IRepresentativeNomenclator, Model<IRepresentativeNomenclator>>({
   key: {
@@ -37,6 +38,11 @@ const RepresentativeNomenclatorSchema = new Schema<IRepresentativeNomenclator, M
     type: Number,
     required: true,
     unique: true
+  },
+  percentage: {
+    type: Number,
+    required: true,
+    unique: false
   },
   contactPerson: {
     type: String,
