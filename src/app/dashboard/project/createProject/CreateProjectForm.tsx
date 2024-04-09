@@ -1,5 +1,5 @@
 "use client";
-import { Button, DatePicker, Form, Input, InputNumber, Select, SelectProps } from "antd";
+import { Button, DatePicker, Form, Input, Select, SelectProps } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -53,7 +53,7 @@ export const CreateProjectForm = () => {
       value: `${client.name}`
     };
   });
-  
+
   const currencyOptions: SelectProps["options"] = currencyNomenclators.map((currency) => {
     return {
       label: `${currency}`,
@@ -118,7 +118,7 @@ export const CreateProjectForm = () => {
               name="projectName"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
-              <TextArea rows={3}/>
+              <TextArea rows={3} />
             </Form.Item>
 
             <Form.Item
@@ -289,4 +289,3 @@ export const FormSection = (props: any) => {
     </section>
   );
 };
-FormSection;
