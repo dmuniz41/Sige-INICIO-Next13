@@ -1,16 +1,17 @@
 import { Schema, model, models, Model } from "mongoose";
 
-export interface IClientNomenclator {
+export interface IRepresentativeNomenclator {
   _id: string;
   address?: string;
   email?: string;
   idNumber: number
   key: string;
   name: string;
-  phoneNumber?: number;
+  phoneNumber?: number[];
+  contactPerson: string
 }
 
-const ClientNomenclatorSchema = new Schema<IClientNomenclator, Model<IClientNomenclator>>({
+const RepresentativeNomenclatorSchema = new Schema<IRepresentativeNomenclator, Model<IRepresentativeNomenclator>>({
   key: {
     type: String,
     unique: true
@@ -29,15 +30,21 @@ const ClientNomenclatorSchema = new Schema<IClientNomenclator, Model<IClientNome
     required: false
   },
   phoneNumber: {
-    type: Number,
+    type: [Number],
     required: false
   },
   idNumber: {
     type: Number,
     required: true,
     unique: true
-  }
+  },
+  contactPerson: {
+    type: String,
+    required: true,
+    unique: false
+  },
+  
 });
 
-const ClientNomenclator = models.ClientNomenclator || model("ClientNomenclator", ClientNomenclatorSchema);
-export default ClientNomenclator;
+const RepresentativeNomenclator = models.ClientNomenclator || model("RepresentativeNomenclator", RepresentativeNomenclatorSchema);
+export default RepresentativeNomenclator;
