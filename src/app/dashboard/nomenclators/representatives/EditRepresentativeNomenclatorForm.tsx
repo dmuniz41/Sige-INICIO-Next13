@@ -1,18 +1,20 @@
 "use client";
 
-import { IClientNomenclator } from "@/models/nomenclators/client";
-import { Form, Input, Modal } from "antd";
-
+import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Form, Input, InputNumber, Modal } from "antd";
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: IClientNomenclator) => void;
+  onCreate: (values: IRepresentativeNomenclator) => void;
   onCancel: () => void;
+  defaultValues: IRepresentativeNomenclator;
 }
 
-export const CreateClientNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
+export const EditRepresentativeNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
   open,
   onCreate,
-  onCancel
+  onCancel,
+  defaultValues
 }) => {
   const [form] = Form.useForm();
   return (
@@ -51,18 +53,63 @@ export const CreateClientNomenclatorForm: React.FC<CollectionCreateFormProps> = 
                 });
             }}
           >
-            Crear
+            Editar
           </button>
         </div>
       ]}
     >
-      <Form form={form} layout="vertical" name="createClientNomenclator" size="middle">
+      <Form
+        form={form}
+        layout="vertical"
+        name="editClientNomenclator"
+        size="middle"
+        fields={[
+          {
+            name: "name",
+            value: defaultValues?.name
+          },
+          {
+            name: "address",
+            value: defaultValues?.address
+          },
+          {
+            name: "email",
+            value: defaultValues?.email
+          },
+          {
+            name: "phoneNumber",
+            value: defaultValues?.phoneNumber
+          },
+          {
+            name: "contactPerson",
+            value: defaultValues?.contactPerson
+          },
+          {
+            name: "percentage",
+            value: defaultValues?.percentage
+          }
+        ]}
+      >
         <Form.Item
           name="name"
-          label="Nombre del Cliente"
+          label="Nombre"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
           <Input />
+        </Form.Item>
+        <Form.Item
+          name="contactPerson"
+          label="Persona de Contacto"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="percentage"
+          label="Representación (%)"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
+          <InputNumber className="w-full" />
         </Form.Item>
         <Form.Item name="address" label="Domicilio Legal" rules={[{ required: false }]}>
           <Input />
@@ -71,7 +118,7 @@ export const CreateClientNomenclatorForm: React.FC<CollectionCreateFormProps> = 
           <Input />
         </Form.Item>
         <Form.Item name="phoneNumber" label="Teléfono" rules={[{ required: false }]}>
-          <Input />
+          <InputNumber className="w-full" />
         </Form.Item>
       </Form>
     </Modal>

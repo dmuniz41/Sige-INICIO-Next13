@@ -1,16 +1,12 @@
 "use client";
 
 import { IClientNomenclator } from "@/models/nomenclators/client";
-import { Button, Form, Input, Modal, Select, SelectProps } from "antd";
-interface Values {
-  code: string;
-  category: string;
-}
+import { Form, Input, Modal } from "antd";
 interface CollectionCreateFormProps {
   open: boolean;
   onCreate: (values: IClientNomenclator) => void;
   onCancel: () => void;
-  defaultValues: IClientNomenclator
+  defaultValues: IClientNomenclator;
 }
 
 export const EditClientNomenclatorForm: React.FC<CollectionCreateFormProps> = ({

@@ -4,15 +4,18 @@ export interface IRepresentativeNomenclator {
   _id: string;
   address?: string;
   email?: string;
-  idNumber: number
+  idNumber: number;
   key: string;
   name: string;
-  phoneNumber?: number[];
+  phoneNumber?: number;
   contactPerson: string;
-  percentage: number
-} 
+  percentage: number;
+}
 
-const RepresentativeNomenclatorSchema = new Schema<IRepresentativeNomenclator, Model<IRepresentativeNomenclator>>({
+const RepresentativeNomenclatorSchema = new Schema<
+  IRepresentativeNomenclator,
+  Model<IRepresentativeNomenclator>
+>({
   key: {
     type: String,
     unique: true
@@ -20,7 +23,7 @@ const RepresentativeNomenclatorSchema = new Schema<IRepresentativeNomenclator, M
   name: {
     type: String,
     required: true,
-    unique: true,
+    unique: true
   },
   address: {
     type: String,
@@ -31,7 +34,7 @@ const RepresentativeNomenclatorSchema = new Schema<IRepresentativeNomenclator, M
     required: false
   },
   phoneNumber: {
-    type: [Number],
+    type: Number,
     required: false
   },
   idNumber: {
@@ -48,9 +51,10 @@ const RepresentativeNomenclatorSchema = new Schema<IRepresentativeNomenclator, M
     type: String,
     required: true,
     unique: false
-  },
-  
+  }
 });
 
-const RepresentativeNomenclator = models.ClientNomenclator || model("RepresentativeNomenclator", RepresentativeNomenclatorSchema);
+const RepresentativeNomenclator =
+  models.RepresentativeNomenclator ||
+  model("RepresentativeNomenclator", RepresentativeNomenclatorSchema);
 export default RepresentativeNomenclator;
