@@ -3,10 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
-import ClientNomenclator, { IClientNomenclator } from "@/models/nomenclators/client";
+import RepresentativeNomenclator, { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
+
 
 export async function POST(request: Request) {
-  const { ...clientNomenclator }: IClientNomenclator = await request.json();
+  const { ...representativeNomenclator }: IRepresentativeNomenclator = await request.json();
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -21,24 +22,24 @@ export async function POST(request: Request) {
       );
     }
     await connectDB();
-    const DBNomenclator = await ClientNomenclator.findOne({
-      name: clientNomenclator.name
+    const DBNomenclator = await RepresentativeNomenclator.findOne({
+      name: representativeNomenclator.name
     });
 
-    // ? LOS NUMEROS DE LOS CLIENTES SE CREAN DE FORMA CONSECUTIVA, DE NO EXISTIR CLIENTES EL PRIMER NUMERO SERÁ 1 //
-    const clients = (await ClientNomenclator.find()) as IClientNomenclator[];
+    // ? LOS NUMEROS DE LOS REPRESENTANTES SE CREAN DE FORMA CONSECUTIVA, DE NO EXISTIR REPRESENTANTES EL PRIMER NUMERO SERÁ 1 //
+    const representatives = (await RepresentativeNomenclator.find()) as IRepresentativeNomenclator[];
     let newId = 0;
-    if (clients.length == 0) {
+    if (representatives.length == 0) {
       newId = 1;
     } else {
-      newId = clients.at(-1)?.idNumber! + 1;
+      newId = representatives.at(-1)?.idNumber! + 1;
     }
 
     if (DBNomenclator) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Ya existe un nomenclador de cliente con ese nombre"
+          message: "Ya existe un nomenclador de representante con ese nombre"
         },
         {
           status: 409
@@ -48,21 +49,18 @@ export async function POST(request: Request) {
 
     let newKey = generateRandomString(26);
 
-    const newClientNomenclator = new ClientNomenclator({
-      address: clientNomenclator.address,
-      email: clientNomenclator.email,
+    const newRepresentativeNomenclator = new RepresentativeNomenclator({
+      ...representativeNomenclator,
       idNumber: newId,
       key: newKey,
-      name: clientNomenclator.name,
-      phoneNumber: clientNomenclator.phoneNumber
     });
 
-    await newClientNomenclator.save();
+    await newRepresentativeNomenclator.save();
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        newClientNomenclator
+        newRepresentativeNomenclator
       }),
       {
         headers: {
@@ -103,12 +101,12 @@ export async function GET(request: Request) {
       );
     }
     await connectDB();
-    const listOfClientNomenclators = (await ClientNomenclator.find()).reverse();
+    const listOfRepresentativeNomenclators = (await RepresentativeNomenclator.find()).reverse() as IRepresentativeNomenclator[];
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        counter: listOfClientNomenclators.length,
-        listOfClientNomenclators
+        counter: listOfRepresentativeNomenclators.length,
+        listOfRepresentativeNomenclators
       }),
       {
         headers: {
@@ -135,7 +133,7 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const { ...clientNomenclator }: IClientNomenclator = await request.json();
+  const { ...representativeNomenclator }: IRepresentativeNomenclator = await request.json();
   const accessToken = request.headers.get("accessToken");
 
   try {
@@ -151,13 +149,13 @@ export async function PUT(request: Request) {
       );
     }
     await connectDB();
-    const nomenclatorToUpdate = await ClientNomenclator.findById(clientNomenclator._id);
+    const nomenclatorToUpdate = await RepresentativeNomenclator.findById(representativeNomenclator._id);
 
     if (!nomenclatorToUpdate) {
       return NextResponse.json(
         {
           ok: false,
-          message: "El nomenclador de cliente a actualizar no existe"
+          message: "El nomenclador de representante a actualizar no existe"
         },
         {
           status: 404
@@ -165,13 +163,10 @@ export async function PUT(request: Request) {
       );
     }
 
-    const updatedNomenclator = await ClientNomenclator.findByIdAndUpdate(
-      clientNomenclator._id,
+    const updatedNomenclator = await RepresentativeNomenclator.findByIdAndUpdate(
+      representativeNomenclator._id,
       {
-        address: clientNomenclator.address,
-        email: clientNomenclator.email,
-        name: clientNomenclator.name,
-        phoneNumber: clientNomenclator.phoneNumber
+        ...representativeNomenclator
       },
       { new: true }
     );
@@ -221,7 +216,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
     await connectDB();
-    const nomenclatorToDelete = await ClientNomenclator.findById(params.get("id"));
+    const nomenclatorToDelete = await RepresentativeNomenclator.findById(params.get("id"));
 
     if (!nomenclatorToDelete) {
       return NextResponse.json(
@@ -235,7 +230,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const deletedNomenclator = await ClientNomenclator.findByIdAndDelete(params.get("id"));
+    const deletedNomenclator = await RepresentativeNomenclator.findByIdAndDelete(params.get("id"));
 
     return new NextResponse(
       JSON.stringify({
