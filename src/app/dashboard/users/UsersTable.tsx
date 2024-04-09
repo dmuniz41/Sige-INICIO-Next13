@@ -205,28 +205,28 @@ const UserTable: React.FC = () => {
 
   const columns: ColumnsType<IUser> = [
     {
-      title: "Usuario",
+      title: <span className="font-bold">Usuario</span>,
       dataIndex: "user",
       key: "user",
       width: "10%",
       ...getColumnSearchProps("user")
     },
     {
-      title: "Nombre",
+      title: <span className="font-bold">Nombre</span>,
       dataIndex: "userName",
       key: "userName",
       width: "10%",
       ...getColumnSearchProps("lastName")
     },
     {
-      title: "Apellidos",
+      title: <span className="font-bold">Apellidos</span>,
       dataIndex: "lastName",
       key: "lastName",
       width: "10%",
       ...getColumnSearchProps("lastName")
     },
     {
-      title: "Privilegios",
+      title: <span className="font-bold">Privilegios</span>,
       dataIndex: "privileges",
       key: "privileges",
       width: "60%",
@@ -240,7 +240,7 @@ const UserTable: React.FC = () => {
       )
     },
     {
-      title: "Area",
+      title: <span className="font-bold">Area</span>,
       dataIndex: "area",
       key: "area",
       width: "15%",
@@ -254,7 +254,7 @@ const UserTable: React.FC = () => {
       )
     },
     {
-      title: "Acciones",
+      title: <span className="font-bold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, { ...record }) => (

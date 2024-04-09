@@ -278,6 +278,14 @@ const items: MenuProps["items"] = [
           </Link>
         ),
         key: "clients"
+      },
+      {
+        label: (
+          <Link prefetch href="/dashboard/nomenclators/representatives">
+            Representantes
+          </Link>
+        ),
+        key: "representatives"
       }
     ]
   }

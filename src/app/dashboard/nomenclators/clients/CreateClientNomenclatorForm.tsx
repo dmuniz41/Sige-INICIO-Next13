@@ -2,18 +2,17 @@
 
 import { IClientNomenclator } from "@/models/nomenclators/client";
 import { Form, Input, Modal } from "antd";
+
 interface CollectionCreateFormProps {
   open: boolean;
   onCreate: (values: IClientNomenclator) => void;
   onCancel: () => void;
-  defaultValues: IClientNomenclator;
 }
 
-export const EditClientNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
+export const CreateClientNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
   open,
   onCreate,
-  onCancel,
-  defaultValues
+  onCancel
 }) => {
   const [form] = Form.useForm();
   return (
@@ -52,35 +51,12 @@ export const EditClientNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
                 });
             }}
           >
-            Editar
+            Crear
           </button>
         </div>
       ]}
     >
-      <Form
-        form={form}
-        layout="vertical"
-        name="editClientNomenclator"
-        size="middle"
-        fields={[
-          {
-            name: "name",
-            value: defaultValues?.name
-          },
-          {
-            name: "address",
-            value: defaultValues?.address
-          },
-          {
-            name: "email",
-            value: defaultValues?.email
-          },
-          {
-            name: "phoneNumber",
-            value: defaultValues?.phoneNumber
-          }
-        ]}
-      >
+      <Form form={form} layout="vertical" name="createClientNomenclator" size="middle">
         <Form.Item
           name="name"
           label="Nombre del Cliente"

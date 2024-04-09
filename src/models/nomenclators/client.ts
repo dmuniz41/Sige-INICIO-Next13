@@ -1,4 +1,3 @@
-import { message } from "antd";
 import { Schema, model, models, Model } from "mongoose";
 
 export interface IClientNomenclator {

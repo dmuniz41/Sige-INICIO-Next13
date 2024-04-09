@@ -72,7 +72,7 @@ export const startUpdateClientNomenclator = ({ ...clientNomenclator }): any => {
   };
 };
 
-// * ELIMINA UN NOMENCLADOR DE CLIENTE POR SU ID* //
+// * ELIMINA UN NOMENCLADOR DE CLIENTE POR SU ID * //
 export const startDeleteClientNomenclator = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {

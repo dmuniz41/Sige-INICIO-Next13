@@ -1,7 +1,6 @@
 "use client";
 import { Button, Input, Space, Table, Tag, Tooltip } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -16,28 +15,27 @@ import {
   startDeleteClientNomenclator,
   startUpdateClientNomenclator
 } from "@/actions/nomenclators/client";
+import { CreateClientNomenclatorForm } from "./CreateClientNomenclatorForm";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
+import { EditClientNomenclatorForm } from "./EditClientNomenclatorForm";
 import { EditSvg } from "@/app/global/EditSvg";
 import { IClientNomenclator } from "@/models/nomenclators/client";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { RootState, useAppSelector } from "@/store/store";
-import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
-import { CreateClientNomenclatorForm } from "./CreateClientNomenclaorForm";
-import { EditClientNomenclatorForm } from "./EditClientNomenclatorForm";
 
 type DataIndex = keyof IClientNomenclator;
 
 const ClientNomenclatorsTable: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const [searchText, setSearchText] = useState("");
   const [selectedNomenclator, setSelectedNomenclator] = useState<IClientNomenclator>();
-  const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
+  const dispatch = useAppDispatch();
+  const searchInput = useRef<InputRef>(null);
 
   const canList = sessionData?.user.role.includes("Listar Nomencladores");
   const canCreate = sessionData?.user.role.includes("Crear Nomenclador");
@@ -67,32 +65,34 @@ const ClientNomenclatorsTable: React.FC = () => {
     dispatch(startAddClientNomenclator(values));
     setCreateNewModal(false);
   };
+
   const onEdit = (values: IClientNomenclator) => {
     dispatch(startUpdateClientNomenclator({ ...values, _id: selectedNomenclator?._id }));
     setEditModal(false);
   };
 
   const handleDelete = (id: string) => {
-      Swal.fire({
-        title: "Eliminar Nomenclador",
-        text: "El nomenclador seleccionado se borrará de forma permanente",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Eliminar"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          dispatch(startDeleteClientNomenclator(id));
-        }
-      });
+    Swal.fire({
+      title: "Eliminar Nomenclador",
+      text: "El nomenclador seleccionado se borrará de forma permanente",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Eliminar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(startDeleteClientNomenclator(id));
+      }
+    });
   };
 
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText("");
   };
+
   const handleEdit = (record: IClientNomenclator) => {
     setSelectedNomenclator(record);
     setEditModal(true);
@@ -177,7 +177,7 @@ const ClientNomenclatorsTable: React.FC = () => {
 
   const columns: ColumnsType<IClientNomenclator> = [
     {
-      title: "Nombre",
+      title: <span className="font-bold">Nombre</span>,
       dataIndex: "name",
       key: "name",
       width: "30%",
@@ -185,19 +185,19 @@ const ClientNomenclatorsTable: React.FC = () => {
       ...getColumnSearchProps("name")
     },
     {
-      title: "Número de Cliente",
+      title: <span className="font-bold">Número de Cliente</span>,
       dataIndex: "idNumber",
       key: "idNumber",
       width: "10%"
     },
     {
-      title: "Teléfono",
+      title: <span className="font-bold">Teléfono</span>,
       dataIndex: "phoneNumber",
       key: "phoneNumber",
       width: "10%"
     },
     {
-      title: "Dirección",
+      title: <span className="font-bold">Dirección</span>,
       dataIndex: "address",
       key: "address",
       width: "20%",
@@ -205,7 +205,7 @@ const ClientNomenclatorsTable: React.FC = () => {
       ...getColumnSearchProps("address")
     },
     {
-      title: "Correo",
+      title: <span className="font-bold">Correo</span>,
       dataIndex: "email",
       key: "email",
       width: "20%",
@@ -213,7 +213,7 @@ const ClientNomenclatorsTable: React.FC = () => {
       ...getColumnSearchProps("email")
     },
     {
-      title: "Acciones",
+      title: <span className="font-bold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, { ...record }) => (
@@ -280,7 +280,6 @@ const ClientNomenclatorsTable: React.FC = () => {
         pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
         className="shadow-md"
       />
-
       <CreateClientNomenclatorForm
         open={createNewModal}
         onCancel={() => setCreateNewModal(false)}

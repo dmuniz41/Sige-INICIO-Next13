@@ -14,6 +14,8 @@ import { startAddOffer } from "@/actions/offer";
 import { useAppDispatch } from "@/hooks/hooks";
 import { IRepresentationCoefficients, IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
+import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
+import { representativeNomenclatorsStartLoading } from '@/actions/nomenclators/representative';
 
 export const CreateOfferForm = () => {
   const dispatch = useAppDispatch();
@@ -23,6 +25,7 @@ export const CreateOfferForm = () => {
 
   useEffect(() => {
     dispatch(startLoadServiceFeeAuxiliary());
+    dispatch(representativeNomenclatorsStartLoading());
   }, [dispatch]);
 
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
@@ -34,6 +37,9 @@ export const CreateOfferForm = () => {
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
     (state: RootState) => state?.serviceFee
   );
+  // const { representativeNomenclators }: { representativeNomenclators: IRepresentativeNomenclator } =
+  // useAppSelector((state: RootState) => state?.nomenclator);
+  // console.log("🚀 ~ CreateOfferForm ~ representativeNomenclators:", representativeNomenclators)
 
   serviceFeeAuxiliary?.payMethod?.map((payMethod) => representatives.push(payMethod));
 
