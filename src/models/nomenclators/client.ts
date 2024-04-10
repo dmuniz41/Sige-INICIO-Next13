@@ -4,10 +4,11 @@ export interface IClientNomenclator {
   _id: string;
   address?: string;
   email?: string;
-  idNumber: number
+  idNumber: number;
   key: string;
   name: string;
   phoneNumber?: number;
+  contactPerson?: string
 }
 
 const ClientNomenclatorSchema = new Schema<IClientNomenclator, Model<IClientNomenclator>>({
@@ -18,7 +19,7 @@ const ClientNomenclatorSchema = new Schema<IClientNomenclator, Model<IClientNome
   name: {
     type: String,
     required: true,
-    unique: true,
+    unique: true
   },
   address: {
     type: String,
@@ -36,6 +37,11 @@ const ClientNomenclatorSchema = new Schema<IClientNomenclator, Model<IClientNome
     type: Number,
     required: true,
     unique: true
+  },
+  contactPerson: {
+    type: String,
+    required: true,
+    unique: false
   }
 });
 

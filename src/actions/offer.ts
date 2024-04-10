@@ -18,7 +18,8 @@ export const startAddOffer = ({ ...offer }: any) => {
           projectName: offer?.projectName,
           projectId: offer?.projectId,
           value: offer?.value,
-          representationCoef: offer?.representationCoef
+          representativeName: offer?.representativeName,
+          representationPercentage: offer?.representationPercentage
         },
         { headers: { accessToken: token } }
       )
@@ -88,7 +89,6 @@ export const startDeleteOffer = (id: string): any => {
 
 // * CARGA TODAS LAS OFERTAS CORRESPONDIENTES A UN PROYECTO POR SI ID * //
 export const offersStartLoading = (projectId: string) => {
-  console.log("🚀 ~ offersStartLoading ~ projectId:", projectId);
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
@@ -97,7 +97,6 @@ export const offersStartLoading = (projectId: string) => {
       })
       .then((resp) => {
         let { listOfOffers } = resp.data;
-        console.log("🚀 ~ .then ~ listOfOffers:", listOfOffers);
         dispatch(offersLoaded(listOfOffers));
       })
       .catch((error: AxiosError) => {

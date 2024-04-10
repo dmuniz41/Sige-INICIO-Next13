@@ -191,6 +191,14 @@ const ClientNomenclatorsTable: React.FC = () => {
       width: "10%"
     },
     {
+      title: <span className="font-bold">Contacto</span>,
+      dataIndex: "contactPerson",
+      key: "contactPerson",
+      width: "15%",
+      sorter: (a: any, b: any) => a.contactPerson.localeCompare(b.contactPerson),
+      ...getColumnSearchProps("contactPerson")
+    },
+    {
       title: <span className="font-bold">Teléfono</span>,
       dataIndex: "phoneNumber",
       key: "phoneNumber",

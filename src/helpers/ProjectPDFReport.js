@@ -1,9 +1,8 @@
-/* eslint-disable jsx-a11y/alt-text */
 import { Page, Text, Document, StyleSheet, View, Font, Image, Svg } from "@react-pdf/renderer";
-import font from "../assets/arial-font/arialceb.ttf";
-import logo from "../assets/inicioLogoPNG.jpg";
+// import font from "../assets/arial-font/arialceb.ttf";
+// import logo from "../assets/inicioLogoPNG.jpg";
 
-Font.register({ family: "Arial", src: font, fontStyle: "normal", fontWeight: "bold" });
+// Font.register({ family: "Arial", src: font, fontStyle: "normal", fontWeight: "bold" });
 
 const BORDER_COLOR = "#000";
 const BORDER_STYLE = "solid";
@@ -54,7 +53,7 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   labelText: {
-    fontFamily: "Arial",
+    // fontFamily: "Arial",
     fontWeight: "bold",
     fontSize: "8pt"
   },
@@ -88,8 +87,8 @@ const styles = StyleSheet.create({
   tableCellHeader: {
     margin: 2,
     fontSize: "8pt",
-    fontWeight: "bold",
-    fontFamily: "Arial"
+    fontWeight: "bold"
+    // fontFamily: "Arial"
   },
   tableCell: {
     margin: 2,
@@ -196,14 +195,19 @@ const CustomTablePDF = (props) => {
 
 export default function ProjectPDFReport(props) {
   const { data = {} } = props;
-  console.log("🚀 ~ ProjectPDFReport ~ data:", data);
   return (
     <Document>
       <Page wrap orientation="portrait" size={"LETTER"} style={styles.body}>
         <View
           style={{ display: "flex", width: "100%", justifyContent: "center", flexDirection: "row" }}
         >
-          <Text style={{ fontFamily: "Arial", fontSize: "14pt", fontWeight: "bold" }}>
+          <Text
+            style={{
+              //  fontFamily: "Arial",
+              fontSize: "14pt",
+              fontWeight: "bold"
+            }}
+          >
             SOLICITUD DE SERVICIO
           </Text>
         </View>
@@ -278,7 +282,7 @@ export default function ProjectPDFReport(props) {
               >
                 <Text
                   style={{
-                    fontFamily: "Arial",
+                    // fontFamily: "Arial",
                     fontSize: "8pt",
                     fontWeight: "bold",
                     textAlign: "center"
@@ -324,7 +328,7 @@ export default function ProjectPDFReport(props) {
                   style={{
                     fontSize: "8pt",
                     fontWeight: "bold",
-                    fontFamily: "Arial",
+                    // fontFamily: "Arial",
                     textAlign: "center"
                   }}
                 >
@@ -371,7 +375,7 @@ export default function ProjectPDFReport(props) {
               <Text
                 style={{
                   margin: 2,
-                  fontFamily: "Arial",
+                  // fontFamily: "Arial",
                   fontWeight: "bold",
                   textAlign: "center",
                   fontSize: "8pt"
@@ -392,7 +396,7 @@ export default function ProjectPDFReport(props) {
             >
               <Text
                 style={{
-                  fontFamily: "Arial",
+                  // fontFamily: "Arial",
                   fontWeight: "bold",
                   fontSize: "8pt",
                   textAlign: "center",
@@ -443,7 +447,7 @@ export default function ProjectPDFReport(props) {
               display: "flex",
               flexDirection: "row",
               flex: 1,
-              alignItems:'flex-end'
+              alignItems: "flex-end"
             }}
           >
             {/* TERMINADO */}

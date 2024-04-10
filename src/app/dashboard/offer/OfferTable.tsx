@@ -76,10 +76,10 @@ const OfferTable: React.FC = () => {
     },
     {
       title: <span className="font-bold">Representación</span>,
-      dataIndex: "representationCoef",
-      key: "representationCoef",
+      dataIndex: "representativeName",
+      key: "representativeName",
       width: "10%",
-      render: (representationCoef) => <span>{representationCoef?.representative}</span>
+      render: (representativeName) => <span>{representativeName}</span>
     },
     {
       title: <span className="font-bold">Acciones</span>,

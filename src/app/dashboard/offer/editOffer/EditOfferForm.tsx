@@ -1,29 +1,31 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { EditSvg } from "@/app/global/EditSvg";
-import { useAppDispatch } from "@/hooks/hooks";
 import { deleteItem, editItem, selectedItem, startAddOffer } from "@/actions/offer";
-import { IOffer, IOfferItem } from "@/models/offer";
-import { RootState, useAppSelector } from "@/store/store";
-import { Item } from "../[id]/Item";
-import { Form, Select, SelectProps, Tooltip } from "antd";
-import { PlusSvg } from "@/app/global/PlusSvg";
-import { IProject } from "@/models/project";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
-import { IRepresentationCoefficients, IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
+import { EditSvg } from "@/app/global/EditSvg";
+import { Form, Select, SelectProps, Tooltip } from "antd";
+import { IOffer, IOfferItem } from "@/models/offer";
+import { IProject } from "@/models/project";
+import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
+import { Item } from "../[id]/Item";
+import { PlusSvg } from "@/app/global/PlusSvg";
+import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/representative";
+import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
+import { useAppDispatch } from "@/hooks/hooks";
 
 export const EditOfferForm = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [form] = Form.useForm();
-  const representatives: IRepresentationCoefficients[] | undefined = [];
+  const [representativePercentage, setRepresentativePercentage] = useState(0);
 
   useEffect(() => {
     dispatch(startLoadServiceFeeAuxiliary());
+    dispatch(representativeNomenclatorsStartLoading());
   }, [dispatch]);
 
   const {
@@ -38,18 +40,34 @@ export const EditOfferForm = () => {
     (state: RootState) => state?.project
   );
 
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
-    (state: RootState) => state?.serviceFee
+  const [representativeName, setRepresentativeName] = useState(selectedOffer?.representativeName);
+
+  const {
+    representativeNomenclators
+  }: { representativeNomenclators: IRepresentativeNomenclator[] } = useAppSelector(
+    (state: RootState) => state?.nomenclator
   );
 
-  serviceFeeAuxiliary?.payMethod?.map((payMethod) => representatives.push(payMethod));
+  const representativeOptions: SelectProps["options"] = representativeNomenclators?.map(
+    (representative) => {
+      return {
+        label: `${representative.name}`,
+        value: `${representative.name}`
+      };
+    }
+  );
 
-  const representativeOptions: SelectProps["options"] = representatives.map((payMethod) => {
-    return {
-      label: `${payMethod.representative}`,
-      value: `${payMethod.representative}`
-    };
-  });
+  const totalValue = useMemo(
+    () =>
+      (
+        selectedOffer?.itemsList?.reduce((totalValue, item) => item.value + totalValue, 0) *
+        (representativePercentage / 100 + 1)
+      ).toLocaleString("DE", {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2
+      }),
+    [selectedOffer, representativePercentage]
+  );
 
   if (isItemUpdated) {
     selectedOffer.itemsList.forEach((item, index, itemList) => {
@@ -89,8 +107,8 @@ export const EditOfferForm = () => {
         size="middle"
         fields={[
           {
-            name: "representationCoef",
-            value: selectedOffer?.representationCoef?.representative
+            name: "representativeName",
+            value: representativeName
           }
         ]}
       >
@@ -100,12 +118,21 @@ export const EditOfferForm = () => {
             <Form.Item
               className="mb-3 w-[30%]"
               label={<span className="font-bold text-md">Representación</span>}
-              name="representationCoef"
+              name="representativeName"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
               <Select
                 allowClear
                 options={representativeOptions}
+                onSelect={() => {
+                  setRepresentativePercentage(
+                    representativeNomenclators.find(
+                      (representative) =>
+                        representative.name === form.getFieldValue("representativeName")
+                    )?.percentage ?? 1
+                  );
+                  setRepresentativeName(form.getFieldValue("representativeName"));
+                }}
                 showSearch
                 optionFilterProp="children"
                 filterOption={(input: any, option: any) =>
@@ -148,6 +175,12 @@ export const EditOfferForm = () => {
             <PlusSvg width={20} height={20} />
             Añadir Item
           </button>
+          <article className="flex items-center justify-end h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-lg">
+            <div className="flex w-[90%] justify-end font-bold">
+              <h2>VALOR TOTAL : </h2>
+            </div>
+            <div className="flex px-4">$ {totalValue}</div>
+          </article>
         </section>
         <Form.Item>
           <button
@@ -160,9 +193,10 @@ export const EditOfferForm = () => {
                   dispatch(
                     startAddOffer({
                       ...selectedOffer,
-                      representationCoef: serviceFeeAuxiliary?.payMethod?.find(
-                        (value) => value.representative === values.representationCoef
-                      ),
+                      representativeName: values?.representativeName,
+                      representationPercentage: representativeNomenclators.find(
+                        (representative) => representative.name === values.representativeName
+                      )?.percentage,
                       projectName: `${selectedProject.projectName} v${offers.length + 1}`,
                       value: selectedOffer?.itemsList
                         ?.map((item) => item.value)

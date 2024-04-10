@@ -49,12 +49,9 @@ export async function POST(request: Request) {
     let newKey = generateRandomString(26);
 
     const newClientNomenclator = new ClientNomenclator({
-      address: clientNomenclator.address,
-      email: clientNomenclator.email,
+      ...clientNomenclator,
       idNumber: newId,
-      key: newKey,
-      name: clientNomenclator.name,
-      phoneNumber: clientNomenclator.phoneNumber
+      key: newKey
     });
 
     await newClientNomenclator.save();
@@ -74,7 +71,7 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ POST ~ error:", error)
+      console.log("🚀 ~ POST ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
@@ -120,7 +117,7 @@ export async function GET(request: Request) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ GET ~ error:", error)
+      console.log("🚀 ~ GET ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
@@ -168,10 +165,7 @@ export async function PUT(request: Request) {
     const updatedNomenclator = await ClientNomenclator.findByIdAndUpdate(
       clientNomenclator._id,
       {
-        address: clientNomenclator.address,
-        email: clientNomenclator.email,
-        name: clientNomenclator.name,
-        phoneNumber: clientNomenclator.phoneNumber
+        ...clientNomenclator
       },
       { new: true }
     );
@@ -191,7 +185,7 @@ export async function PUT(request: Request) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ PUT ~ error:", error)
+      console.log("🚀 ~ PUT ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
@@ -252,7 +246,7 @@ export async function DELETE(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ DELETE ~ error:", error)
+      console.log("🚀 ~ DELETE ~ error:", error);
       return NextResponse.json(
         {
           ok: false,

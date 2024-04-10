@@ -25,6 +25,7 @@ export const MaterialsListModal: React.FC<CollectionCreateFormProps> = ({
   onCancel,
   values
 }) => {
+  
   let PDFReportData: { description: string; amount: number; unitMeasure: string }[] =
     values?.values!;
   const fields = [

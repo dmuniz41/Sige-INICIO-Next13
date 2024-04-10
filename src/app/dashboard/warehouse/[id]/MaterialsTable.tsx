@@ -636,7 +636,7 @@ const MaterialsTable: React.FC = () => {
               fileName={`Reporte de almacén (${currentDate})`}
             >
               {({ blob, url, loading, error }) =>
-                loading ? (
+                !canList ? (
                   <button
                     disabled
                     className={`opacity-20 pt-2 pl-2" flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}

@@ -14,7 +14,6 @@ import { loadSelectedCostSheet } from "@/actions/costSheet";
 import { ICostSheetSubitem } from "../../../../models/costSheet";
 import { PDFSvg } from "@/app/global/PDFSvg";
 import { EditSvg } from "@/app/global/EditSvg";
-import CostSheetPDFReport from "@/helpers/CostSheetPDFReport";
 
 const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
   ssr: false,
@@ -93,13 +92,13 @@ export const CostSheetView = () => {
                 Editar
               </button>
             </Tooltip>
-            <PDFDownloadLink document={<CostSheetPDFReport fields={fields} data={PDFReportData} title={`Ficha de costo`} />} fileName={`Ficha de costo ${selectedCostSheet.taskName}`}>
+            {/* <PDFDownloadLink document={<CostSheetPDFReport fields={fields} data={PDFReportData} title={`Ficha de costo`} />} fileName={`Ficha de costo ${selectedCostSheet.taskName}`}>
               {({ blob, url, loading, error }) => (
                 <button disabled={loading} className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 rounded-full w-[2.5rem] h-[2.5rem] flex justify-center items-center">
                   <PDFSvg />
                 </button>
               )}
-            </PDFDownloadLink>
+            </PDFDownloadLink> */}
           </div>
         </div>
       </article>
