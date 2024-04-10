@@ -44,11 +44,7 @@ export const startUpdateClientNomenclator = ({ ...clientNomenclator }): any => {
       .put(
         `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/client`,
         {
-          _id: clientNomenclator._id,
-          address: clientNomenclator.address,
-          email: clientNomenclator.email,
-          name: clientNomenclator.name,
-          phoneNumber: clientNomenclator.phoneNumber
+          ...clientNomenclator
         },
         { headers: { accessToken: token } }
       )
@@ -104,7 +100,7 @@ export const clientNomenclatorsStartLoading = () => {
       .get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/client`, {
         headers: { accessToken: token }
       })
-      .then((resp) => {
+      .then((resp: any) => {
         let { listOfClientNomenclators } = resp.data;
         dispatch(clientNomenclatorsLoaded(listOfClientNomenclators));
       })

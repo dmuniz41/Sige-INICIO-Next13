@@ -59,7 +59,14 @@ export const CreateClientNomenclatorForm: React.FC<CollectionCreateFormProps> = 
       <Form form={form} layout="vertical" name="createClientNomenclator" size="middle">
         <Form.Item
           name="name"
-          label="Nombre del Cliente"
+          label="Nombre"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="contactPerson"
+          label="Persona de contacto"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
           <Input />
