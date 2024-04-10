@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
     }
 
     let newKey = generateRandomString(26);
-    const finalValue = offer.value! * offer?.representationCoef?.coefficientValue;
+    const finalValue = offer.value! * (offer?.representationPercentage / 100 + 1);
 
     const newOffer = new Offer({
       ...offer,
@@ -310,7 +310,7 @@ export async function DELETE(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ DELETE ~ error:", error)
+      console.log("🚀 ~ DELETE ~ error:", error);
       return NextResponse.json(
         {
           ok: false,

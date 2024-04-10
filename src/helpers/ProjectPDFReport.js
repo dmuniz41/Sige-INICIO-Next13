@@ -195,7 +195,6 @@ const CustomTablePDF = (props) => {
 
 export default function ProjectPDFReport(props) {
   const { data = {} } = props;
-  console.log("🚀 ~ ProjectPDFReport ~ data:", data);
   return (
     <Document>
       <Page wrap orientation="portrait" size={"LETTER"} style={styles.body}>

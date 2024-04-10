@@ -90,7 +90,7 @@ export const nomenclatorsStartLoading = () => {
         dispatch(nomenclatorsLoaded(listOfNomenclators));
       })
       .catch((error: AxiosError) => {
-        let { message }: any = error.response?.data;
+        let { message }: any = error?.response?.data;
         console.log("🚀 ~ return ~ message:", message);
         Swal.fire("Error", message, "error");
       });

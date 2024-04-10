@@ -128,7 +128,7 @@ export const OfferView = () => {
         </h1>
         <div className="flex gap-1 mb-2">
           <h2 className="font-bold">Representación: </h2>
-          <span>{selectedOffer?.representationCoef?.representative}</span>
+          <span>{selectedOffer?.representativeName}</span>
         </div>
         {selectedOffer?.itemsList?.map((item, index) => (
           <div key={item.description}>

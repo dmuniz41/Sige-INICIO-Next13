@@ -6,22 +6,20 @@ import React, { useEffect } from "react";
 import { changeProjectStatus, clearOffer } from "@/actions/project";
 import { IOffer } from "@/models/offer";
 import { IProject } from "@/models/project";
+import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 import { Item } from "../[id]/Item";
 import { NoDataSvg } from "@/app/global/NoDataSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
+import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/representative";
 import { RootState, useAppSelector } from "@/store/store";
 import { startAddOffer } from "@/actions/offer";
-import { useAppDispatch } from "@/hooks/hooks";
-import { IRepresentationCoefficients } from "@/models/serviceFeeAuxiliary";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
-import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
-import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/representative";
+import { useAppDispatch } from "@/hooks/hooks";
 
 export const CreateOfferForm = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const router = useRouter();
-  const representatives: IRepresentationCoefficients[] | undefined = [];
 
   useEffect(() => {
     dispatch(startLoadServiceFeeAuxiliary());
@@ -178,6 +176,7 @@ export const CreateOfferForm = () => {
                     itemsList: selectedOffer?.itemsList,
                     projectName: selectedProject?.projectName,
                     projectId: selectedProject?._id,
+                    representativeName: values?.representative,
                     representationPercentage: representativeNomenclators.find(
                       (representative) => representative.name === values.representative
                     )?.percentage,
