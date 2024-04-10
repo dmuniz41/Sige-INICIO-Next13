@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { deleteItem, editItem, selectedItem, startAddOffer } from "@/actions/offer";
@@ -21,6 +21,7 @@ export const EditOfferForm = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [form] = Form.useForm();
+  const [representativePercentage, setRepresentativePercentage] = useState(0);
 
   useEffect(() => {
     dispatch(startLoadServiceFeeAuxiliary());
@@ -39,6 +40,8 @@ export const EditOfferForm = () => {
     (state: RootState) => state?.project
   );
 
+  const [representativeName, setRepresentativeName] = useState(selectedOffer?.representativeName);
+
   const {
     representativeNomenclators
   }: { representativeNomenclators: IRepresentativeNomenclator[] } = useAppSelector(
@@ -52,6 +55,18 @@ export const EditOfferForm = () => {
         value: `${representative.name}`
       };
     }
+  );
+
+  const totalValue = useMemo(
+    () =>
+      (
+        selectedOffer?.itemsList?.reduce((totalValue, item) => item.value + totalValue, 0) *
+        (representativePercentage / 100 + 1)
+      ).toLocaleString("DE", {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2
+      }),
+    [selectedOffer, representativePercentage]
   );
 
   if (isItemUpdated) {
@@ -93,7 +108,7 @@ export const EditOfferForm = () => {
         fields={[
           {
             name: "representativeName",
-            value: selectedOffer?.representativeName
+            value: representativeName
           }
         ]}
       >
@@ -109,6 +124,15 @@ export const EditOfferForm = () => {
               <Select
                 allowClear
                 options={representativeOptions}
+                onSelect={() => {
+                  setRepresentativePercentage(
+                    representativeNomenclators.find(
+                      (representative) =>
+                        representative.name === form.getFieldValue("representativeName")
+                    )?.percentage ?? 1
+                  );
+                  setRepresentativeName(form.getFieldValue("representativeName"));
+                }}
                 showSearch
                 optionFilterProp="children"
                 filterOption={(input: any, option: any) =>
@@ -151,6 +175,12 @@ export const EditOfferForm = () => {
             <PlusSvg width={20} height={20} />
             Añadir Item
           </button>
+          <article className="flex items-center justify-end h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-lg">
+            <div className="flex w-[90%] justify-end font-bold">
+              <h2>VALOR TOTAL : </h2>
+            </div>
+            <div className="flex px-4">$ {totalValue}</div>
+          </article>
         </section>
         <Form.Item>
           <button

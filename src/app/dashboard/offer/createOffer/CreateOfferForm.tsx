@@ -144,7 +144,6 @@ export const CreateOfferForm = () => {
           <div className="w-full border-b p-2 font-bold border-border_light flex justify-center items-center bg-background_light">
             <span>DESCRIPCIÓN DEL PROYECTO</span>
           </div>
-          <div className="flex flex-1"></div>
           <ul className=" flex flex-col">
             {selectedProject?.itemsList?.map((item, index) => (
               <li
