@@ -1,8 +1,7 @@
-/* eslint-disable jsx-a11y/alt-text */
 import { Page, Text, Document, StyleSheet, View, Font } from "@react-pdf/renderer";
-import font from "../assets/arial-font/arialceb.ttf";
+// import font from "../assets/arial-font/arialceb.ttf";
 
-Font.register({ family: "Arial", src: font, fontStyle: "normal", fontWeight: "bold" });
+// Font.register({ family: "Arial", src: font, fontStyle: "normal", fontWeight: "bold" });
 
 const BORDER_COLOR = "#000";
 const BORDER_STYLE = "solid";
@@ -30,7 +29,7 @@ const styles = StyleSheet.create({
     fontSize: "10pt",
     fontWeight: "bold",
     marginRight: "2px",
-    fontFamily: "Arial"
+    // fontFamily: "Arial"
   },
   clientInfoElementText: {
     fontSize: "10pt"
@@ -72,7 +71,7 @@ const styles = StyleSheet.create({
     margin: 2,
     fontSize: "10pt",
     fontWeight: "bold",
-    fontFamily: "Arial"
+    // fontFamily: "Arial"
   },
   tableCell: {
     margin: 2,
@@ -194,7 +193,7 @@ export default function OfferPDFReport(props) {
                   <Text
                     style={{
                       fontSize: 10,
-                      fontFamily: "Arial",
+                      // fontFamily: "Arial",
                       fontWeight: "bold",
                       textAlign: "center"
                     }}
@@ -217,7 +216,13 @@ export default function OfferPDFReport(props) {
                         padding: 2
                       }}
                     >
-                      <Text style={{ fontFamily: "Arial", fontWeight: "bold", fontSize: "10pt" }}>
+                      <Text
+                        style={{
+                          //  fontFamily: "Arial",
+                          fontWeight: "bold",
+                          fontSize: "10pt"
+                        }}
+                      >
                         {item.description}
                       </Text>
                     </View>
@@ -233,7 +238,7 @@ export default function OfferPDFReport(props) {
                     >
                       <Text
                         style={{
-                          fontFamily: "Arial",
+                          // fontFamily: "Arial",
                           fontWeight: "bold",
                           textAlign: "center",
                           fontSize: 10
@@ -267,7 +272,13 @@ export default function OfferPDFReport(props) {
                 padding: 2
               }}
             >
-              <Text style={{ fontFamily: "Arial", fontWeight: "bold", fontSize: "10pt" }}>
+              <Text
+                style={{
+                  //  fontFamily: "Arial",
+                  fontWeight: "bold",
+                  fontSize: "10pt"
+                }}
+              >
                 VALOR TOTAL
               </Text>
             </View>
@@ -284,7 +295,7 @@ export default function OfferPDFReport(props) {
             >
               <Text
                 style={{
-                  fontFamily: "Arial",
+                  // fontFamily: "Arial",
                   fontWeight: "bold",
                   textAlign: "center",
                   fontSize: 10

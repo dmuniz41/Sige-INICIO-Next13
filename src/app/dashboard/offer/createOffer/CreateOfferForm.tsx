@@ -1,7 +1,7 @@
 "use client";
 import { Form, Select, SelectProps } from "antd";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import { changeProjectStatus, clearOffer } from "@/actions/project";
 import { IOffer } from "@/models/offer";
@@ -12,10 +12,10 @@ import { PlusSvg } from "@/app/global/PlusSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { startAddOffer } from "@/actions/offer";
 import { useAppDispatch } from "@/hooks/hooks";
-import { IRepresentationCoefficients, IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
+import { IRepresentationCoefficients } from "@/models/serviceFeeAuxiliary";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
-import { representativeNomenclatorsStartLoading } from '@/actions/nomenclators/representative';
+import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/representative";
 
 export const CreateOfferForm = () => {
   const dispatch = useAppDispatch();
@@ -34,21 +34,21 @@ export const CreateOfferForm = () => {
   const { selectedOffer }: { selectedOffer: IOffer } = useAppSelector(
     (state: RootState) => state?.offer
   );
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
-    (state: RootState) => state?.serviceFee
+
+  const {
+    representativeNomenclators
+  }: { representativeNomenclators: IRepresentativeNomenclator[] } = useAppSelector(
+    (state: RootState) => state?.nomenclator
   );
-  // const { representativeNomenclators }: { representativeNomenclators: IRepresentativeNomenclator } =
-  // useAppSelector((state: RootState) => state?.nomenclator);
-  // console.log("🚀 ~ CreateOfferForm ~ representativeNomenclators:", representativeNomenclators)
 
-  serviceFeeAuxiliary?.payMethod?.map((payMethod) => representatives.push(payMethod));
-
-  const representativeOptions: SelectProps["options"] = representatives.map((payMethod) => {
-    return {
-      label: `${payMethod.representative}`,
-      value: `${payMethod.representative}`
-    };
-  });
+  const representativeOptions: SelectProps["options"] = representativeNomenclators?.map(
+    (representative) => {
+      return {
+        label: `${representative.name}`,
+        value: `${representative.name}`
+      };
+    }
+  );
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
@@ -73,7 +73,7 @@ export const CreateOfferForm = () => {
       <Form.Item
         className="mb-3 w-[30%]"
         label={<span className="font-bold text-md">Representación</span>}
-        name="representationCoef"
+        name="representative"
         rules={[{ required: true, message: "Campo requerido" }]}
       >
         <Select
@@ -146,9 +146,7 @@ export const CreateOfferForm = () => {
           <div className="w-full border-b p-2 font-bold border-border_light flex justify-center items-center bg-background_light">
             <span>DESCRIPCIÓN DEL PROYECTO</span>
           </div>
-          <div className="flex flex-1">
-
-          </div>
+          <div className="flex flex-1"></div>
           <ul className=" flex flex-col">
             {selectedProject?.itemsList?.map((item, index) => (
               <li
@@ -180,9 +178,9 @@ export const CreateOfferForm = () => {
                     itemsList: selectedOffer?.itemsList,
                     projectName: selectedProject?.projectName,
                     projectId: selectedProject?._id,
-                    representationCoef: serviceFeeAuxiliary?.payMethod?.find(
-                      (value) => value.representative === values.representationCoef
-                    ),
+                    representationPercentage: representativeNomenclators.find(
+                      (representative) => representative.name === values.representative
+                    )?.percentage,
                     value: selectedOffer?.itemsList
                       ?.map((item) => item.value)
                       .reduce((total, current) => total + current, 0)

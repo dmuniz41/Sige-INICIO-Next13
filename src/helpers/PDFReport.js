@@ -1,8 +1,7 @@
-/* eslint-disable jsx-a11y/alt-text */
 import { Page, Text, Document, StyleSheet, View, Font } from "@react-pdf/renderer";
-import font from "../assets/arial-font/arialceb.ttf";
+// import source from "@/assets/arial-font/arialceb.ttf";
 
-Font.register({ family: "Arial", src: font, fontStyle: "normal", fontWeight: "bold" });
+// Font.register({ family: "Arial", src: source, fontStyle: "normal", fontWeight: "bold" });
 
 const BORDER_COLOR = "#000";
 const BORDER_STYLE = "solid";
@@ -57,7 +56,7 @@ const styles = StyleSheet.create({
     margin: 2,
     fontSize: "10pt",
     fontWeight: "bold",
-    fontFamily: "Arial"
+    // fontFamily: "Arial"
   },
   tableCell: {
     margin: 2,

@@ -24,7 +24,7 @@ import dynamic from "next/dynamic";
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
   {
-    ssr: true,
+    ssr: false,
     loading: () => <p>Loading...</p>
   }
 );
@@ -97,20 +97,11 @@ export const OfferView = () => {
               }
               fileName={`Oferta ${selectedOffer?.projectName}  `}
             >
-              {({ blob, url, loading, error }) =>
-                loading ? (
-                  <button
-                    disabled
-                    className={`opacity-20 pt-2 pl-2" flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-                  >
-                    <PDFSvg />
-                  </button>
-                ) : (
-                  <button className={"toolbar-auxiliary-icon"}>
-                    <PDFSvg />
-                  </button>
-                )
-              }
+              {({ blob, url, loading, error }) => (
+                <button className={"toolbar-auxiliary-icon"}>
+                  <PDFSvg />
+                </button>
+              )}
             </PDFDownloadLink>
             {!selectedOffer?.isFinalOffer ? (
               <Tooltip placement="top" title={"Marcar como final"} arrow={{ pointAtCenter: true }}>

@@ -23,7 +23,8 @@ export interface IOffer {
   projectName: string;
   value?: number;
   isFinalOffer?: boolean;
-  representationCoef: IRepresentationCoefficients;
+  representationPercentage: number;
+  representativeName: string;
 }
 
 const OfferSchema = new Schema<IOffer, Model<IOffer>>({
@@ -67,6 +68,10 @@ const OfferSchema = new Schema<IOffer, Model<IOffer>>({
     type: String,
     required: true
   },
+  representativeName: {
+    type: String,
+    required: true
+  },
   value: {
     type: Number,
     required: false
@@ -75,11 +80,8 @@ const OfferSchema = new Schema<IOffer, Model<IOffer>>({
     type: Boolean,
     required: false
   },
-  representationCoef: {
-    type: {
-      representative: String,
-      coefficientValue: Number
-    },
+  representationPercentage: {
+    type: Number,
     required: true
   }
 });

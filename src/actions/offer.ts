@@ -13,12 +13,7 @@ export const startAddOffer = ({ ...offer }: any) => {
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/offer`,
         {
-          itemsList: offer?.itemsList,
-          name: offer?.name,
-          projectName: offer?.projectName,
-          projectId: offer?.projectId,
-          value: offer?.value,
-          representationCoef: offer?.representationCoef
+          ...offer
         },
         { headers: { accessToken: token } }
       )

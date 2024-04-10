@@ -24,7 +24,6 @@ import { SeeSvg } from "@/app/global/SeeSvg";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { INomenclator } from "@/models/nomenclator";
 import { PDFSvg } from "@/app/global/PDFSvg";
-import CostSheetTablePDFReport from "@/helpers/CostSheetTablePDFReport";
 
 const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
   ssr: false,
@@ -324,13 +323,13 @@ const CostSheetsTable: React.FC = () => {
           </button>
         </div>
         <div className="flex">
-          <PDFDownloadLink document={<CostSheetTablePDFReport fields={fields} data={PDFReportData} title={`Fichas de costo`} />} fileName={`Listado de fichas de costo `}>
+          {/* <PDFDownloadLink document={<CostSheetTablePDFReport fields={fields} data={PDFReportData} title={`Fichas de costo`} />} fileName={`Listado de fichas de costo `}>
             {({ blob, url, loading, error }) => (
               <button disabled={loading} className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 rounded-full w-[2.5rem] h-[2.5rem] flex justify-center items-center">
                 <PDFSvg />
               </button>
             )}
-          </PDFDownloadLink>
+          </PDFDownloadLink> */}
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canDelete}
