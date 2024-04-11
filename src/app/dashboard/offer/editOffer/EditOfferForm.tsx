@@ -145,7 +145,7 @@ export const EditOfferForm = () => {
               />
             </Form.Item>
             {selectedOffer?.itemsList?.map((item, index) => (
-              <div className="flex gap-4 items-center" key={item.description}>
+              <article className="flex gap-2 items-center" key={index}>
                 <Item number={index + 1} item={item} />
                 <div className="flex gap-1">
                   <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
@@ -162,7 +162,7 @@ export const EditOfferForm = () => {
                     </button>
                   </Tooltip>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
           <button

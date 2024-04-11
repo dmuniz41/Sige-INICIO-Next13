@@ -16,7 +16,9 @@ const initialState: {
     itemsList: [],
     key: "",
     projectName: "",
-    projectId: ""
+    projectId: "",
+    representationPercentage: 1,
+    representativeName: ""
   },
   selectedItem: {
     _id: "",
