@@ -137,16 +137,12 @@ export const setFinalOfferId = (project: IProject, offer: IOffer) => {
           Swal.fire("Error", "Error establecer la oferta como final", "error");
         });
     }
-    console.log(
-      "🚀 ~ return ~ offer?.representationCoef?.representative:",
-      offer?.representationCoef?.representative
-    );
     dispatch(
       startUpdateProject({
         ...project,
         totalValue: offer?.value,
         finalOfferId: offer?._id,
-        payMethod: offer?.representationCoef?.representative
+        payMethod: offer?.representativeName
       })
     );
     dispatch(loadSelectedProject(project._id));

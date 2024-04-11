@@ -150,27 +150,20 @@ const ProjectTable: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-    if (id) {
-      Swal.fire({
-        title: "Eliminar Proyecto",
-        text: "El proyecto seleccionado se borrará de forma permanente",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Eliminar"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          dispatch(startDeleteProject(id));
-        }
-      });
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un proyecto a eliminar"
-      });
-    }
+    Swal.fire({
+      title: "Eliminar Proyecto",
+      text: "El proyecto seleccionado se borrará de forma permanente",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Eliminar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(startDeleteProject(id));
+      }
+    });
   };
 
   const handleReset = (clearFilters: () => void) => {

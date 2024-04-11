@@ -1,10 +1,10 @@
 "use client";
-import { Form, Select, SelectProps } from "antd";
+import { Form, Select, SelectProps, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { changeProjectStatus, clearOffer } from "@/actions/project";
-import { IOffer } from "@/models/offer";
+import { IOffer, IOfferItem } from "@/models/offer";
 import { IProject } from "@/models/project";
 import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 import { Item } from "../[id]/Item";
@@ -12,14 +12,19 @@ import { NoDataSvg } from "@/app/global/NoDataSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/representative";
 import { RootState, useAppSelector } from "@/store/store";
-import { startAddOffer } from "@/actions/offer";
+import { deleteItem, editItem, selectedItem, startAddOffer } from "@/actions/offer";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
+import { EditSvg } from "@/app/global/EditSvg";
+import { DeleteSvg } from "@/app/global/DeleteSvg";
+import Swal from "sweetalert2";
 
 export const CreateOfferForm = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const router = useRouter();
+  const [representativePercentage, setRepresentativePercentage] = useState(0);
+  const [representativeName, setRepresentativeName] = useState("");
 
   useEffect(() => {
     dispatch(startLoadServiceFeeAuxiliary());
@@ -29,8 +34,24 @@ export const CreateOfferForm = () => {
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
     (state: RootState) => state?.project
   );
-  const { selectedOffer }: { selectedOffer: IOffer } = useAppSelector(
-    (state: RootState) => state?.offer
+
+  const {
+    selectedOffer,
+    itemUpdated,
+    isItemUpdated
+  }: { selectedOffer: IOffer; offers: IOffer[]; itemUpdated: IOfferItem; isItemUpdated: boolean } =
+    useAppSelector((state: RootState) => state?.offer);
+
+  const totalValue = useMemo(
+    () =>
+      (
+        selectedOffer?.itemsList?.reduce((totalValue, item) => item.value + totalValue, 0) *
+        (representativePercentage / 100 + 1)
+      ).toLocaleString("DE", {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2
+      }),
+    [selectedOffer, representativePercentage]
   );
 
   const {
@@ -42,14 +63,46 @@ export const CreateOfferForm = () => {
   const representativeOptions: SelectProps["options"] = representativeNomenclators?.map(
     (representative) => {
       return {
-        label: `${representative.name}`,
-        value: `${representative.name}`
+        label: `${representative?.name}`,
+        value: `${representative?.name}`
       };
     }
   );
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
+  };
+
+  if (isItemUpdated) {
+    selectedOffer.itemsList.forEach((item, index, itemList) => {
+      if (item.description === itemUpdated.description) {
+        itemList[index] = itemUpdated;
+        dispatch(editItem({ _id: "", description: "", activities: [], value: 0 }, false));
+      }
+      return itemList[index];
+    });
+  }
+
+  const handleEdit = (item: IOfferItem) => {
+    dispatch(selectedItem(item));
+    router.push("/dashboard/offer/editOffer/editItem");
+  };
+
+  const handleDeleteItem = (item: IOfferItem) => {
+    Swal.fire({
+      title: "Eliminar Item",
+      text: "Desea eliminar el item seleccionado",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Eliminar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteItem(item));
+      }
+    });
   };
 
   return (
@@ -78,6 +131,12 @@ export const CreateOfferForm = () => {
           allowClear
           options={representativeOptions}
           showSearch
+          onSelect={(value) => {
+            setRepresentativePercentage(
+              representativeNomenclators.find((representative) => representative.name === value)
+                ?.percentage ?? 1
+            );
+          }}
           optionFilterProp="children"
           filterOption={(input: any, option: any) =>
             (option?.label ?? "").toLowerCase().includes(input)
@@ -110,8 +169,23 @@ export const CreateOfferForm = () => {
           <div className="flex flex-col w-[80%] gap-2">
             <article className="grid grow gap-2">
               {selectedOffer?.itemsList?.map((item, index) => (
-                <article key={index}>
+                <article className="flex gap-2 items-center" key={index}>
                   <Item number={index + 1} item={item} />
+                  <div className="flex gap-1">
+                    <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+                      <button onClick={() => handleEdit(item)} className="table-see-action-btn">
+                        <EditSvg width={20} height={20} />
+                      </button>
+                    </Tooltip>
+                    <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
+                      <button
+                        onClick={() => handleDeleteItem(item)}
+                        className="table-delete-action-btn"
+                      >
+                        <DeleteSvg width={20} height={20} />
+                      </button>
+                    </Tooltip>
+                  </div>
                 </article>
               ))}
             </article>
@@ -128,15 +202,9 @@ export const CreateOfferForm = () => {
               className={`${selectedOffer?.itemsList?.length == 0 && "hidden"} flex items-center h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-md`}
             >
               <div className="flex w-[90%] justify-end  font-bold">
-                <h2>VALOR: </h2>
+                <h2>VALOR TOTAL: </h2>
               </div>
-              <div className="flex px-2 ">
-                ${" "}
-                {selectedOffer?.itemsList
-                  ?.map((item) => item.value)
-                  ?.reduce((total, current) => total + current, 0)
-                  ?.toLocaleString("DE")}
-              </div>
+              <div className="flex px-4">$ {totalValue}</div>
             </article>
           </div>
         )}
