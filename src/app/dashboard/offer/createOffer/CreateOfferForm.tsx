@@ -1,7 +1,7 @@
 "use client";
 import { Form, Select, SelectProps } from "antd";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { changeProjectStatus, clearOffer } from "@/actions/project";
 import { IOffer } from "@/models/offer";
@@ -20,6 +20,8 @@ export const CreateOfferForm = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const router = useRouter();
+  const [representativePercentage, setRepresentativePercentage] = useState(0);
+  const [representativeName, setRepresentativeName] = useState("");
 
   useEffect(() => {
     dispatch(startLoadServiceFeeAuxiliary());
@@ -33,6 +35,18 @@ export const CreateOfferForm = () => {
     (state: RootState) => state?.offer
   );
 
+  const totalValue = useMemo(
+    () =>
+      (
+        selectedOffer?.itemsList?.reduce((totalValue, item) => item.value + totalValue, 0) *
+        (representativePercentage / 100 + 1)
+      ).toLocaleString("DE", {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2
+      }),
+    [selectedOffer, representativePercentage]
+  );
+
   const {
     representativeNomenclators
   }: { representativeNomenclators: IRepresentativeNomenclator[] } = useAppSelector(
@@ -42,8 +56,8 @@ export const CreateOfferForm = () => {
   const representativeOptions: SelectProps["options"] = representativeNomenclators?.map(
     (representative) => {
       return {
-        label: `${representative.name}`,
-        value: `${representative.name}`
+        label: `${representative?.name}`,
+        value: `${representative?.name}`
       };
     }
   );
@@ -78,6 +92,12 @@ export const CreateOfferForm = () => {
           allowClear
           options={representativeOptions}
           showSearch
+          onSelect={(value) => {
+            setRepresentativePercentage(
+              representativeNomenclators.find((representative) => representative.name === value)
+                ?.percentage ?? 1
+            );
+          }}
           optionFilterProp="children"
           filterOption={(input: any, option: any) =>
             (option?.label ?? "").toLowerCase().includes(input)
@@ -128,15 +148,9 @@ export const CreateOfferForm = () => {
               className={`${selectedOffer?.itemsList?.length == 0 && "hidden"} flex items-center h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-md`}
             >
               <div className="flex w-[90%] justify-end  font-bold">
-                <h2>VALOR: </h2>
+                <h2>VALOR TOTAL: </h2>
               </div>
-              <div className="flex px-2 ">
-                ${" "}
-                {selectedOffer?.itemsList
-                  ?.map((item) => item.value)
-                  ?.reduce((total, current) => total + current, 0)
-                  ?.toLocaleString("DE")}
-              </div>
+              <div className="flex px-4">{totalValue}</div>
             </article>
           </div>
         )}

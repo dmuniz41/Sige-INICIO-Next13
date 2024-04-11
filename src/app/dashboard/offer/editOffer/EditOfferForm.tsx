@@ -124,11 +124,10 @@ export const EditOfferForm = () => {
               <Select
                 allowClear
                 options={representativeOptions}
-                onSelect={() => {
+                onSelect={(value) => {
                   setRepresentativePercentage(
                     representativeNomenclators.find(
-                      (representative) =>
-                        representative.name === form.getFieldValue("representativeName")
+                      (representative) => representative.name === value
                     )?.percentage ?? 1
                   );
                   setRepresentativeName(form.getFieldValue("representativeName"));
