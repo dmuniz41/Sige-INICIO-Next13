@@ -1,33 +1,22 @@
 "use client";
 
-import { RootState, useAppSelector } from "@/store/store";
 import { Divider } from "antd";
+import { RootState, useAppSelector } from "@/store/store";
 import { useAppDispatch } from "@/hooks/hooks";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
 import React, { useEffect, useMemo } from "react";
 
 import { EditSvg } from "@/app/global/EditSvg";
 import { IServiceFee, IServiceFeeSubItem } from "@/models/serviceFees";
 import { loadSelectedServiceFee } from "@/actions/serviceFee";
-import { PDFSvg } from "@/app/global/PDFSvg";
 import { ServiceFeeViewTableSection } from "./ServiceFeeViewSection";
-import CostSheetPDFReport from "@/helpers/CostSheetPDFReport";
-
-const PDFDownloadLink = dynamic(
-  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
-  {
-    ssr: false,
-    loading: () => <p>Loading...</p>
-  }
-);
 
 export const ServiceFeeView = () => {
-  const url = usePathname().split("/");
-  const selectedServiceFeeId: string = url[3];
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const url = usePathname().split("/");
+  const selectedServiceFeeId: string = url[3];
 
   useEffect(() => {
     dispatch(loadSelectedServiceFee(selectedServiceFeeId));
@@ -56,40 +45,6 @@ export const ServiceFeeView = () => {
   let transportationExpenses: IServiceFeeSubItem[] = selectedServiceFee.transportationExpenses;
   let hiredPersonalExpenses: IServiceFeeSubItem[] = selectedServiceFee.hiredPersonalExpenses;
 
-  // const fields: any = [
-  //   {
-  //     title: "Descripción",
-  //     custom: true,
-  //     component: (item: any) => `${item.description}`,
-  //     width: "40",
-  //   },
-  //   {
-  //     title: "U/M",
-  //     custom: true,
-  //     component: (item: any) => `${item.unitMeasure}`,
-  //     width: "20",
-  //   },
-  //   {
-  //     title: "Cant",
-  //     custom: true,
-  //     component: (item: any) => `${item.amount}`,
-  //     width: "10",
-  //   },
-  //   {
-  //     title: "Precio CUP",
-  //     custom: true,
-  //     component: (item: any) => `$ ${item.price.toFixed(2)}`,
-  //     width: "15",
-  //   },
-  //   {
-  //     title: "Importe CUP",
-  //     custom: true,
-  //     component: (item: any) => `$ ${item.value.toFixed(2)}`,
-  //     width: "15",
-  //   },
-  // ];
-  // const PDFReportData: ICostSheet = selectedCostSheet;
-
   const handleEdit = (): void => {
     router.push(`/dashboard/serviceFees/editServiceFee`);
   };
@@ -97,19 +52,12 @@ export const ServiceFeeView = () => {
   return (
     <>
       <article>
-        <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
+        <div className="flex h-16 w-full  rounded-md shadow-md mb-4 items-center pl-4 gap-4">
           <div className="flex gap-2">
             <button className="toolbar-primary-icon-btn" onClick={handleEdit}>
               <EditSvg />
               Editar
             </button>
-            {/* <PDFDownloadLink document={<CostSheetPDFReport fields={fields} data={PDFReportData} title={`Ficha de costo`} />} fileName={`Ficha de costo ${selectedCostSheet.taskName}`}>
-              {({ blob, url, loading, error }) => (
-                <button disabled={loading} className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 rounded-full w-[2.5rem] h-[2.5rem] flex justify-center items-center">
-                  <PDFSvg />
-                </button>
-              )}
-            </PDFDownloadLink> */}
           </div>
         </div>
       </article>
@@ -170,12 +118,12 @@ export const ServiceFeeView = () => {
             subtotal={selectedServiceFee?.administrativeExpensesSubtotal}
           />
           <ServiceFeeViewTableSection
-            name="Gastos de Transporte"
+            name="Gastos Transporte"
             data={transportationExpenses}
             subtotal={selectedServiceFee?.transportationExpensesSubtotal}
           />
           <ServiceFeeViewTableSection
-            name="Gastos de Personal Contratado"
+            name="Gastos Personal Contratado"
             data={hiredPersonalExpenses}
             subtotal={selectedServiceFee?.hiredPersonalExpensesSubtotal}
           />
@@ -202,12 +150,12 @@ export const ServiceFeeView = () => {
           value={selectedServiceFee?.commercialMarginValue}
         />
 
-        <article className="flex ml-[210px] justify-end pl-4 pr-4 items-center h-[39px] flex-grow bg-white-100 border-solid border-[1px] border-border_light rounded-lg">
+        <article className="flex justify-end pl-4 pr-4 items-center h-[39px] flex-grow bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
           <div className="flex w-[150px] font-bold pl-2">MN</div>
           <Divider type="vertical" />
           <div className="flex w-[150px] font-bold pl-2">USD</div>
         </article>
-        <article className="flex ml-[210px] pl-4 pr-4 items-center h-[39px] flex-grow bg-white-100 border-solid border-[1px] border-border_light rounded-lg">
+        <article className="flex pl-4 pr-4 items-center h-[39px] flex-grow bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
           <div className="flex flex-grow justify-end pr-4 font-bold">
             <h2>PRECIO DE VENTA </h2>
           </div>
@@ -247,8 +195,8 @@ export const ServiceFeeView = () => {
 export const ServiceFeeViewSeccion = (props: any) => {
   const { name, value } = props;
   return (
-    <article className="flex ml-[210px] pl-4 items-center h-[39px] flex-grow bg-white-100 border-solid border-[1px] border-border_light rounded-lg">
-      <div className="flex w-[90%] justify-end pr-4 font-bold">
+    <article className="flex items-center pr-4 h-[39px] bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
+      <div className="flex flex-1 justify-end pr-4 font-bold">
         <h2>{name}: </h2>
       </div>
       <div className="flex w-[150px] pl-2">
@@ -261,7 +209,7 @@ export const ServiceFeeViewSeccion = (props: any) => {
 export const SalePriceViewSeccion = (props: any) => {
   const { name, value } = props;
   return (
-    <article className="flex ml-[210px] pl-4 pr-4 items-center h-[39px] flex-grow bg-white-100 border-solid border-[1px] border-border_light rounded-lg">
+    <article className="flex pl-4 pr-4 items-center h-[39px] flex-grow bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
       <div className="flex flex-grow justify-end pr-4 font-bold">
         <h2>{name}: </h2>
       </div>

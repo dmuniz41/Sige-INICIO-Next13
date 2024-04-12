@@ -13,21 +13,31 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
+export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel
+}) => {
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
+    (state: RootState) => state?.serviceFee
+  );
 
   const [currentPrice, setCurrentPrice] = useState(0);
-  const [currentTransportationExpense, setCurrentTransportationExpense] = useState<{ name: string; value: number }>({
+  const [currentTransportationExpense, setCurrentTransportationExpense] = useState<{
+    name: string;
+    value: number;
+  }>({
     name: "",
-    value: 0,
+    value: 0
   });
 
-  const listOfTransportationExpenses: SelectProps["options"] = serviceFeeAuxiliary?.transportationExpensesCoefficients?.map((transportationExpense) => {
-    return {
-      label: `${transportationExpense.name}`,
-      value: `${transportationExpense.name}`,
-    };
-  });
+  const listOfTransportationExpenses: SelectProps["options"] =
+    serviceFeeAuxiliary?.transportationExpensesCoefficients?.map((transportationExpense) => {
+      return {
+        label: `${transportationExpense.name}`,
+        value: `${transportationExpense.name}`
+      };
+    });
 
   const [form] = Form.useForm();
   return (
@@ -64,7 +74,7 @@ export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps>
                     amount: values.amount,
                     unitMeasure: "$/h",
                     price: currentTransportationExpense.value,
-                    value: currentPrice,
+                    value: currentPrice
                   });
                   form.resetFields();
                   setCurrentTransportationExpense({ name: "", value: 0 });
@@ -77,34 +87,52 @@ export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps>
           >
             Crear
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form form={form} layout="horizontal" name="addTransportationExpenses" size="middle">
-        <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="description"
+          label="Descripción"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select
             allowClear
             options={listOfTransportationExpenses}
             style={{ width: "100%" }}
             onSelect={(value: any) => {
-              const selectedTransportationExpense = serviceFeeAuxiliary?.transportationExpensesCoefficients?.find((transportationExpense) => transportationExpense.name === value);
+              const selectedTransportationExpense =
+                serviceFeeAuxiliary?.transportationExpensesCoefficients?.find(
+                  (transportationExpense) => transportationExpense.name === value
+                );
               setCurrentTransportationExpense(selectedTransportationExpense!);
               form.setFieldsValue({
                 unitMeasure: "$/m2",
-                price: form.getFieldValue("amount") * selectedTransportationExpense?.value!,
+                price: form.getFieldValue("amount") * selectedTransportationExpense?.value!
               });
               setCurrentPrice(form.getFieldValue("amount") * selectedTransportationExpense?.value!);
             }}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+            filterOption={(input: any, option: any) =>
+              (option?.label ?? "").toLowerCase().includes(input)
+            }
+            filterSort={(optionA: any, optionB: any) =>
+              (optionA?.label ?? "")
+                .toLowerCase()
+                .localeCompare((optionB?.label ?? "").toLowerCase())
+            }
           />
         </Form.Item>
-        <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="amount"
+          label="Cantidad"
+          className="w-[10rem]"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <InputNumber
-            onChange={(value: any) => {
-              setCurrentPrice(value * currentTransportationExpense?.value!);
+            onChange={(value: number | null) => {
+              setCurrentPrice(value! * currentTransportationExpense?.value!);
             }}
           />
         </Form.Item>

@@ -13,20 +13,30 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
+export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel
+}) => {
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
+    (state: RootState) => state?.serviceFee
+  );
   const [currentPrice, setCurrentPrice] = useState(0);
-  const [currentEquipmentDepreciation, setCurrentEquipmentDepreciation] = useState<{ name: string; value: number }>({
+  const [currentEquipmentDepreciation, setCurrentEquipmentDepreciation] = useState<{
+    name: string;
+    value: number;
+  }>({
     name: "",
-    value: 0,
+    value: 0
   });
 
-  const listOfEquipmentDepreciation: SelectProps["options"] = serviceFeeAuxiliary?.equipmentDepreciationCoefficients?.map((equipmentDepreciation) => {
-    return {
-      label: `${equipmentDepreciation.name}`,
-      value: `${equipmentDepreciation.name}`,
-    };
-  });
+  const listOfEquipmentDepreciation: SelectProps["options"] =
+    serviceFeeAuxiliary?.equipmentDepreciationCoefficients?.map((equipmentDepreciation) => {
+      return {
+        label: `${equipmentDepreciation.name}`,
+        value: `${equipmentDepreciation.name}`
+      };
+    });
 
   const [form] = Form.useForm();
   return (
@@ -47,11 +57,7 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
       cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button
-            key="2"
-            className="modal-btn-danger"
-            onClick={onCancel}
-          >
+          <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
           <button
@@ -66,7 +72,7 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
                     amount: values.amount,
                     unitMeasure: "$/h",
                     price: currentEquipmentDepreciation.value,
-                    value: currentPrice,
+                    value: currentPrice
                   });
                   form.resetFields();
                   setCurrentEquipmentDepreciation({ name: "", value: 0 });
@@ -79,34 +85,52 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
           >
             Añadir
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form form={form} layout="horizontal" name="addEquipmentDepreciation" size="middle">
-        <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="description"
+          label="Descripción"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select
             allowClear
             options={listOfEquipmentDepreciation}
             style={{ width: "100%" }}
             onSelect={(value: any) => {
-              const selectedEquipmentDepreciation = serviceFeeAuxiliary?.equipmentDepreciationCoefficients?.find((equipmentDepreciation) => equipmentDepreciation.name === value);
+              const selectedEquipmentDepreciation =
+                serviceFeeAuxiliary?.equipmentDepreciationCoefficients?.find(
+                  (equipmentDepreciation) => equipmentDepreciation.name === value
+                );
               setCurrentEquipmentDepreciation(selectedEquipmentDepreciation!);
               form.setFieldsValue({
                 unitMeasure: "$/m2",
-                price: form.getFieldValue("amount") * selectedEquipmentDepreciation?.value!,
+                price: form.getFieldValue("amount") * selectedEquipmentDepreciation?.value!
               });
               setCurrentPrice(form.getFieldValue("amount") * selectedEquipmentDepreciation?.value!);
             }}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+            filterOption={(input: any, option: any) =>
+              (option?.label ?? "").toLowerCase().includes(input)
+            }
+            filterSort={(optionA: any, optionB: any) =>
+              (optionA?.label ?? "")
+                .toLowerCase()
+                .localeCompare((optionB?.label ?? "").toLowerCase())
+            }
           />
         </Form.Item>
-        <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="amount"
+          label="Cantidad"
+          className="w-[10rem]"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <InputNumber
-            onChange={() => {
-              setCurrentPrice(form.getFieldValue("amount") * currentEquipmentDepreciation?.value);
+            onChange={(value: number | null) => {
+              setCurrentPrice(value! * currentEquipmentDepreciation?.value);
             }}
           />
         </Form.Item>

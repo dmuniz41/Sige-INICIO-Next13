@@ -13,21 +13,31 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
+export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel
+}) => {
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
+    (state: RootState) => state?.serviceFee
+  );
   const [currentPrice, setCurrentPrice] = useState(0);
-  const [currentAdministrativeExpense, setCurrentAdministrativeExpense] = useState<{ name: string; value: number }>({
+  const [currentAdministrativeExpense, setCurrentAdministrativeExpense] = useState<{
+    name: string;
+    value: number;
+  }>({
     name: "",
-    value: 0,
+    value: 0
   });
 
-  const listOfAdministrativeExpenses: SelectProps["options"] = serviceFeeAuxiliary?.administrativeExpensesCoefficients?.map((administrativeExpense) => {
-    return {
-      label: `${administrativeExpense.name}`,
-      value: `${administrativeExpense.name}`,
-    };
-  });
-  
+  const listOfAdministrativeExpenses: SelectProps["options"] =
+    serviceFeeAuxiliary?.administrativeExpensesCoefficients?.map((administrativeExpense) => {
+      return {
+        label: `${administrativeExpense.name}`,
+        value: `${administrativeExpense.name}`
+      };
+    });
+
   const [form] = Form.useForm();
   return (
     <Modal
@@ -48,11 +58,7 @@ export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps>
       cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button
-            key="2"
-            className="modal-btn-danger"
-            onClick={onCancel}
-          >
+          <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
           <button
@@ -67,7 +73,7 @@ export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps>
                     amount: values.amount,
                     unitMeasure: "$/h",
                     price: currentAdministrativeExpense.value,
-                    value: currentPrice,
+                    value: currentPrice
                   });
                   form.resetFields();
                   setCurrentAdministrativeExpense({ name: "", value: 0 });
@@ -80,35 +86,53 @@ export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps>
           >
             Añadir
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form form={form} layout="horizontal" name="addAdministrativeExpense" size="middle">
-        <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="description"
+          label="Descripción"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select
             autoFocus
             allowClear
             style={{ width: "100%" }}
             options={listOfAdministrativeExpenses}
             onSelect={(value: any) => {
-              const selectedAdministrativeExpense = serviceFeeAuxiliary?.administrativeExpensesCoefficients?.find((administrativeExpense) => administrativeExpense.name === value);
+              const selectedAdministrativeExpense =
+                serviceFeeAuxiliary?.administrativeExpensesCoefficients?.find(
+                  (administrativeExpense) => administrativeExpense.name === value
+                );
               setCurrentAdministrativeExpense(selectedAdministrativeExpense!);
               form.setFieldsValue({
                 unitMeasure: "$/h",
-                price: form.getFieldValue("amount") * selectedAdministrativeExpense?.value!,
+                price: form.getFieldValue("amount") * selectedAdministrativeExpense?.value!
               });
               setCurrentPrice(form.getFieldValue("amount") * selectedAdministrativeExpense?.value!);
             }}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+            filterOption={(input: any, option: any) =>
+              (option?.label ?? "").toLowerCase().includes(input)
+            }
+            filterSort={(optionA: any, optionB: any) =>
+              (optionA?.label ?? "")
+                .toLowerCase()
+                .localeCompare((optionB?.label ?? "").toLowerCase())
+            }
           />
         </Form.Item>
-        <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="amount"
+          label="Cantidad"
+          className="w-[10rem]"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <InputNumber
-            onChange={() => {
-              setCurrentPrice(form.getFieldValue("amount") * currentAdministrativeExpense.value);
+            onChange={(value: number | null) => {
+              setCurrentPrice(value! * currentAdministrativeExpense.value);
             }}
           />
         </Form.Item>

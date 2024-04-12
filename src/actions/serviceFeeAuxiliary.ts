@@ -3,27 +3,14 @@ import { types } from "@/types/types";
 import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
 
+// * ACTUALIZA LOS AUXILIARES DE LAS TARIFAS DE SERVICIO // 
 export const startUpdateServiceFeeAuxiliary = ({ ...serviceFeeAuxiliary }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
       .put(
         `${process.env.NEXT_PUBLIC_API_URL}/serviceFeeAuxiliary`,
-        {
-          _id: serviceFeeAuxiliary._id,
-          key: serviceFeeAuxiliary.key,
-          calculationCoefficient: serviceFeeAuxiliary.calculationCoefficient,
-          mermaCoefficient: serviceFeeAuxiliary.mermaCoefficient,
-          currencyChange: serviceFeeAuxiliary.currencyChange,
-          officialCurrencyChangeCoefficient: serviceFeeAuxiliary.officialCurrencyChangeCoefficient,
-          informalCurrencyChange: serviceFeeAuxiliary.informalCurrencyChange,
-          currency: serviceFeeAuxiliary.currency,
-          payMethod: serviceFeeAuxiliary.payMethod,
-          administrativeExpensesCoefficients: serviceFeeAuxiliary.administrativeExpensesCoefficients,
-          equipmentDepreciationCoefficients: serviceFeeAuxiliary.equipmentDepreciationCoefficients,
-          equipmentMaintenanceCoefficients: serviceFeeAuxiliary.equipmentMaintenanceCoefficients,
-          transportationExpensesCoefficients: serviceFeeAuxiliary.transportationExpensesCoefficients,
-        },
+        { ...serviceFeeAuxiliary },
         { headers: { accessToken: token } }
       )
       .then((serviceFeeAuxiliary) => {
@@ -31,7 +18,7 @@ export const startUpdateServiceFeeAuxiliary = ({ ...serviceFeeAuxiliary }): any 
         dispatch(startLoadServiceFeeAuxiliary());
         Toast.fire({
           icon: "success",
-          title: `Auxiliares actualizados`,
+          title: `Auxiliares actualizados`
         });
       })
       .catch((error: AxiosError) => {
@@ -42,11 +29,14 @@ export const startUpdateServiceFeeAuxiliary = ({ ...serviceFeeAuxiliary }): any 
   };
 };
 
+// * CARGA LOS AUXILIARES DE LAS TARIFAS DE SERVICIO //
 export const startLoadServiceFeeAuxiliary = (): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/serviceFeeAuxiliary`, { headers: { accessToken: token } })
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/serviceFeeAuxiliary`, {
+        headers: { accessToken: token }
+      })
       .then((resp) => {
         let { BDserviceFeeAuxiliary } = resp.data;
         dispatch(serviceFeeAuxiliaryLoaded(BDserviceFeeAuxiliary));
@@ -62,23 +52,11 @@ export const startLoadServiceFeeAuxiliary = (): any => {
 const updateServiceFeeAuxiliary = ({ ...serviceFeeAuxiliary }) => ({
   type: types.updateServiceFeeAuxiliary,
   payload: {
-    _id: serviceFeeAuxiliary._id,
-    calculationCoefficient: serviceFeeAuxiliary.calculationCoefficient,
-    mermaCoefficient: serviceFeeAuxiliary.mermaCoefficient,
-    currencyChange: serviceFeeAuxiliary.currencyChange,
-    officialCurrencyChangeCoefficient: serviceFeeAuxiliary.officialCurrencyChangeCoefficient,
-    informalCurrencyChange: serviceFeeAuxiliary.informalCurrencyChange,
-    currency: serviceFeeAuxiliary.currency,
-    payMethod: serviceFeeAuxiliary.payMethod,
-    administrativeExpensesCoefficients: serviceFeeAuxiliary.administrativeExpensesCoefficients,
-    equipmentDepreciationCoefficients: serviceFeeAuxiliary.equipmentDepreciationCoefficients,
-    equipmentMaintenanceCoefficients: serviceFeeAuxiliary.equipmentMaintenanceCoefficients,
-    transportationExpensesCoefficient: serviceFeeAuxiliary.transportationExpensesCoefficient,
-    salesAndDistributionExpensesCoefficients: serviceFeeAuxiliary.salesAndDistributionExpensesCoefficients,
-  },
+    serviceFeeAuxiliary
+  }
 });
 
 const serviceFeeAuxiliaryLoaded = (serviceFeeAuxiliary: any) => ({
   type: types.serviceFeeAuxiliaryLoaded,
-  payload: serviceFeeAuxiliary,
+  payload: serviceFeeAuxiliary
 });
