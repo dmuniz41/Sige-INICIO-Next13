@@ -48,10 +48,6 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
           value: defaultValues?.mermaCoefficient,
         },
         {
-          name: "payMethod",
-          value: defaultValues?.payMethod,
-        },
-        {
           name: "administrativeExpenses",
           value: defaultValues?.administrativeExpensesCoefficients,
         },
@@ -115,32 +111,6 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
             <InputNumber />
           </Form.Item>
         </div>
-        {/* Listado de métodos de pago */}
-        <label className="font-bold text-md">Métodos de pago: </label>
-        <Form.List name="payMethod">
-          {(fields, { add, remove }) => (
-            <div className="flex flex-col w-full mt-5">
-              {fields.map(({ key, name, ...restField }) => (
-                <div key={key} className="w-full">
-                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[70%]" {...restField} name={[name, "representative"]} rules={[{ required: true, message: "Campo requerido" }]}>
-                      <Input placeholder="Descripción" className="w-full" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, "coefficientValue"]} rules={[{ required: true, message: "Campo requerido" }]}>
-                      <InputNumber placeholder="Coeficiente" />
-                    </Form.Item>
-                    <MinusCircleOutlined className="mb-auto" onClick={() => remove(name)} />
-                  </div>
-                </div>
-              ))}
-              <Form.Item className="mb-2">
-                <Button className="flex flex-row justify-center items-center" type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                  Añadir método de pago
-                </Button>
-              </Form.Item>
-            </div>
-          )}
-        </Form.List>
         {/* Listado de Coeficientes de Gastos Administrativos */}
         <label className="font-bold text-md">Coeficientes de Gastos Administrativos: </label>
         <Form.List name="administrativeExpenses">

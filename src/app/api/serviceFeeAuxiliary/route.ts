@@ -3,10 +3,10 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { IServiceFeeAuxiliary } from "../../../models/serviceFeeAuxiliary";
-import { verifyJWT } from "@/libs/jwt";
-import ServiceFeeAuxiliary from "@/models/serviceFeeAuxiliary";
-import ServiceFee from "@/models/serviceFees";
 import { updateServiceFeeWhenAuxiliary } from "@/helpers/updateServiceFeeWhenAuxiliary";
+import { verifyJWT } from "@/libs/jwt";
+import ServiceFee from "@/models/serviceFees";
+import ServiceFeeAuxiliary from "@/models/serviceFeeAuxiliary";
 
 export async function POST(request: Request) {
   const { ...serviceFeeAuxiliary }: IServiceFeeAuxiliary = await request.json();
@@ -17,10 +17,10 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
@@ -33,10 +33,10 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Ya existe una hoja de auxiliares",
+          message: "Ya existe una hoja de auxiliares"
         },
         {
-          status: 409,
+          status: 409
         }
       );
     }
@@ -44,18 +44,8 @@ export async function POST(request: Request) {
     const newKey = generateRandomString(26);
 
     const newServiceFeeAuxiliary = new ServiceFeeAuxiliary({
-      key: newKey,
-      calculationCoefficient: serviceFeeAuxiliary.calculationCoefficient,
-      mermaCoefficient: serviceFeeAuxiliary.mermaCoefficient,
-      currencyChange: serviceFeeAuxiliary.currencyChange,
-      officialCurrencyChangeCoefficient: serviceFeeAuxiliary.officialCurrencyChangeCoefficient,
-      informalCurrencyChange: serviceFeeAuxiliary.informalCurrencyChange,
-      currency: serviceFeeAuxiliary.currency,
-      payMethod: serviceFeeAuxiliary.payMethod,
-      administrativeExpensesCoefficients: serviceFeeAuxiliary.administrativeExpensesCoefficients,
-      equipmentDepreciationCoefficients: serviceFeeAuxiliary.equipmentDepreciationCoefficients,
-      equipmentMaintenanceCoefficients: serviceFeeAuxiliary.equipmentMaintenanceCoefficients,
-      transportationExpensesCoefficients: serviceFeeAuxiliary.transportationExpensesCoefficients,
+      ...serviceFeeAuxiliary,
+      key: newKey
     });
 
     await newServiceFeeAuxiliary.save();
@@ -63,24 +53,26 @@ export async function POST(request: Request) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        newServiceFeeAuxiliary,
+        newServiceFeeAuxiliary
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
+        status: 200
       }
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ POST ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al crear la hoja de auxiliaries",
+          message: "Error al crear la hoja de auxiliaries"
         },
         {
-          status: 400,
+          status: 500
         }
       );
     }
@@ -94,15 +86,16 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
     await connectDB();
     const BDserviceFeeAuxiliary = await ServiceFeeAuxiliary.findOne();
+
     return new NextResponse(
       JSON.stringify({
         ok: true,
@@ -111,8 +104,9 @@ export async function GET(request: Request) {
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
+        status: 200
       }
     );
   } catch (error) {
@@ -120,10 +114,10 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al obtener la hoja de auxiliares",
+          message: "Error al obtener la hoja de auxiliares"
         },
         {
-          status: 400,
+          status: 500
         }
       );
     }
@@ -139,10 +133,10 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
@@ -152,109 +146,44 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "La hoja de auxiliares de tarifas de servicio no existe",
+          message: "La hoja de auxiliares de tarifas de servicio no existe"
         },
         {
-          status: 409,
+          status: 404
         }
       );
     }
 
     const updatedServiceFeeAuxiliary = await ServiceFeeAuxiliary.findByIdAndUpdate(
       { _id: serviceFeeAuxiliary._id },
-      {
-        calculationCoefficient: serviceFeeAuxiliary.calculationCoefficient,
-        mermaCoefficient: serviceFeeAuxiliary.mermaCoefficient,
-        currencyChange: serviceFeeAuxiliary.currencyChange,
-        officialCurrencyChangeCoefficient: serviceFeeAuxiliary.officialCurrencyChangeCoefficient,
-        informalCurrencyChange: serviceFeeAuxiliary.informalCurrencyChange,
-        currency: serviceFeeAuxiliary.currency,
-        payMethod: serviceFeeAuxiliary.payMethod,
-        administrativeExpensesCoefficients: serviceFeeAuxiliary.administrativeExpensesCoefficients,
-        equipmentDepreciationCoefficients: serviceFeeAuxiliary.equipmentDepreciationCoefficients,
-        equipmentMaintenanceCoefficients: serviceFeeAuxiliary.equipmentMaintenanceCoefficients,
-        transportationExpensesCoefficients: serviceFeeAuxiliary.transportationExpensesCoefficients,
-      },
+      { ...serviceFeeAuxiliary },
       { new: true }
     );
 
-    await updateServiceFeeWhenAuxiliary(updatedServiceFeeAuxiliary, await ServiceFee.find())
+    await updateServiceFeeWhenAuxiliary(updatedServiceFeeAuxiliary, await ServiceFee.find());
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        updatedServiceFeeAuxiliary,
+        updatedServiceFeeAuxiliary
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ PUT ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al actualizar la hoja de auxiliares para las tarifas de servicio",
+          message: "Error al actualizar la hoja de auxiliares para las tarifas de servicio"
         },
         {
-          status: 400,
-        }
-      );
-    }
-  }
-}
-
-export async function PATCH(request: Request) {
-  const { id } = await request.json();
-  const accessToken = request.headers.get("accessToken");
-
-  try {
-    if (!accessToken || !verifyJWT(accessToken)) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
-        },
-        {
-          status: 401,
-        }
-      );
-    }
-    await connectDB();
-
-    if (!(await ServiceFeeAuxiliary.findById(id))) {
-      return NextResponse.json({
-        ok: true,
-        message: "La hoja de auxiliares a borrar no existe",
-      });
-    }
-
-    const deletedServiceFeeAuxiliary = await ServiceFeeAuxiliary.findByIdAndDelete(id);
-
-    return new NextResponse(
-      JSON.stringify({
-        ok: true,
-        deletedServiceFeeAuxiliary,
-      }),
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
-      }
-    );
-  } catch (error) {
-    if (error instanceof Error) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "Error al eliminar la hoja de auxiliares para tarifas de servicio",
-        },
-        {
-          status: 400,
+          status: 500
         }
       );
     }

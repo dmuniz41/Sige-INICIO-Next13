@@ -50,25 +50,6 @@ export const AuxiliaryView = () => {
     setEditing(false);
   };
 
-  const payMethodColumns = [
-    {
-      title: <span className="font-bold">Representante</span>,
-      dataIndex: "representative",
-      key: "representative",
-      width: "300px"
-    },
-    {
-      title: <span className="font-bold">Porcentaje</span>,
-      dataIndex: "coefficientValue",
-      key: "coefficientValue",
-      width: "150px",
-      render: (value: number) => (
-        <span>
-          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
-        </span>
-      )
-    }
-  ];
   const columns = [
     {
       title: <span className="font-bold">Nombre</span>,
@@ -100,7 +81,6 @@ export const AuxiliaryView = () => {
             </button>
           </article>
           <article className=" flex flex-col items-start gap-3 p-4 rounded-md shadow-lg animate-fade animate-once animate-duration-200">
-            <AuxiliarySection data={serviceFeeAuxiliary?.payMethod} columns={payMethodColumns} sectionName="Métodos de pago" />
             <AuxiliarySection data={serviceFeeAuxiliary?.administrativeExpensesCoefficients} columns={columns} sectionName="Gastos Administrativos" />
             <AuxiliarySection data={serviceFeeAuxiliary?.equipmentDepreciationCoefficients} columns={columns} sectionName="Depreciación de Equipos" />
             <AuxiliarySection data={serviceFeeAuxiliary?.equipmentMaintenanceCoefficients} columns={columns} sectionName="Mantenimiento de Equipos" />

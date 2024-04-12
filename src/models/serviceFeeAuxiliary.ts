@@ -1,13 +1,5 @@
 import { Model, Schema, model, models } from "mongoose";
 
-// * Coeficientes que se utilzan para calcular diferentes valores en las tarifas de servicio
-
-//* Ejemplo: (Efectivo, FCBC, Genesis, ACCS, CNOE)
-export interface IRepresentationCoefficients {
-  representative: string;
-  coefficientValue: number;
-}
-
 export interface IServiceFeeAuxiliary {
   _id: string;
   key: string;
@@ -20,7 +12,7 @@ export interface IServiceFeeAuxiliary {
       name: string;
       value: number;
     }
-  ]
+  ];
   informalCurrencyChange: number;
   currency: ["USD", "CUP"];
   administrativeExpensesCoefficients: [
@@ -41,62 +33,56 @@ export interface IServiceFeeAuxiliary {
       value: number;
     }
   ];
-  payMethod: IRepresentationCoefficients[];
 }
 
 const ServiceFeeAuxiliarySchema = new Schema<IServiceFeeAuxiliary, Model<IServiceFeeAuxiliary>>({
   key: {
-    type: String,
+    type: String
   },
   currency: {
-    type: [String],
+    type: [String]
   },
   calculationCoefficient: {
-    type: Number,
+    type: Number
   },
   officialCurrencyChangeCoefficient: {
-    type: Number,
+    type: Number
   },
   informalCurrencyChange: {
-    type: Number,
+    type: Number
   },
   currencyChange: {
-    type: Number,
+    type: Number
   },
   mermaCoefficient: {
-    type: Number,
+    type: Number
   },
-  payMethod: [
-    {
-      representative: String,
-      coefficientValue: Number,
-    },
-  ],
   administrativeExpensesCoefficients: [
     {
       name: String,
-      value: Number,
-    },
+      value: Number
+    }
   ],
   equipmentDepreciationCoefficients: [
     {
       name: String,
-      value: Number,
-    },
+      value: Number
+    }
   ],
   equipmentMaintenanceCoefficients: [
     {
       name: String,
-      value: Number,
-    },
+      value: Number
+    }
   ],
   transportationExpensesCoefficients: [
     {
       name: String,
-      value: Number,
-    },
-  ],
+      value: Number
+    }
+  ]
 });
 
-const ServiceFeeAuxiliary = models.ServiceFeeAuxiliary || model("ServiceFeeAuxiliary", ServiceFeeAuxiliarySchema);
+const ServiceFeeAuxiliary =
+  models.ServiceFeeAuxiliary || model("ServiceFeeAuxiliary", ServiceFeeAuxiliarySchema);
 export default ServiceFeeAuxiliary;
