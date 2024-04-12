@@ -149,25 +149,21 @@ export const EditServiceFeeForm = () => {
 
   const onAddEquipmentDepreciation = (values: any) => {
     setEquipmentDepreciationValues([values, ...equipmentDepreciationValues]);
-    form.setFieldValue("equipmentDepreciation", [...equipmentDepreciationValues, values]);
     setAddEquipmentDepreciationModal(false);
   };
 
   const onAddEquipmentMaintenance = (values: any) => {
     setEquipmentMaintenanceValues([values, ...equipmentMaintenanceValues]);
-    form.setFieldValue("equipmentMaintenance", [...equipmentMaintenanceValues, values]);
     setAddEquipmentMaintenanceModal(false);
   };
 
   const onAddAdministrativeExpenses = (values: any) => {
     setAdministrativeExpensesValues([values, ...administrativeExpensesValues]);
-    form.setFieldValue("administrativeExpenses", [...administrativeExpensesValues, values]);
     setAddAdministrativeExpensesModal(false);
   };
 
   const onAddTransportationExpenses = (values: any) => {
     setTransportationExpensesValues([values, ...transportationExpensesValues]);
-    form.setFieldValue("transportationExpenses", [...transportationExpensesValues, values]);
     setAddTransportationExpensesModal(false);
   };
 
@@ -741,7 +737,7 @@ const FormSection = (props: any) => {
   );
 };
 
-const TableFormSection = (props: any) => {
+export const TableFormSection = (props: any) => {
   const {
     sectionName,
     values,

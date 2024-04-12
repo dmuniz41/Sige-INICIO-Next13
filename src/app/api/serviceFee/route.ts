@@ -8,7 +8,6 @@ import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 
 export async function POST(request: NextRequest) {
   const { ...serviceFee }: IServiceFee = await request.json();
-  console.log("🚀 ~ POST ~ serviceFee:", serviceFee);
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -68,14 +67,13 @@ export async function POST(request: NextRequest) {
     );
 
     const expensesTotalValue: number =
-      rawMaterialsSubtotal ??
-      0 + taskListSubtotal ??
-      0 + equipmentDepreciationSubtotal ??
-      0 + equipmentMaintenanceSubtotal ??
-      0 + transportationExpensesSubtotal ??
-      0 + administrativeExpensesSubtotal ??
-      0 + hiredPersonalExpensesSubtotal ??
-      0;
+      rawMaterialsSubtotal +
+      taskListSubtotal +
+      equipmentDepreciationSubtotal +
+      equipmentMaintenanceSubtotal +
+      transportationExpensesSubtotal +
+      administrativeExpensesSubtotal +
+      hiredPersonalExpensesSubtotal;
 
     const newKey = generateRandomString(26);
 
@@ -222,14 +220,13 @@ export async function PUT(request: NextRequest) {
     );
 
     const expensesTotalValue: number =
-      rawMaterialsSubtotal ??
-      0 + taskListSubtotal ??
-      0 + equipmentDepreciationSubtotal ??
-      0 + equipmentMaintenanceSubtotal ??
-      0 + transportationExpensesSubtotal ??
-      0 + administrativeExpensesSubtotal ??
-      0 + hiredPersonalExpensesSubtotal ??
-      0;
+      rawMaterialsSubtotal +
+      taskListSubtotal +
+      equipmentDepreciationSubtotal +
+      equipmentMaintenanceSubtotal +
+      transportationExpensesSubtotal +
+      administrativeExpensesSubtotal +
+      hiredPersonalExpensesSubtotal;
 
     const BDNomenclator = await Nomenclator.findOne({
       category: "Tarifa de Servicio",

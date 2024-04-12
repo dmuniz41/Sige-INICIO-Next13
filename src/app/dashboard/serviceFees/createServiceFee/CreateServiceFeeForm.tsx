@@ -20,6 +20,7 @@ import { startLoadServiceFeesTasks } from "@/actions/serviceFeeTask";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useRouter } from "next/navigation";
 import TextArea from "antd/es/input/TextArea";
+import { TableFormSection } from "../editServiceFee/EditServiceFeeForm";
 
 export const CreateServiceFeeForm = () => {
   const dispatch = useAppDispatch();
@@ -28,6 +29,7 @@ export const CreateServiceFeeForm = () => {
   const unitMeasureNomenclators: string[] | undefined = [];
   const router = useRouter();
 
+  // * ESTADOS DE MODALES DE CREAR //
   const [addRawMaterialModal, setAddRawMaterialModal] = useState(false);
   const [addTaskListModal, setAddTaskListModal] = useState(false);
   const [addEquipmentDepreciationModal, setAddEquipmentDepreciationModal] = useState(false);
@@ -56,8 +58,7 @@ export const CreateServiceFeeForm = () => {
   );
 
   nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Categoría de tarifas")
-      serviceFeeCategory.push(nomenclator.code);
+    if (nomenclator.category === "Categoría de tarifas") serviceFeeCategory.push(nomenclator.code);
     if (nomenclator.category === "Unidad de medida") unitMeasureNomenclators.push(nomenclator.code);
   });
 
@@ -80,7 +81,6 @@ export const CreateServiceFeeForm = () => {
   };
 
   const onAddRawMaterial = (values: any) => {
-    console.log("🚀 ~ onAddRawMaterial ~ values:", values);
     setRawMaterialsValues([values, ...rawMaterialsValues]);
     form.setFieldValue("rawMaterials", [...rawMaterialsValues, values]);
     setAddRawMaterialModal(false);
@@ -285,66 +285,66 @@ export const CreateServiceFeeForm = () => {
         </div>
       </section>
 
-      <FormSection
+      <TableFormSection
         sectionName="Materias Primas"
         values={rawMaterialsValues}
         formName="rawMaterials"
         valuesSetter={setRawMaterialsValues}
-        modalSetter={setAddRawMaterialModal}
+        addModalSetter={setAddRawMaterialModal}
         buttonText="Añadir Materia Prima"
         form={form}
       />
-      <FormSection
+      <TableFormSection
         sectionName="Actividades a Ejecutar"
         values={taskListValues}
         formName="taskList"
         valuesSetter={setTaskListValues}
-        modalSetter={setAddTaskListModal}
+        addModalSetter={setAddTaskListModal}
         buttonText="Añadir Actividad"
         form={form}
       />
-      <FormSection
+      <TableFormSection
         sectionName="Depreciación de Equipos"
         values={equipmentDepreciationValues}
         formName="equipmentDepreciation"
         valuesSetter={setEquipmentDepreciationValues}
-        modalSetter={setAddEquipmentDepreciationModal}
+        addModalSetter={setAddEquipmentDepreciationModal}
         buttonText="Añadir Depreciación de Equipos"
         form={form}
       />
-      <FormSection
+      <TableFormSection
         sectionName="Mantenimiento de Equipos"
         values={equipmentMaintenanceValues}
         formName="equipmentMaintenance"
         valuesSetter={setEquipmentMaintenanceValues}
-        modalSetter={setAddEquipmentMaintenanceModal}
+        addModalSetter={setAddEquipmentMaintenanceModal}
         buttonText="Añadir Mantenimiento de Equipos"
         form={form}
       />
-      <FormSection
+      <TableFormSection
         sectionName="Gastos Administrativos"
         values={administrativeExpensesValues}
         formName="administrativeExpenses"
         valuesSetter={setAdministrativeExpensesValues}
-        modalSetter={setAddAdministrativeExpensesModal}
+        addModalSetter={setAddAdministrativeExpensesModal}
         buttonText="Añadir Gasto Administrativo"
         form={form}
       />
-      <FormSection
+      <TableFormSection
         sectionName="Gastos de Transportación"
         values={transportationExpensesValues}
         formName="transportationExpenses"
         valuesSetter={setTransportationExpensesValues}
-        modalSetter={setAddTransportationExpensesModal}
+        addModalSetter={setAddTransportationExpensesModal}
         buttonText="Añadir Gastos de Transportación"
         form={form}
       />
-      <FormSection
+      <TableFormSection
         sectionName="Gastos de Personal Contratado"
         values={hiredPersonalExpensesValues}
         formName="hiredPersonalExpenses"
         valuesSetter={setHiredPersonalExpensesValues}
-        modalSetter={setAddHiredPersonalExpensesModal}
+        addModalSetter={setAddHiredPersonalExpensesModal}
         buttonText="Añadir Gastos de Personal Contratado"
         form={form}
       />
@@ -418,7 +418,7 @@ export const CreateServiceFeeForm = () => {
                 console.log("🚀 ~ .then ~ values:", values);
                 dispatch(
                   startAddServiceFee({
-                    administrativeExpenses: values.administrativeExpenses,
+                    administrativeExpenses: administrativeExpensesValues,
                     // PORCIENTO
                     artisticTalent: values.artisticTalent,
                     category: values.category,
@@ -439,16 +439,16 @@ export const CreateServiceFeeForm = () => {
                       }
                     ],
                     currencyChange: values.currencyChange,
-                    equipmentDepreciation: values.equipmentDepreciation,
-                    equipmentMaintenance: values.equipmentMaintenance,
-                    hiredPersonalExpenses: values.hiredPersonalExpenses,
+                    equipmentDepreciation: equipmentDepreciationValues,
+                    equipmentMaintenance: equipmentMaintenanceValues,
+                    hiredPersonalExpenses: hiredPersonalExpensesValues,
                     nomenclatorId: values.nomenclatorId,
                     // PORCIENTO
                     ONAT: values.ONAT,
-                    rawMaterials: values.rawMaterials,
-                    taskList: values.taskList,
+                    rawMaterials: rawMaterialsValues,
+                    taskList: taskListValues,
                     taskName: values.taskName,
-                    transportationExpenses: values.transportationExpenses,
+                    transportationExpenses: transportationExpensesValues,
                     unitMeasure: values.unitMeasure,
                     workersAmount: values.workersAmount
                   })
