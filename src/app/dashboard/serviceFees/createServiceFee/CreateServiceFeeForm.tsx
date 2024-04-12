@@ -17,34 +17,34 @@ import { RootState, useAppSelector } from "@/store/store";
 import { startAddServiceFee } from "@/actions/serviceFee";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { startLoadServiceFeesTasks } from "@/actions/serviceFeeTask";
+import { TableFormSection } from "../editServiceFee/EditServiceFeeForm";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useRouter } from "next/navigation";
 import TextArea from "antd/es/input/TextArea";
-import { TableFormSection } from "../editServiceFee/EditServiceFeeForm";
 
 export const CreateServiceFeeForm = () => {
-  const dispatch = useAppDispatch();
   const [form] = Form.useForm();
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const serviceFeeCategory: string[] | undefined = [];
   const unitMeasureNomenclators: string[] | undefined = [];
-  const router = useRouter();
 
   // * ESTADOS DE MODALES DE CREAR //
-  const [addRawMaterialModal, setAddRawMaterialModal] = useState(false);
-  const [addTaskListModal, setAddTaskListModal] = useState(false);
+  const [addAdministrativeExpensesModal, setAddAdministrativeExpensesModal] = useState(false);
   const [addEquipmentDepreciationModal, setAddEquipmentDepreciationModal] = useState(false);
   const [addEquipmentMaintenanceModal, setAddEquipmentMaintenanceModal] = useState(false);
-  const [addAdministrativeExpensesModal, setAddAdministrativeExpensesModal] = useState(false);
-  const [addTransportationExpensesModal, setAddTransportationExpensesModal] = useState(false);
   const [addHiredPersonalExpensesModal, setAddHiredPersonalExpensesModal] = useState(false);
+  const [addRawMaterialModal, setAddRawMaterialModal] = useState(false);
+  const [addTaskListModal, setAddTaskListModal] = useState(false);
+  const [addTransportationExpensesModal, setAddTransportationExpensesModal] = useState(false);
 
-  const [rawMaterialsValues, setRawMaterialsValues]: any = useState([]);
-  const [taskListValues, setTaskListValues]: any = useState([]);
+  const [administrativeExpensesValues, setAdministrativeExpensesValues]: any = useState([]);
   const [equipmentDepreciationValues, setEquipmentDepreciationValues]: any = useState([]);
   const [equipmentMaintenanceValues, setEquipmentMaintenanceValues]: any = useState([]);
-  const [administrativeExpensesValues, setAdministrativeExpensesValues]: any = useState([]);
-  const [transportationExpensesValues, setTransportationExpensesValues]: any = useState([]);
   const [hiredPersonalExpensesValues, setHiredPersonalExpensesValues]: any = useState([]);
+  const [rawMaterialsValues, setRawMaterialsValues]: any = useState([]);
+  const [taskListValues, setTaskListValues]: any = useState([]);
+  const [transportationExpensesValues, setTransportationExpensesValues]: any = useState([]);
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
@@ -331,7 +331,7 @@ export const CreateServiceFeeForm = () => {
         form={form}
       />
       <TableFormSection
-        sectionName="Gastos de Transportación"
+        sectionName="Gastos Transportación"
         values={transportationExpensesValues}
         formName="transportationExpenses"
         valuesSetter={setTransportationExpensesValues}
@@ -340,7 +340,7 @@ export const CreateServiceFeeForm = () => {
         form={form}
       />
       <TableFormSection
-        sectionName="Gastos de Personal Contratado"
+        sectionName={`Gastos\n Personal Contratado`}
         values={hiredPersonalExpensesValues}
         formName="hiredPersonalExpenses"
         valuesSetter={setHiredPersonalExpensesValues}

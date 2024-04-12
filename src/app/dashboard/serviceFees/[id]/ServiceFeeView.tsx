@@ -52,7 +52,7 @@ export const ServiceFeeView = () => {
   return (
     <>
       <article>
-        <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
+        <div className="flex h-16 w-full  rounded-md shadow-md mb-4 items-center pl-4 gap-4">
           <div className="flex gap-2">
             <button className="toolbar-primary-icon-btn" onClick={handleEdit}>
               <EditSvg />
@@ -118,12 +118,12 @@ export const ServiceFeeView = () => {
             subtotal={selectedServiceFee?.administrativeExpensesSubtotal}
           />
           <ServiceFeeViewTableSection
-            name="Gastos de Transporte"
+            name="Gastos Transporte"
             data={transportationExpenses}
             subtotal={selectedServiceFee?.transportationExpensesSubtotal}
           />
           <ServiceFeeViewTableSection
-            name="Gastos de Personal Contratado"
+            name="Gastos Personal Contratado"
             data={hiredPersonalExpenses}
             subtotal={selectedServiceFee?.hiredPersonalExpensesSubtotal}
           />
@@ -150,12 +150,12 @@ export const ServiceFeeView = () => {
           value={selectedServiceFee?.commercialMarginValue}
         />
 
-        <article className="flex ml-[210px] justify-end pl-4 pr-4 items-center h-[39px] flex-grow bg-white-100 border-solid border-[1px] border-border_light rounded-lg">
+        <article className="flex justify-end pl-4 pr-4 items-center h-[39px] flex-grow bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
           <div className="flex w-[150px] font-bold pl-2">MN</div>
           <Divider type="vertical" />
           <div className="flex w-[150px] font-bold pl-2">USD</div>
         </article>
-        <article className="flex ml-[210px] pl-4 pr-4 items-center h-[39px] flex-grow bg-white-100 border-solid border-[1px] border-border_light rounded-lg">
+        <article className="flex pl-4 pr-4 items-center h-[39px] flex-grow bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
           <div className="flex flex-grow justify-end pr-4 font-bold">
             <h2>PRECIO DE VENTA </h2>
           </div>
@@ -195,8 +195,8 @@ export const ServiceFeeView = () => {
 export const ServiceFeeViewSeccion = (props: any) => {
   const { name, value } = props;
   return (
-    <article className="flex ml-[210px] pl-4 items-center h-[39px] flex-grow bg-white-100 border-solid border-[1px] border-border_light rounded-lg">
-      <div className="flex w-[90%] justify-end pr-4 font-bold">
+    <article className="flex items-center pr-4 h-[39px] bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
+      <div className="flex flex-1 justify-end pr-4 font-bold">
         <h2>{name}: </h2>
       </div>
       <div className="flex w-[150px] pl-2">
@@ -209,7 +209,7 @@ export const ServiceFeeViewSeccion = (props: any) => {
 export const SalePriceViewSeccion = (props: any) => {
   const { name, value } = props;
   return (
-    <article className="flex ml-[210px] pl-4 pr-4 items-center h-[39px] flex-grow bg-white-100 border-solid border-[1px] border-border_light rounded-lg">
+    <article className="flex pl-4 pr-4 items-center h-[39px] flex-grow bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
       <div className="flex flex-grow justify-end pr-4 font-bold">
         <h2>{name}: </h2>
       </div>

@@ -617,126 +617,6 @@ export const EditServiceFeeForm = () => {
   );
 };
 
-const FormSection = (props: any) => {
-  const { sectionName, values, formName, valuesSetter, modalSetter, buttonText, form } = props;
-  return (
-    <section className=" flex w-full mb-8 bg-white-100 rounded-md p-2 shadow-[0px_0px_5px_0px_#00000024] ">
-      <div className="flex w-[15%] min-h-[100px] h-full p-2 text-center items-center justify-center">
-        <span className="text-base font-bold">{sectionName.toUpperCase()}</span>
-      </div>
-      <div className="flex pl-2 w-full flex-col">
-        {values?.length == 0 ? (
-          <div></div>
-        ) : (
-          <div className="flex w-full pr-9 gap-1 pt-4 font-bold">
-            <div className="grow">
-              <span>Descripción</span>
-            </div>
-            <div className="w-[200px] text-center">
-              <span>Unidad de Medida</span>
-            </div>
-            <div className="w-[88px] text-center">
-              <span>Cantidad</span>
-            </div>
-            <div className="w-[88px] text-center">
-              <span>Precio/UM</span>
-            </div>
-            <div className="w-[88px] text-center">
-              <span>Importe</span>
-            </div>
-          </div>
-        )}
-        <Form.List name={formName}>
-          {(fields, { add, remove }) => (
-            <div className="flex flex-col pr-4 flex-1 pt-6">
-              {fields.map(({ key, name, ...restField }) => (
-                <div key={key} className="w-full">
-                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item
-                      className="grow"
-                      {...restField}
-                      name={[name, "description"]}
-                      rules={[{ required: true }]}
-                    >
-                      <Input
-                        disabled
-                        placeholder="Descripción"
-                        className="w-full disabled:bg-white-100  disabled:text-white-900"
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "unitMeasure"]}
-                      className="w-[200px]"
-                      rules={[{ required: false }]}
-                    >
-                      <Input
-                        disabled
-                        placeholder="Unidad de Medida"
-                        className=" disabled:bg-white-100 disabled:text-white-900"
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "amount"]}
-                      className="w-[88px]"
-                      rules={[{ required: true }]}
-                    >
-                      <Input
-                        disabled
-                        placeholder="Cantidad"
-                        className=" disabled:bg-white-100  disabled:text-white-900"
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "price"]}
-                      className="w-[88px]"
-                      rules={[{ required: true }]}
-                    >
-                      <Input
-                        disabled
-                        placeholder="Precio"
-                        className=" disabled:bg-white-100  disabled:text-white-900"
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "value"]}
-                      className="w-[88px]"
-                      rules={[{ required: true }]}
-                    >
-                      <Input disabled className=" disabled:bg-white-100  disabled:text-white-900" />
-                    </Form.Item>
-                    <MinusCircleOutlined
-                      className="mb-auto"
-                      onClick={() => {
-                        remove(name);
-                        valuesSetter(form.getFieldValue(`${formName}`));
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-              <Form.Item className="justify-center w-full">
-                <Button
-                  className="flex flex-row justify-center items-center"
-                  block
-                  type="dashed"
-                  onClick={() => modalSetter(true)}
-                  icon={<PlusOutlined />}
-                >
-                  {buttonText}
-                </Button>
-              </Form.Item>
-            </div>
-          )}
-        </Form.List>
-      </div>
-    </section>
-  );
-};
-
 export const TableFormSection = (props: any) => {
   const {
     sectionName,
@@ -826,9 +706,10 @@ export const TableFormSection = (props: any) => {
       )
     }
   ];
+
   return (
-    <section className=" flex w-full mb-8 bg-white-100 rounded-md p-2  ">
-      <div className="flex w-[15%] min-h-[100px] h-full p-2 text-center items-center justify-center">
+    <section className=" flex w-full mb-8 rounded-md p-2 border border-border_light shadow-sm">
+      <div className="flex w-[15%] h-full p-2 text-center items-center justify-center bg-[#fafafa] rounded-l-md">
         <span className="text-base font-bold">{sectionName.toUpperCase()}</span>
       </div>
       <div className="grid pl-2 w-full gap-2">
@@ -839,6 +720,7 @@ export const TableFormSection = (props: any) => {
           className="shadow-sm"
           sortDirections={["ascend"]}
           pagination={false}
+          bordered
           footer={() => (
             <footer className="flex w-full">
               <div className="font-bold grow flex w-[90%]">
@@ -857,7 +739,6 @@ export const TableFormSection = (props: any) => {
               </div>
             </footer>
           )}
-          bordered
         />
         <button
           className="add-item-form-btn"

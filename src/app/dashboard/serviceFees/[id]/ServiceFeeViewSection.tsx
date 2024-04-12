@@ -49,37 +49,38 @@ export const ServiceFeeViewTableSection = (props: any) => {
       )
     }
   ];
+
   return (
-    <section className="flex flex-1 mt-2">
-      <article className="flex items-center text-center w-[15rem] p-4">
-        <h2 className="text-base w-full font-bold">{name.toUpperCase()}</h2>
-      </article>
-      <Table
-        size="small"
-        columns={columns}
-        dataSource={data}
-        className="border-solid w-full"
-        pagination={false}
-        bordered
-        footer={() => (
-          <footer className="flex w-full">
-            <div className="font-bold grow flex w-[90%]">
-              <span>Subtotal: </span>
-            </div>
-            <div className="flex w-[9%] pl-1 justify-start">
-              <span>
-                ${" "}
-                {subtotal?.toLocaleString("DE", {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
-                })}
-              </span>
-            </div>
-          </footer>
-        )}
-      />
+    <section className="flex w-full mb-5 rounded-md p-2 border border-border_light shadow-sm">
+      <div className="flex w-[15%] p-2 text-center items-center justify-center bg-[#fafafa] rounded-l-md">
+        <span className="text-base font-bold">{name.toUpperCase()}</span>
+      </div>
+      <div className="grid pl-2 w-full gap-2">
+        <Table
+          size="small"
+          columns={columns}
+          dataSource={data}
+          className="shadow-sm"
+          pagination={false}
+          bordered
+          footer={() => (
+            <footer className="flex w-full">
+              <div className="font-bold grow flex w-[90%]">
+                <span>Subtotal: </span>
+              </div>
+              <div className="flex w-[9%] pl-1 justify-start">
+                <span>
+                  ${" "}
+                  {subtotal?.toLocaleString("DE", {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2
+                  })}
+                </span>
+              </div>
+            </footer>
+          )}
+        />
+      </div>
     </section>
   );
 };
-
-
