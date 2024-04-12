@@ -13,7 +13,6 @@ import type { InputRef } from "antd";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { INomenclator } from "@/models/nomenclator";
 import { IProject } from "@/models/project";
-import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 import { loadSelectedProject } from "../../../actions/project";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { PlusSvg } from "@/app/global/PlusSvg";
@@ -28,16 +27,16 @@ import { useAppDispatch } from "@/hooks/hooks";
 type DataIndex = keyof IProject;
 
 const ProjectTable: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
   const [filteredData, setFilteredData] = useState<IProject[]>();
-  const searchInput = useRef<InputRef>(null);
-  const router = useRouter();
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const [searchText, setSearchText] = useState("");
   const { data: sessionData } = useSession();
-  const payMethodNomenclator: string[] | undefined = [];
   const clientNamesNomenclators: string[] | undefined = [];
   const currencyNomenclators: string[] | undefined = [];
+  const dispatch = useAppDispatch();
+  const payMethodNomenclator: string[] | undefined = [];
+  const router = useRouter();
+  const searchInput = useRef<InputRef>(null);
 
   const canList = sessionData?.user.role.includes("Listar Proyectos");
   const canCreate = sessionData?.user.role.includes("Crear Proyectos");
@@ -49,9 +48,6 @@ const ProjectTable: React.FC = () => {
     dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
-    (state: RootState) => state?.serviceFee
-  );
   const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
@@ -61,10 +57,6 @@ const ProjectTable: React.FC = () => {
   if (!canList) {
     data = [];
   }
-
-  serviceFeeAuxiliary?.payMethod?.map((payMethod) =>
-    payMethodNomenclator.push(payMethod.representative)
-  );
 
   nomenclators.map((nomenclator: INomenclator) => {
     if (nomenclator.category === "Nombre de Cliente")

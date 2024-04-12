@@ -9,25 +9,25 @@ export const ServiceFeeViewTableSection = (props: any) => {
 
   const columns: ColumnsType<IServiceFeeSubItem> = [
     {
-      title: "Descripción",
+      title: <span className="font-bold">Descripción</span>,
       dataIndex: "description",
       key: "description",
       width: "55%"
     },
     {
-      title: "Unidad de Medida",
+      title: <span className="font-bold">Unidad de Medida</span>,
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "15%"
     },
     {
-      title: "Cantidad",
+      title: <span className="font-bold">Cantidad</span>,
       dataIndex: "amount",
       key: "amount",
       width: "10%"
     },
     {
-      title: "Precio",
+      title: <span className="font-bold">Precio</span>,
       dataIndex: "price",
       key: "price",
       width: "10%",
@@ -38,7 +38,7 @@ export const ServiceFeeViewTableSection = (props: any) => {
       )
     },
     {
-      title: "Importe",
+      title: <span className="font-bold">Importe</span>,
       dataIndex: "value",
       key: "value",
       width: "25%",
@@ -81,3 +81,5 @@ export const ServiceFeeViewTableSection = (props: any) => {
     </section>
   );
 };
+
+

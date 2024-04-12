@@ -102,7 +102,6 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
           <Form.Item name="indirectSalariesPrice" label="Precio/UM">
             <InputNumber onChange={() => {
                 let values = form.getFieldsValue();
-                console.log("🚀 ~ values:", values)
                 setIndirectSalariesValue(values.indirectSalariesAmount * values.indirectSalariesPrice);
               }}/>
           </Form.Item>

@@ -13,16 +13,22 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel
+}) => {
   const [taskValue, setTaskValue] = useState(0);
   const [unitMeasure, setUnitMeasure] = useState("");
   const [price, setPrice] = useState(0);
-  const { serviceFeeTasks }: { serviceFeeTasks: IServiceFeeTask[] } = useAppSelector((state: RootState) => state?.serviceFee);
+  const { serviceFeeTasks }: { serviceFeeTasks: IServiceFeeTask[] } = useAppSelector(
+    (state: RootState) => state?.serviceFee
+  );
 
   const tasks: SelectProps["options"] = serviceFeeTasks.map((serviceFeeTask) => {
     return {
       label: `${serviceFeeTask.description}`,
-      value: `${serviceFeeTask.description}`,
+      value: `${serviceFeeTask.description}`
     };
   });
   const [form] = Form.useForm();
@@ -44,11 +50,7 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
       cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button
-            key="2"
-            className="modal-btn-danger"
-            onClick={onCancel}
-          >
+          <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
           <button
@@ -61,7 +63,7 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
                   onCreate({ ...values, unitMeasure: unitMeasure, price: price, value: taskValue });
                   form.resetFields();
                   setTaskValue(0);
-                  setPrice(0)
+                  setPrice(0);
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -70,33 +72,50 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
           >
             Añadir
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form form={form} layout="horizontal" name="addRawMaterial" size="middle">
-        <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="description"
+          label="Descripción"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select
             allowClear
             options={tasks}
             onSelect={() => {
               let selectedTask: string = form.getFieldValue("description") ?? "";
               let complexityCoef: number = form.getFieldValue("complexity") ?? 1;
-              let task = serviceFeeTasks.find((serviceFeeTask) => serviceFeeTask.description === selectedTask);
+              let task = serviceFeeTasks.find(
+                (serviceFeeTask) => serviceFeeTask.description === selectedTask
+              );
               setUnitMeasure(task?.unitMeasure!);
               setPrice(task?.price!);
               setTaskValue(task?.amount! * task?.price! * complexityCoef);
             }}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+            filterOption={(input: any, option: any) =>
+              (option?.label ?? "").toLowerCase().includes(input)
+            }
+            filterSort={(optionA: any, optionB: any) =>
+              (optionA?.label ?? "")
+                .toLowerCase()
+                .localeCompare((optionB?.label ?? "").toLowerCase())
+            }
           />
         </Form.Item>
 
-        <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="amount"
+          label="Cantidad"
+          className="w-[10rem]"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <InputNumber
-            onChange={() => {
-              setTaskValue(form.getFieldValue('amount') * price );
+            onChange={(value: number | null) => {
+              setTaskValue(value! * price);
             }}
           />
         </Form.Item>

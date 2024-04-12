@@ -1,33 +1,22 @@
 "use client";
 
-import { RootState, useAppSelector } from "@/store/store";
 import { Divider } from "antd";
+import { RootState, useAppSelector } from "@/store/store";
 import { useAppDispatch } from "@/hooks/hooks";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
 import React, { useEffect, useMemo } from "react";
 
 import { EditSvg } from "@/app/global/EditSvg";
 import { IServiceFee, IServiceFeeSubItem } from "@/models/serviceFees";
 import { loadSelectedServiceFee } from "@/actions/serviceFee";
-import { PDFSvg } from "@/app/global/PDFSvg";
 import { ServiceFeeViewTableSection } from "./ServiceFeeViewSection";
-import CostSheetPDFReport from "@/helpers/CostSheetPDFReport";
-
-const PDFDownloadLink = dynamic(
-  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
-  {
-    ssr: false,
-    loading: () => <p>Loading...</p>
-  }
-);
 
 export const ServiceFeeView = () => {
-  const url = usePathname().split("/");
-  const selectedServiceFeeId: string = url[3];
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const url = usePathname().split("/");
+  const selectedServiceFeeId: string = url[3];
 
   useEffect(() => {
     dispatch(loadSelectedServiceFee(selectedServiceFeeId));
@@ -56,40 +45,6 @@ export const ServiceFeeView = () => {
   let transportationExpenses: IServiceFeeSubItem[] = selectedServiceFee.transportationExpenses;
   let hiredPersonalExpenses: IServiceFeeSubItem[] = selectedServiceFee.hiredPersonalExpenses;
 
-  // const fields: any = [
-  //   {
-  //     title: "Descripción",
-  //     custom: true,
-  //     component: (item: any) => `${item.description}`,
-  //     width: "40",
-  //   },
-  //   {
-  //     title: "U/M",
-  //     custom: true,
-  //     component: (item: any) => `${item.unitMeasure}`,
-  //     width: "20",
-  //   },
-  //   {
-  //     title: "Cant",
-  //     custom: true,
-  //     component: (item: any) => `${item.amount}`,
-  //     width: "10",
-  //   },
-  //   {
-  //     title: "Precio CUP",
-  //     custom: true,
-  //     component: (item: any) => `$ ${item.price.toFixed(2)}`,
-  //     width: "15",
-  //   },
-  //   {
-  //     title: "Importe CUP",
-  //     custom: true,
-  //     component: (item: any) => `$ ${item.value.toFixed(2)}`,
-  //     width: "15",
-  //   },
-  // ];
-  // const PDFReportData: ICostSheet = selectedCostSheet;
-
   const handleEdit = (): void => {
     router.push(`/dashboard/serviceFees/editServiceFee`);
   };
@@ -103,13 +58,6 @@ export const ServiceFeeView = () => {
               <EditSvg />
               Editar
             </button>
-            {/* <PDFDownloadLink document={<CostSheetPDFReport fields={fields} data={PDFReportData} title={`Ficha de costo`} />} fileName={`Ficha de costo ${selectedCostSheet.taskName}`}>
-              {({ blob, url, loading, error }) => (
-                <button disabled={loading} className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 rounded-full w-[2.5rem] h-[2.5rem] flex justify-center items-center">
-                  <PDFSvg />
-                </button>
-              )}
-            </PDFDownloadLink> */}
           </div>
         </div>
       </article>

@@ -29,14 +29,14 @@ import Swal from "sweetalert2";
 type DataIndex = keyof INomenclator;
 
 const NomenclatorsTable: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const [searchText, setSearchText] = useState("");
   const [selectedNomenclator, setSelectedNomenclator] = useState<INomenclator>();
-  const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
+  const dispatch = useAppDispatch();
+  const searchInput = useRef<InputRef>(null);
 
   const canList = sessionData?.user.role.includes("Listar Nomencladores");
   const canCreate = sessionData?.user.role.includes("Crear Nomenclador");
