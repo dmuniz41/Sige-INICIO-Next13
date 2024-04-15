@@ -3,6 +3,7 @@ import { Button, Input, Space, Table, Tag, Tooltip } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Swal from "sweetalert2";
@@ -27,8 +28,22 @@ import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/r
 import { clientNomenclatorsStartLoading } from "@/actions/nomenclators/client";
 import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 import { IClientNomenclator } from "@/models/nomenclators/client";
+import moment from "moment";
+import PDFReport from "@/helpers/PDFReport";
+import { PDFSvg } from "@/app/global/PDFSvg";
+
+const PDFDownloadLink = dynamic(
+  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+  {
+    ssr: false,
+    loading: () => <p>Loading...</p>
+  }
+);
 
 type DataIndex = keyof IProject;
+
+let date = moment();
+let currentDate = date.format("L");
 
 const ProjectTable: React.FC = () => {
   const [filteredData, setFilteredData] = useState<IProject[]>();
@@ -50,6 +65,69 @@ const ProjectTable: React.FC = () => {
     dispatch(representativeNomenclatorsStartLoading());
     dispatch(clientNomenclatorsStartLoading());
   }, [dispatch]);
+
+  const fields = [
+    {
+      title: "Nombre de Proyecto",
+      custom: true,
+      component: (item: any) => `${item.projectName}`,
+      width: "33"
+    },
+    {
+      title: "Cliente",
+      custom: true,
+      component: (item: any) => `${item.clientName}`,
+      width: "11"
+    },
+    {
+      title: "Cobrado por",
+      custom: true,
+      component: (item: any) => `${item.payMethod}`,
+      width: "10"
+    },
+    {
+      title: "Moneda",
+      custom: true,
+      component: (item: any) => `${item.currency}`,
+      width: "6"
+    },
+    {
+      title: "Precio",
+      custom: true,
+      component: (item: any) =>
+        `$ ${item.totalValue.toLocaleString("DE", {
+          maximumFractionDigits: 2,
+          minimumFractionDigits: 2
+        })}`,
+      width: "12"
+    },
+    {
+      title: "Gastos",
+      custom: true,
+      component: (item: any) =>
+        `$ ${item.expenses.toLocaleString("DE", {
+          maximumFractionDigits: 2,
+          minimumFractionDigits: 2
+        })}`,
+      width: "10"
+    },
+    {
+      title: "Ganancia",
+      custom: true,
+      component: (item: any) =>
+        `$ ${item.profits.toLocaleString("DE", {
+          maximumFractionDigits: 2,
+          minimumFractionDigits: 2
+        })}`,
+      width: "10"
+    },
+    {
+      title: "Fecha",
+      custom: true,
+      component: (item: any) => `${item.initDate}`,
+      width: "8"
+    }
+  ];
 
   const {
     nomenclators,
@@ -112,6 +190,14 @@ const ProjectTable: React.FC = () => {
       value: "Cobrado"
     }
   ];
+
+  let PDFReportData: IProject[] = [];
+
+  if (filteredData) {
+    PDFReportData = filteredData;
+  } else {
+    PDFReportData = data;
+  }
 
   const handleView = (id: string): void => {
     if (id) {
@@ -348,7 +434,7 @@ const ProjectTable: React.FC = () => {
       title: <span className="font-bold">Gastos</span>,
       dataIndex: "expenses",
       key: "expenses",
-      width: "5%",
+      width: "10%",
       render: (value) => (
         <span>
           $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
@@ -362,7 +448,7 @@ const ProjectTable: React.FC = () => {
       title: <span className="font-bold">Ganancia</span>,
       dataIndex: "profits",
       key: "profits",
-      width: "5%",
+      width: "10%",
       render: (value) => (
         <span>
           $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
@@ -457,6 +543,34 @@ const ProjectTable: React.FC = () => {
               <RefreshSvg />
             </button>
           </Tooltip>
+            <PDFDownloadLink
+              document={
+                <PDFReport fields={fields} data={PDFReportData} title={"REPORTE DE PROYECTOS"} />
+              }
+              fileName={`Reporte de proyectoss (${currentDate})`}
+            >
+              {({ blob, url, loading, error }) =>
+                !canList ? (
+                  <button
+                    disabled
+                    className={`opacity-20 pt-2 pl-2" flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+                  >
+                    <PDFSvg />
+                  </button>
+                ) : (
+                  <button
+                    disabled={!canList}
+                    className={`${
+                      canList
+                        ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                        : "opacity-20 pt-2 pl-2"
+                    } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+                  >
+                    <PDFSvg />
+                  </button>
+                )
+              }
+            </PDFDownloadLink>
         </div>
       </div>
       <Table
