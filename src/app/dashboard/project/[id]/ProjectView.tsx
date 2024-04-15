@@ -8,13 +8,13 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import React, { useEffect } from "react";
 
-import { EditSvg } from "@/app/global/EditSvg";
 import { clearOffer, loadSelectedProject } from "@/actions/project";
+import { EditSvg } from "@/app/global/EditSvg";
 import { IProject } from "@/models/project";
+import { PDFSvg } from "@/app/global/PDFSvg";
 import { ProjectViewTable } from "./ProjectViewTable";
 import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
 import ProjectPDFReport from "@/helpers/ProjectPDFReport";
-import { PDFSvg } from "@/app/global/PDFSvg";
 
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
@@ -41,9 +41,9 @@ export const ProjectView = () => {
   const handleEdit = (): void => {
     router.push(`/dashboard/project/editProject`);
   };
+
   const handleCreateOffer = (): void => {
     dispatch(clearOffer());
-
     router.push(`/dashboard/offer/createOffer`);
   };
 
@@ -64,11 +64,7 @@ export const ProjectView = () => {
             )}
             <PDFDownloadLink
               className=" flex w-[2.5rem] h-[2.5rem]"
-              document={
-                <ProjectPDFReport
-                  data={selectedProject}
-                />
-              }
+              document={<ProjectPDFReport data={selectedProject} />}
               fileName={`${selectedProject?.projectName}`}
             >
               {({ blob, url, loading, error }) =>
