@@ -147,7 +147,7 @@ export const EditOfferForm = () => {
             {selectedOffer?.itemsList?.map((item, index) => (
               <article className="flex gap-2 items-center" key={index}>
                 <Item number={index + 1} item={item} />
-                <div className="flex gap-1">
+                <div className="grid gap-1">
                   <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
                     <button onClick={() => handleEdit(item)} className="table-see-action-btn">
                       <EditSvg width={20} height={20} />
