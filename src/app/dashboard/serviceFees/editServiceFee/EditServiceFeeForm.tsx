@@ -623,8 +623,8 @@ export const TableFormSection = (props: any) => {
     values,
     valuesSetter,
     addModalSetter,
-    editModalSetter,
-    valueToEditSetter,
+    // editModalSetter,
+    // valueToEditSetter,
     buttonText
   } = props;
 
@@ -660,7 +660,7 @@ export const TableFormSection = (props: any) => {
       width: "10%",
       render: (value) => (
         <span>
-          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
         </span>
       )
     },
@@ -671,7 +671,7 @@ export const TableFormSection = (props: any) => {
       width: "15%",
       render: (value) => (
         <span>
-          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
         </span>
       )
     },
@@ -682,7 +682,7 @@ export const TableFormSection = (props: any) => {
       width: "15%",
       render: (value) => (
         <span>
-          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
         </span>
       )
     },
@@ -710,7 +710,7 @@ export const TableFormSection = (props: any) => {
   return (
     <section className=" flex w-full mb-8 rounded-md p-2 border border-border_light shadow-sm">
       <div className="flex w-[15%] h-full p-2 text-center items-center justify-center bg-[#fafafa] rounded-l-md">
-        <span className="text-base font-bold">{sectionName.toUpperCase()}</span>
+        <span className="text-base font-bold">{sectionName?.toUpperCase()}</span>
       </div>
       <div className="grid pl-2 w-full gap-2">
         <Table

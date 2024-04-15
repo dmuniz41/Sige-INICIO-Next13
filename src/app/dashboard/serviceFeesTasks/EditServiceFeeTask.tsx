@@ -12,7 +12,12 @@ interface CollectionCreateFormProps {
   defaultValues: IServiceFeeTask;
 }
 
-export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
+export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel,
+  defaultValues
+}) => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
   const categories: string[] | undefined = [];
   const unitMeasures: string[] | undefined = [];
@@ -25,14 +30,14 @@ export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ op
   const categoryOptions: SelectProps["options"] = categories.map((category) => {
     return {
       label: `${category}`,
-      value: `${category}`,
+      value: `${category}`
     };
   });
 
   const unitMeasureOptions: SelectProps["options"] = unitMeasures.map((UM) => {
     return {
       label: `${UM}`,
-      value: `${UM}`,
+      value: `${UM}`
     };
   });
 
@@ -42,7 +47,7 @@ export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ op
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-bold text-lg">Nueva Tarea</span>
+          <span className="font-bold text-lg">Editar Tarea</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -55,11 +60,7 @@ export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ op
       cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button
-            key="2"
-            className="modal-btn-danger"
-            onClick={onCancel}
-          >
+          <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
           <button
@@ -74,17 +75,17 @@ export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ op
                     complexityLevels: [
                       {
                         name: "Alta",
-                        coefficient: values.high,
+                        coefficient: values.high
                       },
                       {
                         name: "Media",
-                        coefficient: values.medium,
+                        coefficient: values.medium
                       },
                       {
                         name: "Baja",
-                        coefficient: values.low,
-                      },
-                    ],
+                        coefficient: values.low
+                      }
+                    ]
                   });
                   form.resetFields();
                 })
@@ -95,7 +96,7 @@ export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ op
           >
             Editar
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form
@@ -106,55 +107,87 @@ export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ op
         fields={[
           {
             name: "description",
-            value: defaultValues?.description,
+            value: defaultValues?.description
           },
           {
             name: "category",
-            value: defaultValues?.category,
+            value: defaultValues?.category
           },
           {
             name: "unitMeasure",
-            value: defaultValues?.unitMeasure,
+            value: defaultValues?.unitMeasure
           },
           {
             name: "amount",
-            value: defaultValues?.amount,
+            value: defaultValues?.amount
           },
           {
             name: "price",
-            value: defaultValues?.price,
-          },
+            value: defaultValues?.price
+          }
         ]}
       >
-        <Form.Item name="category" label="Categoría" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="category"
+          label="Categoría"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select
             allowClear
             style={{ width: "100%" }}
             options={categoryOptions}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+            filterOption={(input: any, option: any) =>
+              (option?.label ?? "").toLowerCase().includes(input)
+            }
+            filterSort={(optionA: any, optionB: any) =>
+              (optionA?.label ?? "")
+                .toLowerCase()
+                .localeCompare((optionB?.label ?? "").toLowerCase())
+            }
           />
         </Form.Item>
-        <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="description"
+          label="Descripción"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Input />
         </Form.Item>
-        <Form.Item name="unitMeasure" label="Unidad de Medida" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="unitMeasure"
+          label="Unidad de Medida"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select
             allowClear
             style={{ width: "100%" }}
             options={unitMeasureOptions}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+            filterOption={(input: any, option: any) =>
+              (option?.label ?? "").toLowerCase().includes(input)
+            }
+            filterSort={(optionA: any, optionB: any) =>
+              (optionA?.label ?? "")
+                .toLowerCase()
+                .localeCompare((optionB?.label ?? "").toLowerCase())
+            }
           />
         </Form.Item>
-        <Form.Item name="amount" label="Cantidad" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="amount"
+          label="Cantidad"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <InputNumber />
         </Form.Item>
-        <Form.Item name="price" label="Precio" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="price"
+          label="Precio"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <InputNumber />
         </Form.Item>
       </Form>

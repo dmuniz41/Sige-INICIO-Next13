@@ -1,36 +1,30 @@
 "use client";
-import { Button, DatePicker, Form, Input, InputNumber, Select, SelectProps } from "antd";
+import { Form, Input, InputNumber, Select, SelectProps, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import moment, { Moment } from "moment";
 
-import { useAppDispatch } from "@/hooks/hooks";
+import { AddItemModal } from "../createProject/AddItem";
+import { clientNomenclatorsStartLoading } from "@/actions/nomenclators/client";
+import { DeleteSvg } from "@/app/global/DeleteSvg";
+import { IClientNomenclator } from "@/models/nomenclators/client";
+import { IItem, IProject } from "@/models/project";
+import { INomenclator } from "@/models/nomenclator";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
-import { startUpdateProject } from "@/actions/project";
-import { IRepresentationCoefficients, IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
+import { PlusSvg } from "@/app/global/PlusSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { INomenclator } from "@/models/nomenclator";
-import { IProject } from "@/models/project";
-import { AddItemModal } from "../createProject/AddItem";
-import { FormSection } from "../createProject/CreateProjectForm";
-import { IClientNomenclator } from "@/models/nomenclators/client";
-import { clientNomenclatorsStartLoading } from "@/actions/nomenclators/client";
+import { startUpdateProject } from "@/actions/project";
+import { useAppDispatch } from "@/hooks/hooks";
+import Table, { ColumnsType } from "antd/es/table";
 
 export const EditProjectForm = () => {
-  const dispatch = useAppDispatch();
-  const [form] = Form.useForm();
-  const router = useRouter();
-  const payMethodNomenclator: IRepresentationCoefficients[] | undefined = [];
-  const clientNamesNomenclators: string[] | undefined = [];
-  const currencyNomenclators: string[] | undefined = [];
-  const [itemsValues, setItemsValues]: any = useState([]);
   const [addItemModal, setAddItemModal] = useState(false);
+  const [form] = Form.useForm();
+  const [itemsValues, setItemsValues]: any = useState([]);
+  const currencyNomenclators: string[] | undefined = [];
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
-    (state: RootState) => state?.serviceFee
-  );
   const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
@@ -43,12 +37,11 @@ export const EditProjectForm = () => {
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
-    dispatch(clientNomenclatorsStartLoading())
+    dispatch(clientNomenclatorsStartLoading());
     dispatch(startLoadServiceFeeAuxiliary());
     setItemsValues(selectedProject.itemsList);
   }, [dispatch, selectedProject]);
 
-  serviceFeeAuxiliary?.payMethod?.map((payMethod) => payMethodNomenclator.push(payMethod));
   nomenclators.map((nomenclator: INomenclator) => {
     if (nomenclator.category === "Moneda") currencyNomenclators.push(nomenclator.code);
   });
@@ -59,7 +52,6 @@ export const EditProjectForm = () => {
       value: `${client.name}`
     };
   });
-
 
   const currencyOptions: SelectProps["options"] = currencyNomenclators.map((currency) => {
     return {
@@ -182,12 +174,12 @@ export const EditProjectForm = () => {
             </Form.Item>
           </div>
         </article>
-        <FormSection
+        <TableFormSection
           sectionName="Servicios"
           values={itemsValues}
           formName="itemList"
           valuesSetter={setItemsValues}
-          modalSetter={setAddItemModal}
+          addModalSetter={setAddItemModal}
           buttonText="Añadir Servicio"
           form={form}
         />
@@ -223,8 +215,90 @@ export const EditProjectForm = () => {
         open={addItemModal}
         onCancel={() => setAddItemModal(false)}
         onCreate={onAddItem}
-        listLength={itemsValues.length}
+        listLength={itemsValues?.length}
       />
     </Form>
+  );
+};
+
+const TableFormSection = (props: any) => {
+  const {
+    sectionName,
+    values,
+    valuesSetter,
+    addModalSetter,
+    // editModalSetter,
+    // valueToEditSetter,
+    buttonText
+  } = props;
+
+  const handleDelete = (record: IItem) => {
+    valuesSetter(values.filter((value: IItem) => value.description !== record.description));
+  };
+  // const handleEdit = (record: IServiceFeeSubItem) => {
+  //   valueToEditSetter(record);
+  //   editModalSetter(true);
+  // };
+
+  const columns: ColumnsType<IItem> = [
+    {
+      title: <span className="font-bold">No.</span>,
+      dataIndex: "idNumber",
+      key: "idNumber",
+      width: "5%"
+    },
+    {
+      title: <span className="font-bold">Descripción</span>,
+      dataIndex: "description",
+      key: "description",
+      width: "90%"
+    },
+    {
+      title: <span className="font-bold">Acciones</span>,
+      key: "actions",
+      width: "5%",
+      render: (_, { ...record }) => (
+        <div className="flex gap-1 justify-center">
+          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+            <button onClick={() => handleEdit(record)} className="table-see-action-btn">
+              <EditSvg width={18} height={18} />
+            </button>
+          </Tooltip> */}
+          <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
+            <button onClick={() => handleDelete(record)} className="table-delete-action-btn">
+              <DeleteSvg width={17} height={17} />
+            </button>
+          </Tooltip>
+        </div>
+      )
+    }
+  ];
+
+  return (
+    <section className=" flex w-full mb-8 rounded-md p-2 border border-border_light shadow-sm">
+      <div className="flex w-[15%] h-full p-2 text-center items-center justify-center bg-[#fafafa] rounded-l-md">
+        <span className="text-base font-bold">{sectionName?.toUpperCase()}</span>
+      </div>
+      <div className="grid pl-2 w-full gap-2">
+        <Table
+          size="small"
+          columns={columns}
+          dataSource={values}
+          className="shadow-sm"
+          sortDirections={["ascend"]}
+          pagination={false}
+          bordered
+        />
+        <button
+          className="add-item-form-btn"
+          onClick={() => {
+            addModalSetter(true);
+          }}
+        >
+          <PlusSvg width={20} height={20} />
+          {buttonText}
+        </button>
+      </div>
+    </section>
   );
 };
