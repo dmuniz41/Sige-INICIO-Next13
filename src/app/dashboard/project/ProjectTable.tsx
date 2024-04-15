@@ -23,6 +23,10 @@ import { RootState, useAppSelector } from "@/store/store";
 import { SeeSvg } from "@/app/global/SeeSvg";
 import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
+import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/representative";
+import { clientNomenclatorsStartLoading } from "@/actions/nomenclators/client";
+import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
+import { IClientNomenclator } from "@/models/nomenclators/client";
 
 type DataIndex = keyof IProject;
 
@@ -31,10 +35,7 @@ const ProjectTable: React.FC = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const [searchText, setSearchText] = useState("");
   const { data: sessionData } = useSession();
-  const clientNamesNomenclators: string[] | undefined = [];
-  const currencyNomenclators: string[] | undefined = [];
   const dispatch = useAppDispatch();
-  const payMethodNomenclator: string[] | undefined = [];
   const router = useRouter();
   const searchInput = useRef<InputRef>(null);
 
@@ -46,11 +47,20 @@ const ProjectTable: React.FC = () => {
   useEffect(() => {
     dispatch(projectsStartLoading());
     dispatch(nomenclatorsStartLoading());
+    dispatch(representativeNomenclatorsStartLoading());
+    dispatch(clientNomenclatorsStartLoading());
   }, [dispatch]);
 
-  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector(
-    (state: RootState) => state?.nomenclator
-  );
+  const {
+    nomenclators,
+    representativeNomenclators,
+    clientNomenclators
+  }: {
+    nomenclators: INomenclator[];
+    representativeNomenclators: IRepresentativeNomenclator[];
+    clientNomenclators: IClientNomenclator[];
+  } = useAppSelector((state: RootState) => state?.nomenclator);
+
   const { projects }: any = useAppSelector((state: RootState) => state?.project);
 
   let data: IProject[] = useMemo(() => projects, [projects]);
@@ -58,33 +68,29 @@ const ProjectTable: React.FC = () => {
     data = [];
   }
 
-  nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Nombre de Cliente")
-      clientNamesNomenclators.push(nomenclator.code);
-    if (nomenclator.category === "Moneda") currencyNomenclators.push(nomenclator.code);
-  });
-
-  const payMethodFilter: any[] = [];
-  payMethodNomenclator.map((payMethod: string) => {
-    payMethodFilter.push({
-      text: `${payMethod}`,
-      value: `${payMethod}`
-    });
-  });
-
-  const clientNameFilter: any[] = [];
-  clientNamesNomenclators.map((clientName: string) => {
-    clientNameFilter.push({
-      text: `${clientName}`,
-      value: `${clientName}`
-    });
-  });
-
   const currencyFilter: any[] = [];
-  currencyNomenclators.map((currency: string) => {
-    currencyFilter.push({
-      text: `${currency}`,
-      value: `${currency}`
+  nomenclators.map((nomenclator: INomenclator) => {
+    if (nomenclator.category === "Moneda") {
+      currencyFilter.push({
+        text: `${nomenclator.code}`,
+        value: `${nomenclator.code}`
+      });
+    }
+  });
+
+  const representativeFilter: any[] = [];
+  representativeNomenclators.map((representative: IRepresentativeNomenclator) => {
+    representativeFilter.push({
+      text: `${representative.name}`,
+      value: `${representative.name}`
+    });
+  });
+
+  const clientFilter: any[] = [];
+  clientNomenclators.map((client: IClientNomenclator) => {
+    clientFilter.push({
+      text: `${client.name}`,
+      value: `${client.name}`
     });
   });
 
@@ -259,7 +265,7 @@ const ProjectTable: React.FC = () => {
       dataIndex: "clientName",
       key: "clientName",
       width: "10%",
-      filters: clientNameFilter,
+      filters: clientFilter,
       onFilter: (value: any, record: any) => record.clientName.startsWith(value),
       filterSearch: true
     },
@@ -268,7 +274,7 @@ const ProjectTable: React.FC = () => {
       dataIndex: "payMethod",
       key: "payMethod",
       width: "8%",
-      filters: payMethodFilter,
+      filters: representativeFilter,
       onFilter: (value: any, record: any) => record.payMethod.startsWith(value),
       filterSearch: true
     },

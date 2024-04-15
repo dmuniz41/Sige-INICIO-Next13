@@ -1,5 +1,4 @@
 import { Schema, model, models, Model } from "mongoose";
-import { IRepresentationCoefficients } from "./serviceFeeAuxiliary";
 
 export interface IActivity {
   amount: number;

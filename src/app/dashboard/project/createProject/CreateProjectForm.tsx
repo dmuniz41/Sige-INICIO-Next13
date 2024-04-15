@@ -1,30 +1,31 @@
 "use client";
-import { Button, DatePicker, Form, Input, Select, SelectProps } from "antd";
+import {  DatePicker, Form, Select, SelectProps, Table, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-import { useAppDispatch } from "@/hooks/hooks";
-import { nomenclatorsStartLoading } from "@/actions/nomenclator";
-import { startAddProject } from "@/actions/project";
-import { IRepresentationCoefficients, IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
-import { RootState, useAppSelector } from "@/store/store";
-import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { AddItemModal } from "./AddItem";
-import { INomenclator } from "@/models/nomenclator";
-import { IClientNomenclator } from "@/models/nomenclators/client";
 import { clientNomenclatorsStartLoading } from "@/actions/nomenclators/client";
+import { ColumnsType } from "antd/es/table";
+import { DeleteSvg } from "@/app/global/DeleteSvg";
+import { IClientNomenclator } from "@/models/nomenclators/client";
+import { INomenclator } from "@/models/nomenclator";
+import { nomenclatorsStartLoading } from "@/actions/nomenclator";
+import { PlusSvg } from "@/app/global/PlusSvg";
+import { RootState, useAppSelector } from "@/store/store";
+import { startAddProject } from "@/actions/project";
+import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
+import { useAppDispatch } from "@/hooks/hooks";
 import TextArea from "antd/es/input/TextArea";
+import { IItem } from "@/models/project";
 
 export const CreateProjectForm = () => {
-  const dispatch = useAppDispatch();
-  const [form] = Form.useForm();
-  const router = useRouter();
-  const payMethodNomenclator: IRepresentationCoefficients[] | undefined = [];
-  const currencyNomenclators: string[] | undefined = [];
-  const [itemsValues, setItemsValues]: any = useState([]);
   const [addItemModal, setAddItemModal] = useState(false);
   const [clientNumber, setClientNumber] = useState(0);
+  const [form] = Form.useForm();
+  const [itemsValues, setItemsValues]: any = useState([]);
+  const currencyNomenclators: string[] | undefined = [];
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
@@ -32,9 +33,6 @@ export const CreateProjectForm = () => {
     dispatch(startLoadServiceFeeAuxiliary());
   }, [dispatch]);
 
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
-    (state: RootState) => state?.serviceFee
-  );
   const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
@@ -42,7 +40,6 @@ export const CreateProjectForm = () => {
     (state: RootState) => state?.nomenclator
   );
 
-  serviceFeeAuxiliary?.payMethod?.map((payMethod) => payMethodNomenclator.push(payMethod));
   nomenclators.map((nomenclator: INomenclator) => {
     if (nomenclator.category === "Moneda") currencyNomenclators.push(nomenclator.code);
   });
@@ -161,16 +158,16 @@ export const CreateProjectForm = () => {
               />
             </Form.Item>
           </div>
+          <TableFormSection
+            sectionName="Servicios"
+            values={itemsValues}
+            formName="itemsList"
+            valuesSetter={setItemsValues}
+            addModalSetter={setAddItemModal}
+            buttonText="Añadir Servicio"
+            form={form}
+          />
         </article>
-        <FormSection
-          sectionName="Servicios"
-          values={itemsValues}
-          formName="itemsList"
-          valuesSetter={setItemsValues}
-          modalSetter={setAddItemModal}
-          buttonText="Añadir Servicio"
-          form={form}
-        />
       </section>
       <Form.Item>
         <button
@@ -183,6 +180,7 @@ export const CreateProjectForm = () => {
                 dispatch(
                   startAddProject({
                     ...values,
+                    itemsList: itemsValues,
                     clientNumber: clientNumber,
                     status: "Pendiente de Oferta",
                     expenses: 0,
@@ -211,80 +209,83 @@ export const CreateProjectForm = () => {
   );
 };
 
-export const FormSection = (props: any) => {
-  const { sectionName, values, formName, valuesSetter, modalSetter, buttonText, form } = props;
+const TableFormSection = (props: any) => {
+  const {
+    sectionName,
+    values,
+    valuesSetter,
+    addModalSetter,
+    // editModalSetter,
+    // valueToEditSetter,
+    buttonText
+  } = props;
+
+  const handleDelete = (record: IItem) => {
+    valuesSetter(values.filter((value: IItem) => value.description !== record.description));
+  };
+  // const handleEdit = (record: IServiceFeeSubItem) => {
+  //   valueToEditSetter(record);
+  //   editModalSetter(true);
+  // };
+
+  const columns: ColumnsType<IItem> = [
+    {
+      title: <span className="font-bold">No.</span>,
+      dataIndex: "idNumber",
+      key: "idNumber",
+      width: "5%"
+    },
+    {
+      title: <span className="font-bold">Descripción</span>,
+      dataIndex: "description",
+      key: "description",
+      width: "90%"
+    },
+    {
+      title: <span className="font-bold">Acciones</span>,
+      key: "actions",
+      width: "5%",
+      render: (_, { ...record }) => (
+        <div className="flex gap-1 justify-center">
+          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+            <button onClick={() => handleEdit(record)} className="table-see-action-btn">
+              <EditSvg width={18} height={18} />
+            </button>
+          </Tooltip> */}
+          <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
+            <button onClick={() => handleDelete(record)} className="table-delete-action-btn">
+              <DeleteSvg width={17} height={17} />
+            </button>
+          </Tooltip>
+        </div>
+      )
+    }
+  ];
+
   return (
-    <section className=" flex full bg-white-100 items-center rounded-md shadow-[0px_0px_5px_0px_#00000024] ">
-      <div className="flex w-[15%] min-h-[100px] h-full p-2 text-center items-center justify-center">
-        <span className="text-base font-bold">{sectionName.toUpperCase()}</span>
+    <section className=" flex w-full rounded-md p-2 border border-border_light shadow-sm">
+      <div className="flex w-[15%] h-full p-2 text-center items-center justify-center bg-[#fafafa] rounded-l-md">
+        <span className="text-base font-bold">{sectionName?.toUpperCase()}</span>
       </div>
-      <div className="flex pl-2 w-full flex-col">
-        {values?.length == 0 ? (
-          <div></div>
-        ) : (
-          <div className="flex w-full pr-9 gap-1 pt-4 font-bold">
-            <div className="w-[50px]">
-              <span>No.</span>
-            </div>
-            <div className="">
-              <span>Descripción del servicio</span>
-            </div>
-          </div>
-        )}
-        <Form.List name={formName}>
-          {(fields, { add, remove }) => (
-            <div className="flex flex-col pr-4 flex-1 pt-6">
-              {fields.map(({ key, name, ...restField }) => (
-                <div key={key} className="w-full">
-                  <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item
-                      className=""
-                      {...restField}
-                      name={[name, "idNumber"]}
-                      rules={[{ required: true }]}
-                    >
-                      <Input
-                        disabled
-                        placeholder="No."
-                        className=" w-[50px] disabled:bg-white-100  disabled:text-white-900"
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      className="grow"
-                      {...restField}
-                      name={[name, "description"]}
-                      rules={[{ required: true }]}
-                    >
-                      <Input
-                        disabled
-                        placeholder="Descripción"
-                        className="w-full disabled:bg-white-100  disabled:text-white-900"
-                      />
-                    </Form.Item>
-                    <MinusCircleOutlined
-                      className="mb-auto"
-                      onClick={() => {
-                        remove(name);
-                        valuesSetter(form.getFieldValue(`${formName}`));
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-              <Form.Item className="justify-center w-full">
-                <Button
-                  className="flex flex-row justify-center items-center"
-                  block
-                  type="dashed"
-                  onClick={() => modalSetter(true)}
-                  icon={<PlusOutlined />}
-                >
-                  {buttonText}
-                </Button>
-              </Form.Item>
-            </div>
-          )}
-        </Form.List>
+      <div className="grid pl-2 w-full gap-2">
+        <Table
+          size="small"
+          columns={columns}
+          dataSource={values}
+          className="shadow-sm"
+          sortDirections={["ascend"]}
+          pagination={false}
+          bordered
+        />
+        <button
+          className="add-item-form-btn"
+          onClick={() => {
+            addModalSetter(true);
+          }}
+        >
+          <PlusSvg width={20} height={20} />
+          {buttonText}
+        </button>
       </div>
     </section>
   );
