@@ -58,7 +58,7 @@ export const EditItemForm = () => {
       ]}
       size="middle"
     >
-      <section className=" flex-col">
+      <section className="flex-col">
         <Form.Item
           className="mb-3 w-[35%]"
           name="description"
@@ -68,32 +68,18 @@ export const EditItemForm = () => {
           <TextArea rows={4} onChange={(value) => setDescription(String(value.target.value))} />
         </Form.Item>
 
-        <TableFormSection
-          sectionName="LISTA DE ACTIVIDADES"
-          values={activitiesValues}
-          formName="activities"
-          valuesSetter={setActivitiesValues}
-          addModalSetter={setAddActivitiesModal}
-          buttonText="Añadir Actividad"
-          form={form}
-        />
+        <div className="flex w-full">
+          <TableFormSection
+            sectionName="LISTA DE ACTIVIDADES"
+            values={activitiesValues}
+            formName="activities"
+            valuesSetter={setActivitiesValues}
+            addModalSetter={setAddActivitiesModal}
+            buttonText="Añadir Actividad"
+            form={form}
+          />
+        </div>
       </section>
-
-      <article
-        className={`flex pl-4 items-center h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-md ${activitiesValues.length == 0 && `hidden`}`}
-      >
-        <div className="flex w-[90%] justify-end pr-4 font-bold">
-          <h2>VALOR: </h2>
-        </div>
-        <div className="flex w-[150px] pl-2">
-          ${" "}
-          {activitiesValues
-            .map((activity) => activity.value)
-            .reduce((total, current) => total + current, 0)
-            .toLocaleString("DE")}
-        </div>
-      </article>
-
       <Form.Item>
         <button
           type="submit"
@@ -224,7 +210,7 @@ const TableFormSection = (props: any) => {
   ];
 
   return (
-    <section className=" flex w-full mb-8 rounded-md p-2 border border-border_light shadow-sm">
+    <section className=" flex w-full rounded-md p-2 border border-border_light shadow-sm">
       <div className="flex w-[15%] h-full p-2 text-center items-center justify-center bg-[#fafafa] rounded-l-md">
         <span className="text-base font-bold">{sectionName?.toUpperCase()}</span>
       </div>

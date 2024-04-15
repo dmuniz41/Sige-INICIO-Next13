@@ -173,16 +173,16 @@ export const EditProjectForm = () => {
               />
             </Form.Item>
           </div>
+          <TableFormSection
+            sectionName="Servicios"
+            values={itemsValues}
+            formName="itemList"
+            valuesSetter={setItemsValues}
+            addModalSetter={setAddItemModal}
+            buttonText="Añadir Servicio"
+            form={form}
+          />
         </article>
-        <TableFormSection
-          sectionName="Servicios"
-          values={itemsValues}
-          formName="itemList"
-          valuesSetter={setItemsValues}
-          addModalSetter={setAddItemModal}
-          buttonText="Añadir Servicio"
-          form={form}
-        />
       </section>
       <Form.Item>
         <button

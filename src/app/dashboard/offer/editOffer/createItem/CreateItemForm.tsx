@@ -52,16 +52,17 @@ export const CreateItemForm = () => {
         >
           <TextArea rows={4} />
         </Form.Item>
-
-        <TableFormSection
-          sectionName="LISTA DE ACTIVIDADES"
-          values={activitiesValues}
-          formName="activities"
-          valuesSetter={setActivitiesValues}
-          addModalSetter={setAddActivitiesModal}
-          buttonText="Añadir Actividad"
-          form={form}
-        />
+        <div className="flex w-full">
+          <TableFormSection
+            sectionName="LISTA DE ACTIVIDADES"
+            values={activitiesValues}
+            formName="activities"
+            valuesSetter={setActivitiesValues}
+            addModalSetter={setAddActivitiesModal}
+            buttonText="Añadir Actividad"
+            form={form}
+          />
+        </div>
       </section>
       <Form.Item>
         <button
@@ -185,7 +186,7 @@ const TableFormSection = (props: any) => {
   ];
 
   return (
-    <section className=" flex w-full mb-8 rounded-md p-2 border border-border_light shadow-sm">
+    <section className=" flex w-full  rounded-md p-2 border border-border_light shadow-sm">
       <div className="flex w-[15%] h-full p-2 text-center items-center justify-center bg-[#fafafa] rounded-l-md">
         <span className="text-base font-bold">{sectionName?.toUpperCase()}</span>
       </div>
