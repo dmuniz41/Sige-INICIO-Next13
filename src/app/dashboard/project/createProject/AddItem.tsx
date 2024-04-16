@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, InputNumber, Modal} from "antd";
+import { Form, Modal} from "antd";
 import { IItem } from "@/models/project";
 import TextArea from "antd/es/input/TextArea";
 
