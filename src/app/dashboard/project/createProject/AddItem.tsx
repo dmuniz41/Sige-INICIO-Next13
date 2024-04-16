@@ -8,10 +8,9 @@ interface CollectionCreateFormProps {
   open: boolean;
   onCreate: (values: IItem) => void;
   onCancel: () => void;
-  listLength: number
 }
 
-export const AddItemModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, listLength }) => {
+export const AddItemModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
   const [form] = Form.useForm();
   return (
     <Modal
@@ -42,7 +41,7 @@ export const AddItemModal: React.FC<CollectionCreateFormProps> = ({ open, onCrea
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate({...values, idNumber: listLength + 1});
+                  onCreate(values);
                   form.resetFields();
                 })
                 .catch((error) => {

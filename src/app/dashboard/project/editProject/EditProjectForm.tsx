@@ -1,5 +1,5 @@
 "use client";
-import { Form, Input, InputNumber, Select, SelectProps, Tooltip } from "antd";
+import { Form, Select, SelectProps, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -16,6 +16,7 @@ import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { startUpdateProject } from "@/actions/project";
 import { useAppDispatch } from "@/hooks/hooks";
 import Table, { ColumnsType } from "antd/es/table";
+import TextArea from "antd/es/input/TextArea";
 
 export const EditProjectForm = () => {
   const [addItemModal, setAddItemModal] = useState(false);
@@ -24,7 +25,7 @@ export const EditProjectForm = () => {
   const currencyNomenclators: string[] | undefined = [];
   const dispatch = useAppDispatch();
   const router = useRouter();
-
+  
   const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
@@ -34,13 +35,16 @@ export const EditProjectForm = () => {
   const { clientNomenclators }: { clientNomenclators: IClientNomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
-
+  
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
     dispatch(clientNomenclatorsStartLoading());
     dispatch(startLoadServiceFeeAuxiliary());
     setItemsValues(selectedProject.itemsList);
   }, [dispatch, selectedProject]);
+  
+  const [clientNumber, setClientNumber] = useState(selectedProject.clientNumber);
+  const [clientName, setClientName] = useState(selectedProject?.clientName);
 
   nomenclators.map((nomenclator: INomenclator) => {
     if (nomenclator.category === "Moneda") currencyNomenclators.push(nomenclator.code);
@@ -66,9 +70,9 @@ export const EditProjectForm = () => {
 
   const onAddItem = (values: any) => {
     setItemsValues([...itemsValues, values]);
-    form.setFieldValue("itemsList", [values, ...itemsValues]);
     setAddItemModal(false);
   };
+
   return (
     <Form
       form={form}
@@ -82,24 +86,12 @@ export const EditProjectForm = () => {
       size="middle"
       fields={[
         {
-          name: "clientNumber",
-          value: selectedProject.clientNumber
-        },
-        {
-          name: "projectNumber",
-          value: selectedProject.projectNumber
-        },
-        {
           name: "clientName",
-          value: selectedProject.clientName
+          value: clientName
         },
         {
           name: "projectName",
           value: selectedProject.projectName
-        },
-        {
-          name: "payMethod",
-          value: selectedProject.payMethod
         },
         {
           name: "currency",
@@ -114,14 +106,6 @@ export const EditProjectForm = () => {
       <section className=" flex-col mb-4">
         <article className="grid gap-4">
           <div className="grid w-[50%]">
-            <Form.Item
-              className="mb-3"
-              name="clientNumber"
-              label={<span className="font-bold text-md">No. de Cliente</span>}
-              rules={[{ required: true, message: "Campo requerido" }]}
-            >
-              <InputNumber />
-            </Form.Item>
             <Form.Item
               className="mb-3"
               label={<span className="font-bold text-md">Nombre del Cliente</span>}
@@ -141,6 +125,12 @@ export const EditProjectForm = () => {
                     .toLowerCase()
                     .localeCompare((optionB?.label ?? "").toLowerCase())
                 }
+                onSelect={(value: string) => {
+                  setClientName(value)
+                  clientNomenclators.map((client) => {
+                    client.name === value && setClientNumber(client.idNumber);
+                  });
+                }}
               />
             </Form.Item>
             <Form.Item
@@ -149,7 +139,7 @@ export const EditProjectForm = () => {
               name="projectName"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
-              <Input />
+              <TextArea rows={3} />
             </Form.Item>
             <Form.Item
               className="mb-3"
@@ -196,6 +186,7 @@ export const EditProjectForm = () => {
                 dispatch(
                   startUpdateProject({
                     ...values,
+                    clientNumber: clientNumber,
                     _id: selectedProject._id,
                     itemsList: itemsValues
                   })
@@ -215,7 +206,6 @@ export const EditProjectForm = () => {
         open={addItemModal}
         onCancel={() => setAddItemModal(false)}
         onCreate={onAddItem}
-        listLength={itemsValues?.length}
       />
     </Form>
   );
@@ -243,15 +233,15 @@ const TableFormSection = (props: any) => {
   const columns: ColumnsType<IItem> = [
     {
       title: <span className="font-bold">No.</span>,
-      dataIndex: "idNumber",
       key: "idNumber",
-      width: "5%"
+      width: "2%",
+      render: (text, record, index) => <span className="flex justify-center">{index + 1}</span>
     },
     {
       title: <span className="font-bold">Descripción</span>,
       dataIndex: "description",
       key: "description",
-      width: "90%"
+      width: "95%"
     },
     {
       title: <span className="font-bold">Acciones</span>,

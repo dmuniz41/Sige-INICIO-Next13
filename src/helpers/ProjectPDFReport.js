@@ -195,6 +195,12 @@ const CustomTablePDF = (props) => {
 
 export default function ProjectPDFReport(props) {
   const { data = {} } = props;
+  data?.itemsList?.forEach((value, index, array) => {
+    array[index] = {
+      ...value,
+      idNumber: index + 1
+    };
+  });
   return (
     <Document>
       <Page wrap orientation="portrait" size={"LETTER"} style={styles.body}>

@@ -2,7 +2,6 @@ import { Schema, model, models, Model } from "mongoose";
 
 export interface IItem {
   key: string;
-  idNumber: number;
   description: string;
 }
 

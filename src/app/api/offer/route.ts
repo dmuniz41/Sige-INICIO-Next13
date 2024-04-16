@@ -266,7 +266,6 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   const params = request.nextUrl.searchParams;
-  const { id } = await request.json();
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -287,7 +286,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         {
           ok: true,
-          message: "La oferta a borrar no existe"
+          message: "La oferta a eliminar no existe"
         },
         { status: 404 }
       );
