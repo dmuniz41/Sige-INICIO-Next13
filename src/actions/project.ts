@@ -158,7 +158,7 @@ export const startDeleteProject = (id: string) => {
         });
       })
       .catch((error: AxiosError) => {
-        let { message }: any = error.response?.data;
+        let { message }: any = error?.response?.data;
         console.log("🚀 ~ file: project.ts:162 ~ return ~ message:", message);
         Swal.fire("Error", "Error al eliminar el proyecto", "error");
       });
@@ -176,7 +176,7 @@ export const loadSelectedProject = (id: string) => {
         dispatch(selectedProject(BDProject));
       })
       .catch((error: AxiosError) => {
-        let { message }: any = error.response?.data;
+        let { message }: any = error?.response?.data;
         console.log("🚀 ~ file: project.ts:182 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar el proyecto seleccionado", "error");
       });

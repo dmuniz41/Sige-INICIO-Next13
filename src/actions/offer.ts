@@ -117,6 +117,7 @@ export const loadSelectedOffer = (projectId: string) => {
       })
       .then((resp) => {
         let { BDOffer } = resp.data;
+        console.log("🚀 ~ .then ~ BDOffer:", BDOffer)
         dispatch(selectedOffer(BDOffer));
       })
       .catch((error: AxiosError) => {

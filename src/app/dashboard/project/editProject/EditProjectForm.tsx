@@ -17,15 +17,19 @@ import { startUpdateProject } from "@/actions/project";
 import { useAppDispatch } from "@/hooks/hooks";
 import Table, { ColumnsType } from "antd/es/table";
 import TextArea from "antd/es/input/TextArea";
+import { EditSvg } from "@/app/global/EditSvg";
+import { EditItemModal } from "../createProject/EditItem";
 
 export const EditProjectForm = () => {
   const [addItemModal, setAddItemModal] = useState(false);
+  const [editItemModal, setEditItemModal] = useState(false);
   const [form] = Form.useForm();
-  const [itemsValues, setItemsValues]: any = useState([]);
+  const [itemsValues, setItemsValues] = useState<IItem[]>([]);
+  const [rowToEdit, setRowToEdit] = useState<IItem>();
   const currencyNomenclators: string[] | undefined = [];
   const dispatch = useAppDispatch();
   const router = useRouter();
-  
+
   const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
@@ -35,14 +39,14 @@ export const EditProjectForm = () => {
   const { clientNomenclators }: { clientNomenclators: IClientNomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
-  
+
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
     dispatch(clientNomenclatorsStartLoading());
     dispatch(startLoadServiceFeeAuxiliary());
     setItemsValues(selectedProject.itemsList);
   }, [dispatch, selectedProject]);
-  
+
   const [clientNumber, setClientNumber] = useState(selectedProject.clientNumber);
   const [clientName, setClientName] = useState(selectedProject?.clientName);
 
@@ -71,6 +75,25 @@ export const EditProjectForm = () => {
   const onAddItem = (values: any) => {
     setItemsValues([...itemsValues, values]);
     setAddItemModal(false);
+  };
+
+  // ! ARREGLAR ESTA FUNCIONALIDAD: RETORNA undefined PARA EL RESTO DE ELEMENTOS QUE NO CUMPLEN LA CONDICION //
+  const onEditItem = (values: any) => {
+    console.log("🚀 ~ onEditItem ~ values:", values);
+    console.log("🚀 ~ newItemList ~ itemsValues:", itemsValues)
+    const newItemList = itemsValues?.map((value, index, array) => {
+      if (value._id === values._id) {
+        array[index]= {
+          ...value,
+          description: values.description
+        };
+        console.log("🚀 ~ newItemList ~ array[index]:", array[index])
+        return array[index]
+      }
+    });
+    console.log("🚀 ~ newItemList ~ newItemList:", newItemList);
+    // setItemsValues(newItemList!);
+    // setEditItemModal(false);
   };
 
   return (
@@ -126,7 +149,7 @@ export const EditProjectForm = () => {
                     .localeCompare((optionB?.label ?? "").toLowerCase())
                 }
                 onSelect={(value: string) => {
-                  setClientName(value)
+                  setClientName(value);
                   clientNomenclators.map((client) => {
                     client.name === value && setClientNumber(client.idNumber);
                   });
@@ -169,6 +192,8 @@ export const EditProjectForm = () => {
             formName="itemList"
             valuesSetter={setItemsValues}
             addModalSetter={setAddItemModal}
+            editModalSetter={setEditItemModal}
+            valueToEditSetter={setRowToEdit}
             buttonText="Añadir Servicio"
             form={form}
           />
@@ -207,6 +232,12 @@ export const EditProjectForm = () => {
         onCancel={() => setAddItemModal(false)}
         onCreate={onAddItem}
       />
+      <EditItemModal
+        open={editItemModal}
+        onCancel={() => setEditItemModal(false)}
+        onCreate={onEditItem}
+        defaultValues={rowToEdit}
+      />
     </Form>
   );
 };
@@ -217,18 +248,18 @@ const TableFormSection = (props: any) => {
     values,
     valuesSetter,
     addModalSetter,
-    // editModalSetter,
-    // valueToEditSetter,
+    editModalSetter,
+    valueToEditSetter,
     buttonText
   } = props;
 
   const handleDelete = (record: IItem) => {
     valuesSetter(values.filter((value: IItem) => value.description !== record.description));
   };
-  // const handleEdit = (record: IServiceFeeSubItem) => {
-  //   valueToEditSetter(record);
-  //   editModalSetter(true);
-  // };
+  const handleEdit = (record: IItem) => {
+    valueToEditSetter(record);
+    editModalSetter(true);
+  };
 
   const columns: ColumnsType<IItem> = [
     {
@@ -249,11 +280,11 @@ const TableFormSection = (props: any) => {
       width: "5%",
       render: (_, { ...record }) => (
         <div className="flex gap-1 justify-center">
-          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleEdit(record)} className="table-see-action-btn">
               <EditSvg width={18} height={18} />
             </button>
-          </Tooltip> */}
+          </Tooltip>
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleDelete(record)} className="table-delete-action-btn">
               <DeleteSvg width={17} height={17} />
