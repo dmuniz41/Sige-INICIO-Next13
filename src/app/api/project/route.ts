@@ -53,21 +53,9 @@ export async function POST(request: NextRequest) {
     }
 
     const newProject = new Project({
-      clientName: project.clientName,
-      clientNumber: project.clientNumber,
-      currency: project.currency,
-      deliveryDate: project.deliveryDate,
-      expenses: project.expenses ?? 0,
-      finalOfferId: project.finalOfferId ?? "",
-      initDate: project.initDate,
-      itemsList: project.itemsList,
-      key: newKey,
-      payMethod: project.payMethod,
-      profits: project.profits ?? 0,
-      projectName: project.projectName,
+      ...project,
       projectNumber: newProjectNumber,
-      status: project.status,
-      totalValue: project.totalValue ?? 0
+      key: newKey
     });
 
     await newProject.save();
@@ -86,13 +74,14 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ POST ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
           message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
@@ -101,6 +90,7 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   const { ...project }: IProject = await request.json();
+  console.log("🚀 ~ PUT ~ project:", project);
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -132,19 +122,7 @@ export async function PUT(request: NextRequest) {
     const updatedProject = await Project.findByIdAndUpdate(
       project._id,
       {
-        clientName: project.clientName,
-        clientNumber: project.clientNumber,
-        currency: project.currency,
-        deliveryDate: project.deliveryDate,
-        expenses: project.expenses ?? 0,
-        finalOfferId: project.finalOfferId,
-        initDate: project.initDate,
-        itemsList: project.itemsList,
-        payMethod: project.payMethod,
-        profits: project.profits ?? 0,
-        projectName: project.projectName,
-        status: project.status,
-        totalValue: project.totalValue ?? 0
+        ...project
       },
       { new: true }
     );
@@ -163,13 +141,14 @@ export async function PUT(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ PUT ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
           message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
@@ -208,21 +187,22 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ GET ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
           message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }
   }
 }
 
-export async function PATCH(request: NextRequest) {
-  const { id } = await request.json();
+export async function DELETE(request: NextRequest) {
+  const params = request.nextUrl.searchParams;
   const accessToken = request.headers.get("accessToken");
 
   try {
@@ -238,18 +218,20 @@ export async function PATCH(request: NextRequest) {
       );
     }
     await connectDB();
-    const projectToDelete = await Project.findByIdAndDelete(id);
+
+    const projectToDelete = await Project.findById(params.get("id"));
 
     if (!projectToDelete) {
-      return NextResponse.json({
-        ok: true,
-        message: "El proyecto a borrar no existe"
-      });
-    }
-
-    if (projectToDelete) {
-      await Project.findByIdAndDelete(id);
-      const offersToDelete = await Offer.find({ projectId: id });
+      return NextResponse.json(
+        {
+          ok: true,
+          message: "El proyecto a eliminar no existe"
+        },
+        { status: 404 }
+      );
+    } else {
+      await Project.findByIdAndDelete(await Project.findByIdAndDelete(params.get("id")));
+      const offersToDelete = await Offer.find({ projectId: params.get("id") });
       offersToDelete.map(async (offer: any) => await Offer.findByIdAndDelete(offer._id));
     }
     return new NextResponse(
@@ -267,13 +249,14 @@ export async function PATCH(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ DELETE ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
           message: error.message
         },
         {
-          status: 400
+          status: 500
         }
       );
     }

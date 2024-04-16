@@ -10,11 +10,11 @@ import React, { useEffect } from "react";
 
 import { clearOffer, loadSelectedProject } from "@/actions/project";
 import { EditSvg } from "@/app/global/EditSvg";
-import { IProject } from "@/models/project";
+import { IItem, IProject } from "@/models/project";
 import { PDFSvg } from "@/app/global/PDFSvg";
-import { ProjectViewTable } from "./ProjectViewTable";
 import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
 import ProjectPDFReport from "@/helpers/ProjectPDFReport";
+import Table, { ColumnsType } from "antd/es/table";
 
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
@@ -181,5 +181,36 @@ export const ProjectView = () => {
         </article>
       </section>
     </>
+  );
+};
+
+
+const ProjectViewTable = (props: any) => {
+  const { data } = props;
+
+  const columns: ColumnsType<IItem> = [
+    {
+      title: <span className="font-bold">No.</span>,
+      key: "idNumber",
+      width: "1%",
+      align: "center",
+      render : (text, record, index) => index +1
+    },
+    {
+      title: <span className="font-bold">Descripción del servicio</span>,
+      dataIndex: "description",
+      key: "description",
+      width: "55%"
+    }
+  ];
+  return (
+    <Table
+      size="small"
+      columns={columns}
+      dataSource={data}
+      className="border-solid w-full"
+      pagination={false}
+      bordered
+    />
   );
 };

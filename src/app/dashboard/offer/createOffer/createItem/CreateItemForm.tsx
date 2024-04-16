@@ -52,16 +52,17 @@ export const CreateItemForm = () => {
         >
           <TextArea rows={4} />
         </Form.Item>
-
-        <TableFormSection
-          sectionName="LISTA DE ACTIVIDADES"
-          values={activitiesValues}
-          formName="activities"
-          valuesSetter={setActivitiesValues}
-          addModalSetter={setAddActivitiesModal}
-          buttonText="Añadir Actividad"
-          form={form}
-        />
+        <div className="flex w-full">
+          <TableFormSection
+            sectionName="LISTA DE ACTIVIDADES"
+            values={activitiesValues}
+            formName="activities"
+            valuesSetter={setActivitiesValues}
+            addModalSetter={setAddActivitiesModal}
+            buttonText="Añadir Actividad"
+            form={form}
+          />
+        </div>
       </section>
       <Form.Item>
         <button
@@ -115,9 +116,7 @@ const TableFormSection = (props: any) => {
   const subtotal = useMemo(() => values?.map((value: IActivity) => value.value), [values]);
 
   const handleDelete = (record: IActivity) => {
-    valuesSetter(
-      values.filter((value: IActivity) => value.description !== record.description)
-    );
+    valuesSetter(values.filter((value: IActivity) => value.description !== record.description));
   };
   // const handleEdit = (record: IServiceFeeSubItem) => {
   //   valueToEditSetter(record);
@@ -141,7 +140,7 @@ const TableFormSection = (props: any) => {
       title: <span className="font-bold">Unidad de Medida</span>,
       dataIndex: "unitMeasure",
       key: "unitMeasure",
-      width: "10%",
+      width: "10%"
     },
     {
       title: <span className="font-bold">Precio</span>,

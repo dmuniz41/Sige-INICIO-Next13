@@ -14,19 +14,7 @@ export const startAddProject = ({ ...project }) => {
     await axios
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/project`,
-        {
-          clientName: project.clientName,
-          clientNumber: project.clientNumber,
-          currency: project.currency,
-          deliveryDate: project.deliveryDate,
-          expenses: project.expenses,
-          initDate: project.initDate,
-          itemsList: project.itemsList,
-          profits: project.profits,
-          projectName: project.projectName,
-          status: project.status,
-          totalValue: project.totalValue
-        },
+        { ...project },
         { headers: { accessToken: token } }
       )
       .then((resp) => {
@@ -39,7 +27,7 @@ export const startAddProject = ({ ...project }) => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: project.ts:40 ~ return ~ message:", message);
+        console.log("🚀 ~ file: project.ts:30 ~ return ~ message:", message);
         Swal.fire("Error", message, "error");
       });
   };
@@ -53,22 +41,7 @@ export const startUpdateProject = ({ ...project }) => {
     await axios
       .put(
         `${process.env.NEXT_PUBLIC_API_URL}/project`,
-        {
-          _id: project._id,
-          clientName: project.clientName,
-          clientNumber: project.clientNumber,
-          currency: project.currency,
-          deliveryDate: project.deliveryDate,
-          expenses: project.expenses,
-          finalOfferId: project.finalOfferId,
-          initDate: project.initDate,
-          itemsList: project.itemsList,
-          profits: project.profits,
-          projectName: project.projectName,
-          status: project.status,
-          totalValue: project.totalValue,
-          payMethod: project.payMethod
-        },
+        { ...project },
         { headers: { accessToken: token } }
       )
       .then((resp) => {
@@ -81,7 +54,7 @@ export const startUpdateProject = ({ ...project }) => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: project.ts:80 ~ return ~ message:", message);
+        console.log("🚀 ~ file: project.ts:57 ~ return ~ message:", message);
         Swal.fire("Error", "Error al editar proyecto", "error");
       });
   };
@@ -162,7 +135,7 @@ export const projectsStartLoading = () => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: project.ts:157 ~ return ~ message:", message);
+        console.log("🚀 ~ file: project.ts:138 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar los proyectos", "error");
       });
   };
@@ -173,11 +146,9 @@ export const startDeleteProject = (id: string) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/project`,
-        { id },
-        { headers: { accessToken: token } }
-      )
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/project?id=${id}`, {
+        headers: { accessToken: token }
+      })
       .then(() => {
         dispatch(deleteProject(id));
         dispatch(projectsStartLoading());
@@ -187,8 +158,8 @@ export const startDeleteProject = (id: string) => {
         });
       })
       .catch((error: AxiosError) => {
-        let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: project.ts:118 ~ return ~ message:", message);
+        let { message }: any = error?.response?.data;
+        console.log("🚀 ~ file: project.ts:162 ~ return ~ message:", message);
         Swal.fire("Error", "Error al eliminar el proyecto", "error");
       });
   };
@@ -205,8 +176,8 @@ export const loadSelectedProject = (id: string) => {
         dispatch(selectedProject(BDProject));
       })
       .catch((error: AxiosError) => {
-        let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: project.ts:137 ~ return ~ message:", message);
+        let { message }: any = error?.response?.data;
+        console.log("🚀 ~ file: project.ts:182 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar el proyecto seleccionado", "error");
       });
   };

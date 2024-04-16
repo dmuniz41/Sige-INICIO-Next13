@@ -1,5 +1,5 @@
 "use client";
-import { Form, Input, InputNumber, Select, SelectProps, Tooltip } from "antd";
+import { Form, Select, SelectProps, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -16,11 +16,16 @@ import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { startUpdateProject } from "@/actions/project";
 import { useAppDispatch } from "@/hooks/hooks";
 import Table, { ColumnsType } from "antd/es/table";
+import TextArea from "antd/es/input/TextArea";
+import { EditSvg } from "@/app/global/EditSvg";
+import { EditItemModal } from "../createProject/EditItem";
 
 export const EditProjectForm = () => {
   const [addItemModal, setAddItemModal] = useState(false);
+  const [editItemModal, setEditItemModal] = useState(false);
   const [form] = Form.useForm();
-  const [itemsValues, setItemsValues]: any = useState([]);
+  const [itemsValues, setItemsValues] = useState<IItem[]>([]);
+  const [rowToEdit, setRowToEdit] = useState<IItem>();
   const currencyNomenclators: string[] | undefined = [];
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -41,6 +46,9 @@ export const EditProjectForm = () => {
     dispatch(startLoadServiceFeeAuxiliary());
     setItemsValues(selectedProject.itemsList);
   }, [dispatch, selectedProject]);
+
+  const [clientNumber, setClientNumber] = useState(selectedProject.clientNumber);
+  const [clientName, setClientName] = useState(selectedProject?.clientName);
 
   nomenclators.map((nomenclator: INomenclator) => {
     if (nomenclator.category === "Moneda") currencyNomenclators.push(nomenclator.code);
@@ -66,9 +74,28 @@ export const EditProjectForm = () => {
 
   const onAddItem = (values: any) => {
     setItemsValues([...itemsValues, values]);
-    form.setFieldValue("itemsList", [values, ...itemsValues]);
     setAddItemModal(false);
   };
+
+  // ! ARREGLAR ESTA FUNCIONALIDAD: RETORNA undefined PARA EL RESTO DE ELEMENTOS QUE NO CUMPLEN LA CONDICION //
+  const onEditItem = (values: any) => {
+    console.log("🚀 ~ onEditItem ~ values:", values);
+    console.log("🚀 ~ newItemList ~ itemsValues:", itemsValues)
+    const newItemList = itemsValues?.map((value, index, array) => {
+      if (value._id === values._id) {
+        array[index]= {
+          ...value,
+          description: values.description
+        };
+        console.log("🚀 ~ newItemList ~ array[index]:", array[index])
+        return array[index]
+      }
+    });
+    console.log("🚀 ~ newItemList ~ newItemList:", newItemList);
+    // setItemsValues(newItemList!);
+    // setEditItemModal(false);
+  };
+
   return (
     <Form
       form={form}
@@ -82,24 +109,12 @@ export const EditProjectForm = () => {
       size="middle"
       fields={[
         {
-          name: "clientNumber",
-          value: selectedProject.clientNumber
-        },
-        {
-          name: "projectNumber",
-          value: selectedProject.projectNumber
-        },
-        {
           name: "clientName",
-          value: selectedProject.clientName
+          value: clientName
         },
         {
           name: "projectName",
           value: selectedProject.projectName
-        },
-        {
-          name: "payMethod",
-          value: selectedProject.payMethod
         },
         {
           name: "currency",
@@ -114,14 +129,6 @@ export const EditProjectForm = () => {
       <section className=" flex-col mb-4">
         <article className="grid gap-4">
           <div className="grid w-[50%]">
-            <Form.Item
-              className="mb-3"
-              name="clientNumber"
-              label={<span className="font-bold text-md">No. de Cliente</span>}
-              rules={[{ required: true, message: "Campo requerido" }]}
-            >
-              <InputNumber />
-            </Form.Item>
             <Form.Item
               className="mb-3"
               label={<span className="font-bold text-md">Nombre del Cliente</span>}
@@ -141,6 +148,12 @@ export const EditProjectForm = () => {
                     .toLowerCase()
                     .localeCompare((optionB?.label ?? "").toLowerCase())
                 }
+                onSelect={(value: string) => {
+                  setClientName(value);
+                  clientNomenclators.map((client) => {
+                    client.name === value && setClientNumber(client.idNumber);
+                  });
+                }}
               />
             </Form.Item>
             <Form.Item
@@ -149,7 +162,7 @@ export const EditProjectForm = () => {
               name="projectName"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
-              <Input />
+              <TextArea rows={3} />
             </Form.Item>
             <Form.Item
               className="mb-3"
@@ -179,6 +192,8 @@ export const EditProjectForm = () => {
             formName="itemList"
             valuesSetter={setItemsValues}
             addModalSetter={setAddItemModal}
+            editModalSetter={setEditItemModal}
+            valueToEditSetter={setRowToEdit}
             buttonText="Añadir Servicio"
             form={form}
           />
@@ -196,6 +211,7 @@ export const EditProjectForm = () => {
                 dispatch(
                   startUpdateProject({
                     ...values,
+                    clientNumber: clientNumber,
                     _id: selectedProject._id,
                     itemsList: itemsValues
                   })
@@ -215,7 +231,12 @@ export const EditProjectForm = () => {
         open={addItemModal}
         onCancel={() => setAddItemModal(false)}
         onCreate={onAddItem}
-        listLength={itemsValues?.length}
+      />
+      <EditItemModal
+        open={editItemModal}
+        onCancel={() => setEditItemModal(false)}
+        onCreate={onEditItem}
+        defaultValues={rowToEdit}
       />
     </Form>
   );
@@ -227,31 +248,31 @@ const TableFormSection = (props: any) => {
     values,
     valuesSetter,
     addModalSetter,
-    // editModalSetter,
-    // valueToEditSetter,
+    editModalSetter,
+    valueToEditSetter,
     buttonText
   } = props;
 
   const handleDelete = (record: IItem) => {
     valuesSetter(values.filter((value: IItem) => value.description !== record.description));
   };
-  // const handleEdit = (record: IServiceFeeSubItem) => {
-  //   valueToEditSetter(record);
-  //   editModalSetter(true);
-  // };
+  const handleEdit = (record: IItem) => {
+    valueToEditSetter(record);
+    editModalSetter(true);
+  };
 
   const columns: ColumnsType<IItem> = [
     {
       title: <span className="font-bold">No.</span>,
-      dataIndex: "idNumber",
       key: "idNumber",
-      width: "5%"
+      width: "2%",
+      render: (text, record, index) => <span className="flex justify-center">{index + 1}</span>
     },
     {
       title: <span className="font-bold">Descripción</span>,
       dataIndex: "description",
       key: "description",
-      width: "90%"
+      width: "95%"
     },
     {
       title: <span className="font-bold">Acciones</span>,
@@ -259,11 +280,11 @@ const TableFormSection = (props: any) => {
       width: "5%",
       render: (_, { ...record }) => (
         <div className="flex gap-1 justify-center">
-          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleEdit(record)} className="table-see-action-btn">
               <EditSvg width={18} height={18} />
             </button>
-          </Tooltip> */}
+          </Tooltip>
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleDelete(record)} className="table-delete-action-btn">
               <DeleteSvg width={17} height={17} />

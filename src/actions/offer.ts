@@ -117,11 +117,12 @@ export const loadSelectedOffer = (projectId: string) => {
       })
       .then((resp) => {
         let { BDOffer } = resp.data;
+        console.log("🚀 ~ .then ~ BDOffer:", BDOffer)
         dispatch(selectedOffer(BDOffer));
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: offer.ts:91 ~ return ~ message:", message);
+        console.log("🚀 ~ file: offer.ts:124 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar la oferta seleccionada", "error");
       });
   };

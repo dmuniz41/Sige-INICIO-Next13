@@ -1,6 +1,5 @@
 "use client";
-
-import { Form, Modal} from "antd";
+import { Form, Modal } from "antd";
 import { IItem } from "@/models/project";
 import TextArea from "antd/es/input/TextArea";
 
@@ -8,9 +7,16 @@ interface CollectionCreateFormProps {
   open: boolean;
   onCreate: (values: IItem) => void;
   onCancel: () => void;
+  defaultValues: IItem | undefined;
 }
 
-export const AddItemModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+export const EditItemModal: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel,
+  defaultValues
+}) => {
+  console.log("🚀 ~ defaultValues:", defaultValues)
   const [form] = Form.useForm();
   return (
     <Modal
@@ -36,12 +42,12 @@ export const AddItemModal: React.FC<CollectionCreateFormProps> = ({ open, onCrea
           </button>
           <button
             key="1"
-            className="modal-btn-primary "
+            className="modal-btn-primary"
             onClick={() => {
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate(values);
+                  onCreate({...values, _id: defaultValues?._id!});
                   form.resetFields();
                 })
                 .catch((error) => {
@@ -49,14 +55,24 @@ export const AddItemModal: React.FC<CollectionCreateFormProps> = ({ open, onCrea
                 });
             }}
           >
-            Añadir
+            Editar
           </button>
-        </div>,
+        </div>
       ]}
     >
-      <Form form={form} layout="horizontal" name="addItem" size="middle">
-        <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
-          <TextArea rows={3}/>
+      <Form
+        form={form}
+        layout="horizontal"
+        name="addItem"
+        size="middle"
+        fields={[{ name: "description", value: defaultValues?.description }]}
+      >
+        <Form.Item
+          name="description"
+          label="Descripción"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
+          <TextArea rows={3} />
         </Form.Item>
       </Form>
     </Modal>

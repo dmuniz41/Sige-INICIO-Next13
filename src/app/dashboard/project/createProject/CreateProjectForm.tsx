@@ -1,5 +1,5 @@
 "use client";
-import {  DatePicker, Form, Select, SelectProps, Table, Tooltip } from "antd";
+import { DatePicker, Form, Select, SelectProps, Table, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -8,6 +8,7 @@ import { clientNomenclatorsStartLoading } from "@/actions/nomenclators/client";
 import { ColumnsType } from "antd/es/table";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { IClientNomenclator } from "@/models/nomenclators/client";
+import { IItem } from "@/models/project";
 import { INomenclator } from "@/models/nomenclator";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { PlusSvg } from "@/app/global/PlusSvg";
@@ -16,7 +17,6 @@ import { startAddProject } from "@/actions/project";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import TextArea from "antd/es/input/TextArea";
-import { IItem } from "@/models/project";
 
 export const CreateProjectForm = () => {
   const [addItemModal, setAddItemModal] = useState(false);
@@ -64,7 +64,6 @@ export const CreateProjectForm = () => {
 
   const onAddItem = (values: any) => {
     setItemsValues([...itemsValues, values]);
-    form.setFieldValue("itemsList", [...itemsValues, values]);
     setAddItemModal(false);
   };
   return (
@@ -203,7 +202,6 @@ export const CreateProjectForm = () => {
         open={addItemModal}
         onCancel={() => setAddItemModal(false)}
         onCreate={onAddItem}
-        listLength={itemsValues?.length}
       />
     </Form>
   );
@@ -231,9 +229,9 @@ const TableFormSection = (props: any) => {
   const columns: ColumnsType<IItem> = [
     {
       title: <span className="font-bold">No.</span>,
-      dataIndex: "idNumber",
       key: "idNumber",
-      width: "5%"
+      width: "5%",
+      render: (text, record, index) => index + 1
     },
     {
       title: <span className="font-bold">Descripción</span>,
