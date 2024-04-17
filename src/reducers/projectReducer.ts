@@ -2,32 +2,40 @@ import { types } from "../types/types";
 
 const initialState = {
   projects: [],
-  selectedProject: {},
+  selectedProject: {}
 };
 
 export const projectReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case types.addProject:
       return {
-        ...state,
+        ...state
       };
     case types.updateProject:
       return {
-        ...state,
+        ...state
       };
     case types.deleteProject:
       return {
-        ...state,
+        ...state
       };
     case types.projectsLoaded:
       return {
         ...state,
-        projects: [...action.payload],
+        projects: [...action.payload]
       };
     case types.selectedProject:
       return {
         ...state,
-        selectedProject: action.payload,
+        selectedProject: action.payload
+      };
+    case types.editItemList:
+      return {
+        ...state,
+        selectedProject: {
+          ...state.selectedProject,
+          itemsList: [...action.payload]
+        }
       };
 
     default:

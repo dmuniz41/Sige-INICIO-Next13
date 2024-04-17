@@ -63,6 +63,7 @@ export const types = {
   deleteProject:           "[Project] Delete Project",
   projectsLoaded:          "[Project] Projects Loaded ",
   selectedProject:         "[Project] Project Selected ",
+  editItemList:            "[Project] Edit Item in Project ",
 
   addOffer:                "[Offer] Add Offer",
   updateOffer:             "[Offer] Update Offer",

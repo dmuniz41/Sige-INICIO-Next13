@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
 
-import { IProject } from "@/models/project";
+import { IItem, IProject } from "@/models/project";
 import { Toast } from "@/helpers/customAlert";
 import { types } from "@/types/types";
 import { offersStartLoading, startUpdateOffer } from "./offer";
@@ -35,7 +35,6 @@ export const startAddProject = ({ ...project }) => {
 
 //* ACTUALIZA UN PROYECTO  *//
 export const startUpdateProject = ({ ...project }) => {
-  console.log("🚀 ~ startUpdateProject ~ project:", project);
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
@@ -176,8 +175,8 @@ export const loadSelectedProject = (id: string) => {
         dispatch(selectedProject(BDProject));
       })
       .catch((error: AxiosError) => {
+        console.log("🚀 ~ return ~ error:", error);
         let { message }: any = error?.response?.data;
-        console.log("🚀 ~ file: project.ts:182 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar el proyecto seleccionado", "error");
       });
   };
@@ -214,7 +213,12 @@ const deleteProject = (id: string) => ({
     id
   }
 });
-const selectedProject = (project: any) => ({
+const selectedProject = ({ ...project }) => ({
   type: types.selectedProject,
-  payload: project
+  payload: { ...project }
+});
+
+export const editItemList = (items: IItem[]) => ({
+  type: types.editItemList,
+  payload: items
 });

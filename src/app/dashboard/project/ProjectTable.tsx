@@ -60,10 +60,10 @@ const ProjectTable: React.FC = () => {
   const canDelete = sessionData?.user.role.includes("Eliminar Proyectos");
 
   useEffect(() => {
-    dispatch(projectsStartLoading());
     dispatch(nomenclatorsStartLoading());
     dispatch(representativeNomenclatorsStartLoading());
     dispatch(clientNomenclatorsStartLoading());
+    dispatch(projectsStartLoading());
   }, [dispatch]);
 
   const fields = [
@@ -200,15 +200,8 @@ const ProjectTable: React.FC = () => {
   }
 
   const handleView = (id: string): void => {
-    if (id) {
-      dispatch(loadSelectedProject(id));
-      router.push(`/dashboard/project/${id}`);
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un proyecto para ver"
-      });
-    }
+    dispatch(loadSelectedProject(id));
+    router.push(`/dashboard/project/${id}`);
   };
 
   const handleViewOffer = (projectId: string): void => {
@@ -543,34 +536,34 @@ const ProjectTable: React.FC = () => {
               <RefreshSvg />
             </button>
           </Tooltip>
-            <PDFDownloadLink
-              document={
-                <PDFReport fields={fields} data={PDFReportData} title={"REPORTE DE PROYECTOS"} />
-              }
-              fileName={`Reporte de proyectoss (${currentDate})`}
-            >
-              {({ blob, url, loading, error }) =>
-                !canList ? (
-                  <button
-                    disabled
-                    className={`opacity-20 pt-2 pl-2" flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-                  >
-                    <PDFSvg />
-                  </button>
-                ) : (
-                  <button
-                    disabled={!canList}
-                    className={`${
-                      canList
-                        ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                        : "opacity-20 pt-2 pl-2"
-                    } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-                  >
-                    <PDFSvg />
-                  </button>
-                )
-              }
-            </PDFDownloadLink>
+          <PDFDownloadLink
+            document={
+              <PDFReport fields={fields} data={PDFReportData} title={"REPORTE DE PROYECTOS"} />
+            }
+            fileName={`Reporte de proyectos (${currentDate})`}
+          >
+            {({ blob, url, loading, error }) =>
+              !canList ? (
+                <button
+                  disabled
+                  className={`opacity-20 pt-2 pl-2" flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+                >
+                  <PDFSvg />
+                </button>
+              ) : (
+                <button
+                  disabled={!canList}
+                  className={`${
+                    canList
+                      ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                      : "opacity-20 pt-2 pl-2"
+                  } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+                >
+                  <PDFSvg />
+                </button>
+              )
+            }
+          </PDFDownloadLink>
         </div>
       </div>
       <Table
