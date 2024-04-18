@@ -1,5 +1,4 @@
 "use client";
-
 import { Form, InputNumber, Modal, Radio, Select, SelectProps } from "antd";
 import { IActivity } from "@/models/offer";
 import { IServiceFee } from "@/models/serviceFees";
@@ -12,27 +11,35 @@ interface CollectionCreateFormProps {
   open: boolean;
   onCreate: (values: IActivity) => void;
   onCancel: () => void;
+  defaultValues: IActivity | undefined;
 }
-
-export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
+// !ARREGLAR: NO ACTUALIZA EN TIEMPO REAL LOS VALORES DE LOS INPUTS CUANDO SE SELECCIONA UNA ACTIVIDAD PARA EDITAR //
+export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
   open,
   onCreate,
-  onCancel
+  onCancel,
+  defaultValues
 }) => {
+  const dispatch = useAppDispatch();
   const [size, setSize] = useState<number>(0);
-  const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>("");
-  const [currentPrice, setCurrentPrice] = useState<number>(0);
+  const [currentPrice, setCurrentPrice] = useState<number>(defaultValues?.price!);
   const [selectedServiceFee, setSelectedServiceFee] = useState<IServiceFee>();
   const activityValue = useMemo(() => size * currentPrice, [size, currentPrice]);
-  const dispatch = useAppDispatch();
-
+  
   useEffect(() => {
     dispatch(serviceFeeStartLoading());
   }, [dispatch]);
-
+  
   const { serviceFees }: { serviceFees: IServiceFee[] } = useAppSelector(
     (state: RootState) => state?.serviceFee
   );
+  const { selectedActivity }: { selectedActivity: IActivity } = useAppSelector(
+    (state: RootState) => state?.offer
+  );
+  console.log("🚀 ~ selectedActivity:", selectedActivity)
+  const [currentDescription, setCurrentDescription] = useState<string>(selectedActivity?.description);
+  const description = useMemo(() => selectedActivity.description, [selectedActivity]);
+  const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>(selectedActivity?.unitMeasure);
 
   const listOfActivities: SelectProps["options"] = serviceFees.map((serviceFee) => {
     return {
@@ -47,14 +54,17 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-bold text-lg">Nueva Actividad</span>
+          <span className="font-bold text-lg">Editar Actividad</span>
         </div>
       }
       style={{ textAlign: "left" }}
       centered
       open={open}
       destroyOnClose
-      onCancel={onCancel}
+      onCancel={() => {
+        form.resetFields();
+        onCancel;
+      }}
       okType="default"
       okText="Crear"
       width={"1000px"}
@@ -75,7 +85,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                     currentUnitMeasure.includes("Unidades (U)") ||
                       currentUnitMeasure.includes("Metro (m)")
                       ? {
-                          _id: selectedServiceFee?._id!,
+                          _id: defaultValues?._id!,
                           amount: values.amount,
                           description: values.description.value,
                           price: Number(currentPrice.toFixed(2)),
@@ -83,7 +93,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                           value: Number(activityValue.toFixed(2))
                         }
                       : {
-                          _id: selectedServiceFee?._id!,
+                          _id: defaultValues?._id!,
                           amount: size,
                           description: values.description.value,
                           price: Number(currentPrice.toFixed(2)),
@@ -106,7 +116,19 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
         </div>
       ]}
     >
-      <Form form={form} layout="horizontal" name="addActivity" size="middle">
+      <Form
+        form={form}
+        layout="horizontal"
+        name="addActivity"
+        size="middle"
+        initialValues={{description:description}}
+        // fields={[
+        //   {
+        //     name: "description",
+        //     value: description
+        //   }
+        // ]}
+      >
         <Form.Item
           name="description"
           label="Descripción"
@@ -122,6 +144,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
               const currentServiceFee = serviceFees.find(
                 (serviceFee) => serviceFee.taskName === value.label
               );
+              setCurrentDescription(value.value)
               setSelectedServiceFee(currentServiceFee!);
               setCurrentUnitMeasure(currentServiceFee?.unitMeasure!);
               setCurrentPrice(0);

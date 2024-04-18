@@ -13,7 +13,7 @@ import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
-import { startUpdateProject } from "@/actions/project";
+import { editItemList, startUpdateProject } from "@/actions/project";
 import { useAppDispatch } from "@/hooks/hooks";
 import Table, { ColumnsType } from "antd/es/table";
 import TextArea from "antd/es/input/TextArea";
@@ -34,17 +34,17 @@ export const EditProjectForm = () => {
     (state: RootState) => state?.nomenclator
   );
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
-    (state: RootState) => state.project
+    (state: RootState) => state?.project
   );
   const { clientNomenclators }: { clientNomenclators: IClientNomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
 
   useEffect(() => {
+    setItemsValues(selectedProject.itemsList);
     dispatch(nomenclatorsStartLoading());
     dispatch(clientNomenclatorsStartLoading());
     dispatch(startLoadServiceFeeAuxiliary());
-    setItemsValues(selectedProject.itemsList);
   }, [dispatch, selectedProject]);
 
   const [clientNumber, setClientNumber] = useState(selectedProject.clientNumber);
@@ -77,23 +77,21 @@ export const EditProjectForm = () => {
     setAddItemModal(false);
   };
 
-  // ! ARREGLAR ESTA FUNCIONALIDAD: RETORNA undefined PARA EL RESTO DE ELEMENTOS QUE NO CUMPLEN LA CONDICION //
   const onEditItem = (values: any) => {
-    console.log("🚀 ~ onEditItem ~ values:", values);
-    console.log("🚀 ~ newItemList ~ itemsValues:", itemsValues)
-    const newItemList = itemsValues?.map((value, index, array) => {
+    const newItemList: IItem[] = [];
+    itemsValues.forEach((value: any) => {
       if (value._id === values._id) {
-        array[index]= {
+        newItemList.push({
           ...value,
           description: values.description
-        };
-        console.log("🚀 ~ newItemList ~ array[index]:", array[index])
-        return array[index]
+        });
+      } else {
+        newItemList.push(value);
       }
     });
-    console.log("🚀 ~ newItemList ~ newItemList:", newItemList);
-    // setItemsValues(newItemList!);
-    // setEditItemModal(false);
+    dispatch(editItemList(newItemList));
+    setItemsValues(newItemList);
+    setEditItemModal(false);
   };
 
   return (

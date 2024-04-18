@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
 
-import { IOffer, IOfferItem } from "@/models/offer";
+import { IActivity, IOffer, IOfferItem } from "@/models/offer";
 import { Toast } from "../helpers/customAlert";
 import { types } from "../types/types";
 
@@ -164,6 +164,11 @@ export const selectedItem = (item: IOfferItem) => ({
   payload: item
 });
 
+export const selectedActivity = (activity: IActivity) => ({
+  type: types.selectedActivity,
+  payload: activity
+});
+
 // * AÑADE UN NUEVO ITEM A LA OFERTA * //
 export const setCurrentItem = (item: IOfferItem) => ({
   type: types.setCurrentItem,
@@ -186,4 +191,10 @@ export const editItem = (item: IOfferItem, isItemUpdated: boolean) => ({
 export const setFinalOffer = (id: string) => ({
   type: types.setFinalOffer,
   payload: id
+});
+
+// * EDITA UNA ACTIVIDAD DE LA LISTA DE ACTIVIDADES DE UNA OFERTA //
+export const editActivityList = (activities: IActivity[]) => ({
+  type: types.editActivityList,
+  payload: activities
 });

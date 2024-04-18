@@ -60,10 +60,10 @@ const ProjectTable: React.FC = () => {
   const canDelete = sessionData?.user.role.includes("Eliminar Proyectos");
 
   useEffect(() => {
-    dispatch(projectsStartLoading());
     dispatch(nomenclatorsStartLoading());
     dispatch(representativeNomenclatorsStartLoading());
     dispatch(clientNomenclatorsStartLoading());
+    dispatch(projectsStartLoading());
   }, [dispatch]);
 
   const fields = [
@@ -95,7 +95,7 @@ const ProjectTable: React.FC = () => {
       title: "Precio",
       custom: true,
       component: (item: any) =>
-        `$ ${item.totalValue.toLocaleString("DE", {
+        `$ ${item.totalValue?.toLocaleString("DE", {
           maximumFractionDigits: 2,
           minimumFractionDigits: 2
         })}`,
@@ -105,7 +105,7 @@ const ProjectTable: React.FC = () => {
       title: "Gastos",
       custom: true,
       component: (item: any) =>
-        `$ ${item.expenses.toLocaleString("DE", {
+        `$ ${item.expenses?.toLocaleString("DE", {
           maximumFractionDigits: 2,
           minimumFractionDigits: 2
         })}`,
@@ -115,7 +115,7 @@ const ProjectTable: React.FC = () => {
       title: "Ganancia",
       custom: true,
       component: (item: any) =>
-        `$ ${item.profits.toLocaleString("DE", {
+        `$ ${item.profits?.toLocaleString("DE", {
           maximumFractionDigits: 2,
           minimumFractionDigits: 2
         })}`,
@@ -200,15 +200,8 @@ const ProjectTable: React.FC = () => {
   }
 
   const handleView = (id: string): void => {
-    if (id) {
-      dispatch(loadSelectedProject(id));
-      router.push(`/dashboard/project/${id}`);
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un proyecto para ver"
-      });
-    }
+    dispatch(loadSelectedProject(id));
+    router.push(`/dashboard/project/${id}`);
   };
 
   const handleViewOffer = (projectId: string): void => {
@@ -423,7 +416,7 @@ const ProjectTable: React.FC = () => {
       width: "10%",
       render: (value) => (
         <span>
-          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
         </span>
       ),
       sorter: {
@@ -437,7 +430,7 @@ const ProjectTable: React.FC = () => {
       width: "10%",
       render: (value) => (
         <span>
-          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
         </span>
       ),
       sorter: {
@@ -451,7 +444,7 @@ const ProjectTable: React.FC = () => {
       width: "10%",
       render: (value) => (
         <span>
-          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
         </span>
       ),
       sorter: {
@@ -543,34 +536,34 @@ const ProjectTable: React.FC = () => {
               <RefreshSvg />
             </button>
           </Tooltip>
-            <PDFDownloadLink
-              document={
-                <PDFReport fields={fields} data={PDFReportData} title={"REPORTE DE PROYECTOS"} />
-              }
-              fileName={`Reporte de proyectoss (${currentDate})`}
-            >
-              {({ blob, url, loading, error }) =>
-                !canList ? (
-                  <button
-                    disabled
-                    className={`opacity-20 pt-2 pl-2" flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-                  >
-                    <PDFSvg />
-                  </button>
-                ) : (
-                  <button
-                    disabled={!canList}
-                    className={`${
-                      canList
-                        ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                        : "opacity-20 pt-2 pl-2"
-                    } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-                  >
-                    <PDFSvg />
-                  </button>
-                )
-              }
-            </PDFDownloadLink>
+          <PDFDownloadLink
+            document={
+              <PDFReport fields={fields} data={PDFReportData} title={"REPORTE DE PROYECTOS"} />
+            }
+            fileName={`Reporte de proyectos (${currentDate})`}
+          >
+            {({ blob, url, loading, error }) =>
+              !canList ? (
+                <button
+                  disabled
+                  className={`opacity-20 pt-2 pl-2" flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+                >
+                  <PDFSvg />
+                </button>
+              ) : (
+                <button
+                  disabled={!canList}
+                  className={`${
+                    canList
+                      ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                      : "opacity-20 pt-2 pl-2"
+                  } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+                >
+                  <PDFSvg />
+                </button>
+              )
+            }
+          </PDFDownloadLink>
         </div>
       </div>
       <Table

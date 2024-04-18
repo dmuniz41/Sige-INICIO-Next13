@@ -30,6 +30,7 @@ export const ProjectView = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
+  // ! ARREGLAR ERROR DE REDUX CUANDO SE CARGA UN PROYECTO Y CUANDO SE VA A EDITAR UN PROYECTO //
   useEffect(() => {
     dispatch(loadSelectedProject(selectedProjectId));
   }, [dispatch, selectedProjectId]);
@@ -184,7 +185,6 @@ export const ProjectView = () => {
   );
 };
 
-
 const ProjectViewTable = (props: any) => {
   const { data } = props;
 
@@ -194,7 +194,7 @@ const ProjectViewTable = (props: any) => {
       key: "idNumber",
       width: "1%",
       align: "center",
-      render : (text, record, index) => index +1
+      render: (text, record, index) => index + 1
     },
     {
       title: <span className="font-bold">Descripción del servicio</span>,
@@ -203,6 +203,7 @@ const ProjectViewTable = (props: any) => {
       width: "55%"
     }
   ];
+
   return (
     <Table
       size="small"
