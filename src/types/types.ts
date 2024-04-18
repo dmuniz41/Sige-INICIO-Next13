@@ -76,6 +76,7 @@ export const types = {
   clearOffer: "[Offer] Clear Offer",
   setFinalOffer: "[Offer] Set Offer as Final",
   editActivityList: "[Offer] Edit Activity in Offer",
+  selectedActivity: "[Offer] Activity Selected",
 
   setCurrencyChange: "[Global] Set Currency Change",
 

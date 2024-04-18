@@ -1,4 +1,4 @@
-import { IOffer, IOfferItem } from "@/models/offer";
+import { IActivity, IOffer, IOfferItem } from "@/models/offer";
 import { types } from "../types/types";
 
 const initialState: {
@@ -8,6 +8,7 @@ const initialState: {
   isItemUpdated: boolean;
   itemUpdated: IOfferItem;
   finalOfferId: string;
+  selectedActivity: IActivity;
 } = {
   offers: [],
   selectedOffer: {
@@ -23,6 +24,14 @@ const initialState: {
     _id: "",
     description: "",
     activities: [],
+    value: 0
+  },
+  selectedActivity: {
+    _id: "",
+    amount: 0,
+    description: "",
+    price: 0,
+    unitMeasure: "",
     value: 0
   },
   itemUpdated: {
@@ -87,6 +96,11 @@ export const offerReducer = (state = initialState, action: any) => {
       return {
         ...state,
         selectedItem: action.payload
+      };
+    case types.selectedActivity:
+      return {
+        ...state,
+        selectedActivity: action.payload
       };
     case types.clearOffer:
       return {

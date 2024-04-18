@@ -164,6 +164,11 @@ export const selectedItem = (item: IOfferItem) => ({
   payload: item
 });
 
+export const selectedActivity = (activity: IActivity) => ({
+  type: types.selectedActivity,
+  payload: activity
+});
+
 // * AÑADE UN NUEVO ITEM A LA OFERTA * //
 export const setCurrentItem = (item: IOfferItem) => ({
   type: types.setCurrentItem,

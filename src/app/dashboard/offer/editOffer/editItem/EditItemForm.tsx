@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
 import { IActivity, IOffer, IOfferItem } from "@/models/offer";
-import { editActivityList, editItem } from "@/actions/offer";
+import { editActivityList, editItem, selectedActivity } from "@/actions/offer";
 import { useAppDispatch } from "@/hooks/hooks";
 import TextArea from "antd/es/input/TextArea";
 import { AddActivityModal } from "../../createOffer/createItem/AddActivity";
@@ -40,8 +40,6 @@ export const EditItemForm = () => {
   };
 
   const onEditActivity = (values: IActivity) => {
-    console.log("🚀 ~ onEditActivity ~ values:", values)
-    console.log("🚀 ~ activitiesValues.forEach ~ activitiesValues:", activitiesValues)
     const newActivityList: IActivity[] = [];
     activitiesValues.forEach((value: IActivity) => {
       if (value._id === values._id) {
@@ -57,7 +55,6 @@ export const EditItemForm = () => {
         newActivityList.push(value);
       }
     });
-    console.log("🚀 ~ onEditActivity ~ newActivityList:", newActivityList)
     dispatch(editActivityList(newActivityList));
     setActivitiesValues(newActivityList);
     setEditActivityModal(false);
@@ -77,7 +74,7 @@ export const EditItemForm = () => {
         {
           name: "description",
           value: description
-        },
+        }
       ]}
       size="middle"
     >
@@ -100,6 +97,8 @@ export const EditItemForm = () => {
             editModalSetter={setEditActivityModal}
             valueToEditSetter={setRowToEdit}
             buttonText="Añadir Actividad"
+            dispatch={dispatch}
+            actionToDispatch={selectedActivity}
             form={form}
           />
         </div>
@@ -146,6 +145,7 @@ export const EditItemForm = () => {
         onCancel={() => setAddActivitiesModal(false)}
         onCreate={onAddActivity}
       />
+      
       <EditActivityModal
         open={editActivityModal}
         onCancel={() => setEditActivityModal(false)}
@@ -164,7 +164,9 @@ const TableFormSection = (props: any) => {
     addModalSetter,
     editModalSetter,
     valueToEditSetter,
-    buttonText
+    buttonText,
+    dispatch,
+    actionToDispatch
   } = props;
 
   const subtotal = useMemo(() => values?.map((value: IActivity) => value.value), [values]);
@@ -173,6 +175,7 @@ const TableFormSection = (props: any) => {
     valuesSetter(values.filter((value: IActivity) => value.description !== record.description));
   };
   const handleEdit = (record: IActivity) => {
+    dispatch(actionToDispatch(record));
     valueToEditSetter(record);
     editModalSetter(true);
   };
