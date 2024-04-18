@@ -1,6 +1,5 @@
 import { IOffer, IOfferItem } from "@/models/offer";
 import { types } from "../types/types";
-import { selectedItem } from "@/actions/offer";
 
 const initialState: {
   offers: IOffer[];
@@ -98,6 +97,14 @@ export const offerReducer = (state = initialState, action: any) => {
       return {
         ...state,
         finalOfferId: action.payload
+      };
+    case types.editActivityList:
+      return {
+        ...state,
+        selectedItem: {
+          ...state.selectedItem,
+          activities: action.payload
+        }
       };
 
     default:

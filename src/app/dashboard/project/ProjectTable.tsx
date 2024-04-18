@@ -95,7 +95,7 @@ const ProjectTable: React.FC = () => {
       title: "Precio",
       custom: true,
       component: (item: any) =>
-        `$ ${item.totalValue.toLocaleString("DE", {
+        `$ ${item.totalValue?.toLocaleString("DE", {
           maximumFractionDigits: 2,
           minimumFractionDigits: 2
         })}`,
@@ -105,7 +105,7 @@ const ProjectTable: React.FC = () => {
       title: "Gastos",
       custom: true,
       component: (item: any) =>
-        `$ ${item.expenses.toLocaleString("DE", {
+        `$ ${item.expenses?.toLocaleString("DE", {
           maximumFractionDigits: 2,
           minimumFractionDigits: 2
         })}`,
@@ -115,7 +115,7 @@ const ProjectTable: React.FC = () => {
       title: "Ganancia",
       custom: true,
       component: (item: any) =>
-        `$ ${item.profits.toLocaleString("DE", {
+        `$ ${item.profits?.toLocaleString("DE", {
           maximumFractionDigits: 2,
           minimumFractionDigits: 2
         })}`,
@@ -416,7 +416,7 @@ const ProjectTable: React.FC = () => {
       width: "10%",
       render: (value) => (
         <span>
-          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
         </span>
       ),
       sorter: {
@@ -430,7 +430,7 @@ const ProjectTable: React.FC = () => {
       width: "10%",
       render: (value) => (
         <span>
-          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
         </span>
       ),
       sorter: {
@@ -444,7 +444,7 @@ const ProjectTable: React.FC = () => {
       width: "10%",
       render: (value) => (
         <span>
-          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
         </span>
       ),
       sorter: {

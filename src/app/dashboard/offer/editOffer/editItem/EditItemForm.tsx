@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
 import { IActivity, IOffer, IOfferItem } from "@/models/offer";
-import { editItem } from "@/actions/offer";
+import { editActivityList, editItem } from "@/actions/offer";
 import { useAppDispatch } from "@/hooks/hooks";
 import TextArea from "antd/es/input/TextArea";
 import { AddActivityModal } from "../../createOffer/createItem/AddActivity";
@@ -12,6 +12,8 @@ import { RootState, useAppSelector } from "@/store/store";
 import Table, { ColumnsType } from "antd/es/table";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
+import { EditActivityModal } from "./EditAcivity";
+import { EditSvg } from "@/app/global/EditSvg";
 
 export const EditItemForm = () => {
   const dispatch = useAppDispatch();
@@ -24,7 +26,8 @@ export const EditItemForm = () => {
   const [activitiesValues, setActivitiesValues] = useState<IActivity[]>(selectedItem.activities);
   const [description, setDescription] = useState(selectedItem?.description);
   const [addActivitiesModal, setAddActivitiesModal] = useState(false);
-  const activities = useMemo(() => activitiesValues, [activitiesValues]);
+  const [editActivityModal, setEditActivityModal] = useState(false);
+  const [rowToEdit, setRowToEdit] = useState<IActivity>();
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
@@ -34,6 +37,30 @@ export const EditItemForm = () => {
     setActivitiesValues([values, ...activitiesValues]);
     form.setFieldValue("activities", [values, ...activitiesValues]);
     setAddActivitiesModal(false);
+  };
+
+  const onEditActivity = (values: IActivity) => {
+    console.log("🚀 ~ onEditActivity ~ values:", values)
+    console.log("🚀 ~ activitiesValues.forEach ~ activitiesValues:", activitiesValues)
+    const newActivityList: IActivity[] = [];
+    activitiesValues.forEach((value: IActivity) => {
+      if (value._id === values._id) {
+        newActivityList.push({
+          ...value,
+          amount: values.amount,
+          description: values.description,
+          price: values.price,
+          unitMeasure: values.unitMeasure,
+          value: values.value
+        });
+      } else {
+        newActivityList.push(value);
+      }
+    });
+    console.log("🚀 ~ onEditActivity ~ newActivityList:", newActivityList)
+    dispatch(editActivityList(newActivityList));
+    setActivitiesValues(newActivityList);
+    setEditActivityModal(false);
   };
 
   return (
@@ -51,10 +78,6 @@ export const EditItemForm = () => {
           name: "description",
           value: description
         },
-        {
-          name: "activities",
-          value: activities
-        }
       ]}
       size="middle"
     >
@@ -72,9 +95,10 @@ export const EditItemForm = () => {
           <TableFormSection
             sectionName="LISTA DE ACTIVIDADES"
             values={activitiesValues}
-            formName="activities"
             valuesSetter={setActivitiesValues}
             addModalSetter={setAddActivitiesModal}
+            editModalSetter={setEditActivityModal}
+            valueToEditSetter={setRowToEdit}
             buttonText="Añadir Actividad"
             form={form}
           />
@@ -92,7 +116,7 @@ export const EditItemForm = () => {
                   editItem(
                     {
                       ...values,
-                      activities: activities,
+                      activities: activitiesValues,
                       value: activitiesValues
                         .map((activity) => activity.value)
                         .reduce((total, current) => total + current, 0)
@@ -122,6 +146,12 @@ export const EditItemForm = () => {
         onCancel={() => setAddActivitiesModal(false)}
         onCreate={onAddActivity}
       />
+      <EditActivityModal
+        open={editActivityModal}
+        onCancel={() => setEditActivityModal(false)}
+        onCreate={onEditActivity}
+        defaultValues={rowToEdit}
+      />
     </Form>
   );
 };
@@ -132,8 +162,8 @@ const TableFormSection = (props: any) => {
     values,
     valuesSetter,
     addModalSetter,
-    // editModalSetter,
-    // valueToEditSetter,
+    editModalSetter,
+    valueToEditSetter,
     buttonText
   } = props;
 
@@ -142,10 +172,10 @@ const TableFormSection = (props: any) => {
   const handleDelete = (record: IActivity) => {
     valuesSetter(values.filter((value: IActivity) => value.description !== record.description));
   };
-  // const handleEdit = (record: IServiceFeeSubItem) => {
-  //   valueToEditSetter(record);
-  //   editModalSetter(true);
-  // };
+  const handleEdit = (record: IActivity) => {
+    valueToEditSetter(record);
+    editModalSetter(true);
+  };
 
   const columns: ColumnsType<IActivity> = [
     {
@@ -194,11 +224,11 @@ const TableFormSection = (props: any) => {
       width: "5%",
       render: (_, { ...record }) => (
         <div className="flex gap-1 justify-center">
-          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleEdit(record)} className="table-see-action-btn">
               <EditSvg width={18} height={18} />
             </button>
-          </Tooltip> */}
+          </Tooltip>
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleDelete(record)} className="table-delete-action-btn">
               <DeleteSvg width={17} height={17} />

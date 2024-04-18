@@ -56,7 +56,7 @@ const ProjectSchema = new Schema<IProject, Model<IProject>>({
   },
   finalOfferId: {
     type: String,
-    required: String
+    required: false
   },
   deliveryDate: {
     type: String

@@ -1,5 +1,4 @@
 "use client";
-
 import { Form, InputNumber, Modal, Radio, Select, SelectProps } from "antd";
 import { IActivity } from "@/models/offer";
 import { IServiceFee } from "@/models/serviceFees";
@@ -12,16 +11,19 @@ interface CollectionCreateFormProps {
   open: boolean;
   onCreate: (values: IActivity) => void;
   onCancel: () => void;
+  defaultValues: IActivity | undefined;
 }
 
-export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
+export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
   open,
   onCreate,
-  onCancel
+  onCancel,
+  defaultValues
 }) => {
+  console.log("🚀 ~ defaultValues:", defaultValues)
   const [size, setSize] = useState<number>(0);
-  const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>("");
-  const [currentPrice, setCurrentPrice] = useState<number>(0);
+  const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>(defaultValues?.unitMeasure!);
+  const [currentPrice, setCurrentPrice] = useState<number>(defaultValues?.price!);
   const [selectedServiceFee, setSelectedServiceFee] = useState<IServiceFee>();
   const activityValue = useMemo(() => size * currentPrice, [size, currentPrice]);
   const dispatch = useAppDispatch();
@@ -75,7 +77,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                     currentUnitMeasure.includes("Unidades (U)") ||
                       currentUnitMeasure.includes("Metro (m)")
                       ? {
-                          _id: selectedServiceFee?._id!,
+                          _id: defaultValues?._id!,
                           amount: values.amount,
                           description: values.description.value,
                           price: Number(currentPrice.toFixed(2)),
@@ -83,7 +85,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                           value: Number(activityValue.toFixed(2))
                         }
                       : {
-                          _id: selectedServiceFee?._id!,
+                          _id: defaultValues?._id!,
                           amount: size,
                           description: values.description.value,
                           price: Number(currentPrice.toFixed(2)),
@@ -106,7 +108,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
         </div>
       ]}
     >
-      <Form form={form} layout="horizontal" name="addActivity" size="middle">
+      <Form form={form} layout="horizontal" name="addActivity" size="middle" initialValues={defaultValues}>
         <Form.Item
           name="description"
           label="Descripción"

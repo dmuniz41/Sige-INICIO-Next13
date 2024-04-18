@@ -90,7 +90,7 @@ export const EditProjectForm = () => {
       }
     });
     dispatch(editItemList(newItemList));
-    setItemsValues(newItemList!);
+    setItemsValues(newItemList);
     setEditItemModal(false);
   };
 
