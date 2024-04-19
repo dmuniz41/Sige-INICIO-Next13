@@ -3,14 +3,14 @@ import { Form, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
+import { AddActivityModal } from "../../createOffer/createItem/AddActivity";
+import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { IActivity } from "@/models/offer";
+import { PlusSvg } from "@/app/global/PlusSvg";
 import { setCurrentItem } from "@/actions/offer";
 import { useAppDispatch } from "@/hooks/hooks";
-import TextArea from "antd/es/input/TextArea";
 import Table, { ColumnsType } from "antd/es/table";
-import { DeleteSvg } from "@/app/global/DeleteSvg";
-import { PlusSvg } from "@/app/global/PlusSvg";
-import { AddActivityModal } from "../../createOffer/createItem/AddActivity";
+import TextArea from "antd/es/input/TextArea";
 
 export const CreateItemForm = () => {
   const dispatch = useAppDispatch();
@@ -18,6 +18,7 @@ export const CreateItemForm = () => {
   const router = useRouter();
 
   const [activitiesValues, setActivitiesValues] = useState<IActivity[]>([]);
+  console.log("🚀 ~ CreateItemForm ~ activitiesValues:", activitiesValues)
   const [addActivitiesModal, setAddActivitiesModal] = useState(false);
 
   const onFinishFailed = (errorInfo: any) => {

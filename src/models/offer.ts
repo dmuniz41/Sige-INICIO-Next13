@@ -1,12 +1,15 @@
 import { Schema, model, models, Model } from "mongoose";
 
 export interface IActivity {
-  _id: string
+  _id: string;
   amount: number;
   description: string;
   price: number;
   unitMeasure: string;
   value: number;
+  size?: number;
+  width?: number;
+  height?: number;
 }
 export interface IOfferItem {
   _id: string;
