@@ -20,26 +20,30 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
   onCancel,
   defaultValues
 }) => {
+  const [form] = Form.useForm();
   const dispatch = useAppDispatch();
-  const [size, setSize] = useState<number>(0);
-  const [currentPrice, setCurrentPrice] = useState<number>(defaultValues?.price!);
+  const [size, setSize] = useState<number>(defaultValues?.size!);
+  const [width, setWidth] = useState<number>(defaultValues?.size!);
+  const [height, setHeight] = useState<number>(defaultValues?.size!);
+  const [currentPrice, setCurrentPrice] = useState<number>(defaultValues?.price! ?? 0);
   const [selectedServiceFee, setSelectedServiceFee] = useState<IServiceFee>();
   const activityValue = useMemo(() => size * currentPrice, [size, currentPrice]);
-  
+
   useEffect(() => {
     dispatch(serviceFeeStartLoading());
-  }, [dispatch]);
-  
+    console.log("RENDER");
+  }, [dispatch, defaultValues]);
+
   const { serviceFees }: { serviceFees: IServiceFee[] } = useAppSelector(
     (state: RootState) => state?.serviceFee
   );
   const { selectedActivity }: { selectedActivity: IActivity } = useAppSelector(
     (state: RootState) => state?.offer
   );
-  console.log("🚀 ~ selectedActivity:", selectedActivity)
-  const [currentDescription, setCurrentDescription] = useState<string>(selectedActivity?.description);
-  const description = useMemo(() => selectedActivity.description, [selectedActivity]);
-  const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>(selectedActivity?.unitMeasure);
+  console.log("🚀 ~ selectedActivity:", selectedActivity);
+  const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>(
+    selectedActivity?.unitMeasure
+  );
 
   const listOfActivities: SelectProps["options"] = serviceFees.map((serviceFee) => {
     return {
@@ -48,7 +52,6 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
     };
   });
 
-  const [form] = Form.useForm();
   return (
     <Modal
       className="flex flex-col"
@@ -61,14 +64,8 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
       centered
       open={open}
       destroyOnClose
-      onCancel={() => {
-        form.resetFields();
-        onCancel;
-      }}
       okType="default"
-      okText="Crear"
       width={"1000px"}
-      cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
           <button key="2" className="modal-btn-danger" onClick={onCancel}>
@@ -85,6 +82,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
                     currentUnitMeasure.includes("Unidades (U)") ||
                       currentUnitMeasure.includes("Metro (m)")
                       ? {
+                          ...values,
                           _id: defaultValues?._id!,
                           amount: values.amount,
                           description: values.description.value,
@@ -93,6 +91,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
                           value: Number(activityValue.toFixed(2))
                         }
                       : {
+                          ...values,
                           _id: defaultValues?._id!,
                           amount: size,
                           description: values.description.value,
@@ -119,15 +118,9 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
       <Form
         form={form}
         layout="horizontal"
-        name="addActivity"
+        name="editActivity"
         size="middle"
-        initialValues={{description:description}}
-        // fields={[
-        //   {
-        //     name: "description",
-        //     value: description
-        //   }
-        // ]}
+        initialValues={{...defaultValues}}
       >
         <Form.Item
           name="description"
@@ -144,7 +137,6 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
               const currentServiceFee = serviceFees.find(
                 (serviceFee) => serviceFee.taskName === value.label
               );
-              setCurrentDescription(value.value)
               setSelectedServiceFee(currentServiceFee!);
               setCurrentUnitMeasure(currentServiceFee?.unitMeasure!);
               setCurrentPrice(0);

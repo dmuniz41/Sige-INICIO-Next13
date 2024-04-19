@@ -19,10 +19,10 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
   onCreate,
   onCancel
 }) => {
-  const [size, setSize] = useState<number>(0);
-  const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>("");
   const [currentPrice, setCurrentPrice] = useState<number>(0);
+  const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>("");
   const [selectedServiceFee, setSelectedServiceFee] = useState<IServiceFee>();
+  const [size, setSize] = useState<number>(0);
   const activityValue = useMemo(() => size * currentPrice, [size, currentPrice]);
   const dispatch = useAppDispatch();
 
@@ -70,25 +70,31 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
             onClick={() => {
               form
                 .validateFields()
-                .then((values) => {
+                .then((values) => {                  
                   onCreate(
-                    currentUnitMeasure.includes("Unidades (U)") ||
+                    currentUnitMeasure.includes("Unidad (U)") ||
                       currentUnitMeasure.includes("Metro (m)")
                       ? {
                           _id: selectedServiceFee?._id!,
                           amount: values.amount,
                           description: values.description.value,
+                          height: 0,
                           price: Number(currentPrice.toFixed(2)),
+                          size: 0,
                           unitMeasure: currentUnitMeasure,
-                          value: Number(activityValue.toFixed(2))
+                          value: Number(activityValue.toFixed(2)),
+                          width: 0,
                         }
                       : {
                           _id: selectedServiceFee?._id!,
-                          amount: size,
+                          amount: values.width * values.height,
                           description: values.description.value,
+                          height: values.height,
                           price: Number(currentPrice.toFixed(2)),
+                          size: values.width * values.height,
                           unitMeasure: currentUnitMeasure,
-                          value: Number(activityValue.toFixed(2))
+                          value: Number(activityValue.toFixed(2)),
+                          width: values.width,
                         }
                   );
                   form.resetFields();
@@ -148,7 +154,6 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
             }
           />
         </Form.Item>
-
         <Form.Item
           name="amount"
           label="Cantidad"
@@ -156,8 +161,8 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
           rules={[{ required: true, message: "Campo requerido" }]}
         >
           <InputNumber
-            onChange={() => {
-              setSize(form.getFieldValue("amount"));
+            onChange={(value: number | null) => {
+              setSize(value!);
             }}
           />
         </Form.Item>

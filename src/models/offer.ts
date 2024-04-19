@@ -1,12 +1,15 @@
 import { Schema, model, models, Model } from "mongoose";
 
 export interface IActivity {
-  _id: string
+  _id: string;
   amount: number;
   description: string;
   price: number;
   unitMeasure: string;
   value: number;
+  size?: number;
+  width?: number;
+  height?: number;
 }
 export interface IOfferItem {
   _id: string;
@@ -42,7 +45,10 @@ const OfferSchema = new Schema<IOffer, Model<IOffer>>({
             description: String,
             unitMeasure: String,
             price: Number,
-            value: Number
+            value: Number,
+            size: Number,
+            width: Number,
+            height: Number
           }
         ],
         value: Number
