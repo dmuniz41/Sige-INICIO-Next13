@@ -19,11 +19,10 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
   onCreate,
   onCancel
 }) => {
-  const [size, setSize] = useState<number>(0);
-  const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>("");
   const [currentPrice, setCurrentPrice] = useState<number>(0);
-  const [currentAmount, setCurrentAmount] = useState<number>(0);
+  const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>("");
   const [selectedServiceFee, setSelectedServiceFee] = useState<IServiceFee>();
+  const [size, setSize] = useState<number>(0);
   const activityValue = useMemo(() => size * currentPrice, [size, currentPrice]);
   const dispatch = useAppDispatch();
 
@@ -76,26 +75,26 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                     currentUnitMeasure.includes("Unidad (U)") ||
                       currentUnitMeasure.includes("Metro (m)")
                       ? {
-                          amount: values.amount,
-                          size: 0,
-                          width: 0,
-                          height: 0,
                           _id: selectedServiceFee?._id!,
+                          amount: values.amount,
                           description: values.description.value,
+                          height: 0,
                           price: Number(currentPrice.toFixed(2)),
+                          size: 0,
                           unitMeasure: currentUnitMeasure,
-                          value: Number(activityValue.toFixed(2))
+                          value: Number(activityValue.toFixed(2)),
+                          width: 0,
                         }
                       : {
-                          size: values.width * values.height,
-                          width: values.width,
-                          height: values.height,
                           _id: selectedServiceFee?._id!,
                           amount: values.width * values.height,
                           description: values.description.value,
+                          height: values.height,
                           price: Number(currentPrice.toFixed(2)),
+                          size: values.width * values.height,
                           unitMeasure: currentUnitMeasure,
-                          value: Number(activityValue.toFixed(2))
+                          value: Number(activityValue.toFixed(2)),
+                          width: values.width,
                         }
                   );
                   form.resetFields();

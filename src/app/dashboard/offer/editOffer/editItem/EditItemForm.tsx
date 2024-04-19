@@ -3,17 +3,17 @@ import { Form, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
-import { IActivity, IOffer, IOfferItem } from "@/models/offer";
-import { editActivityList, editItem, selectedActivity } from "@/actions/offer";
-import { useAppDispatch } from "@/hooks/hooks";
-import TextArea from "antd/es/input/TextArea";
 import { AddActivityModal } from "../../createOffer/createItem/AddActivity";
-import { RootState, useAppSelector } from "@/store/store";
-import Table, { ColumnsType } from "antd/es/table";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
-import { PlusSvg } from "@/app/global/PlusSvg";
-import { EditActivityModal } from "./EditAcivity";
+import { editActivityList, editItem, selectedActivity } from "@/actions/offer";
+import { EditActivityModal } from "./EditActivity";
 import { EditSvg } from "@/app/global/EditSvg";
+import { IActivity, IOffer, IOfferItem } from "@/models/offer";
+import { PlusSvg } from "@/app/global/PlusSvg";
+import { RootState, useAppSelector } from "@/store/store";
+import { useAppDispatch } from "@/hooks/hooks";
+import Table, { ColumnsType } from "antd/es/table";
+import TextArea from "antd/es/input/TextArea";
 
 export const EditItemForm = () => {
   const dispatch = useAppDispatch();
@@ -24,8 +24,8 @@ export const EditItemForm = () => {
     useAppSelector((state: RootState) => state?.offer);
 
   const [activitiesValues, setActivitiesValues] = useState<IActivity[]>(selectedItem.activities);
-  const [description, setDescription] = useState(selectedItem?.description);
   const [addActivitiesModal, setAddActivitiesModal] = useState(false);
+  const [description, setDescription] = useState(selectedItem?.description);
   const [editActivityModal, setEditActivityModal] = useState(false);
   const [rowToEdit, setRowToEdit] = useState<IActivity>();
 
@@ -148,7 +148,10 @@ export const EditItemForm = () => {
       
       <EditActivityModal
         open={editActivityModal}
-        onCancel={() => setEditActivityModal(false)}
+        onCancel={() => {
+          setEditActivityModal(false)          
+          form.resetFields()
+        }}
         onCreate={onEditActivity}
         defaultValues={rowToEdit}
       />
@@ -175,7 +178,8 @@ const TableFormSection = (props: any) => {
     valuesSetter(values.filter((value: IActivity) => value.description !== record.description));
   };
   const handleEdit = (record: IActivity) => {
-    dispatch(actionToDispatch(record));
+    const selectedActivity = values.find((value: IActivity)=> value._id === record._id)
+    dispatch(actionToDispatch(selectedActivity));
     valueToEditSetter(record);
     editModalSetter(true);
   };

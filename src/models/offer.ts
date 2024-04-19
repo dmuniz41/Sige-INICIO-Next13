@@ -45,7 +45,10 @@ const OfferSchema = new Schema<IOffer, Model<IOffer>>({
             description: String,
             unitMeasure: String,
             price: Number,
-            value: Number
+            value: Number,
+            size: Number,
+            width: Number,
+            height: Number
           }
         ],
         value: Number
