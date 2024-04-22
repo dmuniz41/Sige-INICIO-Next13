@@ -1,41 +1,32 @@
 "use client";
 import { Table, Tooltip } from "antd";
-import React, { useEffect, useState } from "react";
-import type { ColumnsType, TableProps } from "antd/es/table";
+import React, { useEffect } from "react";
+import type { ColumnsType } from "antd/es/table";
 
+import { CircleCheckSvg } from "@/app/global/CircleCheckSvg";
+import { IOffer } from "@/models/offer";
+import { loadSelectedOffer, offersStartLoading } from "@/actions/offer";
 import { RootState, useAppSelector } from "@/store/store";
 import { SeeSvg } from "@/app/global/SeeSvg";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useRouter } from "next/navigation";
-import { IOffer } from "@/models/offer";
-import { loadSelectedOffer, offersStartLoading } from "../../../actions/offer";
-import { IProject } from "@/models/project";
-import { CircleCheckSvg } from "@/app/global/CircleCheckSvg";
 
-const OfferTable: React.FC = () => {
+const OfferTable = (props: { projectId: string }) => {
+  const { projectId } = props;
   const dispatch = useAppDispatch();
-  const [filteredData, setFilteredData] = useState<IOffer[]>();
   const router = useRouter();
 
-  const { selectedProject }: { selectedProject: IProject } = useAppSelector(
-    (state: RootState) => state?.project
-  );
-
   useEffect(() => {
-    dispatch(offersStartLoading(selectedProject._id));
-  }, [dispatch, selectedProject]);
+    dispatch(offersStartLoading(projectId));
+  }, [dispatch, projectId]);
 
   const { offers }: { offers: IOffer[]; finalOfferId: string } = useAppSelector(
     (state: RootState) => state?.offer
   );
 
-  const handleView = (projectId: string): void => {
+  const handleView = (offerId: string): void => {
     dispatch(loadSelectedOffer(projectId));
-    router.push(`/dashboard/offer/${projectId}`);
-  };
-
-  const onChange: TableProps<IOffer>["onChange"] = (pagination, filters, sorter, extra) => {
-    setFilteredData(extra.currentDataSource);
+    router.push(`/dashboard/project/${projectId}/offer/${offerId}`);
   };
 
   const columns: ColumnsType<IOffer> = [
@@ -106,7 +97,6 @@ const OfferTable: React.FC = () => {
         size="small"
         columns={columns}
         dataSource={offers}
-        onChange={onChange}
         pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
         className="shadow-md"
         rowClassName={(record) => isFinalOfferRow(record)}

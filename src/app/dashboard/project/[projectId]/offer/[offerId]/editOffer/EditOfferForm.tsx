@@ -10,18 +10,19 @@ import { Form, Select, SelectProps, Tooltip } from "antd";
 import { IOffer, IOfferItem } from "@/models/offer";
 import { IProject } from "@/models/project";
 import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
-import { Item } from "../[id]/Item";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/representative";
 import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
+import { Item } from "../Item";
 
-export const EditOfferForm = () => {
-  const dispatch = useAppDispatch();
-  const router = useRouter();
+export const EditOfferForm = (props: { projectId: string; offerId: string }) => {
   const [form] = Form.useForm();
   const [representativePercentage, setRepresentativePercentage] = useState(0);
+  const { projectId, offerId } = props;
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     dispatch(startLoadServiceFeeAuxiliary());
@@ -81,7 +82,7 @@ export const EditOfferForm = () => {
 
   const handleEdit = (item: IOfferItem) => {
     dispatch(selectedItem(item));
-    router.push("/dashboard/offer/editOffer/editItem");
+    router.push(`/dashboard/project/${projectId}/offer/${offerId}/editOffer/editItem`);
   };
 
   const handleDeleteItem = (item: IOfferItem) => {
@@ -168,7 +169,7 @@ export const EditOfferForm = () => {
           <button
             className="add-item-form-btn"
             onClick={() => {
-              router.push("/dashboard/offer/editOffer/createItem");
+              router.push(`/dashboard/project/${projectId}/offer/${offerId}/editOffer/createItem`);
             }}
           >
             <PlusSvg width={20} height={20} />
@@ -202,7 +203,7 @@ export const EditOfferForm = () => {
                         .reduce((total, current) => total + current, 0)
                     })
                   );
-                  router.push(`/dashboard/offer`);
+                  router.push(`/dashboard/project/${projectId}/offer`);
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);

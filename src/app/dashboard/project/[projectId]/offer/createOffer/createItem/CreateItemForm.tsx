@@ -3,31 +3,23 @@ import { Form, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
-import { AddActivityModal } from "../../createOffer/createItem/AddActivity";
-import { DeleteSvg } from "@/app/global/DeleteSvg";
-import { editActivityList, editItem, selectedActivity } from "@/actions/offer";
-import { EditActivityModal } from "./EditActivity";
-import { EditSvg } from "@/app/global/EditSvg";
-import { IActivity, IOffer, IOfferItem } from "@/models/offer";
-import { PlusSvg } from "@/app/global/PlusSvg";
-import { RootState, useAppSelector } from "@/store/store";
+import { AddActivityModal } from "./AddActivity";
+import { IActivity } from "@/models/offer";
+import { setCurrentItem } from "@/actions/offer";
 import { useAppDispatch } from "@/hooks/hooks";
-import Table, { ColumnsType } from "antd/es/table";
 import TextArea from "antd/es/input/TextArea";
+import Table, { ColumnsType } from "antd/es/table";
+import { DeleteSvg } from "@/app/global/DeleteSvg";
+import { PlusSvg } from "@/app/global/PlusSvg";
 
-export const EditItemForm = () => {
+export const CreateItemForm = (props: { projectId: string }) => {
+  const { projectId } = props;
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const router = useRouter();
 
-  const { selectedItem, selectedOffer }: { selectedItem: IOfferItem; selectedOffer: IOffer } =
-    useAppSelector((state: RootState) => state?.offer);
-
-  const [activitiesValues, setActivitiesValues] = useState<IActivity[]>(selectedItem.activities);
+  const [activitiesValues, setActivitiesValues] = useState<IActivity[]>([]);
   const [addActivitiesModal, setAddActivitiesModal] = useState(false);
-  const [description, setDescription] = useState(selectedItem?.description);
-  const [editActivityModal, setEditActivityModal] = useState(false);
-  const [rowToEdit, setRowToEdit] = useState<IActivity>();
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
@@ -39,66 +31,36 @@ export const EditItemForm = () => {
     setAddActivitiesModal(false);
   };
 
-  const onEditActivity = (values: IActivity) => {
-    const newActivityList: IActivity[] = [];
-    activitiesValues.forEach((value: IActivity) => {
-      if (value._id === values._id) {
-        newActivityList.push({
-          ...value,
-          amount: values.amount,
-          description: values.description,
-          price: values.price,
-          unitMeasure: values.unitMeasure,
-          value: values.value
-        });
-      } else {
-        newActivityList.push(value);
-      }
-    });
-    dispatch(editActivityList(newActivityList));
-    setActivitiesValues(newActivityList);
-    setEditActivityModal(false);
-  };
-
   return (
     <Form
       form={form}
-      name="editItemForm"
+      name="createItemForm"
       labelCol={{ span: 0 }}
       wrapperCol={{ span: 0 }}
       className="w-full flex flex-col gap-0"
+      initialValues={{ remember: true }}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
       requiredMark={"optional"}
-      fields={[
-        {
-          name: "description",
-          value: description
-        }
-      ]}
       size="middle"
     >
-      <section className="flex-col">
+      <section className=" flex-col">
         <Form.Item
           className="mb-3 w-[35%]"
           name="description"
           label={<span className="font-bold text-md">Descripción</span>}
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <TextArea rows={4} onChange={(value) => setDescription(String(value.target.value))} />
+          <TextArea rows={4} />
         </Form.Item>
-
         <div className="flex w-full">
           <TableFormSection
             sectionName="LISTA DE ACTIVIDADES"
             values={activitiesValues}
+            formName="activities"
             valuesSetter={setActivitiesValues}
             addModalSetter={setAddActivitiesModal}
-            editModalSetter={setEditActivityModal}
-            valueToEditSetter={setRowToEdit}
             buttonText="Añadir Actividad"
-            dispatch={dispatch}
-            actionToDispatch={selectedActivity}
             form={form}
           />
         </div>
@@ -112,31 +74,23 @@ export const EditItemForm = () => {
               .validateFields()
               .then((values) => {
                 dispatch(
-                  editItem(
-                    {
-                      ...values,
-                      activities: activitiesValues,
-                      value: activitiesValues
-                        .map((activity) => activity.value)
-                        .reduce((total, current) => total + current, 0)
-                    },
-                    true
-                  )
+                  setCurrentItem({
+                    ...values,
+                    activities: activitiesValues,
+                    value: activitiesValues
+                      .map((activity) => activity.value)
+                      .reduce((total, current) => total + current, 0)
+                  })
                 );
-
                 form.resetFields();
-                if (selectedOffer?._id === "") {
-                  router.push("/dashboard/offer/createOffer");
-                } else {
-                  router.push("/dashboard/offer/editOffer");
-                }
+                router.push(`/dashboard/project/${projectId}/offer/createOffer`);
               })
               .catch((error) => {
                 console.log("Validate Failed:", error);
               });
           }}
         >
-          Editar
+          Crear
         </button>
       </Form.Item>
 
@@ -144,16 +98,6 @@ export const EditItemForm = () => {
         open={addActivitiesModal}
         onCancel={() => setAddActivitiesModal(false)}
         onCreate={onAddActivity}
-      />
-      
-      <EditActivityModal
-        open={editActivityModal}
-        onCancel={() => {
-          setEditActivityModal(false)          
-          form.resetFields()
-        }}
-        onCreate={onEditActivity}
-        defaultValues={rowToEdit}
       />
     </Form>
   );
@@ -165,11 +109,9 @@ const TableFormSection = (props: any) => {
     values,
     valuesSetter,
     addModalSetter,
-    editModalSetter,
-    valueToEditSetter,
-    buttonText,
-    dispatch,
-    actionToDispatch
+    // editModalSetter,
+    // valueToEditSetter,
+    buttonText
   } = props;
 
   const subtotal = useMemo(() => values?.map((value: IActivity) => value.value), [values]);
@@ -177,12 +119,10 @@ const TableFormSection = (props: any) => {
   const handleDelete = (record: IActivity) => {
     valuesSetter(values.filter((value: IActivity) => value.description !== record.description));
   };
-  const handleEdit = (record: IActivity) => {
-    const selectedActivity = values.find((value: IActivity)=> value._id === record._id)
-    dispatch(actionToDispatch(selectedActivity));
-    valueToEditSetter(record);
-    editModalSetter(true);
-  };
+  // const handleEdit = (record: IServiceFeeSubItem) => {
+  //   valueToEditSetter(record);
+  //   editModalSetter(true);
+  // };
 
   const columns: ColumnsType<IActivity> = [
     {
@@ -231,11 +171,11 @@ const TableFormSection = (props: any) => {
       width: "5%",
       render: (_, { ...record }) => (
         <div className="flex gap-1 justify-center">
-          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleEdit(record)} className="table-see-action-btn">
               <EditSvg width={18} height={18} />
             </button>
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleDelete(record)} className="table-delete-action-btn">
               <DeleteSvg width={17} height={17} />
