@@ -205,7 +205,6 @@ export const EditProjectForm = () => {
             form
               .validateFields()
               .then((values) => {
-                console.log("🚀 ~ .then ~ values:", values);
                 dispatch(
                   startUpdateProject({
                     ...values,

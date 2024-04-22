@@ -31,7 +31,6 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
 
   useEffect(() => {
     dispatch(serviceFeeStartLoading());
-    console.log("RENDER");
   }, [dispatch, defaultValues]);
 
   const { serviceFees }: { serviceFees: IServiceFee[] } = useAppSelector(
@@ -40,7 +39,6 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
   const { selectedActivity }: { selectedActivity: IActivity } = useAppSelector(
     (state: RootState) => state?.offer
   );
-  console.log("🚀 ~ selectedActivity:", selectedActivity);
   const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>(
     selectedActivity?.unitMeasure
   );

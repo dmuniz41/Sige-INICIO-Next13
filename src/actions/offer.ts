@@ -31,7 +31,7 @@ export const startAddOffer = ({ ...offer }: any) => {
         });
       })
       .catch((error: AxiosError) => {
-        let { message }: any = error.response?.data;
+        const { message }: any = error.response?.data;
         console.log("🚀 ~ file: offer.ts:22 ~ return ~ message:", message);
         Swal.fire("Error", "Error al crear la oferta", "error");
       });
@@ -50,14 +50,14 @@ export const startUpdateOffer = ({ ...offer }: any) => {
       )
       .then(() => {
         dispatch(updateOffer(offer));
-        dispatch(offersStartLoading(offer.projectId));
+        // dispatch(offersStartLoading(offer.projectId));
         Toast.fire({
           icon: "success",
           title: "Oferta Actualizada"
         });
       })
       .catch((error: AxiosError) => {
-        let { message }: any = error.response?.data;
+        const { message }: any = error.response?.data;
         console.log("🚀 ~ file: offer.ts:41 ~ return ~ message:", message);
         Swal.fire("Error", "Error al actualizar la oferta", "error");
       });
@@ -80,7 +80,7 @@ export const startDeleteOffer = (id: string): any => {
         });
       })
       .catch((error: AxiosError) => {
-        let { message }: any = error.response?.data;
+        const { message }: any = error.response?.data;
         console.log("🚀 ~ file: offer.ts:60 ~ return ~ message:", message);
         Swal.fire("Error", "Error al borrar la oferta", "error");
       });
@@ -96,11 +96,11 @@ export const offersStartLoading = (projectId: string) => {
         headers: { accessToken: token, projectId: projectId }
       })
       .then((resp) => {
-        let { listOfOffers } = resp.data;
+        const { listOfOffers } = resp.data;
         dispatch(offersLoaded(listOfOffers));
       })
       .catch((error: AxiosError) => {
-        let { message }: any = error.response?.data;
+        const { message }: any = error.response?.data;
         console.log("🚀 ~ file: offer.ts:75 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar las ofertas", "error");
       });
@@ -116,12 +116,11 @@ export const loadSelectedOffer = (projectId: string) => {
         headers: { accessToken: token }
       })
       .then((resp) => {
-        let { BDOffer } = resp.data;
-        console.log("🚀 ~ .then ~ BDOffer:", BDOffer)
+        const { BDOffer } = resp?.data;
         dispatch(selectedOffer(BDOffer));
       })
       .catch((error: AxiosError) => {
-        let { message }: any = error.response?.data;
+        const { message }: any = error.response?.data;
         console.log("🚀 ~ file: offer.ts:124 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar la oferta seleccionada", "error");
       });

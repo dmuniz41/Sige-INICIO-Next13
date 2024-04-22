@@ -355,13 +355,11 @@ const MaterialsTable: React.FC = () => {
 
   const onChange: TableProps<DataType>["onChange"] = (pagination, filters, sorter, extra) => {
     setFilteredData(extra.currentDataSource);
-    console.log(filteredData);
   };
 
   const rowSelection: TableRowSelection<DataType> = {
     onChange: async (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
       setSelectedRow(selectedRows[0]);
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows);
     }
   };
 

@@ -4,8 +4,6 @@ import { NextResponse } from "next/server";
 
 export default withAuth(
   function middleware(request: NextRequestWithAuth) {
-    // console.log(request.nextUrl.pathname);
-    // console.log(request.nextauth.token?.user?.role);
 
     // //* Allow only users with administrator role to access the users page  */
     // if (request.nextUrl.pathname.startsWith("/dashboard/users") && !request.nextauth.token?.user?.role?.includes("ADMIN")) {

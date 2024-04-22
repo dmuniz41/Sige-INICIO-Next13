@@ -273,7 +273,6 @@ export const EditCostSheetForm = () => {
             form
               .validateFields()
               .then((values: ICostSheet) => {
-                console.log(values);
                 dispatch(
                   startUpdateCostSheet(
                     selectedCostSheet._id,

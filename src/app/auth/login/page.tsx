@@ -24,7 +24,6 @@ export default function Login() {
     });
 
     if (res?.error) {
-      console.log(error);
       Toast.fire({
         icon: "error",
         title: "Usuario o contraseña incorrecto"

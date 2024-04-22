@@ -26,7 +26,7 @@ export const startAddProject = ({ ...project }) => {
         });
       })
       .catch((error: AxiosError) => {
-        let { message }: any = error.response?.data;
+        const { message }: any = error.response?.data;
         console.log("🚀 ~ file: project.ts:30 ~ return ~ message:", message);
         Swal.fire("Error", message, "error");
       });
@@ -52,7 +52,7 @@ export const startUpdateProject = ({ ...project }) => {
         });
       })
       .catch((error: AxiosError) => {
-        let { message }: any = error.response?.data;
+        const { message }: any = error.response?.data;
         console.log("🚀 ~ file: project.ts:57 ~ return ~ message:", message);
         Swal.fire("Error", "Error al editar proyecto", "error");
       });
@@ -81,7 +81,7 @@ export const changeProjectStatus = (project: IProject, newStatus: string) => {
         });
       })
       .catch((error: AxiosError) => {
-        let { message }: any = error.response?.data;
+        const { message }: any = error.response?.data;
         console.log("🚀 ~ file: project.ts:112 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cambiar el estado del proyecto", "error");
       });
@@ -98,13 +98,13 @@ export const setFinalOfferId = (project: IProject, offer: IOffer) => {
           headers: { accessToken: token }
         })
         .then((resp) => {
-          let { BDOffer } = resp.data;
+          const { BDOffer } = resp?.data;
           dispatch(startUpdateOffer({ ...BDOffer, isFinalOffer: false }));
           dispatch(offersStartLoading(project._id));
           dispatch(loadSelectedProject(project._id));
         })
         .catch((error: AxiosError) => {
-          let { message }: any = error.response?.data;
+          const { message }: any = error.response?.data;
           console.log("🚀 ~ file: project.ts:133 ~ return ~ message:", message);
           Swal.fire("Error", "Error establecer la oferta como final", "error");
         });
@@ -129,11 +129,11 @@ export const projectsStartLoading = () => {
     await axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/project`, { headers: { accessToken: token } })
       .then((resp) => {
-        let { listOfProjects } = resp.data;
+        const { listOfProjects } = resp.data;
         dispatch(projectLoaded(listOfProjects));
       })
       .catch((error: AxiosError) => {
-        let { message }: any = error.response?.data;
+        const { message }: any = error.response?.data;
         console.log("🚀 ~ file: project.ts:138 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar los proyectos", "error");
       });
@@ -157,7 +157,7 @@ export const startDeleteProject = (id: string) => {
         });
       })
       .catch((error: AxiosError) => {
-        let { message }: any = error?.response?.data;
+        const { message }: any = error?.response?.data;
         console.log("🚀 ~ file: project.ts:162 ~ return ~ message:", message);
         Swal.fire("Error", "Error al eliminar el proyecto", "error");
       });
@@ -171,12 +171,12 @@ export const loadSelectedProject = (id: string) => {
     await axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/project/${id}`, { headers: { accessToken: token } })
       .then((resp) => {
-        let { BDProject } = resp.data;
+        const { BDProject } = resp.data;
         dispatch(selectedProject(BDProject));
       })
       .catch((error: AxiosError) => {
-        console.log("🚀 ~ return ~ error:", error);
-        let { message }: any = error?.response?.data;
+        const { message }: any = error?.response?.data;
+        console.log("🚀 ~ file: project.ts:179 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar el proyecto seleccionado", "error");
       });
   };

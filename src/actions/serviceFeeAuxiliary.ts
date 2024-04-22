@@ -13,7 +13,7 @@ export const startUpdateServiceFeeAuxiliary = ({ ...serviceFeeAuxiliary }): any 
         { ...serviceFeeAuxiliary },
         { headers: { accessToken: token } }
       )
-      .then((serviceFeeAuxiliary) => {
+      .then(() => {
         dispatch(updateServiceFeeAuxiliary(serviceFeeAuxiliary));
         dispatch(startLoadServiceFeeAuxiliary());
         Toast.fire({
@@ -49,7 +49,7 @@ export const startLoadServiceFeeAuxiliary = (): any => {
   };
 };
 
-const updateServiceFeeAuxiliary = ({ ...serviceFeeAuxiliary }) => ({
+const updateServiceFeeAuxiliary = (serviceFeeAuxiliary: any) => ({
   type: types.updateServiceFeeAuxiliary,
   payload: {
     serviceFeeAuxiliary

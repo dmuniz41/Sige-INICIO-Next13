@@ -16,7 +16,6 @@ export const EditItemModal: React.FC<CollectionCreateFormProps> = ({
   onCancel,
   defaultValues
 }) => {
-  console.log("🚀 ~ defaultValues:", defaultValues)
   const [form] = Form.useForm();
   return (
     <Modal
@@ -47,6 +46,7 @@ export const EditItemModal: React.FC<CollectionCreateFormProps> = ({
               form
                 .validateFields()
                 .then((values) => {
+                  // !REVISAR ESTE ERROR DE TS //
                   onCreate({...values, _id: defaultValues?._id!});
                   form.resetFields();
                 })

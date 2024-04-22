@@ -18,7 +18,6 @@ export const CreateItemForm = () => {
   const router = useRouter();
 
   const [activitiesValues, setActivitiesValues] = useState<IActivity[]>([]);
-  console.log("🚀 ~ CreateItemForm ~ activitiesValues:", activitiesValues)
   const [addActivitiesModal, setAddActivitiesModal] = useState(false);
 
   const onFinishFailed = (errorInfo: any) => {

@@ -118,7 +118,6 @@ export const EditServiceFeeForm = () => {
   };
 
   // const onEditRawMaterial = (values: any) => {
-  //   console.log("🚀 ~ onEditRawMaterial ~ values:", values)
   //   // setRawMaterialsValues([values, ...rawMaterialsValues]);
   //   setAddRawMaterialModal(false);
   // };
@@ -519,7 +518,6 @@ export const EditServiceFeeForm = () => {
             form
               .validateFields()
               .then((values) => {
-                console.log("🚀 ~ .then ~ values:", values);
                 dispatch(
                   startUpdateServiceFee({
                     _id: selectedServiceFee?._id,

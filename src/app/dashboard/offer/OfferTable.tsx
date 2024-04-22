@@ -36,7 +36,6 @@ const OfferTable: React.FC = () => {
 
   const onChange: TableProps<IOffer>["onChange"] = (pagination, filters, sorter, extra) => {
     setFilteredData(extra.currentDataSource);
-    console.log(filteredData);
   };
 
   const columns: ColumnsType<IOffer> = [

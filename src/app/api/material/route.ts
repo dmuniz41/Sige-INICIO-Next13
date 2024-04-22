@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
         );
       } else {
         // ? SI LAS EXISTENCIAS DESPUES DE EXTRAER EL MATERIAL ES CERO ELIMINA EL MATERIAL //
-
+        //! REVISAR ESTE ERROR DE TS // 
         if (newTotal === 0) {
           let code = BDMaterial.code;
           let deletedMaterial: IMaterial = (await Material.findOneAndDelete({ code })) as IMaterial;
@@ -315,6 +315,7 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ GET ~ error:", error)
       return NextResponse.json(
         {
           ok: false,

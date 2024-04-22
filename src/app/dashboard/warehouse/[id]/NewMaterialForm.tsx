@@ -89,7 +89,6 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
               form
                 .validateFields()
                 .then((values) => {
-                  console.log("🚀 ~ file: NewMaterialForm.tsx:90 ~ .then ~ values:", values.enterDate.format("MM/DD/YYYY"));
                   onCreate(values);
                   form.resetFields();
                 })
