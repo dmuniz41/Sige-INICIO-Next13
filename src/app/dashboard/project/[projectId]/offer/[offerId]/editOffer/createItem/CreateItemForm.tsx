@@ -3,7 +3,6 @@ import { Form, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
-import { AddActivityModal } from "../../createOffer/createItem/AddActivity";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { IActivity } from "@/models/offer";
 import { PlusSvg } from "@/app/global/PlusSvg";
@@ -11,14 +10,15 @@ import { setCurrentItem } from "@/actions/offer";
 import { useAppDispatch } from "@/hooks/hooks";
 import Table, { ColumnsType } from "antd/es/table";
 import TextArea from "antd/es/input/TextArea";
+import { AddActivityModal } from "../../../createOffer/createItem/AddActivity";
 
-export const CreateItemForm = () => {
+export const CreateItemForm = (props: { projectId: string; offerId: string }) => {
+  const { projectId, offerId } = props;
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const router = useRouter();
 
   const [activitiesValues, setActivitiesValues] = useState<IActivity[]>([]);
-  console.log("🚀 ~ CreateItemForm ~ activitiesValues:", activitiesValues)
   const [addActivitiesModal, setAddActivitiesModal] = useState(false);
 
   const onFinishFailed = (errorInfo: any) => {
@@ -83,7 +83,7 @@ export const CreateItemForm = () => {
                   })
                 );
                 form.resetFields();
-                router.push("/dashboard/offer/editOffer");
+                router.push(`/dashboard/project/${projectId}/offer/${offerId}}/editOffer`);
               })
               .catch((error) => {
                 console.log("Validate Failed:", error);

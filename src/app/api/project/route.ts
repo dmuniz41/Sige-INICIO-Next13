@@ -90,7 +90,6 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   const { ...project }: IProject = await request.json();
-  console.log("🚀 ~ PUT ~ project:", project);
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {

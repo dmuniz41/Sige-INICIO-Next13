@@ -181,14 +181,12 @@ const CostSheetsTable: React.FC = () => {
 
   const onChange: TableProps<ICostSheet>["onChange"] = (pagination, filters, sorter, extra) => {
     setFilteredData(extra.currentDataSource);
-    console.log(filteredData);
   };
 
   const rowSelection: TableRowSelection<ICostSheet> = {
     onChange: async (selectedRowKeys: React.Key[], selectedRows: ICostSheet[]) => {
       setSelectedRow(selectedRows[0]);
       dispatch(loadSelectedCostSheet(selectedRows[0]._id));
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRow: ", selectedRows);
     },
   };
 

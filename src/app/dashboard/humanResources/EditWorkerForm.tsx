@@ -70,7 +70,6 @@ export const EditWorkerForm: React.FC<CollectionCreateFormProps> = ({
                 .validateFields()
                 .then((values) => {
                   onCreate(values);
-                  console.log("🚀 ~ file: CreateNomenclatorForm.tsx:51 ~ .then ~ values:", values);
                   form.resetFields();
                 })
                 .catch((error) => {

@@ -22,7 +22,6 @@ export const EditRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
   onCancel,
   defaultValues
 }) => {
-  console.log("🚀 ~ defaultValues:", defaultValues);
   const [currentPrice, setCurrentPrice] = useState<number>(0);
   const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>("");
   const [rawMaterialValue, setRawMaterialValue] = useState<number>(0);

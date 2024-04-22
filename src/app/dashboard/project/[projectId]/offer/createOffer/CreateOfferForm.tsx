@@ -7,7 +7,7 @@ import { changeProjectStatus, clearOffer } from "@/actions/project";
 import { IOffer, IOfferItem } from "@/models/offer";
 import { IProject } from "@/models/project";
 import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
-import { Item } from "../[id]/Item";
+import { Item } from "../[offerId]/Item";
 import { NoDataSvg } from "@/app/global/NoDataSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/representative";
@@ -19,12 +19,12 @@ import { EditSvg } from "@/app/global/EditSvg";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import Swal from "sweetalert2";
 
-export const CreateOfferForm = () => {
+export const CreateOfferForm = (props: { projectId: string }) => {
+  const { projectId } = props;
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const router = useRouter();
   const [representativePercentage, setRepresentativePercentage] = useState(0);
-  const [representativeName, setRepresentativeName] = useState("");
 
   useEffect(() => {
     dispatch(startLoadServiceFeeAuxiliary());
@@ -77,6 +77,7 @@ export const CreateOfferForm = () => {
     selectedOffer.itemsList.forEach((item, index, itemList) => {
       if (item.description === itemUpdated.description) {
         itemList[index] = itemUpdated;
+        // !REVISAR POR QUE SE LE PASA UN ITEM VACIO //
         dispatch(editItem({ _id: "", description: "", activities: [], value: 0 }, false));
       }
       return itemList[index];
@@ -85,7 +86,7 @@ export const CreateOfferForm = () => {
 
   const handleEdit = (item: IOfferItem) => {
     dispatch(selectedItem(item));
-    router.push("/dashboard/offer/editOffer/editItem");
+    router.push(`/dashboard/project/${projectId}/offer/createOffer/editItem`);
   };
 
   const handleDeleteItem = (item: IOfferItem) => {
@@ -159,7 +160,7 @@ export const CreateOfferForm = () => {
               <button
                 className="toolbar-primary-icon-btn"
                 onClick={() => {
-                  router.push("/dashboard/offer/createOffer/createItem");
+                  router.push(`/dashboard/project/${projectId}/offer/createOffer/createItem`);
                 }}
               >
                 <PlusSvg width={20} height={20} />
@@ -194,7 +195,7 @@ export const CreateOfferForm = () => {
             <button
               className="add-item-form-btn"
               onClick={() => {
-                router.push("/dashboard/offer/createOffer/createItem");
+                router.push(`/dashboard/project/${projectId}/offer/createOffer/createItem`);
               }}
             >
               <PlusSvg width={20} height={20} />
@@ -256,7 +257,7 @@ export const CreateOfferForm = () => {
                 );
                 dispatch(changeProjectStatus(selectedProject, "Calculado"));
                 dispatch(clearOffer());
-                router.push(`/dashboard/project`);
+                router.push(`/dashboard/project/${projectId}/offer`);
                 form.resetFields();
               })
               .catch((error) => {

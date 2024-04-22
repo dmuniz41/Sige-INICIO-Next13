@@ -24,16 +24,15 @@ const PDFDownloadLink = dynamic(
   }
 );
 
-export const ProjectView = () => {
-  const url = usePathname().split("/");
-  const selectedProjectId: string = url[3];
+export const ProjectView = (props: { projectId: string }) => {
+  const { projectId } = props;
   const dispatch = useAppDispatch();
   const router = useRouter();
 
   // ! ARREGLAR ERROR DE REDUX CUANDO SE CARGA UN PROYECTO Y CUANDO SE VA A EDITAR UN PROYECTO //
   useEffect(() => {
-    dispatch(loadSelectedProject(selectedProjectId));
-  }, [dispatch, selectedProjectId]);
+    dispatch(loadSelectedProject(projectId));
+  }, [dispatch, projectId]);
 
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
     (state: RootState) => state?.project
@@ -45,7 +44,7 @@ export const ProjectView = () => {
 
   const handleCreateOffer = (): void => {
     dispatch(clearOffer());
-    router.push(`/dashboard/offer/createOffer`);
+    router.push(`/dashboard/project/${projectId}/offer/createOffer`);
   };
 
   return (

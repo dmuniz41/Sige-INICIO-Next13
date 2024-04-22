@@ -32,7 +32,7 @@ export const startAddServiceFeeTask = ({ ...serviceFeeTask }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: serviceFeeTask.ts:36 ~ return ~ message:", message);
+        console.log("🚀 ~ file: serviceFeeTask.ts:35 ~ return ~ message:", message);
         Swal.fire("Error", "Error al crear la tarea", "error");
       });
   };
@@ -65,7 +65,7 @@ export const startUpdateServiceFeeTask = ({ ...serviceFeeTask }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: serviceFeeTask.ts:71 ~ return ~ message:", message);
+        console.log("🚀 ~ file: serviceFeeTask.ts:68 ~ return ~ message:", message);
         Swal.fire("Error", "Error al editar la tarea", "error");
       });
   };
@@ -82,7 +82,7 @@ export const startLoadServiceFeesTasks = (): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ file: serviceFeeTask.ts:53 ~ return ~ message:", message);
+        console.log("🚀 ~ file: serviceFeeTask.ts:85 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar las tareas", "error");
       });
   };
@@ -103,7 +103,7 @@ export const startDeleteServiceFeeTask = (id: string): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ return ~ message:", message)
+        console.log("🚀 ~ file: serviceFeeTask.ts:106 ~ return ~ message:", message);
         Swal.fire("Error", 'Error al eliminar la tarea', "error");
       });
   };

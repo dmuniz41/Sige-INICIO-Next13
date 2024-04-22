@@ -126,6 +126,7 @@ export async function GET(request: Request) {
 
 export async function PUT(request: Request) {
   const { ...serviceFeeAuxiliary }: IServiceFeeAuxiliary = await request.json();
+  console.log("🚀 ~ PUT ~ serviceFeeAuxiliary:", serviceFeeAuxiliary)
   const accessToken = request.headers.get("accessToken");
 
   try {

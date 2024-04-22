@@ -15,7 +15,7 @@ export const connectDB = async () => {
       return Promise.resolve(true);
     }
   } catch (error) {
-    console.log(error);
+    console.log("🚀 ~ connectDB ~ error:", error)
     return Promise.reject(false);
   }
 };

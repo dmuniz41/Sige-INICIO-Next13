@@ -205,15 +205,8 @@ const ProjectTable: React.FC = () => {
   };
 
   const handleViewOffer = (projectId: string): void => {
-    if (projectId) {
       dispatch(loadSelectedProject(projectId));
-      router.push(`/dashboard/offer`);
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione una oferta para ver"
-      });
-    }
+      router.push(`/dashboard/project/${projectId}/offer`);
   };
 
   const handleSearch = (

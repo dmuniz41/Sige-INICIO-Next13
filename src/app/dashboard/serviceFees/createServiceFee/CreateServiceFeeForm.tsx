@@ -86,7 +86,6 @@ export const CreateServiceFeeForm = () => {
   };
 
   const onAddTaskList = (values: any) => {
-    console.log("🚀 ~ onAddTaskList ~ values:", values);
     setTaskListValues([
       {
         description: values.description,
@@ -111,35 +110,30 @@ export const CreateServiceFeeForm = () => {
   };
 
   const onAddEquipmentDepreciation = (values: any) => {
-    console.log("🚀 ~ onAddEquipmentDepreciation ~ values:", values);
     setEquipmentDepreciationValues([values, ...equipmentDepreciationValues]);
     form.setFieldValue("equipmentDepreciation", [...equipmentDepreciationValues, values]);
     setAddEquipmentDepreciationModal(false);
   };
 
   const onAddEquipmentMaintenance = (values: any) => {
-    console.log("🚀 ~ onAddEquipmentMaintenance ~ values:", values);
     setEquipmentMaintenanceValues([values, ...equipmentMaintenanceValues]);
     form.setFieldValue("equipmentMaintenance", [...equipmentMaintenanceValues, values]);
     setAddEquipmentMaintenanceModal(false);
   };
 
   const onAddAdministrativeExpenses = (values: any) => {
-    console.log("🚀 ~ onAddAdministrativeExpenses ~ values:", values);
     setAdministrativeExpensesValues([values, ...administrativeExpensesValues]);
     form.setFieldValue("administrativeExpenses", [...administrativeExpensesValues, values]);
     setAddAdministrativeExpensesModal(false);
   };
 
   const onAddTransportationExpenses = (values: any) => {
-    console.log("🚀 ~ onAddTransportationExpenses ~ values:", values);
     setTransportationExpensesValues([values, ...transportationExpensesValues]);
     form.setFieldValue("transportationExpenses", [...transportationExpensesValues, values]);
     setAddTransportationExpensesModal(false);
   };
 
   const onAddHiredPersonalExpenses = (values: any) => {
-    console.log("🚀 ~ onAddHiredPersonalExpenses ~ values:", values);
     setHiredPersonalExpensesValues([
       {
         description: "Gasto de salarios indirectos",
@@ -414,7 +408,6 @@ export const CreateServiceFeeForm = () => {
             form
               .validateFields()
               .then((values) => {
-                console.log("🚀 ~ .then ~ values:", values);
                 dispatch(
                   startAddServiceFee({
                     administrativeExpenses: administrativeExpensesValues,

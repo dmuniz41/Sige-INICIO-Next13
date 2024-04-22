@@ -71,7 +71,6 @@ const WorkersTable: React.FC = () => {
   };
 
   const onEdit = (values: any) => {
-    console.log("🚀 ~ onEdit ~ values:", values)
     dispatch(startUpdateWorker({ _id: selectedWorker?._id, ...values }));
     setEditModal(false);
   };

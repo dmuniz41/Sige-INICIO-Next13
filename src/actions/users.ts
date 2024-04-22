@@ -31,7 +31,6 @@ export const startAddUser = ({ ...user }): any => {
 
 // * ACTUALIZA UN USUARIO POR SU ID * //
 export const startUpdateUser = ({ ...user }): any => {
-  console.log("🚀 ~ startUpdateUser ~ user:", user);
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios

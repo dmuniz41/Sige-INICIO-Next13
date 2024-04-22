@@ -29,21 +29,20 @@ const PDFDownloadLink = dynamic(
   }
 );
 
-export const OfferView = () => {
-  const url = usePathname().split("/");
+export const OfferView = (props: { offerId: string; projectId: string }) => {
+  const { offerId, projectId } = props;
   const dispatch = useAppDispatch();
-  const projectId: string = url[3];
   const router = useRouter();
   const [materialsTableModal, setMaterialsTableModal] = useState(false);
 
   const handleEdit = (): void => {
-    router.push(`/dashboard/offer/editOffer`);
+    router.push(`/dashboard/project/${projectId}/offer/${offerId}/editOffer`);
   };
 
   useEffect(() => {
-    dispatch(loadSelectedOffer(projectId));
+    dispatch(loadSelectedOffer(offerId));
     dispatch(clientNomenclatorsStartLoading());
-  }, [dispatch, projectId]);
+  }, [dispatch, offerId]);
 
   const { selectedOffer }: { selectedOffer: IOffer } = useAppSelector(
     (state: RootState) => state?.offer
@@ -59,7 +58,7 @@ export const OfferView = () => {
 
   const setOfferAsFinal = () => {
     dispatch(setFinalOfferId(selectedProject, selectedOffer));
-    router.push(`/dashboard/offer`);
+    router.push(`/dashboard/project/${projectId}/offer`);
   };
 
   return (
