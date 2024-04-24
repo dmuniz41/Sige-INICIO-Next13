@@ -6,6 +6,9 @@ import React, { useEffect, useState } from "react";
 import { AddItemModal } from "../createProject/AddItem";
 import { clientNomenclatorsStartLoading } from "@/actions/nomenclators/client";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
+import { editItemList, startUpdateProject } from "@/actions/project";
+import { EditItemModal } from "../createProject/EditItem";
+import { EditSvg } from "@/app/global/EditSvg";
 import { IClientNomenclator } from "@/models/nomenclators/client";
 import { IItem, IProject } from "@/models/project";
 import { INomenclator } from "@/models/nomenclator";
@@ -13,39 +16,36 @@ import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
-import { editItemList, startUpdateProject } from "@/actions/project";
 import { useAppDispatch } from "@/hooks/hooks";
 import Table, { ColumnsType } from "antd/es/table";
 import TextArea from "antd/es/input/TextArea";
-import { EditSvg } from "@/app/global/EditSvg";
-import { EditItemModal } from "../createProject/EditItem";
 
 export const EditProjectForm = () => {
   const [addItemModal, setAddItemModal] = useState(false);
   const [editItemModal, setEditItemModal] = useState(false);
   const [form] = Form.useForm();
-  const [itemsValues, setItemsValues] = useState<IItem[]>([]);
   const [rowToEdit, setRowToEdit] = useState<IItem>();
   const currencyNomenclators: string[] | undefined = [];
   const dispatch = useAppDispatch();
   const router = useRouter();
-
+  
   const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
     (state: RootState) => state?.project
   );
+  const [itemsValues, setItemsValues] = useState<IItem[]>(selectedProject.itemsList);
   const { clientNomenclators }: { clientNomenclators: IClientNomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
 
-  useEffect(() => {
-    setItemsValues(selectedProject.itemsList);
-    dispatch(nomenclatorsStartLoading());
-    dispatch(clientNomenclatorsStartLoading());
-    dispatch(startLoadServiceFeeAuxiliary());
-  }, [dispatch, selectedProject]);
+  // useEffect(() => {
+    // setItemsValues(selectedProject?.itemsList);
+    // dispatch(nomenclatorsStartLoading());
+    // dispatch(clientNomenclatorsStartLoading());
+    // dispatch(startLoadServiceFeeAuxiliary());
+  // }, [dispatch, selectedProject]);
 
   const [clientNumber, setClientNumber] = useState(selectedProject.clientNumber);
   const [clientName, setClientName] = useState(selectedProject?.clientName);
@@ -214,7 +214,7 @@ export const EditProjectForm = () => {
                   })
                 );
                 form.resetFields();
-                router.push(`/dashboard/project/${selectedProject._id}`);
+                router.push(`/dashboard/project/${selectedProject?._id}`);
               })
               .catch((error) => {
                 console.log("Validate Failed:", error);
@@ -261,7 +261,7 @@ const TableFormSection = (props: any) => {
   const columns: ColumnsType<IItem> = [
     {
       title: <span className="font-bold">No.</span>,
-      key: "idNumber",
+      // key: "idNumber",
       width: "2%",
       render: (text, record, index) => <span className="flex justify-center">{index + 1}</span>
     },

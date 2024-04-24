@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { connectDB } from "@/libs/mongodb";
 import { verifyJWT } from "@/libs/jwt";
-import ServiceFee from "@/models/serviceFees";
 import Project from "@/models/project";
 
 export async function GET(request: NextRequest) {
@@ -24,6 +23,7 @@ export async function GET(request: NextRequest) {
     }
     await connectDB();
     const BDProject = await Project.findById(projectId);
+    
     return new NextResponse(
       JSON.stringify({
         ok: true,
@@ -38,13 +38,14 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
+      console.log("🚀 ~ GET ~ error:", error)
       return NextResponse.json(
         {
           ok: false,
           message: error.message,
         },
         {
-          status: 400,
+          status: 500,
         }
       );
     }
