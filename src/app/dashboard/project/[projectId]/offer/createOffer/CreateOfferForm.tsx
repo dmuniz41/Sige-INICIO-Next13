@@ -240,6 +240,7 @@ export const CreateOfferForm = (props: { projectId: string }) => {
             form
               .validateFields()
               .then((values) => {
+                dispatch(changeProjectStatus(selectedProject, "Calculado"));
                 dispatch(
                   startAddOffer({
                     name: selectedProject?.projectName,
@@ -255,7 +256,6 @@ export const CreateOfferForm = (props: { projectId: string }) => {
                       .reduce((total, current) => total + current, 0)
                   })
                 );
-                dispatch(changeProjectStatus(selectedProject, "Calculado"));
                 dispatch(clearOffer());
                 router.push(`/dashboard/project/${projectId}/offer`);
                 form.resetFields();

@@ -34,7 +34,7 @@ export const startAddProject = ({ ...project }) => {
 };
 
 //* ACTUALIZA UN PROYECTO  *//
-export const startUpdateProject = ({ ...project }) => {
+export const startUpdateProject = (project: IProject) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
@@ -44,7 +44,7 @@ export const startUpdateProject = ({ ...project }) => {
         { headers: { accessToken: token } }
       )
       .then((resp) => {
-        dispatch(updateProject(resp.data.updatedProject));
+        dispatch(updateProject(resp?.data?.updatedProject));
         dispatch(projectsStartLoading());
         Toast.fire({
           icon: "success",
@@ -73,7 +73,7 @@ export const changeProjectStatus = (project: IProject, newStatus: string) => {
         { headers: { accessToken: token } }
       )
       .then((resp) => {
-        dispatch(updateProject(resp.data.updatedProject));
+        dispatch(updateProject(resp?.data?.updatedProject));
         dispatch(projectsStartLoading());
         Toast.fire({
           icon: "success",
@@ -92,33 +92,42 @@ export const changeProjectStatus = (project: IProject, newStatus: string) => {
 export const setFinalOfferId = (project: IProject, offer: IOffer) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
-    if (project.finalOfferId !== "") {
+    if (project?.finalOfferId !== "") {
       await axios
-        .get(`${process.env.NEXT_PUBLIC_API_URL}/offer/${project.finalOfferId}`, {
+        .get(`${process.env.NEXT_PUBLIC_API_URL}/offer/${project?.finalOfferId}`, {
           headers: { accessToken: token }
         })
         .then((resp) => {
           const { BDOffer } = resp?.data;
           dispatch(startUpdateOffer({ ...BDOffer, isFinalOffer: false }));
-          dispatch(offersStartLoading(project._id));
-          dispatch(loadSelectedProject(project._id));
+          dispatch(startUpdateOffer({ ...offer, isFinalOffer: true }));
+          dispatch(
+            startUpdateProject({
+              ...project,
+              totalValue: offer?.value!,
+              finalOfferId: offer?._id,
+              payMethod: offer?.representativeName
+            })
+          );
+          dispatch(offersStartLoading(project._id))
         })
         .catch((error: AxiosError) => {
-          const { message }: any = error.response?.data;
+          const { message }: any = error?.response?.data;
           console.log("🚀 ~ file: project.ts:133 ~ return ~ message:", message);
           Swal.fire("Error", "Error establecer la oferta como final", "error");
         });
+    } else {
+      dispatch(startUpdateOffer({ ...offer, isFinalOffer: true }));
+      dispatch(
+        startUpdateProject({
+          ...project,
+          totalValue: offer?.value!,
+          finalOfferId: offer?._id,
+          payMethod: offer?.representativeName
+        })
+      );
+      dispatch(offersStartLoading(project._id));
     }
-    dispatch(
-      startUpdateProject({
-        ...project,
-        totalValue: offer?.value,
-        finalOfferId: offer?._id,
-        payMethod: offer?.representativeName
-      })
-    );
-    dispatch(loadSelectedProject(project._id));
-    dispatch(startUpdateOffer({ ...offer, isFinalOffer: true }));
   };
 };
 
@@ -165,11 +174,13 @@ export const startDeleteProject = (id: string) => {
 };
 
 //* CARGA LA INFORMACION DE UN PROYECTO *//
-export const loadSelectedProject = (id: string) => {
+export const loadSelectedProject = (projectId: string) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/project/${id}`, { headers: { accessToken: token } })
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/project/${projectId}`, {
+        headers: { accessToken: token }
+      })
       .then((resp) => {
         const { BDProject } = resp.data;
         dispatch(selectedProject(BDProject));
@@ -189,11 +200,9 @@ const addProject = ({ ...project }) => ({
   }
 });
 
-export const updateProject = ({ ...project }) => ({
+export const updateProject = (project: any) => ({
   type: types.updateProject,
-  payload: {
-    project
-  }
+  payload: project
 });
 
 export const projectLoaded = (projects: IProject[]) => ({
@@ -213,9 +222,9 @@ const deleteProject = (id: string) => ({
     id
   }
 });
-const selectedProject = ({ ...project }) => ({
+const selectedProject = ({ ...project }: any) => ({
   type: types.selectedProject,
-  payload: { ...project }
+  payload: project
 });
 
 export const editItemList = (items: IItem[]) => ({

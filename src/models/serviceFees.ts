@@ -26,27 +26,27 @@ export interface IServiceFee {
   //* MATERIAS PRIMAS
   rawMaterials: IServiceFeeSubItem[];
   rawMaterialsSubtotal: number;
-  // *ACTIVIDADES O OPERACIONES
+  //* ACTIVIDADES O OPERACIONES
   taskList: IServiceFeeSubItem[];
   taskListSubtotal: number;
-  //*DEPRECIACION DE EQUIPOS
+  //* DEPRECIACION DE EQUIPOS
   equipmentDepreciation: IServiceFeeSubItem[];
   equipmentDepreciationSubtotal: number;
-  //*MANTENIMIENTO DE EQUIPOS
+  //* MANTENIMIENTO DE EQUIPOS
   equipmentMaintenance: IServiceFeeSubItem[];
   equipmentMaintenanceSubtotal: number;
-  //*GASTOS ADMINISTRATIVOS
+  //* GASTOS ADMINISTRATIVOS
   administrativeExpenses: IServiceFeeSubItem[];
   administrativeExpensesSubtotal: number;
-  //*GASTOS DE TRANSPORTE
+  //* GASTOS DE TRANSPORTE
   transportationExpenses: IServiceFeeSubItem[];
   transportationExpensesSubtotal: number;
-  //*GASTO DE PERSONAL CONTRATADO
+  //* GASTO DE PERSONAL CONTRATADO
   hiredPersonalExpenses: IServiceFeeSubItem[];
   hiredPersonalExpensesSubtotal: number;
   //* COMPLEJIDAD
   complexity: IServiceFeeComplexityItem[];
-  //*OTROS
+  //* OTROS
   expensesTotalValue: number;
   artisticTalent: number;
   artisticTalentValue: number;
@@ -83,7 +83,6 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
   unitMeasure: {
     type: String,
   },
-
   rawMaterials: [
     {
       description: String,
@@ -108,7 +107,6 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
   taskListSubtotal: {
     type: Number,
   },
-
   equipmentDepreciation: [
     {
       description: String,

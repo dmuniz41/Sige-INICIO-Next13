@@ -63,7 +63,9 @@ export const CreateProjectForm = () => {
   };
 
   const onAddItem = (values: any) => {
+    console.log("🚀 ~ onAddItem ~ values:", values)
     setItemsValues([...itemsValues, values]);
+    console.log("🚀 ~ onAddItem ~ itemsValues:", itemsValues)
     setAddItemModal(false);
   };
   return (
@@ -176,6 +178,7 @@ export const CreateProjectForm = () => {
             form
               .validateFields()
               .then((values) => {
+                console.log(itemsValues)
                 dispatch(
                   startAddProject({
                     ...values,

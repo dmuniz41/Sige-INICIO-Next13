@@ -194,10 +194,10 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
                     startAddOffer({
                       ...selectedOffer,
                       representativeName: values?.representativeName,
-                      representationPercentage: representativeNomenclators.find(
-                        (representative) => representative.name === values.representativeName
+                      representationPercentage: representativeNomenclators?.find(
+                        (representative) => representative?.name === values?.representativeName
                       )?.percentage,
-                      projectName: `${selectedProject.projectName} v${offers.length + 1}`,
+                      projectName: `${selectedProject?.projectName} v${offers.length + 1}`,
                       value: selectedOffer?.itemsList
                         ?.map((item) => item.value)
                         .reduce((total, current) => total + current, 0)

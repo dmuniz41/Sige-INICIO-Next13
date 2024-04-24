@@ -7,6 +7,7 @@ import { types } from "../types/types";
 
 // * CREA UNA NUEVA OFERTA * //
 export const startAddOffer = ({ ...offer }: any) => {
+  console.log("🚀 ~ startAddOffer ~ offer:", offer)
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios

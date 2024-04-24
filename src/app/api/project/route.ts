@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
 
     const newProject = new Project({
       ...project,
+      finalOfferId: project.finalOfferId ?? "",
       projectNumber: newProjectNumber,
       key: newKey
     });
