@@ -13,7 +13,8 @@ export const projectReducer = (state = initialState, action: any) => {
       };
     case types.updateProject:
       return {
-        ...state
+        ...state,
+        selectedProject: action.payload
       };
     case types.deleteProject:
       return {
@@ -40,5 +41,5 @@ export const projectReducer = (state = initialState, action: any) => {
 
     default:
       return state;
-  }
+    }
 };

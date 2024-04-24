@@ -200,7 +200,6 @@ const ProjectTable: React.FC = () => {
   }
 
   const handleView = (id: string): void => {
-    dispatch(loadSelectedProject(id));
     router.push(`/dashboard/project/${id}`);
   };
 
@@ -477,7 +476,7 @@ const ProjectTable: React.FC = () => {
             <Tooltip placement="top" title={"Detalles"} arrow={{ pointAtCenter: true }}>
               <button
                 disabled={!canList}
-                onClick={() => handleView(record._id)}
+                onClick={() => handleView(record?._id)}
                 className="table-see-action-btn"
               >
                 <SeeSvg width={20} height={20} />

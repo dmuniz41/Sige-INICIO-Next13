@@ -5,7 +5,7 @@ import { IServiceFeeTask } from "@/models/serviceFeeTask";
 import { Toast } from "@/helpers/customAlert";
 import { types } from "@/types/types";
 
-
+// * CREA UNA NUEVA TAREA  //
 export const startAddServiceFeeTask = ({ ...serviceFeeTask }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -38,6 +38,7 @@ export const startAddServiceFeeTask = ({ ...serviceFeeTask }): any => {
   };
 };
 
+// * ACTUALIZA UNA TAREA //
 export const startUpdateServiceFeeTask = ({ ...serviceFeeTask }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -71,6 +72,7 @@ export const startUpdateServiceFeeTask = ({ ...serviceFeeTask }): any => {
   };
 };
 
+// * CARGA TODAS LAS TAREAS //
 export const startLoadServiceFeesTasks = (): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -88,6 +90,7 @@ export const startLoadServiceFeesTasks = (): any => {
   };
 };
 
+// * ELIMINA UNA TAREA //
 export const startDeleteServiceFeeTask = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
