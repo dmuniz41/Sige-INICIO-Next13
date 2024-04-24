@@ -194,13 +194,15 @@ const CustomTablePDF = (props) => {
 };
 
 export default function ProjectPDFReport(props) {
-  const { data = {} } = props;
-  data?.itemsList?.forEach((value, index, array) => {
-    array[index] = {
-      ...value,
-      idNumber: index + 1
-    };
-  });
+  const { data } = props;
+  // const listOfItems = data?.itemsList?.map((value, index, array) => {
+  //   array[index] = {
+  //     ...value,
+  //     idNumber: index + 1
+  //   };
+  //   return array[index];
+  // });
+  // console.log("🚀 ~ listOfItems ~ listOfItems:", listOfItems);
   return (
     <Document>
       <Page wrap orientation="portrait" size={"LETTER"} style={styles.body}>
@@ -355,7 +357,16 @@ export default function ProjectPDFReport(props) {
         {/* SECCION DE LA LISTA DE ITEMS */}
         <View style={styles.itemListContainer}>
           <View style={{ display: "flex", flexDirection: "column", width: "85%" }}>
-            <CustomTablePDF fields={fields} data={data?.itemsList} />
+            <CustomTablePDF
+              fields={fields}
+              data={data?.itemsList?.map((value, index, array) => {
+                array[index] = {
+                  ...value,
+                  idNumber: index + 1
+                };
+                return array[index];
+              })}
+            />
           </View>
           {/* PRECIO */}
           <View

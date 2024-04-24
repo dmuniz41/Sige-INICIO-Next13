@@ -45,7 +45,7 @@ export const startUpdateProject = (project: IProject) => {
       )
       .then((resp) => {
         dispatch(updateProject(resp?.data?.updatedProject));
-        dispatch(projectsStartLoading());
+        // dispatch(projectsStartLoading());
         Toast.fire({
           icon: "success",
           title: `Proyecto Actualizado`
@@ -139,6 +139,7 @@ export const projectsStartLoading = () => {
       .get(`${process.env.NEXT_PUBLIC_API_URL}/project`, { headers: { accessToken: token } })
       .then((resp) => {
         const { listOfProjects } = resp.data;
+        console.log("🚀 ~ .then ~ listOfProjects:", listOfProjects)
         dispatch(projectLoaded(listOfProjects));
       })
       .catch((error: AxiosError) => {
@@ -174,7 +175,27 @@ export const startDeleteProject = (id: string) => {
 };
 
 //* CARGA LA INFORMACION DE UN PROYECTO *//
-export const loadSelectedProject = (projectId: string) => {
+// export const loadSelectedProject = (projectId: string) => {
+//   const token = localStorage.getItem("accessToken");
+//   return async (dispatch: any) => {
+//     await axios
+//       .get(`${process.env.NEXT_PUBLIC_API_URL}/project/${projectId}`, {
+//         headers: { accessToken: token }
+//       })
+//       .then((resp) => {
+//         const { BDProject } = resp?.data;
+//         console.log("🚀 ~ .then ~ BDProject:", BDProject)
+//         dispatch(selectedProject(BDProject));
+//       })
+//       .catch((error: AxiosError) => {
+//         console.log("🚀 ~ return ~ error:", error)
+//         const { message }: any = error?.response?.data;
+//         console.log("🚀 ~ file: project.ts:179 ~ return ~ message:", message);
+//         Swal.fire("Error", "Error al cargar el proyecto seleccionado", "error");
+//       });
+//   };
+// };
+export const startLoadSelectedProject = (projectId: string) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
@@ -182,10 +203,12 @@ export const loadSelectedProject = (projectId: string) => {
         headers: { accessToken: token }
       })
       .then((resp) => {
-        const { BDProject } = resp.data;
+        const { BDProject } = resp?.data;
+        console.log("🚀 ~ .then ~ BDProject:", BDProject)
         dispatch(selectedProject(BDProject));
       })
       .catch((error: AxiosError) => {
+        console.log("🚀 ~ return ~ error:", error)
         const { message }: any = error?.response?.data;
         console.log("🚀 ~ file: project.ts:179 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar el proyecto seleccionado", "error");
@@ -222,10 +245,13 @@ const deleteProject = (id: string) => ({
     id
   }
 });
-const selectedProject = ({ ...project }: any) => ({
-  type: types.selectedProject,
-  payload: project
-});
+const selectedProject = (project: IProject) => {
+  console.log("🚀 ~ selectedProject ~ project:", project)
+  return {
+    type: types.loadSelectedProject,
+    payload: project
+  };
+};
 
 export const editItemList = (items: IItem[]) => ({
   type: types.editItemList,

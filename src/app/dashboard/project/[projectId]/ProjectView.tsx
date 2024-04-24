@@ -3,17 +3,16 @@
 import { RootState, useAppSelector } from "@/store/store";
 import { Tag } from "antd";
 import { useAppDispatch } from "@/hooks/hooks";
-import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import React, { useEffect } from "react";
 
-import { clearOffer, loadSelectedProject } from "@/actions/project";
+import { clearOffer, startLoadSelectedProject } from "@/actions/project";
 import { EditSvg } from "@/app/global/EditSvg";
 import { IItem, IProject } from "@/models/project";
 import { PDFSvg } from "@/app/global/PDFSvg";
 import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
-import ProjectPDFReport from "@/helpers/ProjectPDFReport";
+// import ProjectPDFReport from "@/helpers/ProjectPDFReport";
 import Table, { ColumnsType } from "antd/es/table";
 
 const PDFDownloadLink = dynamic(
@@ -32,7 +31,7 @@ export const ProjectView = (props: { projectId: string }) => {
   // ! ARREGLAR ERROR DE REDUX CUANDO SE CARGA UN PROYECTO Y CUANDO SE VA A EDITAR UN PROYECTO //
   // ! REVISAR POR QUE AL REFRESCAR SALE UN IDNUMBER EN LOS ELEMENTOS DEL ITEM LIS //
   useEffect(() => {
-    dispatch(loadSelectedProject(projectId));
+    dispatch(startLoadSelectedProject(projectId));
   }, [dispatch, projectId]);
 
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
@@ -63,7 +62,7 @@ export const ProjectView = (props: { projectId: string }) => {
                 Crear Oferta
               </button>
             )}
-            <PDFDownloadLink
+            {/* <PDFDownloadLink
               className=" flex w-[2.5rem] h-[2.5rem]"
               document={<ProjectPDFReport data={selectedProject} />}
               fileName={`${selectedProject?.projectName}`}
@@ -82,7 +81,7 @@ export const ProjectView = (props: { projectId: string }) => {
                   </button>
                 )
               }
-            </PDFDownloadLink>
+            </PDFDownloadLink> */}
           </div>
         </div>
       </article>
@@ -191,7 +190,7 @@ const ProjectViewTable = (props: any) => {
   const columns: ColumnsType<IItem> = [
     {
       title: <span className="font-bold">No.</span>,
-      key: "idNumber",
+      // key: "idNumber",
       width: "1%",
       align: "center",
       render: (text, record, index) => index + 1

@@ -14,10 +14,9 @@ import type { InputRef } from "antd";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { INomenclator } from "@/models/nomenclator";
 import { IProject } from "@/models/project";
-import { loadSelectedProject } from "../../../actions/project";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { PlusSvg } from "@/app/global/PlusSvg";
-import { projectsStartLoading, startDeleteProject } from "@/actions/project";
+import { projectsStartLoading, startDeleteProject, startLoadSelectedProject } from "@/actions/project";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
 import { RootState, useAppSelector } from "@/store/store";
@@ -60,9 +59,9 @@ const ProjectTable: React.FC = () => {
   const canDelete = sessionData?.user.role.includes("Eliminar Proyectos");
 
   useEffect(() => {
-    dispatch(nomenclatorsStartLoading());
-    dispatch(representativeNomenclatorsStartLoading());
-    dispatch(clientNomenclatorsStartLoading());
+    // dispatch(nomenclatorsStartLoading());
+    // dispatch(representativeNomenclatorsStartLoading());
+    // dispatch(clientNomenclatorsStartLoading());
     dispatch(projectsStartLoading());
   }, [dispatch]);
 
@@ -200,11 +199,12 @@ const ProjectTable: React.FC = () => {
   }
 
   const handleView = (id: string): void => {
+    dispatch(startLoadSelectedProject(id))
     router.push(`/dashboard/project/${id}`);
   };
 
   const handleViewOffer = (projectId: string): void => {
-      dispatch(loadSelectedProject(projectId));
+      dispatch(startLoadSelectedProject(projectId));
       router.push(`/dashboard/project/${projectId}/offer`);
   };
 

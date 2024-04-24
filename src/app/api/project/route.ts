@@ -121,9 +121,7 @@ export async function PUT(request: NextRequest) {
 
     const updatedProject = await Project.findByIdAndUpdate(
       project._id,
-      {
-        ...project
-      },
+      { ...project },
       { new: true }
     );
 
@@ -169,8 +167,10 @@ export async function GET(request: NextRequest) {
         }
       );
     }
+
     await connectDB();
     const listOfProjects = (await Project.find()).reverse();
+    
     return new NextResponse(
       JSON.stringify({
         ok: true,

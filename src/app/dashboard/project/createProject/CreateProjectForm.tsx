@@ -232,7 +232,7 @@ const TableFormSection = (props: any) => {
   const columns: ColumnsType<IItem> = [
     {
       title: <span className="font-bold">No.</span>,
-      key: "idNumber",
+      // key: "idNumber",
       width: "5%",
       render: (text, record, index) => index + 1
     },

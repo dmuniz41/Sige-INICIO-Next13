@@ -25,7 +25,7 @@ export const projectReducer = (state = initialState, action: any) => {
         ...state,
         projects: [...action.payload]
       };
-    case types.selectedProject:
+    case types.loadSelectedProject:
       return {
         ...state,
         selectedProject: action.payload
@@ -41,5 +41,5 @@ export const projectReducer = (state = initialState, action: any) => {
 
     default:
       return state;
-    }
+  }
 };
