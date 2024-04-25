@@ -28,8 +28,6 @@ export const ProjectView = (props: { projectId: string }) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  // ! ARREGLAR ERROR DE REDUX CUANDO SE CARGA UN PROYECTO Y CUANDO SE VA A EDITAR UN PROYECTO //
-  // ! REVISAR POR QUE AL REFRESCAR SALE UN IDNUMBER EN LOS ELEMENTOS DEL ITEM LIS //
   useEffect(() => {
     dispatch(startLoadSelectedProject(projectId));
   }, [dispatch, projectId]);
