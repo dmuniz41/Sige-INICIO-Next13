@@ -12,7 +12,7 @@ import { EditSvg } from "@/app/global/EditSvg";
 import { IItem, IProject } from "@/models/project";
 import { PDFSvg } from "@/app/global/PDFSvg";
 import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
-// import ProjectPDFReport from "@/helpers/ProjectPDFReport";
+import ProjectPDFReport from "@/helpers/ProjectPDFReport";
 import Table, { ColumnsType } from "antd/es/table";
 
 const PDFDownloadLink = dynamic(
@@ -35,6 +35,8 @@ export const ProjectView = (props: { projectId: string }) => {
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
     (state: RootState) => state?.project
   );
+
+  const itemsList = selectedProject.itemsList
 
   const handleEdit = (): void => {
     router.push(`/dashboard/project/editProject`);
@@ -60,9 +62,9 @@ export const ProjectView = (props: { projectId: string }) => {
                 Crear Oferta
               </button>
             )}
-            {/* <PDFDownloadLink
+            <PDFDownloadLink
               className=" flex w-[2.5rem] h-[2.5rem]"
-              document={<ProjectPDFReport data={selectedProject} />}
+              document={<ProjectPDFReport data={selectedProject} itemsList={itemsList} />}
               fileName={`${selectedProject?.projectName}`}
             >
               {({ blob, url, loading, error }) =>
@@ -79,7 +81,7 @@ export const ProjectView = (props: { projectId: string }) => {
                   </button>
                 )
               }
-            </PDFDownloadLink> */}
+            </PDFDownloadLink>
           </div>
         </div>
       </article>
@@ -188,7 +190,6 @@ const ProjectViewTable = (props: any) => {
   const columns: ColumnsType<IItem> = [
     {
       title: <span className="font-bold">No.</span>,
-      // key: "idNumber",
       width: "1%",
       align: "center",
       render: (text, record, index) => index + 1

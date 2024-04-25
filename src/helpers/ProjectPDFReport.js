@@ -101,38 +101,12 @@ function checkStrEmpty(str) {
 }
 
 const fields = [
-  {
-    title: "No.",
-    custom: true,
-    component: (item) => (
-      <View
-        style={{
-          display: "flex",
-          flex: 1,
-          flexDirection: "column",
-          width: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          backgroundColor: "red"
-        }}
-      >
-        <Text
-          style={{
-            fontSize: "8pt"
-          }}
-        >
-          {item?.idNumber}
-        </Text>
-      </View>
-    ),
-    width: "5"
-  },
+  { title: 'No.', value: 'index', width: "1"   },
   {
     title: "DESCRIPCIÓN DEL SERVICIO",
     custom: true,
     component: (item) => `${item?.description}`,
-    width: "95"
+    width: "100"
   }
 ];
 
@@ -160,6 +134,9 @@ const CustomTablePDF = (props) => {
         (item, idx) =>
           item && (
             <View key={idx} style={styles.tableRow}>
+              <View wrap={false} style={[tableCol, { width: "5%" }]}>
+                <Text style={[styles.tableCell, { textAlign: "center" }]}>{idx + 1}</Text>
+              </View>
               {fields.map((_item, _idx) => {
                 let val = item[_item.value] || "";
                 let value_alt = (_item.value_alt && item[_item.value_alt]) || "";
@@ -194,15 +171,8 @@ const CustomTablePDF = (props) => {
 };
 
 export default function ProjectPDFReport(props) {
-  const { data } = props;
-  // const listOfItems = data?.itemsList?.map((value, index, array) => {
-  //   array[index] = {
-  //     ...value,
-  //     idNumber: index + 1
-  //   };
-  //   return array[index];
-  // });
-  // console.log("🚀 ~ listOfItems ~ listOfItems:", listOfItems);
+  const { data, itemsList } = props;
+
   return (
     <Document>
       <Page wrap orientation="portrait" size={"LETTER"} style={styles.body}>
@@ -356,23 +326,14 @@ export default function ProjectPDFReport(props) {
         </View>
         {/* SECCION DE LA LISTA DE ITEMS */}
         <View style={styles.itemListContainer}>
-          <View style={{ display: "flex", flexDirection: "column", width: "85%" }}>
-            <CustomTablePDF
-              fields={fields}
-              data={data?.itemsList?.map((value, index, array) => {
-                array[index] = {
-                  ...value,
-                  idNumber: index + 1
-                };
-                return array[index];
-              })}
-            />
+          <View style={{ display: "flex", flexDirection: "column", width: "80%" }}>
+            <CustomTablePDF fields={fields} data={itemsList} />
           </View>
           {/* PRECIO */}
           <View
             style={{
               display: "flex",
-              width: "15%",
+              width: "20%",
               flexDirection: "column",
               borderStyle: "solid",
               borderBottom: 1,

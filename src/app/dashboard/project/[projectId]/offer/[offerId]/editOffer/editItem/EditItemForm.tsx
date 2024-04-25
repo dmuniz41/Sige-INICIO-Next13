@@ -262,11 +262,11 @@ const TableFormSection = (props: any) => {
           pagination={false}
           bordered
           footer={() => (
-            <footer className="flex w-full">
-              <div className="font-bold grow flex w-[90%]">
+            <footer className="flex w-full justify-between pr-1">
+              <div className="font-bold flex">
                 <span>Valor: </span>
               </div>
-              <div className="flex flex-1 pl-1 justify-start font-bold">
+              <div className="flex pl-1 font-bold">
                 <span>
                   ${" "}
                   {subtotal
