@@ -63,9 +63,7 @@ export const CreateProjectForm = () => {
   };
 
   const onAddItem = (values: any) => {
-    console.log("🚀 ~ onAddItem ~ values:", values)
     setItemsValues([...itemsValues, values]);
-    console.log("🚀 ~ onAddItem ~ itemsValues:", itemsValues)
     setAddItemModal(false);
   };
   return (
@@ -232,8 +230,8 @@ const TableFormSection = (props: any) => {
   const columns: ColumnsType<IItem> = [
     {
       title: <span className="font-bold">No.</span>,
-      // key: "idNumber",
       width: "5%",
+      align: "center",
       render: (text, record, index) => index + 1
     },
     {
