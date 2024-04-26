@@ -93,6 +93,32 @@ const OfferTable = (props: { projectId: string }) => {
 
   return (
     <>
+      <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
+        <div className="flex gap-2">
+          <button
+            onClick={() => router.push(`/dashboard/project/`)}
+            className="toolbar-secondary-icon-btn"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M5 12l14 0" />
+              <path d="M5 12l6 6" />
+              <path d="M5 12l6 -6" />
+            </svg>
+            Proyectos
+          </button>
+        </div>
+        <div className="flex"></div>
+      </div>
       <Table
         size="small"
         columns={columns}
