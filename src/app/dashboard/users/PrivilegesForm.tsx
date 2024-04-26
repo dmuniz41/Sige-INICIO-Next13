@@ -20,6 +20,7 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({
 }) => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
   const userArea: string[] | undefined = [];
+  
   nomenclators.map((nomenclator: INomenclator) => {
     if (nomenclator.category === "Area de usuario") {
       userArea.push(nomenclator.code);
@@ -279,43 +280,43 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({
           },
           {
             name: "securityPrivileges",
-            value: defaultValues?.privileges!.filter((privilege) => privilege.includes("Usuario"))
+            value: defaultValues?.privileges?.filter((privilege) => privilege.includes("Usuario"))
           },
           {
             name: "nomenclatorPrivileges",
-            value: defaultValues?.privileges!.filter((privilege) =>
+            value: defaultValues?.privileges?.filter((privilege) =>
               privilege.includes("Nomenclador")
             )
           },
           {
             name: "humanResourcesPrivileges",
-            value: defaultValues?.privileges!.filter((privilege) =>
+            value: defaultValues?.privileges?.filter((privilege) =>
               privilege.includes("Trabajador")
             )
           },
           {
             name: "warehousePrivileges",
-            value: defaultValues?.privileges!.filter((privilege) => privilege.includes("Almacén"))
+            value: defaultValues?.privileges?.filter((privilege) => privilege.includes("Almacén"))
           },
           {
             name: "materialPrivileges",
-            value: defaultValues?.privileges!.filter((privilege) => privilege.includes("Material"))
+            value: defaultValues?.privileges?.filter((privilege) => privilege.includes("Material"))
           },
           {
             name: "costSheetPrivileges",
-            value: defaultValues?.privileges!.filter((privilege) =>
+            value: defaultValues?.privileges?.filter((privilege) =>
               privilege.includes("Ficha de Costo")
             )
           },
           {
             name: "serviceFeePrivileges",
-            value: defaultValues?.privileges!.filter((privilege) =>
+            value: defaultValues?.privileges?.filter((privilege) =>
               privilege.includes("Tarifas de Servicio")
             )
           },
           {
             name: "projectPrivileges",
-            value: defaultValues?.privileges!.filter((privilege) => privilege.includes("Proyectos"))
+            value: defaultValues?.privileges?.filter((privilege) => privilege.includes("Proyectos"))
           },
           {
             name: "area",

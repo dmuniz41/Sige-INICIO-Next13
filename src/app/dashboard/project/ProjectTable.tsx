@@ -563,6 +563,7 @@ const ProjectTable: React.FC = () => {
         columns={columns}
         dataSource={data}
         onChange={onChange}
+        rowKey={(record) => record?._id}
         pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
         className="shadow-md"
       />
