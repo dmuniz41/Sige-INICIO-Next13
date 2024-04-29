@@ -35,7 +35,16 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
     }[]
   >([]);
   const [size, setSize] = useState<number>(0);
-  const activityValue = useMemo(() => size * currentPrice, [size, currentPrice]);
+  const activityValue = useMemo(
+    () =>
+      activitiesTableValues.reduce(
+        (total, currentValue) =>
+          total + currentValue.amount * currentValue.width * currentValue.height,
+        0
+      ) * currentPrice,
+    [currentPrice, activitiesTableValues]
+  );
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -56,12 +65,29 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
   const columns: ColumnsType<{
     description: string;
     unitMeasure: string;
+    width: number;
+    height: number;
+    amount: number;
   }> = [
     {
       title: <span className="font-bold">Descripción</span>,
       dataIndex: "description",
       key: "description",
       width: "70%"
+    },
+    {
+      title: <span className="font-bold">Cantidad</span>,
+      dataIndex: "size",
+      key: "size",
+      width: "10%",
+      render: (_, { ...record }) => (
+        <div className="flex gap-1 justify-center">
+          {(record.width * record.height * record.amount).toLocaleString("DE", {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })}
+        </div>
+      )
     },
     {
       title: <span className="font-bold">Unidad de Medida</span>,
@@ -77,11 +103,11 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button
               className="table-delete-action-btn"
-              onClick={() =>
+              onClick={() => {
                 setActivitiesTableValues(
                   activitiesTableValues.filter((av) => av.description !== record.description)
-                )
-              }
+                );
+              }}
             >
               <DeleteSvg width={17} height={17} />
             </button>
@@ -90,7 +116,6 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
       )
     }
   ];
-
   const [form] = Form.useForm();
   return (
     <Modal
@@ -132,13 +157,13 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                           price: Number(currentPrice.toFixed(2)),
                           size: 0,
                           unitMeasure: currentUnitMeasure,
-                          value: Number(activityValue.toFixed(2)),
+                          value: (size * currentPrice),
                           width: 0
                         }
                       : {
                           _id: selectedServiceFee?._id!,
                           amount: size,
-                          description: `${values.description.value} ${activitiesTableValues.map(ac=> ac.description)} ${" "}`,
+                          description: `${values.description.value} ${activitiesTableValues.map((ac) => ac.description)} ${" "}`,
                           height: values.height,
                           price: Number(currentPrice.toFixed(2)),
                           size: size,
@@ -221,8 +246,8 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
           />
         </Form.Item>
         <section className="w-full flex">
-          <article className="grid w-[50%]">
-            <article className="flex gap-4 mb-4 py-4 w-fit border-border_light rounded-md">
+          <article className="grid bg w-[40%]">
+            <article className="flex gap-4  w-fit border-border_light rounded-md">
               <div className="flex flex-col items-center">
                 {/* SOLO SE MUESTRA SI LA UNIDAD DE MEDIDA DE LA TARIFA ES EN UNIDADES CUADRADAS */}
                 <Form.Item
@@ -273,7 +298,14 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                   <InputNumber className="w-full" precision={2} />
                 </Form.Item>
               </div>
-              <div className="flex items-center text-success-500">
+              <div
+                className={
+                  currentUnitMeasure.includes("Unidad (U)") ||
+                  currentUnitMeasure.includes("Metro (m)")
+                    ? "hidden"
+                    : `flex items-center text-success-500`
+                }
+              >
                 <button
                   className="hover:bg-success-100 rounded-full"
                   onClick={() => {
@@ -349,7 +381,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
               {currentUnitMeasure?.includes("Unidad (U)") ||
               currentUnitMeasure?.includes("Metro (m)") ? (
                 <div
-                  className={`flex gap-2 pl-2 mb-4 ${currentUnitMeasure.includes("u") && "hidden"}`}
+                  className={`flex gap-2 pl-2 mb-4 ${currentUnitMeasure.includes("Unidad (U)") || (currentUnitMeasure?.includes("Metro (m)") && "hidden")}`}
                 >
                   <span className="font-bold">Cantidad:</span>
                   <span>
@@ -365,19 +397,20 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                 <div className=" flex gap-2 pl-2 mb-4">
                   <span className="font-bold">Tamaño:</span>
                   <span>
-                    {!size
-                      ? 0
-                      : size.toLocaleString("DE", {
-                          maximumFractionDigits: 2,
-                          minimumFractionDigits: 2
-                        })}
+                    {activitiesTableValues
+                      .reduce(
+                        (total, currentValue) =>
+                          total + currentValue.amount * currentValue.width * currentValue.height,
+                        0
+                      )
+                      .toLocaleString("DE", {
+                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 2
+                      })}{" "}
+                    {currentUnitMeasure}
                   </span>
                 </div>
               )}
-              <div className=" flex gap-2 pl-2 mb-4">
-                <span className="font-bold">Unidad de Medida:</span>
-                <span>{currentUnitMeasure}</span>
-              </div>
               <div className=" flex gap-2 pl-2 mb-4">
                 <span className="font-bold">Precio:</span>
                 <span>
@@ -392,15 +425,33 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                 <span className="font-bold">Importe:</span>
                 <span>
                   $
-                  {activityValue?.toLocaleString("DE", {
-                    maximumFractionDigits: 2,
-                    minimumFractionDigits: 2
-                  })}
+                  {currentUnitMeasure.includes("Unidad (U)") ||
+                  currentUnitMeasure?.includes("Metro (m)") ? (
+                    <span>
+                      {(size * currentPrice).toLocaleString("DE", {
+                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 2
+                      })}
+                    </span>
+                  ) : (
+                    <span>
+                      {activityValue?.toLocaleString("DE", {
+                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 2
+                      })}
+                    </span>
+                  )}
                 </span>
               </div>
             </article>
           </article>
-          <article className="flex w-full">
+          <article
+            className={
+              currentUnitMeasure.includes("Unidad (U)") || currentUnitMeasure.includes("Metro (m)")
+                ? "hidden"
+                : `flex w-full`
+            }
+          >
             <Table
               size="small"
               columns={columns}
