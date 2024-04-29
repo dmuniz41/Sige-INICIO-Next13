@@ -1,12 +1,15 @@
 "use client";
 
-import { Form, InputNumber, Modal, Radio, Select, SelectProps } from "antd";
+import { Form, InputNumber, Modal, Radio, Select, SelectProps, Table, Tooltip } from "antd";
 import { IActivity } from "@/models/offer";
 import { IServiceFee } from "@/models/serviceFees";
 import { RootState, useAppSelector } from "@/store/store";
 import { serviceFeeStartLoading } from "@/actions/serviceFee";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useEffect, useMemo, useState } from "react";
+import { ColumnsType } from "antd/es/table";
+import { PlusCircleSvg } from "@/app/global/PlusCircleSvg";
+import { DeleteSvg } from "@/app/global/DeleteSvg";
 
 interface CollectionCreateFormProps {
   open: boolean;
@@ -22,8 +25,26 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
   const [currentPrice, setCurrentPrice] = useState<number>(0);
   const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>("");
   const [selectedServiceFee, setSelectedServiceFee] = useState<IServiceFee>();
+  const [activitiesTableValues, setActivitiesTableValues] = useState<
+    {
+      amount: number;
+      description: string;
+      height: number;
+      unitMeasure: string;
+      width: number;
+    }[]
+  >([]);
   const [size, setSize] = useState<number>(0);
-  const activityValue = useMemo(() => size * currentPrice, [size, currentPrice]);
+  const activityValue = useMemo(
+    () =>
+      activitiesTableValues.reduce(
+        (total, currentValue) =>
+          total + currentValue.amount * currentValue.width * currentValue.height,
+        0
+      ) * currentPrice,
+    [currentPrice, activitiesTableValues]
+  );
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -41,6 +62,60 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
     };
   });
 
+  const columns: ColumnsType<{
+    description: string;
+    unitMeasure: string;
+    width: number;
+    height: number;
+    amount: number;
+  }> = [
+    {
+      title: <span className="font-bold">Descripción</span>,
+      dataIndex: "description",
+      key: "description",
+      width: "70%"
+    },
+    {
+      title: <span className="font-bold">Cantidad</span>,
+      dataIndex: "size",
+      key: "size",
+      width: "10%",
+      render: (_, { ...record }) => (
+        <div className="flex gap-1 justify-center">
+          {(record.width * record.height * record.amount).toLocaleString("DE", {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })}
+        </div>
+      )
+    },
+    {
+      title: <span className="font-bold">Unidad de Medida</span>,
+      dataIndex: "unitMeasure",
+      key: "unitMeasure",
+      width: "20%"
+    },
+    {
+      title: <span className="font-bold">Acciones</span>,
+      width: "10%",
+      render: (_, { ...record }) => (
+        <div className="flex gap-1 justify-center">
+          <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
+            <button
+              className="table-delete-action-btn"
+              onClick={() => {
+                setActivitiesTableValues(
+                  activitiesTableValues.filter((av) => av.description !== record.description)
+                );
+              }}
+            >
+              <DeleteSvg width={17} height={17} />
+            </button>
+          </Tooltip>
+        </div>
+      )
+    }
+  ];
   const [form] = Form.useForm();
   return (
     <Modal
@@ -57,7 +132,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
       onCancel={onCancel}
       okType="default"
       okText="Crear"
-      width={"1000px"}
+      width={"1200px"}
       cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
@@ -70,7 +145,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
             onClick={() => {
               form
                 .validateFields()
-                .then((values) => {                  
+                .then((values) => {
                   onCreate(
                     currentUnitMeasure.includes("Unidad (U)") ||
                       currentUnitMeasure.includes("Metro (m)")
@@ -82,19 +157,19 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                           price: Number(currentPrice.toFixed(2)),
                           size: 0,
                           unitMeasure: currentUnitMeasure,
-                          value: Number(activityValue.toFixed(2)),
-                          width: 0,
+                          value: (size * currentPrice),
+                          width: 0
                         }
                       : {
                           _id: selectedServiceFee?._id!,
-                          amount: values.width * values.height,
-                          description: values.description.value,
+                          amount: size,
+                          description: `${values.description.value} ${activitiesTableValues.map((ac) => ac.description)} ${" "}`,
                           height: values.height,
                           price: Number(currentPrice.toFixed(2)),
-                          size: values.width * values.height,
+                          size: size,
                           unitMeasure: currentUnitMeasure,
                           value: Number(activityValue.toFixed(2)),
-                          width: values.width,
+                          width: values.width
                         }
                   );
                   form.resetFields();
@@ -131,6 +206,8 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
               setSelectedServiceFee(currentServiceFee!);
               setCurrentUnitMeasure(currentServiceFee?.unitMeasure!);
               setCurrentPrice(0);
+              setActivitiesTableValues([]);
+              setSize(0);
 
               form.setFieldsValue({
                 unitMeasure: selectedServiceFee?.unitMeasure,
@@ -138,6 +215,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                 height: 0,
                 width: 0,
                 amount: 0,
+                amountOfUnits: 0,
                 size: 0,
                 complexity: null
               });
@@ -154,6 +232,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
             }
           />
         </Form.Item>
+        {/* SOLO SE MUESTRA SI LA UNIDAD DE MEDIDA DE LA TARIFA ES EN UNIDADES LINEALES */}
         <Form.Item
           name="amount"
           label="Cantidad"
@@ -166,125 +245,224 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
             }}
           />
         </Form.Item>
-        <Form.Item
-          name="width"
-          label="Largo"
-          className={`w-[12rem] ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
-          rules={[{ required: true, message: "Campo vacío o incorrecto" }]}
-        >
-          <InputNumber
-            precision={2}
-            className="w-full"
-            onChange={() => {
-              setSize(form.getFieldValue("width") * form.getFieldValue("height"));
-              form.setFieldValue(
-                "size",
-                form.getFieldValue("width") * form.getFieldValue("height")
-              );
-            }}
-          />
-        </Form.Item>
-        <Form.Item
-          name="height"
-          label="Ancho"
-          className={`w-[12rem] ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
-          rules={[{ required: true, message: "Campo vacío o incorrecto" }]}
-        >
-          <InputNumber
-            precision={2}
-            className="w-full"
-            onChange={() => {
-              setSize(form.getFieldValue("width") * form.getFieldValue("height"));
-              form.setFieldValue(
-                "size",
-                form.getFieldValue("width") * form.getFieldValue("height")
-              );
-              setSize(form.getFieldValue("height") * form.getFieldValue("width"));
-            }}
-          />
-        </Form.Item>
-        <Form.Item
-          name="complexity"
-          label="Complejidad"
-          rules={[{ required: true, message: "Seleccione un nivel de complejidad" }]}
-        >
-          <Radio.Group
-            buttonStyle="solid"
-            onChange={(value) => {
-              value.target.value === "Alta"
-                ? selectedServiceFee?.complexity.find(
-                    (complexity) => complexity.name === "Alta" && setCurrentPrice(complexity.value)
-                  )
-                : value.target.value === "Media"
-                  ? selectedServiceFee?.complexity.find(
-                      (complexity) =>
-                        complexity.name === "Media" && setCurrentPrice(complexity.value)
-                    )
-                  : selectedServiceFee?.complexity.find(
-                      (complexity) =>
-                        complexity.name === "Baja" && setCurrentPrice(complexity.value)
-                    );
-            }}
-          >
-            <Radio.Button value="Alta">Alta</Radio.Button>
-            <Radio.Button value="Media">Media</Radio.Button>
-            <Radio.Button value="Baja">Baja</Radio.Button>
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item
-          name="size"
-          label="Tamano"
-          className="w-[12rem] hidden"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
-          <InputNumber precision={2} disabled className="w-full" />
-        </Form.Item>
-        {currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)") ? (
-          <div className={`flex gap-2 pl-2 mb-4 ${currentUnitMeasure.includes("u") && "hidden"}`}>
-            <span className="font-bold">Cantidad:</span>
-            <span>
-              {!form.getFieldValue("amount")
-                ? 0
-                : form.getFieldValue("amount").toLocaleString("DE", {
+        <section className="w-full flex">
+          <article className="grid bg w-[40%]">
+            <article className="flex gap-4  w-fit border-border_light rounded-md">
+              <div className="flex flex-col items-center">
+                {/* SOLO SE MUESTRA SI LA UNIDAD DE MEDIDA DE LA TARIFA ES EN UNIDADES CUADRADAS */}
+                <Form.Item
+                  name="width"
+                  label="Largo"
+                  className={`w-[12rem] mb-2 ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
+                  rules={[{ required: true, message: "" }]}
+                >
+                  <InputNumber
+                    precision={2}
+                    className="w-full"
+                    // onChange={() => {
+                    //   setSize(form.getFieldValue("width") * form.getFieldValue("height"));
+                    //   form.setFieldValue(
+                    //     "size",
+                    //     form.getFieldValue("width") * form.getFieldValue("height")
+                    //   );
+                    // }}
+                  />
+                </Form.Item>
+                {/* SOLO SE MUESTRA SI LA UNIDAD DE MEDIDA DE LA TARIFA ES EN UNIDADES CUADRADAS */}
+                <Form.Item
+                  name="height"
+                  label="Ancho"
+                  className={`w-[12rem] mb-2 ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
+                  rules={[{ required: true, message: "" }]}
+                >
+                  <InputNumber
+                    precision={2}
+                    className="w-full"
+                    // onChange={() => {
+                    //   setSize(form.getFieldValue("width") * form.getFieldValue("height"));
+                    //   form.setFieldValue(
+                    //     "size",
+                    //     form.getFieldValue("width") * form.getFieldValue("height")
+                    //   );
+                    //   setSize(form.getFieldValue("height") * form.getFieldValue("width"));
+                    // }}
+                  />
+                </Form.Item>
+                {/* SOLO SE MUESTRA SI LA UNIDAD DE MEDIDA DE LA TARIFA ES EN UNIDADES CUADRADAS */}
+                <Form.Item
+                  name="amountOfUnits"
+                  label="Cantidad"
+                  className={`w-[12rem] mb-2 ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
+                  rules={[{ required: true, message: "" }]}
+                >
+                  <InputNumber className="w-full" precision={2} />
+                </Form.Item>
+              </div>
+              <div
+                className={
+                  currentUnitMeasure.includes("Unidad (U)") ||
+                  currentUnitMeasure.includes("Metro (m)")
+                    ? "hidden"
+                    : `flex items-center text-success-500`
+                }
+              >
+                <button
+                  className="hover:bg-success-100 rounded-full"
+                  onClick={() => {
+                    const currentWidth = form.getFieldValue("width");
+                    const currentHeight = form.getFieldValue("height");
+                    const currentAmount = form.getFieldValue("amountOfUnits");
+                    setActivitiesTableValues([
+                      ...activitiesTableValues,
+                      {
+                        description: `Cant(${currentAmount}) (${currentWidth.toLocaleString("DE", {
+                          maximumFractionDigits: 2,
+                          minimumFractionDigits: 2
+                        })} x ${currentHeight.toLocaleString("DE", {
+                          maximumFractionDigits: 2,
+                          minimumFractionDigits: 2
+                        })})`,
+                        width: currentWidth,
+                        height: currentHeight,
+                        amount: currentAmount,
+                        unitMeasure: currentUnitMeasure
+                      }
+                    ]);
+                    setSize(size + currentHeight * currentWidth * currentAmount);
+                    form.setFieldsValue({
+                      height: 0,
+                      width: 0,
+                      amountOfUnits: 0
+                    });
+                  }}
+                >
+                  <PlusCircleSvg width={40} height={40} />
+                </button>
+              </div>
+            </article>
+            <article className="w-fit grid">
+              <Form.Item
+                name="complexity"
+                label="Complejidad"
+                rules={[{ required: true, message: "Seleccione un nivel de complejidad" }]}
+              >
+                <Radio.Group
+                  buttonStyle="solid"
+                  onChange={(value) => {
+                    value.target.value === "Alta"
+                      ? selectedServiceFee?.complexity.find(
+                          (complexity) =>
+                            complexity.name === "Alta" && setCurrentPrice(complexity.value)
+                        )
+                      : value.target.value === "Media"
+                        ? selectedServiceFee?.complexity.find(
+                            (complexity) =>
+                              complexity.name === "Media" && setCurrentPrice(complexity.value)
+                          )
+                        : selectedServiceFee?.complexity.find(
+                            (complexity) =>
+                              complexity.name === "Baja" && setCurrentPrice(complexity.value)
+                          );
+                  }}
+                >
+                  <Radio.Button value="Alta">Alta</Radio.Button>
+                  <Radio.Button value="Media">Media</Radio.Button>
+                  <Radio.Button value="Baja">Baja</Radio.Button>
+                </Radio.Group>
+              </Form.Item>
+              <Form.Item
+                name="size"
+                label="Tamano"
+                className="w-[12rem] hidden"
+                rules={[{ required: true, message: "Campo requerido" }]}
+              >
+                <InputNumber precision={2} disabled className="w-full" />
+              </Form.Item>
+              {currentUnitMeasure?.includes("Unidad (U)") ||
+              currentUnitMeasure?.includes("Metro (m)") ? (
+                <div
+                  className={`flex gap-2 pl-2 mb-4 ${currentUnitMeasure.includes("Unidad (U)") || (currentUnitMeasure?.includes("Metro (m)") && "hidden")}`}
+                >
+                  <span className="font-bold">Cantidad:</span>
+                  <span>
+                    {!form.getFieldValue("amount")
+                      ? 0
+                      : form.getFieldValue("amount").toLocaleString("DE", {
+                          maximumFractionDigits: 2,
+                          minimumFractionDigits: 2
+                        })}{" "}
+                  </span>
+                </div>
+              ) : (
+                <div className=" flex gap-2 pl-2 mb-4">
+                  <span className="font-bold">Tamaño:</span>
+                  <span>
+                    {activitiesTableValues
+                      .reduce(
+                        (total, currentValue) =>
+                          total + currentValue.amount * currentValue.width * currentValue.height,
+                        0
+                      )
+                      .toLocaleString("DE", {
+                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 2
+                      })}{" "}
+                    {currentUnitMeasure}
+                  </span>
+                </div>
+              )}
+              <div className=" flex gap-2 pl-2 mb-4">
+                <span className="font-bold">Precio:</span>
+                <span>
+                  $
+                  {currentPrice?.toLocaleString("DE", {
                     maximumFractionDigits: 2,
                     minimumFractionDigits: 2
-                  })}{" "}
-            </span>
-          </div>
-        ) : (
-          <div className=" flex gap-2 pl-2 mb-4">
-            <span className="font-bold">Tamaño:</span>
-            <span>
-              {!size
-                ? 0
-                : size.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
-            </span>
-          </div>
-        )}
-        <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Unidad de Medida:</span>
-          <span>{currentUnitMeasure}</span>
-        </div>
-        <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Precio:</span>
-          <span>
-            $
-            {currentPrice?.toLocaleString("DE", {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2
-            })}
-          </span>
-        </div>
-        <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Importe:</span>
-          <span>
-            $
-            {activityValue?.toLocaleString("DE", {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2
-            })}
-          </span>
-        </div>
+                  })}
+                </span>
+              </div>
+              <div className=" flex gap-2 pl-2 mb-4">
+                <span className="font-bold">Importe:</span>
+                <span>
+                  $
+                  {currentUnitMeasure.includes("Unidad (U)") ||
+                  currentUnitMeasure?.includes("Metro (m)") ? (
+                    <span>
+                      {(size * currentPrice).toLocaleString("DE", {
+                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 2
+                      })}
+                    </span>
+                  ) : (
+                    <span>
+                      {activityValue?.toLocaleString("DE", {
+                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 2
+                      })}
+                    </span>
+                  )}
+                </span>
+              </div>
+            </article>
+          </article>
+          <article
+            className={
+              currentUnitMeasure.includes("Unidad (U)") || currentUnitMeasure.includes("Metro (m)")
+                ? "hidden"
+                : `flex w-full`
+            }
+          >
+            <Table
+              size="small"
+              columns={columns}
+              dataSource={activitiesTableValues}
+              className="w-full "
+              sortDirections={["ascend"]}
+              pagination={false}
+              bordered
+            />
+          </article>
+        </section>
       </Form>
     </Modal>
   );

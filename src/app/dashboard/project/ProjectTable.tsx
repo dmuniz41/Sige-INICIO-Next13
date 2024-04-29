@@ -1,6 +1,6 @@
 "use client";
-import { Button, Input, Space, Table, Tag, Tooltip } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Button, Input, Space, Spin, Table, Tag, Tooltip } from "antd";
+import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
@@ -14,17 +14,13 @@ import type { InputRef } from "antd";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { INomenclator } from "@/models/nomenclator";
 import { IProject } from "@/models/project";
-import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { projectsStartLoading, startDeleteProject, startLoadSelectedProject } from "@/actions/project";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { SeeSvg } from "@/app/global/SeeSvg";
-import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
-import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/representative";
-import { clientNomenclatorsStartLoading } from "@/actions/nomenclators/client";
 import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 import { IClientNomenclator } from "@/models/nomenclators/client";
 import moment from "moment";
@@ -35,7 +31,7 @@ const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
   {
     ssr: false,
-    loading: () => <p>Loading...</p>
+    loading: () => <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
   }
 );
 
@@ -59,9 +55,6 @@ const ProjectTable: React.FC = () => {
   const canDelete = sessionData?.user.role.includes("Eliminar Proyectos");
 
   useEffect(() => {
-    // dispatch(nomenclatorsStartLoading());
-    // dispatch(representativeNomenclatorsStartLoading());
-    // dispatch(clientNomenclatorsStartLoading());
     dispatch(projectsStartLoading());
   }, [dispatch]);
 
