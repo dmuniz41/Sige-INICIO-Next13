@@ -158,18 +158,21 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                           size: 0,
                           unitMeasure: currentUnitMeasure,
                           value: size * currentPrice,
-                          width: 0
+                          width: 0,
+                          listOfMeasures: activitiesTableValues
                         }
                       : {
                           _id: selectedServiceFee?._id!,
                           amount: size,
-                          description: `${values.description.value} ${activitiesTableValues.map((ac) => ac.description)} ${" "}`,
+                          // description: `${values.description.value} ${activitiesTableValues.map((ac) => ac.description)} ${" "}`,
+                          description: values.description.value,
                           height: values.height,
                           price: Number(currentPrice.toFixed(2)),
                           size: size,
                           unitMeasure: currentUnitMeasure,
                           value: Number(activityValue.toFixed(2)),
-                          width: values.width
+                          width: values.width,
+                          listOfMeasures: activitiesTableValues
                         }
                   );
                   form.resetFields();
@@ -238,10 +241,10 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
           name="amount"
           label="Cantidad"
           className={`w-[12rem] ${currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)") ? "" : "hidden"}`}
-          rules={[{ required: true, message: "Campo requerido" }]}
+          rules={[{ required: true, message: "" }]}
         >
           <InputNumber
-            min={0}
+            min={1}
             onChange={(value: number | null) => {
               setSize(value!);
             }}
@@ -258,7 +261,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                   className={`w-[12rem] mb-2 ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
                   rules={[{ required: true, message: "" }]}
                 >
-                  <InputNumber min={0} precision={2} className="w-full" />
+                  <InputNumber min={1} precision={2} className="w-full" />
                 </Form.Item>
                 {/* SOLO SE MUESTRA SI LA UNIDAD DE MEDIDA DE LA TARIFA ES EN UNIDADES CUADRADAS */}
                 <Form.Item
@@ -267,7 +270,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                   className={`w-[12rem] mb-2 ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
                   rules={[{ required: true, message: "" }]}
                 >
-                  <InputNumber min={0} precision={2} className="w-full" />
+                  <InputNumber min={1} precision={2} className="w-full" />
                 </Form.Item>
                 {/* SOLO SE MUESTRA SI LA UNIDAD DE MEDIDA DE LA TARIFA ES EN UNIDADES CUADRADAS */}
                 <Form.Item
@@ -276,7 +279,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                   className={`w-[12rem] mb-2 ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
                   rules={[{ required: true, message: "" }]}
                 >
-                  <InputNumber min={0} className="w-full" precision={2} />
+                  <InputNumber min={1} className="w-full" precision={2} />
                 </Form.Item>
               </div>
               <div
@@ -355,7 +358,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                 name="size"
                 label="Tamano"
                 className="w-[12rem] hidden"
-                rules={[{ required: true, message: "Campo requerido" }]}
+                rules={[{ required: true, message: "" }]}
               >
                 <InputNumber min={0} precision={2} disabled className="w-full" />
               </Form.Item>
