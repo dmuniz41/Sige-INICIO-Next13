@@ -26,13 +26,13 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
   const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>("");
   const [selectedServiceFee, setSelectedServiceFee] = useState<IServiceFee>();
   const [activitiesTableValues, setActivitiesTableValues] = useState<
-    {
-      amount: number;
-      description: string;
-      height: number;
-      unitMeasure: string;
-      width: number;
-    }[]
+  {
+    amount: number;
+    description: string;
+    height: number;
+    unitMeasure: string;
+    width: number;
+  }[]
   >([]);
   const [size, setSize] = useState<number>(0);
   const activityValue = useMemo(
@@ -150,7 +150,6 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                     currentUnitMeasure.includes("Unidad (U)") ||
                       currentUnitMeasure.includes("Metro (m)")
                       ? {
-                          _id: selectedServiceFee?._id!,
                           amount: values.amount,
                           description: values.description.value,
                           height: 0,
@@ -162,9 +161,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                           listOfMeasures: activitiesTableValues
                         }
                       : {
-                          _id: selectedServiceFee?._id!,
                           amount: size,
-                          // description: `${values.description.value} ${activitiesTableValues.map((ac) => ac.description)} ${" "}`,
                           description: values.description.value,
                           height: values.height,
                           price: Number(currentPrice.toFixed(2)),
@@ -244,7 +241,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
           rules={[{ required: true, message: "" }]}
         >
           <InputNumber
-            min={1}
+            min={0}
             onChange={(value: number | null) => {
               setSize(value!);
             }}
@@ -261,7 +258,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                   className={`w-[12rem] mb-2 ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
                   rules={[{ required: true, message: "" }]}
                 >
-                  <InputNumber min={1} precision={2} className="w-full" />
+                  <InputNumber min={0} precision={2} className="w-full" />
                 </Form.Item>
                 {/* SOLO SE MUESTRA SI LA UNIDAD DE MEDIDA DE LA TARIFA ES EN UNIDADES CUADRADAS */}
                 <Form.Item
@@ -270,7 +267,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                   className={`w-[12rem] mb-2 ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
                   rules={[{ required: true, message: "" }]}
                 >
-                  <InputNumber min={1} precision={2} className="w-full" />
+                  <InputNumber min={0} precision={2} className="w-full" />
                 </Form.Item>
                 {/* SOLO SE MUESTRA SI LA UNIDAD DE MEDIDA DE LA TARIFA ES EN UNIDADES CUADRADAS */}
                 <Form.Item
@@ -279,7 +276,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                   className={`w-[12rem] mb-2 ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
                   rules={[{ required: true, message: "" }]}
                 >
-                  <InputNumber min={1} className="w-full" precision={2} />
+                  <InputNumber min={0} className="w-full" precision={2} />
                 </Form.Item>
               </div>
               <div

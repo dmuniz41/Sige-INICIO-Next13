@@ -27,12 +27,20 @@ const initialState: {
     value: 0
   },
   selectedActivity: {
-    _id: "",
     amount: 0,
     description: "",
     price: 0,
     unitMeasure: "",
-    value: 0
+    value: 0,
+    listOfMeasures: [
+      {
+        amount: 0,
+        description: "",
+        height: 0,
+        unitMeasure: "",
+        width: 0
+      }
+    ]
   },
   itemUpdated: {
     _id: "",
@@ -82,7 +90,7 @@ export const offerReducer = (state = initialState, action: any) => {
         selectedOffer: {
           ...state.selectedOffer,
           itemsList: state.selectedOffer.itemsList.filter(
-            (item) => item.description != action.payload.description
+            (item, index) => !index
           )
         }
       };

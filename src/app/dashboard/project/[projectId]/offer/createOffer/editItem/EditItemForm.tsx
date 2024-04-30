@@ -187,13 +187,24 @@ const TableFormSection = (props: any) => {
       title: <span className="font-bold">Descripción</span>,
       dataIndex: "description",
       key: "description",
-      width: "50%"
+      width: "50%",
+      render: (_, { ...record }) => (
+        <span className="flex gap-1">
+          {record.description}
+          <span className="flex gap-2">{`${record.listOfMeasures.map((e) => e.description)}`}</span>
+        </span>
+      )
     },
     {
       title: <span className="font-bold">Cantidad</span>,
       dataIndex: "amount",
       key: "amount",
-      width: "15%"
+      width: "15%",
+      render: (value) => (
+        <span>
+          {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+        </span>
+      )
     },
     {
       title: <span className="font-bold">Unidad de Medida</span>,

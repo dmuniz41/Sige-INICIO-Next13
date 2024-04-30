@@ -1,7 +1,6 @@
 import { Schema, model, models, Model } from "mongoose";
 
 export interface IActivity {
-  _id: string;
   amount: number;
   description: string;
   price: number;

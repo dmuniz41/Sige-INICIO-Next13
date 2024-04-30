@@ -40,26 +40,27 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
     setAddActivitiesModal(false);
   };
 
-  const onEditActivity = (values: IActivity) => {
-    const newActivityList: IActivity[] = [];
-    activitiesValues.forEach((value: IActivity) => {
-      if (value._id === values._id) {
-        newActivityList.push({
-          ...value,
-          amount: values.amount,
-          description: values.description,
-          price: values.price,
-          unitMeasure: values.unitMeasure,
-          value: values.value
-        });
-      } else {
-        newActivityList.push(value);
-      }
-    });
-    dispatch(editActivityList(newActivityList));
-    setActivitiesValues(newActivityList);
-    setEditActivityModal(false);
-  };
+  // TODO: Terminar la funcionalidad de editar actividad
+  // const onEditActivity = (values: IActivity) => {
+  //   const newActivityList: IActivity[] = [];
+  //   activitiesValues.forEach((value: IActivity) => {
+  //     if (value._id === values._id) {
+  //       newActivityList.push({
+  //         ...value,
+  //         amount: values.amount,
+  //         description: values.description,
+  //         price: values.price,
+  //         unitMeasure: values.unitMeasure,
+  //         value: values.value
+  //       });
+  //     } else {
+  //       newActivityList.push(value);
+  //     }
+  //   });
+  //   dispatch(editActivityList(newActivityList));
+  //   setActivitiesValues(newActivityList);
+  //   setEditActivityModal(false);
+  // };
 
   return (
     <Form
@@ -147,7 +148,7 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
         onCreate={onAddActivity}
       />
 
-      <EditActivityModal
+      {/* <EditActivityModal
         open={editActivityModal}
         onCancel={() => {
           setEditActivityModal(false);
@@ -155,7 +156,7 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
         }}
         onCreate={onEditActivity}
         defaultValues={rowToEdit}
-      />
+      /> */}
     </Form>
   );
 };
@@ -178,12 +179,12 @@ const TableFormSection = (props: any) => {
   const handleDelete = (record: IActivity) => {
     valuesSetter(values.filter((value: IActivity) => value.description !== record.description));
   };
-  const handleEdit = (record: IActivity) => {
-    const selectedActivity = values.find((value: IActivity)=> value._id === record._id)
-    dispatch(actionToDispatch(selectedActivity));
-    valueToEditSetter(record);
-    editModalSetter(true);
-  };
+  // const handleEdit = (record: IActivity) => {
+  //   const selectedActivity = values.find((value: IActivity)=> value._id === record._id)
+  //   dispatch(actionToDispatch(selectedActivity));
+  //   valueToEditSetter(record);
+  //   editModalSetter(true);
+  // };
 
   const columns: ColumnsType<IActivity> = [
     {
@@ -243,11 +244,11 @@ const TableFormSection = (props: any) => {
       width: "5%",
       render: (_, { ...record }) => (
         <div className="flex gap-1 justify-center">
-          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleEdit(record)} className="table-see-action-btn">
               <EditSvg width={18} height={18} />
             </button>
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleDelete(record)} className="table-delete-action-btn">
               <DeleteSvg width={17} height={17} />

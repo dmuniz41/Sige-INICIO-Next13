@@ -26,7 +26,6 @@ export const CreateItemForm = (props: { projectId: string }) => {
   };
 
   const onAddActivity = (values: IActivity) => {
-    console.log("🚀 ~ onAddActivity ~ values:", values)
     setActivitiesValues([values, ...activitiesValues]);
     form.setFieldValue("activities", [values, ...activitiesValues]);
     setAddActivitiesModal(false);
@@ -118,7 +117,7 @@ const TableFormSection = (props: any) => {
   const subtotal = useMemo(() => values?.map((value: IActivity) => value.value), [values]);
 
   const handleDelete = (record: IActivity) => {
-    valuesSetter(values.filter((value: IActivity) => value.description !== record.description));
+    valuesSetter(values.filter((value: IActivity) => JSON.stringify(value) !== JSON.stringify(record)));
   };
   // const handleEdit = (record: IServiceFeeSubItem) => {
   //   valueToEditSetter(record);
