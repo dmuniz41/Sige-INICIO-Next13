@@ -157,7 +157,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                           price: Number(currentPrice.toFixed(2)),
                           size: 0,
                           unitMeasure: currentUnitMeasure,
-                          value: (size * currentPrice),
+                          value: size * currentPrice,
                           width: 0
                         }
                       : {
@@ -176,6 +176,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                   setCurrentPrice(0);
                   setSize(0);
                   setCurrentUnitMeasure("");
+                  setActivitiesTableValues([]);
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -240,6 +241,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
           rules={[{ required: true, message: "Campo requerido" }]}
         >
           <InputNumber
+            min={0}
             onChange={(value: number | null) => {
               setSize(value!);
             }}
@@ -256,17 +258,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                   className={`w-[12rem] mb-2 ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
                   rules={[{ required: true, message: "" }]}
                 >
-                  <InputNumber
-                    precision={2}
-                    className="w-full"
-                    // onChange={() => {
-                    //   setSize(form.getFieldValue("width") * form.getFieldValue("height"));
-                    //   form.setFieldValue(
-                    //     "size",
-                    //     form.getFieldValue("width") * form.getFieldValue("height")
-                    //   );
-                    // }}
-                  />
+                  <InputNumber min={0} precision={2} className="w-full" />
                 </Form.Item>
                 {/* SOLO SE MUESTRA SI LA UNIDAD DE MEDIDA DE LA TARIFA ES EN UNIDADES CUADRADAS */}
                 <Form.Item
@@ -275,18 +267,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                   className={`w-[12rem] mb-2 ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
                   rules={[{ required: true, message: "" }]}
                 >
-                  <InputNumber
-                    precision={2}
-                    className="w-full"
-                    // onChange={() => {
-                    //   setSize(form.getFieldValue("width") * form.getFieldValue("height"));
-                    //   form.setFieldValue(
-                    //     "size",
-                    //     form.getFieldValue("width") * form.getFieldValue("height")
-                    //   );
-                    //   setSize(form.getFieldValue("height") * form.getFieldValue("width"));
-                    // }}
-                  />
+                  <InputNumber min={0} precision={2} className="w-full" />
                 </Form.Item>
                 {/* SOLO SE MUESTRA SI LA UNIDAD DE MEDIDA DE LA TARIFA ES EN UNIDADES CUADRADAS */}
                 <Form.Item
@@ -295,7 +276,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                   className={`w-[12rem] mb-2 ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
                   rules={[{ required: true, message: "" }]}
                 >
-                  <InputNumber className="w-full" precision={2} />
+                  <InputNumber min={0} className="w-full" precision={2} />
                 </Form.Item>
               </div>
               <div
@@ -376,7 +357,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                 className="w-[12rem] hidden"
                 rules={[{ required: true, message: "Campo requerido" }]}
               >
-                <InputNumber precision={2} disabled className="w-full" />
+                <InputNumber min={0} precision={2} disabled className="w-full" />
               </Form.Item>
               {currentUnitMeasure?.includes("Unidad (U)") ||
               currentUnitMeasure?.includes("Metro (m)") ? (

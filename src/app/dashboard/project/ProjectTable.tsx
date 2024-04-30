@@ -12,8 +12,11 @@ import type { FilterConfirmProps } from "antd/es/table/interface";
 import type { InputRef } from "antd";
 
 import { DeleteSvg } from "@/app/global/DeleteSvg";
+import { IClientNomenclator } from "@/models/nomenclators/client";
 import { INomenclator } from "@/models/nomenclator";
 import { IProject } from "@/models/project";
+import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
+import { PDFSvg } from "@/app/global/PDFSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { projectsStartLoading, startDeleteProject, startLoadSelectedProject } from "@/actions/project";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
@@ -21,11 +24,8 @@ import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { SeeSvg } from "@/app/global/SeeSvg";
 import { useAppDispatch } from "@/hooks/hooks";
-import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
-import { IClientNomenclator } from "@/models/nomenclators/client";
 import moment from "moment";
 import PDFReport from "@/helpers/PDFReport";
-import { PDFSvg } from "@/app/global/PDFSvg";
 
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
@@ -212,6 +212,7 @@ const ProjectTable: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
+
     Swal.fire({
       title: "Eliminar Proyecto",
       text: "El proyecto seleccionado se borrará de forma permanente",

@@ -23,7 +23,12 @@ interface CollectionCreateFormProps {
   defaultValues?: Values;
 }
 
-export const AddMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
+export const AddMaterialForm: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel,
+  defaultValues
+}) => {
   const [form] = Form.useForm();
 
   return (
@@ -44,11 +49,7 @@ export const AddMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
       cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button
-            key="2"
-            className="modal-btn-danger"
-            onClick={onCancel}
-          >
+          <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
           <button
@@ -68,7 +69,7 @@ export const AddMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
           >
             Añadir
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form
@@ -79,32 +80,32 @@ export const AddMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
         fields={[
           {
             name: "category",
-            value: defaultValues?.category,
+            value: defaultValues?.category
           },
           {
             name: "materialName",
-            value: defaultValues?.materialName,
+            value: defaultValues?.materialName
           },
           {
             name: "description",
-            value: defaultValues?.description,
+            value: defaultValues?.description
           },
           {
             name: "costPerUnit",
-            value: defaultValues?.costPerUnit,
+            value: defaultValues?.costPerUnit
           },
           {
             name: "unitMeasure",
-            value: defaultValues?.unitMeasure,
+            value: defaultValues?.unitMeasure
           },
           {
             name: "minimumExistence",
-            value: defaultValues?.minimumExistence,
+            value: defaultValues?.minimumExistence
           },
           {
             name: "provider",
-            value: defaultValues?.provider,
-          },
+            value: defaultValues?.provider
+          }
         ]}
       >
         <Form.Item name="category" label="Categoría">
@@ -117,16 +118,16 @@ export const AddMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
           <Input disabled />
         </Form.Item>
         <Form.Item name="costPerUnit" label="Costo por unidad de medida">
-          <InputNumber className="w-full" disabled />
+          <InputNumber min={0} className="w-full" disabled />
         </Form.Item>
         <Form.Item name="unitMeasure" label="Unidad de medida">
           <Select allowClear style={{ width: "100%" }} disabled />
         </Form.Item>
         <Form.Item name="unitsTotal" label="Cantidad a añadir">
-          <InputNumber className="w-full" />
+          <InputNumber min={0} className="w-full" />
         </Form.Item>
         <Form.Item name="minimumExistence" label="Existencias mínimas">
-          <InputNumber className="w-full" disabled />
+          <InputNumber min={0} className="w-full" disabled />
         </Form.Item>
         <Form.Item name="provider" label="Proveedor">
           <Select allowClear style={{ width: "100%" }} disabled />

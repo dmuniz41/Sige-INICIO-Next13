@@ -33,41 +33,40 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
       fields={[
         {
           name: "calculationCoefficient",
-          value: defaultValues?.calculationCoefficient,
+          value: defaultValues?.calculationCoefficient
         },
         {
           name: "officialCurrencyChangeCoefficient",
-          value: defaultValues?.officialCurrencyChangeCoefficient,
+          value: defaultValues?.officialCurrencyChangeCoefficient
         },
         {
           name: "informalCurrencyChange",
-          value: defaultValues?.informalCurrencyChange,
+          value: defaultValues?.informalCurrencyChange
         },
         {
           name: "mermaCoefficient",
-          value: defaultValues?.mermaCoefficient,
+          value: defaultValues?.mermaCoefficient
         },
         {
           name: "administrativeExpenses",
-          value: defaultValues?.administrativeExpensesCoefficients,
+          value: defaultValues?.administrativeExpensesCoefficients
         },
         {
           name: "equipmentDepreciation",
-          value: defaultValues?.equipmentDepreciationCoefficients,
+          value: defaultValues?.equipmentDepreciationCoefficients
         },
         {
           name: "equipmentMaintenance",
-          value: defaultValues?.equipmentMaintenanceCoefficients,
+          value: defaultValues?.equipmentMaintenanceCoefficients
         },
         {
           name: "transportationExpenses",
-          value: defaultValues?.transportationExpensesCoefficients,
+          value: defaultValues?.transportationExpensesCoefficients
         },
         {
           name: "currencyChange",
-          value: defaultValues?.currencyChange,
-        },
-
+          value: defaultValues?.currencyChange
+        }
       ]}
     >
       <section className=" flex-col">
@@ -78,7 +77,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
             name="currencyChange"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
-            <InputNumber />
+            <InputNumber min={0} />
           </Form.Item>
         </div>
         <div className="flex gap-2 pr-[13rem]">
@@ -88,7 +87,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
             name="calculationCoefficient"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
-            <InputNumber />
+            <InputNumber min={0} />
           </Form.Item>
         </div>
         <div className="flex gap-2 pr-[13rem]">
@@ -98,17 +97,27 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
             name="officialCurrencyChangeCoefficient"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
-            <InputNumber />
+            <InputNumber min={0} />
           </Form.Item>
         </div>
         <div className="flex gap-2 pr-[13rem]">
-          <Form.Item className="mb-3 flex-1" label={<span className="font-bold text-md">Cambio Informal</span>} name="informalCurrencyChange" rules={[{ required: true, message: "Campo requerido" }]}>
-            <InputNumber />
+          <Form.Item
+            className="mb-3 flex-1"
+            label={<span className="font-bold text-md">Cambio Informal</span>}
+            name="informalCurrencyChange"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
+            <InputNumber min={0} />
           </Form.Item>
         </div>
         <div className="flex gap-2 pr-[13rem]">
-          <Form.Item className="mb-3 flex-1" label={<span className="font-bold text-md">Coeficiente de Merma</span>} name="mermaCoefficient" rules={[{ required: true, message: "Campo requerido" }]}>
-            <InputNumber />
+          <Form.Item
+            className="mb-3 flex-1"
+            label={<span className="font-bold text-md">Coeficiente de Merma</span>}
+            name="mermaCoefficient"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
+            <InputNumber min={0} />
           </Form.Item>
         </div>
         {/* Listado de Coeficientes de Gastos Administrativos */}
@@ -119,18 +128,33 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
               {fields.map(({ key, name, ...restField }) => (
                 <div key={key} className="w-full">
                   <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[70%]" {...restField} name={[name, "name"]} rules={[{ required: true, message: "Campo requerido" }]}>
+                    <Form.Item
+                      className="w-[70%]"
+                      {...restField}
+                      name={[name, "name"]}
+                      rules={[{ required: true, message: "Campo requerido" }]}
+                    >
                       <Input placeholder="Descripción" className="w-full" />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true, message: "Campo requerido" }]}>
-                      <InputNumber placeholder="Coeficiente" />
+                    <Form.Item
+                      {...restField}
+                      name={[name, "value"]}
+                      rules={[{ required: true, message: "Campo requerido" }]}
+                    >
+                      <InputNumber min={0} placeholder="Coeficiente" />
                     </Form.Item>
                     <MinusCircleOutlined className="mb-auto" onClick={() => remove(name)} />
                   </div>
                 </div>
               ))}
               <Form.Item className="mb-2">
-                <Button className="flex flex-row justify-center items-center" type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                <Button
+                  className="flex flex-row justify-center items-center"
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                >
                   Añadir gasto administrativo
                 </Button>
               </Form.Item>
@@ -145,18 +169,33 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
               {fields.map(({ key, name, ...restField }) => (
                 <div key={key} className="w-full">
                   <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[70%]" {...restField} name={[name, "name"]} rules={[{ required: true, message: "Campo requerido" }]}>
+                    <Form.Item
+                      className="w-[70%]"
+                      {...restField}
+                      name={[name, "name"]}
+                      rules={[{ required: true, message: "Campo requerido" }]}
+                    >
                       <Input placeholder="Descripción" className="w-full" />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true, message: "Campo requerido" }]}>
-                      <InputNumber placeholder="Coeficiente" />
+                    <Form.Item
+                      {...restField}
+                      name={[name, "value"]}
+                      rules={[{ required: true, message: "Campo requerido" }]}
+                    >
+                      <InputNumber min={0} placeholder="Coeficiente" />
                     </Form.Item>
                     <MinusCircleOutlined className="mb-auto" onClick={() => remove(name)} />
                   </div>
                 </div>
               ))}
               <Form.Item className="mb-2">
-                <Button className="flex flex-row justify-center items-center" type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                <Button
+                  className="flex flex-row justify-center items-center"
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                >
                   Añadir Coeficiente de Depreciación
                 </Button>
               </Form.Item>
@@ -164,25 +203,40 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
           )}
         </Form.List>
         {/* Listado de Coeficientes de Mantenimiento de Equipos */}
-          <label className="font-bold text-md">Coeficientes de Mantenimiento de Equipos: </label>
-          <Form.List name="equipmentMaintenance">
+        <label className="font-bold text-md">Coeficientes de Mantenimiento de Equipos: </label>
+        <Form.List name="equipmentMaintenance">
           {(fields, { add, remove }) => (
             <div className="flex flex-col w-full mt-5">
               {fields.map(({ key, name, ...restField }) => (
                 <div key={key} className="w-full">
                   <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[70%]" {...restField} name={[name, "name"]} rules={[{ required: true, message: "Campo requerido" }]}>
+                    <Form.Item
+                      className="w-[70%]"
+                      {...restField}
+                      name={[name, "name"]}
+                      rules={[{ required: true, message: "Campo requerido" }]}
+                    >
                       <Input placeholder="Descripción" className="w-full" />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true, message: "Campo requerido" }]}>
-                      <InputNumber placeholder="Coeficiente" />
+                    <Form.Item
+                      {...restField}
+                      name={[name, "value"]}
+                      rules={[{ required: true, message: "Campo requerido" }]}
+                    >
+                      <InputNumber min={0} placeholder="Coeficiente" />
                     </Form.Item>
                     <MinusCircleOutlined className="mb-auto" onClick={() => remove(name)} />
                   </div>
                 </div>
               ))}
               <Form.Item className="mb-2">
-                <Button className="flex flex-row justify-center items-center" type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                <Button
+                  className="flex flex-row justify-center items-center"
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                >
                   Añadir Coeficiente de Mantenimiento
                 </Button>
               </Form.Item>
@@ -190,25 +244,40 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
           )}
         </Form.List>
         {/* Listado de Coeficientes de Gastos de Transportacion */}
-          <label className="font-bold text-md">Coeficientes de Gastos de Transportacion: </label>
-          <Form.List name="transportationExpenses">
+        <label className="font-bold text-md">Coeficientes de Gastos de Transportacion: </label>
+        <Form.List name="transportationExpenses">
           {(fields, { add, remove }) => (
             <div className="flex flex-col w-full mt-5">
               {fields.map(({ key, name, ...restField }) => (
                 <div key={key} className="w-full">
                   <div className="flex items-center flex-row mb-0 h-9  gap-1">
-                    <Form.Item className="w-[70%]" {...restField} name={[name, "name"]} rules={[{ required: true, message: "Campo requerido" }]}>
+                    <Form.Item
+                      className="w-[70%]"
+                      {...restField}
+                      name={[name, "name"]}
+                      rules={[{ required: true, message: "Campo requerido" }]}
+                    >
                       <Input placeholder="Descripción" className="w-full" />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true, message: "Campo requerido" }]}>
-                      <InputNumber placeholder="Coeficiente" />
+                    <Form.Item
+                      {...restField}
+                      name={[name, "value"]}
+                      rules={[{ required: true, message: "Campo requerido" }]}
+                    >
+                      <InputNumber min={0} placeholder="Coeficiente" />
                     </Form.Item>
                     <MinusCircleOutlined className="mb-auto" onClick={() => remove(name)} />
                   </div>
                 </div>
               ))}
               <Form.Item className="mb-2">
-                <Button className="flex flex-row justify-center items-center" type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                <Button
+                  className="flex flex-row justify-center items-center"
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                >
                   Añadir Gasto de Transportación
                 </Button>
               </Form.Item>

@@ -181,14 +181,14 @@ export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({
           label="Cantidad"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <InputNumber />
+          <InputNumber min={0} />
         </Form.Item>
         <Form.Item
           name="price"
           label="Precio"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <InputNumber />
+          <InputNumber min={0} />
         </Form.Item>
       </Form>
     </Modal>

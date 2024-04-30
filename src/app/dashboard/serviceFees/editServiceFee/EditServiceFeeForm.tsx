@@ -349,7 +349,7 @@ export const EditServiceFeeForm = () => {
               name="workersAmount"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
-              <InputNumber className="w-full" />
+              <InputNumber min={0} className="w-full" />
             </Form.Item>
             <Form.Item
               className="mb-3"
@@ -380,7 +380,7 @@ export const EditServiceFeeForm = () => {
               name="currencyChange"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
-              <InputNumber disabled className="w-full" />
+              <InputNumber min={0} disabled className="w-full" />
             </Form.Item>
           </article>
         </div>
@@ -462,7 +462,7 @@ export const EditServiceFeeForm = () => {
             name="highComplexity"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
-            <InputNumber />
+            <InputNumber min={0} />
           </Form.Item>
           <Form.Item
             className="mb-3 "
@@ -470,7 +470,7 @@ export const EditServiceFeeForm = () => {
             name="mediumComplexity"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
-            <InputNumber />
+            <InputNumber min={0} />
           </Form.Item>
           <Form.Item
             className="mb-3 "
@@ -478,7 +478,7 @@ export const EditServiceFeeForm = () => {
             name="lowComplexity"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
-            <InputNumber />
+            <InputNumber min={0} />
           </Form.Item>
         </div>
       </article>
@@ -490,7 +490,7 @@ export const EditServiceFeeForm = () => {
           name="ONAT"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <InputNumber />
+          <InputNumber min={0} />
         </Form.Item>
         {/* commercialMargin */}
         <Form.Item
@@ -499,7 +499,7 @@ export const EditServiceFeeForm = () => {
           name="commercialMargin"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <InputNumber />
+          <InputNumber min={0} />
         </Form.Item>
         <Form.Item
           className="mb-3 "
@@ -507,7 +507,7 @@ export const EditServiceFeeForm = () => {
           name="artisticTalent"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <InputNumber />
+          <InputNumber min={0} />
         </Form.Item>
       </section>
       <Form.Item>

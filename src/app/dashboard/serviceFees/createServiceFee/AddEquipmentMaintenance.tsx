@@ -128,6 +128,7 @@ export const AddEquipmentMaintenanceModal: React.FC<CollectionCreateFormProps> =
           rules={[{ required: true, message: "Campo requerido" }]}
         >
           <InputNumber
+            min={0}
             onChange={(value: number | null) => {
               setCurrentPrice(value! * currentEquipmentMaintenance?.value!);
             }}

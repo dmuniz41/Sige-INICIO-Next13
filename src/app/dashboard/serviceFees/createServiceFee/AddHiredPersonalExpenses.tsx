@@ -10,7 +10,11 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel
+}) => {
   const [indirectSalariesValue, setIndirectSalariesValue] = useState(0);
   const [subcontractExpensesValue, setSubcontractExpensesValue] = useState(0);
 
@@ -34,11 +38,7 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
       cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button
-            key="2"
-            className="modal-btn-danger"
-            onClick={onCancel}
-          >
+          <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
           <button
@@ -60,7 +60,7 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
           >
             Crear
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form
@@ -71,16 +71,16 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
         fields={[
           {
             name: "indirectSalariesDescription",
-            value: "Salarios Indirectos",
+            value: "Salarios Indirectos"
           },
           {
             name: "subcontractExpenseDescription",
-            value: "Subcontratación",
+            value: "Subcontratación"
           },
           {
             name: "unitMeasure",
-            value: "",
-          },
+            value: ""
+          }
         ]}
       >
         {/* Salarios Indirectos */}
@@ -91,23 +91,37 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
           <Form.Item name="unitMeasure" className="w-[10rem]" label="Unidad de Medida">
             <Input />
           </Form.Item>
-          <Form.Item name="indirectSalariesAmount" label="Cantidad" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            name="indirectSalariesAmount"
+            label="Cantidad"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <InputNumber
+              min={0}
               onChange={() => {
                 let values = form.getFieldsValue();
-                setIndirectSalariesValue(values.indirectSalariesAmount * values.indirectSalariesPrice);
+                setIndirectSalariesValue(
+                  values.indirectSalariesAmount * values.indirectSalariesPrice
+                );
               }}
             />
           </Form.Item>
           <Form.Item name="indirectSalariesPrice" label="Precio/UM">
-            <InputNumber onChange={() => {
+            <InputNumber
+              min={0}
+              onChange={() => {
                 let values = form.getFieldsValue();
-                setIndirectSalariesValue(values.indirectSalariesAmount * values.indirectSalariesPrice);
-              }}/>
+                setIndirectSalariesValue(
+                  values.indirectSalariesAmount * values.indirectSalariesPrice
+                );
+              }}
+            />
           </Form.Item>
           <div className=" flex flex-col w-[4rem]">
             <span className="font-bold h-[22px] mb-2">Importe</span>
-            <span className="h-[30px] pt-1.5">$ {!indirectSalariesValue ? 0 : indirectSalariesValue?.toFixed(2)}</span>
+            <span className="h-[30px] pt-1.5">
+              $ {!indirectSalariesValue ? 0 : indirectSalariesValue?.toFixed(2)}
+            </span>
           </div>
         </section>
         {/* Subcontratación */}
@@ -118,8 +132,12 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
           <Form.Item name="unitMeasure" className="w-[10rem]">
             <Input />
           </Form.Item>
-          <Form.Item name="subcontractAmount" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            name="subcontractAmount"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <InputNumber
+              min={0}
               onChange={() => {
                 let values = form.getFieldsValue();
                 setSubcontractExpensesValue(values.subcontractAmount * values.subcontractPrice);
@@ -127,13 +145,18 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
             />
           </Form.Item>
           <Form.Item name="subcontractPrice">
-            <InputNumber  onChange={() => {
+            <InputNumber
+              min={0}
+              onChange={() => {
                 let values = form.getFieldsValue();
                 setSubcontractExpensesValue(values.subcontractAmount * values.subcontractPrice);
-              }}/>
+              }}
+            />
           </Form.Item>
           <div className=" flex flex-col w-[4rem]">
-            <span className="pt-1.5 h-[30px]">$ {!subcontractExpensesValue ? 0 : subcontractExpensesValue?.toFixed(2)}</span>
+            <span className="pt-1.5 h-[30px]">
+              $ {!subcontractExpensesValue ? 0 : subcontractExpensesValue?.toFixed(2)}
+            </span>
           </div>
         </section>
       </Form>

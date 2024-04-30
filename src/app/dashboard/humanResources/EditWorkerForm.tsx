@@ -128,7 +128,7 @@ export const EditWorkerForm: React.FC<CollectionCreateFormProps> = ({
           rules={[{ required: true, message: "${CI} debe tener 11 números" }]}
           tooltip={{ title: "El carnet debe tener 11 números", icon: <InfoCircleOutlined /> }}
         >
-          <InputNumber className="w-full" />
+          <InputNumber min={0} className="w-full" />
         </Form.Item>
         <Form.Item
           name="role"
@@ -151,7 +151,7 @@ export const EditWorkerForm: React.FC<CollectionCreateFormProps> = ({
           rules={[{ required: true, message: "${phoneNumber} debe tener 8 números" }]}
           tooltip={{ title: "El telefono debe tener 8 números", icon: <InfoCircleOutlined /> }}
         >
-          <InputNumber className="w-full" />
+          <InputNumber min={0} className="w-full" />
         </Form.Item>
         <Form.Item
           messageVariables={{ bankAccount: "Cuenta bancaria" }}
@@ -163,7 +163,7 @@ export const EditWorkerForm: React.FC<CollectionCreateFormProps> = ({
             icon: <InfoCircleOutlined />
           }}
         >
-          <InputNumber className="w-full" />
+          <InputNumber min={0} className="w-full" />
         </Form.Item>
       </Form>
     </Modal>

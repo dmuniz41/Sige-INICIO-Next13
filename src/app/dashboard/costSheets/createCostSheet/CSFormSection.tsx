@@ -51,10 +51,10 @@ export const CSFormSection = (props: any) => {
                       />
                   </Form.Item>
                   <Form.Item {...restField} name={[name, "amount"]} rules={[{ required: true, message: "Introduzca la cantidad" }]}>
-                    <InputNumber placeholder="Cantidad"  />
+                    <InputNumber min={0} placeholder="Cantidad"  />
                   </Form.Item>
                   <Form.Item {...restField} name={[name, "price"]} rules={[{ required: true, message: "Introduzca el precio" }]}>
-                    <InputNumber placeholder="Precio" />
+                    <InputNumber min={0} placeholder="Precio" />
                   </Form.Item>
                   <MinusCircleOutlined className="mb-auto" onClick={() => remove(name)} />
                 </div>
