@@ -103,7 +103,7 @@ export const EditMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, on
           <Input className="w-full" />
         </Form.Item>
         <Form.Item className="w-full" name="minimumExistence" label="Existencias mínimas">
-          <InputNumber />
+          <InputNumber min={0}/>
         </Form.Item>
       </Form>
     </Modal>

@@ -20,11 +20,11 @@ import { DeleteSvg } from "@/app/global/DeleteSvg";
 import Swal from "sweetalert2";
 
 export const CreateOfferForm = (props: { projectId: string }) => {
+  const [form] = Form.useForm();
+  const [representativePercentage, setRepresentativePercentage] = useState(0);
   const { projectId } = props;
   const dispatch = useAppDispatch();
-  const [form] = Form.useForm();
   const router = useRouter();
-  const [representativePercentage, setRepresentativePercentage] = useState(0);
 
   useEffect(() => {
     dispatch(startLoadServiceFeeAuxiliary());
@@ -77,7 +77,7 @@ export const CreateOfferForm = (props: { projectId: string }) => {
     selectedOffer.itemsList.forEach((item, index, itemList) => {
       if (item.description === itemUpdated.description) {
         itemList[index] = itemUpdated;
-        // !REVISAR POR QUE SE LE PASA UN ITEM VACIO //
+        // TODO: Revisar por que se la pasa un item vacio 
         dispatch(editItem({ _id: "", description: "", activities: [], value: 0 }, false));
       }
       return itemList[index];

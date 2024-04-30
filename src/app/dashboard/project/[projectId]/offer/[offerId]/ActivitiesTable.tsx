@@ -1,16 +1,22 @@
-import { IOfferItem } from "@/models/offer";
+import { IActivity } from "@/models/offer";
 import React from "react";
 import Table, { ColumnsType } from "antd/es/table";
 
 export const ActivitiesTable = (props: any) => {
   const { activities } = props;
 
-  const columns: ColumnsType<IOfferItem> = [
+  const columns: ColumnsType<IActivity> = [
     {
       title: <span className="font-bold">Descripción</span>,
       dataIndex: "description",
       key: "description",
-      width: "45%"
+      width: "50%",
+      render: (_, { ...record }) => (
+        <span className="flex gap-1">
+          {record.description}
+          <span className="flex gap-2">{record.listOfMeasures.map((e) => e.description)}</span>
+        </span>
+      )
     },
     {
       title: <span className="font-bold">U/M</span>,

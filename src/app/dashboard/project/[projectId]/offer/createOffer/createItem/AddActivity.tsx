@@ -26,13 +26,13 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
   const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>("");
   const [selectedServiceFee, setSelectedServiceFee] = useState<IServiceFee>();
   const [activitiesTableValues, setActivitiesTableValues] = useState<
-    {
-      amount: number;
-      description: string;
-      height: number;
-      unitMeasure: string;
-      width: number;
-    }[]
+  {
+    amount: number;
+    description: string;
+    height: number;
+    unitMeasure: string;
+    width: number;
+  }[]
   >([]);
   const [size, setSize] = useState<number>(0);
   const activityValue = useMemo(
@@ -150,32 +150,33 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                     currentUnitMeasure.includes("Unidad (U)") ||
                       currentUnitMeasure.includes("Metro (m)")
                       ? {
-                          _id: selectedServiceFee?._id!,
                           amount: values.amount,
                           description: values.description.value,
                           height: 0,
                           price: Number(currentPrice.toFixed(2)),
                           size: 0,
                           unitMeasure: currentUnitMeasure,
-                          value: (size * currentPrice),
-                          width: 0
+                          value: size * currentPrice,
+                          width: 0,
+                          listOfMeasures: activitiesTableValues
                         }
                       : {
-                          _id: selectedServiceFee?._id!,
                           amount: size,
-                          description: `${values.description.value} ${activitiesTableValues.map((ac) => ac.description)} ${" "}`,
+                          description: values.description.value,
                           height: values.height,
                           price: Number(currentPrice.toFixed(2)),
                           size: size,
                           unitMeasure: currentUnitMeasure,
                           value: Number(activityValue.toFixed(2)),
-                          width: values.width
+                          width: values.width,
+                          listOfMeasures: activitiesTableValues
                         }
                   );
                   form.resetFields();
                   setCurrentPrice(0);
                   setSize(0);
                   setCurrentUnitMeasure("");
+                  setActivitiesTableValues([]);
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -237,9 +238,10 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
           name="amount"
           label="Cantidad"
           className={`w-[12rem] ${currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)") ? "" : "hidden"}`}
-          rules={[{ required: true, message: "Campo requerido" }]}
+          rules={[{ required: true, message: "" }]}
         >
           <InputNumber
+            min={0}
             onChange={(value: number | null) => {
               setSize(value!);
             }}
@@ -256,17 +258,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                   className={`w-[12rem] mb-2 ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
                   rules={[{ required: true, message: "" }]}
                 >
-                  <InputNumber
-                    precision={2}
-                    className="w-full"
-                    // onChange={() => {
-                    //   setSize(form.getFieldValue("width") * form.getFieldValue("height"));
-                    //   form.setFieldValue(
-                    //     "size",
-                    //     form.getFieldValue("width") * form.getFieldValue("height")
-                    //   );
-                    // }}
-                  />
+                  <InputNumber min={0} precision={2} className="w-full" />
                 </Form.Item>
                 {/* SOLO SE MUESTRA SI LA UNIDAD DE MEDIDA DE LA TARIFA ES EN UNIDADES CUADRADAS */}
                 <Form.Item
@@ -275,18 +267,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                   className={`w-[12rem] mb-2 ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
                   rules={[{ required: true, message: "" }]}
                 >
-                  <InputNumber
-                    precision={2}
-                    className="w-full"
-                    // onChange={() => {
-                    //   setSize(form.getFieldValue("width") * form.getFieldValue("height"));
-                    //   form.setFieldValue(
-                    //     "size",
-                    //     form.getFieldValue("width") * form.getFieldValue("height")
-                    //   );
-                    //   setSize(form.getFieldValue("height") * form.getFieldValue("width"));
-                    // }}
-                  />
+                  <InputNumber min={0} precision={2} className="w-full" />
                 </Form.Item>
                 {/* SOLO SE MUESTRA SI LA UNIDAD DE MEDIDA DE LA TARIFA ES EN UNIDADES CUADRADAS */}
                 <Form.Item
@@ -295,7 +276,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                   className={`w-[12rem] mb-2 ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
                   rules={[{ required: true, message: "" }]}
                 >
-                  <InputNumber className="w-full" precision={2} />
+                  <InputNumber min={0} className="w-full" precision={2} />
                 </Form.Item>
               </div>
               <div
@@ -374,9 +355,9 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                 name="size"
                 label="Tamano"
                 className="w-[12rem] hidden"
-                rules={[{ required: true, message: "Campo requerido" }]}
+                rules={[{ required: true, message: "" }]}
               >
-                <InputNumber precision={2} disabled className="w-full" />
+                <InputNumber min={0} precision={2} disabled className="w-full" />
               </Form.Item>
               {currentUnitMeasure?.includes("Unidad (U)") ||
               currentUnitMeasure?.includes("Metro (m)") ? (

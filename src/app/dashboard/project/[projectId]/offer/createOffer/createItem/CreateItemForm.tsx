@@ -26,7 +26,6 @@ export const CreateItemForm = (props: { projectId: string }) => {
   };
 
   const onAddActivity = (values: IActivity) => {
-    console.log("🚀 ~ onAddActivity ~ values:", values)
     setActivitiesValues([values, ...activitiesValues]);
     form.setFieldValue("activities", [values, ...activitiesValues]);
     setAddActivitiesModal(false);
@@ -63,7 +62,7 @@ export const CreateItemForm = (props: { projectId: string }) => {
             addModalSetter={setAddActivitiesModal}
             buttonText="Añadir Actividad"
             form={form}
-          />
+          />  
         </div>
       </section>
       <Form.Item>
@@ -118,7 +117,7 @@ const TableFormSection = (props: any) => {
   const subtotal = useMemo(() => values?.map((value: IActivity) => value.value), [values]);
 
   const handleDelete = (record: IActivity) => {
-    valuesSetter(values.filter((value: IActivity) => value.description !== record.description));
+    valuesSetter(values.filter((value: IActivity) => JSON.stringify(value) !== JSON.stringify(record)));
   };
   // const handleEdit = (record: IServiceFeeSubItem) => {
   //   valueToEditSetter(record);
@@ -130,13 +129,24 @@ const TableFormSection = (props: any) => {
       title: <span className="font-bold">Descripción</span>,
       dataIndex: "description",
       key: "description",
-      width: "50%"
+      width: "50%",
+      render: (_, { ...record }) => (
+        <span className="flex gap-1">
+          {record.description}
+          <span className="flex gap-2">{`${record.listOfMeasures.map((e) => e.description)}`}</span>
+        </span>
+      )
     },
     {
       title: <span className="font-bold">Cantidad</span>,
       dataIndex: "amount",
       key: "amount",
-      width: "15%"
+      width: "15%",
+      render: (value) => (
+        <span>
+          {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+        </span>
+      )
     },
     {
       title: <span className="font-bold">Unidad de Medida</span>,

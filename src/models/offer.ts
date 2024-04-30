@@ -1,7 +1,6 @@
 import { Schema, model, models, Model } from "mongoose";
 
 export interface IActivity {
-  _id: string;
   amount: number;
   description: string;
   price: number;
@@ -10,6 +9,13 @@ export interface IActivity {
   size?: number;
   width?: number;
   height?: number;
+  listOfMeasures: {
+    amount: number;
+    description: string;
+    height: number;
+    unitMeasure: string;
+    width: number;
+  }[];
 }
 export interface IOfferItem {
   _id: string;
@@ -48,7 +54,16 @@ const OfferSchema = new Schema<IOffer, Model<IOffer>>({
             value: Number,
             size: Number,
             width: Number,
-            height: Number
+            height: Number,
+            listOfMeasures: [
+              {
+                amount: Number,
+                description: String,
+                height: Number,
+                unitMeasure: String,
+                width: Number
+              }
+            ]
           }
         ],
         value: Number

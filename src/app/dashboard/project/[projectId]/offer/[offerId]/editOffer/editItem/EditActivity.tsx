@@ -168,7 +168,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
           className={`w-[12rem] ${currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)") ? "" : "hidden"}`}
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <InputNumber
+          <InputNumber min={0}
             onChange={() => {
               setSize(form.getFieldValue("amount"));
             }}
@@ -180,7 +180,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
           className={`w-[12rem] ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
           rules={[{ required: true, message: "Campo vacío o incorrecto" }]}
         >
-          <InputNumber
+          <InputNumber min={0}
             precision={2}
             className="w-full"
             onChange={() => {
@@ -198,7 +198,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
           className={`w-[12rem] ${(currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)")) && "hidden"}`}
           rules={[{ required: true, message: "Campo vacío o incorrecto" }]}
         >
-          <InputNumber
+          <InputNumber min={0}
             precision={2}
             className="w-full"
             onChange={() => {
@@ -245,7 +245,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
           className="w-[12rem] hidden"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <InputNumber precision={2} disabled className="w-full" />
+          <InputNumber min={0} precision={2} disabled className="w-full" />
         </Form.Item>
         {currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)") ? (
           <div className={`flex gap-2 pl-2 mb-4 ${currentUnitMeasure.includes("u") && "hidden"}`}>

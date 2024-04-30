@@ -11,7 +11,7 @@ interface Values {
   provider: string;
   unitMeasure?: string;
   unitsTotal: number;
-  enterDate: Date
+  enterDate: Date;
 }
 interface CollectionCreateFormProps {
   open: boolean;
@@ -19,12 +19,16 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel
+}) => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
   const materialCategory: string[] | undefined = [];
   const unitMeasures: string[] | undefined = [];
   const providers: string[] | undefined = [];
-  
+
   nomenclators.map((nomenclator: INomenclator) => {
     if (nomenclator.category === "Categoría de material") materialCategory.push(nomenclator.code);
     if (nomenclator.category === "Unidad de medida") {
@@ -38,21 +42,21 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
   const category: SelectProps["options"] = materialCategory.map((materialCategory) => {
     return {
       label: `${materialCategory}`,
-      value: `${materialCategory}`,
+      value: `${materialCategory}`
     };
   });
 
   const unitMeasure: SelectProps["options"] = unitMeasures.map((unitMeasure) => {
     return {
       label: `${unitMeasure}`,
-      value: `${unitMeasure}`,
+      value: `${unitMeasure}`
     };
   });
 
   const provider: SelectProps["options"] = providers.map((provider) => {
     return {
       label: `${provider}`,
-      value: `${provider}`,
+      value: `${provider}`
     };
   });
 
@@ -75,11 +79,7 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
       cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button
-            key="2"
-            className="modal-btn-danger"
-            onClick={onCancel}
-          >
+          <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
           <button
@@ -99,59 +99,109 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onC
           >
             Crear
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form form={form} layout="vertical" name="createUserForm" size="middle">
-        <Form.Item name="category" label="Categoría" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="category"
+          label="Categoría"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select
             allowClear
             style={{ width: "100%" }}
             options={category}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+            filterOption={(input: any, option: any) =>
+              (option?.label ?? "").toLowerCase().includes(input)
+            }
+            filterSort={(optionA: any, optionB: any) =>
+              (optionA?.label ?? "")
+                .toLowerCase()
+                .localeCompare((optionB?.label ?? "").toLowerCase())
+            }
           />
         </Form.Item>
-        <Form.Item name="materialName" label="Nombre del material" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="materialName"
+          label="Nombre del material"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Input />
         </Form.Item>
         <Form.Item name="description" label="Descripción">
           <Input />
         </Form.Item>
-        <Form.Item name="costPerUnit" label="Costo por unidad de medida" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber className="w-full" />
+        <Form.Item
+          name="costPerUnit"
+          label="Costo por unidad de medida"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
+          <InputNumber min={0} className="w-full" />
         </Form.Item>
-        <Form.Item name="unitMeasure" label="Unidad de medida" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="unitMeasure"
+          label="Unidad de medida"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select
             allowClear
             style={{ width: "100%" }}
             options={unitMeasure}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+            filterOption={(input: any, option: any) =>
+              (option?.label ?? "").toLowerCase().includes(input)
+            }
+            filterSort={(optionA: any, optionB: any) =>
+              (optionA?.label ?? "")
+                .toLowerCase()
+                .localeCompare((optionB?.label ?? "").toLowerCase())
+            }
           />
         </Form.Item>
-        <Form.Item name="unitsTotal" label="Cantidad a añadir" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber className="w-full" />
+        <Form.Item
+          name="unitsTotal"
+          label="Cantidad a añadir"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
+          <InputNumber min={0} className="w-full" />
         </Form.Item>
-        <Form.Item name="minimumExistence" label="Existencias mínimas" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber className="w-full" />
+        <Form.Item
+          name="minimumExistence"
+          label="Existencias mínimas"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
+          <InputNumber min={0} className="w-full" />
         </Form.Item>
-        <Form.Item name="provider" label="Proveedor" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="provider"
+          label="Proveedor"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select
             allowClear
             style={{ width: "100%" }}
             options={provider}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+            filterOption={(input: any, option: any) =>
+              (option?.label ?? "").toLowerCase().includes(input)
+            }
+            filterSort={(optionA: any, optionB: any) =>
+              (optionA?.label ?? "")
+                .toLowerCase()
+                .localeCompare((optionB?.label ?? "").toLowerCase())
+            }
           />
         </Form.Item>
-        <Form.Item name="enterDate" label="Fecha de entrada" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="enterDate"
+          label="Fecha de entrada"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <DatePicker format={"MM/DD/YYYY"} />
         </Form.Item>
       </Form>

@@ -116,16 +116,16 @@ export const MinusMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, o
           <Input disabled />
         </Form.Item>
         <Form.Item name="costPerUnit" label="Costo por unidad de medida">
-          <InputNumber className="w-full" disabled />
+          <InputNumber min={0} className="w-full" disabled />
         </Form.Item>
         <Form.Item name="unitMeasure" label="Unidad de medida">
           <Select allowClear style={{ width: "100%" }} disabled />
         </Form.Item>
         <Form.Item name="unitsTotal" label="Cantidad a sustraer">
-          <InputNumber className="w-full" />
+          <InputNumber min={0} className="w-full" />
         </Form.Item>
         <Form.Item name="minimumExistence" label="Existencias mínimas">
-          <InputNumber className="w-full" disabled />
+          <InputNumber min={0} className="w-full" disabled />
         </Form.Item>
         <Form.Item name="provider" label="Proveedor">
           <Select allowClear style={{ width: "100%" }} disabled />

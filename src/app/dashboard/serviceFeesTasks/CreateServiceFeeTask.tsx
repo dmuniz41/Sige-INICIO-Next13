@@ -11,7 +11,11 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const CreateServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+export const CreateServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel
+}) => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
   const categories: string[] | undefined = [];
   const unitMeasures: string[] | undefined = [];
@@ -24,14 +28,14 @@ export const CreateServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ 
   const categoryOptions: SelectProps["options"] = categories.map((category) => {
     return {
       label: `${category}`,
-      value: `${category}`,
+      value: `${category}`
     };
   });
 
   const unitMeasureOptions: SelectProps["options"] = unitMeasures.map((UM) => {
     return {
       label: `${UM}`,
-      value: `${UM}`,
+      value: `${UM}`
     };
   });
 
@@ -54,11 +58,7 @@ export const CreateServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ 
       cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button
-            key="2"
-            className="modal-btn-danger"
-            onClick={onCancel}
-          >
+          <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
           <button
@@ -78,40 +78,72 @@ export const CreateServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({ 
           >
             Crear
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form form={form} layout="horizontal" name="createUserForm" size="middle">
-        <Form.Item name="category" label="Categoría" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="category"
+          label="Categoría"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select
             allowClear
             style={{ width: "100%" }}
             options={categoryOptions}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+            filterOption={(input: any, option: any) =>
+              (option?.label ?? "").toLowerCase().includes(input)
+            }
+            filterSort={(optionA: any, optionB: any) =>
+              (optionA?.label ?? "")
+                .toLowerCase()
+                .localeCompare((optionB?.label ?? "").toLowerCase())
+            }
           />
         </Form.Item>
-        <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="description"
+          label="Descripción"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Input />
         </Form.Item>
-        <Form.Item name="unitMeasure" label="Unidad de Medida" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="unitMeasure"
+          label="Unidad de Medida"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select
             allowClear
             style={{ width: "100%" }}
             options={unitMeasureOptions}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+            filterOption={(input: any, option: any) =>
+              (option?.label ?? "").toLowerCase().includes(input)
+            }
+            filterSort={(optionA: any, optionB: any) =>
+              (optionA?.label ?? "")
+                .toLowerCase()
+                .localeCompare((optionB?.label ?? "").toLowerCase())
+            }
           />
         </Form.Item>
-        <Form.Item name="amount" label="Cantidad" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber />
+        <Form.Item
+          name="amount"
+          label="Cantidad"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
+          <InputNumber min={0} />
         </Form.Item>
-        <Form.Item name="price" label="Precio" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber />
+        <Form.Item
+          name="price"
+          label="Precio"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
+          <InputNumber min={0} />
         </Form.Item>
       </Form>
     </Modal>

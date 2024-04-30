@@ -103,7 +103,7 @@ export const CreateCostSheetForm = () => {
           </Form.Item> */}
           <div className="flex flex-col">
             <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cantidad de empleados</span>} name="workersAmount" rules={[{ required: true, message: "Campo requerido" }]}>
-              <InputNumber className="w-[5rem]" />
+              <InputNumber min={0} className="w-[5rem]" />
             </Form.Item>
             <Form.Item className="mb-3" label={<span className="font-bold text-md">Precio/UM</span>} name="valuePerUnitMeasure" rules={[{ required: true, message: "Campo requerido" }]}>
               <Select
@@ -118,7 +118,7 @@ export const CreateCostSheetForm = () => {
           </div>
           <div className="flex flex-col">
             <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cambio $ </span>} name="USDValue" rules={[{ required: true, message: "Campo requerido" }]}>
-              <InputNumber disabled className="w-[5rem]" />
+              <InputNumber min={0} disabled className="w-[5rem]" />
             </Form.Item>
           </div>
         </div>
@@ -160,10 +160,10 @@ export const CreateCostSheetForm = () => {
             name="representationCost"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
-            <InputNumber className="w-[5rem] " />
+            <InputNumber min={0} className="w-[5rem] " />
           </Form.Item>
           <Form.Item className="mb-3 " label={<span className="font-bold text-md">Talento artístico</span>} name="artisticTalent" rules={[{ required: true, message: "Campo requerido" }]}>
-            <InputNumber className="w-[5rem] " />
+            <InputNumber min={0} className="w-[5rem] " />
           </Form.Item>
         </div>
         <div className="flex flex-col gap-1 justify-start">
@@ -180,7 +180,7 @@ export const CreateCostSheetForm = () => {
           name="rawMaterialsByClient"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <InputNumber className="w-[5rem] " />
+          <InputNumber min={0} className="w-[5rem] " />
         </Form.Item>
       </section>
 

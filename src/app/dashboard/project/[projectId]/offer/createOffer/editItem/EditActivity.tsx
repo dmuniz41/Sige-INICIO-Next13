@@ -118,7 +118,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
         layout="horizontal"
         name="editActivity"
         size="middle"
-        initialValues={{...defaultValues}}
+        initialValues={{ ...defaultValues }}
       >
         <Form.Item
           name="description"
@@ -169,6 +169,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
           rules={[{ required: true, message: "Campo requerido" }]}
         >
           <InputNumber
+            min={0}
             onChange={() => {
               setSize(form.getFieldValue("amount"));
             }}
@@ -181,6 +182,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
           rules={[{ required: true, message: "Campo vacío o incorrecto" }]}
         >
           <InputNumber
+            min={0}
             precision={2}
             className="w-full"
             onChange={() => {
@@ -199,6 +201,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
           rules={[{ required: true, message: "Campo vacío o incorrecto" }]}
         >
           <InputNumber
+            min={0}
             precision={2}
             className="w-full"
             onChange={() => {

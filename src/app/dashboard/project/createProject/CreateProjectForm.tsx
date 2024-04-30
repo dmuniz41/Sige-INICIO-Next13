@@ -176,7 +176,7 @@ export const CreateProjectForm = () => {
             form
               .validateFields()
               .then((values) => {
-                console.log(itemsValues)
+                console.log(itemsValues);
                 dispatch(
                   startAddProject({
                     ...values,

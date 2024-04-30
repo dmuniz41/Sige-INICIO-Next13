@@ -91,7 +91,7 @@ export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, on
           rules={[{ required: true, message: "${CI} debe tener 11 números" }]}
           tooltip={{ title: "El carnet debe tener 11 números", icon: <InfoCircleOutlined /> }}
         >
-          <InputNumber className="w-full" />
+          <InputNumber min={0} className="w-full" />
         </Form.Item>
         <Form.Item name="role" label="Cargos" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={options} />
@@ -106,7 +106,7 @@ export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, on
           rules={[{ required: true, message: "${phoneNumber} debe tener 8 números" }]}
           tooltip={{ title: "El telefono debe tener 8 números", icon: <InfoCircleOutlined /> }}
         >
-          <InputNumber className="w-full" />
+          <InputNumber min={0} className="w-full" />
         </Form.Item>
         <Form.Item
           messageVariables={{ bankAccount: "Cuenta bancaria" }}
@@ -115,7 +115,7 @@ export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, on
           rules={[{ required: true, message: "${bankAccount} debe tener 16 números" }]}
           tooltip={{ title: "La cuenta bancaria debe tener 16 números", icon: <InfoCircleOutlined /> }}
         >
-          <InputNumber className="w-full" />
+          <InputNumber min={0} className="w-full" />
         </Form.Item>
       </Form>
     </Modal>

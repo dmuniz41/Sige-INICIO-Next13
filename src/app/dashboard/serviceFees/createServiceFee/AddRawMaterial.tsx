@@ -115,7 +115,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
           />
         </Form.Item>
         <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber
+          <InputNumber min={0}
             onChange={(value: number | null) => {
               setRawMaterialValue(value! * currentPrice);
             }}

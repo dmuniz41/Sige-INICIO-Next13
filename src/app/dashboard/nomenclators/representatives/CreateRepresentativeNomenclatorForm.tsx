@@ -77,13 +77,13 @@ export const CreateRepresentativeNomenclatorForm: React.FC<CollectionCreateFormP
           label="Representación (%)"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <InputNumber className="w-full" />
+          <InputNumber min={0} className="w-full" />
         </Form.Item>
         <Form.Item
           name="phoneNumber"
           label=" Teléfono"
         >
-          <InputNumber className="w-full" />
+          <InputNumber min={0} className="w-full" />
         </Form.Item>
         <Form.Item name="address" label="Domicilio Legal" rules={[{ required: false }]}>
           <Input />

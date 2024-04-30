@@ -175,26 +175,6 @@ export const startDeleteProject = (id: string) => {
 };
 
 //* CARGA LA INFORMACION DE UN PROYECTO *//
-// export const loadSelectedProject = (projectId: string) => {
-//   const token = localStorage.getItem("accessToken");
-//   return async (dispatch: any) => {
-//     await axios
-//       .get(`${process.env.NEXT_PUBLIC_API_URL}/project/${projectId}`, {
-//         headers: { accessToken: token }
-//       })
-//       .then((resp) => {
-//         const { BDProject } = resp?.data;
-//         console.log("🚀 ~ .then ~ BDProject:", BDProject)
-//         dispatch(selectedProject(BDProject));
-//       })
-//       .catch((error: AxiosError) => {
-//         console.log("🚀 ~ return ~ error:", error)
-//         const { message }: any = error?.response?.data;
-//         console.log("🚀 ~ file: project.ts:179 ~ return ~ message:", message);
-//         Swal.fire("Error", "Error al cargar el proyecto seleccionado", "error");
-//       });
-//   };
-// };
 export const startLoadSelectedProject = (projectId: string) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
