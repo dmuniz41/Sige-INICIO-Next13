@@ -36,14 +36,9 @@ const ServiceFeeTaskTable: React.FC = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const [searchText, setSearchText] = useState("");
   const [selectedRow, setSelectedRow] = useState<IServiceFeeTask>();
+  const { data: sessionData } = useSession();
   const dispatch = useAppDispatch();
   const searchInput = useRef<InputRef>(null);
-  const { data: sessionData } = useSession();
-
-  const taskCategory: string[] | undefined = [];
-  const taskCategoryFilter: any[] = [];
-  const unitMeasureFilter: any[] = [];
-  const unitMeasures: string[] | undefined = [];
 
   const canList = sessionData?.user.role.includes("Listar Tarifas de Servicio");
   const canCreate = sessionData?.user.role.includes("Crear Tarifas de Servicio");
@@ -64,22 +59,25 @@ const ServiceFeeTaskTable: React.FC = () => {
   if (!canList) {
     data = [];
   }
+
+  const taskCategoryFilter: any[] = [];
   nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Unidad de medida") unitMeasures.push(nomenclator.code);
-    if (nomenclator.category === "Categoría de tareas") taskCategory.push(nomenclator.code);
+    if (nomenclator.category === "Categoría de tareas") {
+      taskCategoryFilter.push({
+        text: `${nomenclator.code}`,
+        value: `${nomenclator.code}`
+      });
+    }
   });
 
-  taskCategory.map((taskCategory: string) => {
-    taskCategoryFilter.push({
-      text: `${taskCategory}`,
-      value: `${taskCategory}`
-    });
-  });
-  unitMeasures.map((unitMeasure: string) => {
-    unitMeasureFilter.push({
-      text: `${unitMeasure}`,
-      value: `${unitMeasure}`
-    });
+  const unitMeasureFilter: any[] = [];
+  nomenclators.map((nomenclator: INomenclator) => {
+    if (nomenclator.category === "Unidad de medida") {
+      unitMeasureFilter.push({
+        text: `${nomenclator.code}`,
+        value: `${nomenclator.code}`
+      });
+    }
   });
 
   const handleSearch = (

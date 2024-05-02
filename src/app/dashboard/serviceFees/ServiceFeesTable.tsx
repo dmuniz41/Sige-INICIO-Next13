@@ -45,14 +45,13 @@ let date = moment();
 let currentDate = date.format("L");
 
 const ServiceFeeTable: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
   const [filteredData, setFilteredData] = useState<IServiceFee[]>();
-  const searchInput = useRef<InputRef>(null);
-  const router = useRouter();
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const [searchText, setSearchText] = useState("");
   const { data: sessionData } = useSession();
-  const serviceFeeNomenclator: string[] | undefined = [];
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const searchInput = useRef<InputRef>(null);
 
   const canList = sessionData?.user.role.includes("Listar Tarifas de Servicio");
   const canCreate = sessionData?.user.role.includes("Crear Tarifas de Servicio");
@@ -108,17 +107,14 @@ const ServiceFeeTable: React.FC = () => {
 
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
 
-  nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Categoría de tarifas")
-      serviceFeeNomenclator.push(nomenclator.code);
-  });
-
   const categoryFilter: any[] = [];
-  serviceFeeNomenclator.map((nomenclator: string) => {
-    categoryFilter.push({
-      text: `${nomenclator}`,
-      value: `${nomenclator}`
-    });
+  nomenclators.map((nomenclator: INomenclator) => {
+    if (nomenclator.category === "Categoría de tarifas") {
+      categoryFilter.push({
+        text: `${nomenclator.code}`,
+        value: `${nomenclator.code}`
+      });
+    }
   });
 
   const handleView = (id: string): void => {

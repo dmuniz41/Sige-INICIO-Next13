@@ -158,16 +158,14 @@ const MaterialsTable: React.FC = () => {
 
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
 
-  nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Categoría de material") materialCategory.push(nomenclator.code);
-  });
-
   const categoryFilter: any[] = [];
-  materialCategory.map((category: string) => {
-    categoryFilter.push({
-      text: `${category}`,
-      value: `${category}`
-    });
+  nomenclators.map((nomenclator: INomenclator) => {
+    if (nomenclator.category === "Categoría de material") {
+      categoryFilter.push({
+        text: `${nomenclator.code}`,
+        value: `${nomenclator.code}`
+      });
+    }
   });
 
   let PDFReportData: DataType[] = [];
