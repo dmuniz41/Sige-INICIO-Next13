@@ -238,7 +238,6 @@ const NomenclatorsTable: React.FC = () => {
       onFilter: (value: any, record: any) => record.category.startsWith(value),
       filterSearch: true,
       width: "50%",
-      sorter: (a: any, b: any) => a.category.localeCompare(b.category)
     },
     {
       title: <span className="font-bold">Código</span>,
