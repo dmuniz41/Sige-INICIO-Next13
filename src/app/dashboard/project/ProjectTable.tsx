@@ -18,7 +18,11 @@ import { IProject } from "@/models/project";
 import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 import { PDFSvg } from "@/app/global/PDFSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
-import { projectsStartLoading, startDeleteProject, startLoadSelectedProject } from "@/actions/project";
+import {
+  projectsStartLoading,
+  startDeleteProject,
+  startLoadSelectedProject
+} from "@/actions/project";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
 import { RootState, useAppSelector } from "@/store/store";
@@ -26,6 +30,9 @@ import { SeeSvg } from "@/app/global/SeeSvg";
 import { useAppDispatch } from "@/hooks/hooks";
 import moment from "moment";
 import PDFReport from "@/helpers/PDFReport";
+import { clientNomenclatorsStartLoading } from "@/actions/nomenclators/client";
+import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/representative";
+import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
@@ -56,6 +63,9 @@ const ProjectTable: React.FC = () => {
 
   useEffect(() => {
     dispatch(projectsStartLoading());
+    dispatch(clientNomenclatorsStartLoading());
+    dispatch(representativeNomenclatorsStartLoading());
+    dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
   const fields = [
@@ -192,13 +202,13 @@ const ProjectTable: React.FC = () => {
   }
 
   const handleView = (id: string): void => {
-    dispatch(startLoadSelectedProject(id))
+    dispatch(startLoadSelectedProject(id));
     router.push(`/dashboard/project/${id}`);
   };
 
   const handleViewOffer = (projectId: string): void => {
-      dispatch(startLoadSelectedProject(projectId));
-      router.push(`/dashboard/project/${projectId}/offer`);
+    dispatch(startLoadSelectedProject(projectId));
+    router.push(`/dashboard/project/${projectId}/offer`);
   };
 
   const handleSearch = (
@@ -212,7 +222,6 @@ const ProjectTable: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-
     Swal.fire({
       title: "Eliminar Proyecto",
       text: "El proyecto seleccionado se borrará de forma permanente",

@@ -3,6 +3,7 @@ import { Form, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
+import { AddActivityModal } from "../../../createOffer/createItem/AddActivity";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { editActivityList, editItem, selectedActivity } from "@/actions/offer";
 import { EditActivityModal } from "./EditActivity";
@@ -13,7 +14,6 @@ import { RootState, useAppSelector } from "@/store/store";
 import { useAppDispatch } from "@/hooks/hooks";
 import Table, { ColumnsType } from "antd/es/table";
 import TextArea from "antd/es/input/TextArea";
-import { AddActivityModal } from "../../../createOffer/createItem/AddActivity";
 
 export const EditItemForm = (props: { projectId: string; offerId: string }) => {
   const [form] = Form.useForm();
@@ -41,26 +41,27 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
   };
 
   // TODO: Terminar la funcionalidad de editar actividad
-  // const onEditActivity = (values: IActivity) => {
-  //   const newActivityList: IActivity[] = [];
-  //   activitiesValues.forEach((value: IActivity) => {
-  //     if (value._id === values._id) {
-  //       newActivityList.push({
-  //         ...value,
-  //         amount: values.amount,
-  //         description: values.description,
-  //         price: values.price,
-  //         unitMeasure: values.unitMeasure,
-  //         value: values.value
-  //       });
-  //     } else {
-  //       newActivityList.push(value);
-  //     }
-  //   });
-  //   dispatch(editActivityList(newActivityList));
-  //   setActivitiesValues(newActivityList);
-  //   setEditActivityModal(false);
-  // };
+  const onEditActivity = (values: IActivity) => {
+    const newActivityList: IActivity[] = [];
+    activitiesValues.map((value: IActivity) => {
+      if (value.description === values.description) {
+        newActivityList.push({
+          ...value,
+          amount: values.amount,
+          description: values.description,
+          price: values.price,
+          listOfMeasures: values.listOfMeasures ??[],
+          unitMeasure: values.unitMeasure,
+          value: values.value
+        });
+      } else {
+        newActivityList.push(value);
+      }
+    });
+    dispatch(editActivityList(newActivityList));
+    setActivitiesValues(newActivityList);
+    setEditActivityModal(false);
+  };
 
   return (
     <Form
@@ -148,15 +149,15 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
         onCreate={onAddActivity}
       />
 
-      {/* <EditActivityModal
+      <EditActivityModal
         open={editActivityModal}
         onCancel={() => {
           setEditActivityModal(false);
-          form.resetFields();
+          form.setFieldValue("description", "");
         }}
         onCreate={onEditActivity}
-        defaultValues={rowToEdit}
-      /> */}
+        defaultValues={rowToEdit!}
+      />
     </Form>
   );
 };
@@ -179,12 +180,12 @@ const TableFormSection = (props: any) => {
   const handleDelete = (record: IActivity) => {
     valuesSetter(values.filter((value: IActivity) => value.description !== record.description));
   };
-  // const handleEdit = (record: IActivity) => {
-  //   const selectedActivity = values.find((value: IActivity)=> value._id === record._id)
-  //   dispatch(actionToDispatch(selectedActivity));
-  //   valueToEditSetter(record);
-  //   editModalSetter(true);
-  // };
+  const handleEdit = (record: IActivity) => {
+    const selectedActivity = values.find((value: IActivity)=> value.description === record.description)
+    dispatch(actionToDispatch(selectedActivity));
+    valueToEditSetter(record);
+    editModalSetter(true);
+  };
 
   const columns: ColumnsType<IActivity> = [
     {
@@ -244,11 +245,11 @@ const TableFormSection = (props: any) => {
       width: "5%",
       render: (_, { ...record }) => (
         <div className="flex gap-1 justify-center">
-          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleEdit(record)} className="table-see-action-btn">
               <EditSvg width={18} height={18} />
             </button>
-          </Tooltip> */}
+          </Tooltip>
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleDelete(record)} className="table-delete-action-btn">
               <DeleteSvg width={17} height={17} />
