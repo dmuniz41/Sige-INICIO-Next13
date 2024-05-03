@@ -24,10 +24,12 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
   onCancel,
   defaultValues
 }) => {
+  console.log("🚀 ~ defaultValues:", defaultValues);
+  const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const [currentPrice, setCurrentPrice] = useState<number>(defaultValues?.price);
-  const [currentDescription, setCurrentDescription] = useState<string>(defaultValues?.description);
   const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>(defaultValues?.unitMeasure);
+  const [currentDescription, setCurrentDescription] = useState<string>(defaultValues?.description);
   const [selectedServiceFee, setSelectedServiceFee] = useState<IServiceFee>();
   const [size, setSize] = useState<number>(0);
   const [activitiesTableValues, setActivitiesTableValues] = useState<
@@ -48,8 +50,9 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
       ) * currentPrice,
     [currentPrice, activitiesTableValues]
   );
-
-  const dispatch = useAppDispatch();
+  const { serviceFees }: { serviceFees: IServiceFee[] } = useAppSelector(
+    (state: RootState) => state?.serviceFee
+  );
 
   useEffect(() => {
     form.setFieldValue("height", 0);
@@ -57,15 +60,12 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
     form.setFieldValue("amountOfUnits", 0);
     form.setFieldValue("amount", 0);
     form.setFieldValue("size", 0);
+    form.setFieldValue("complexity", defaultValues?.complexity);
     setCurrentUnitMeasure(defaultValues?.unitMeasure);
     setActivitiesTableValues(defaultValues?.listOfMeasures);
+    setCurrentDescription(defaultValues?.description);
     setCurrentPrice(defaultValues?.price);
-    dispatch(serviceFeeStartLoading());
-  }, [dispatch, defaultValues, form]);
-
-  const { serviceFees }: { serviceFees: IServiceFee[] } = useAppSelector(
-    (state: RootState) => state?.serviceFee
-  );
+  }, [dispatch, defaultValues, form, currentDescription, serviceFees]);
 
   const columns: ColumnsType<{
     description: string;
@@ -136,6 +136,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
       destroyOnClose={true}
       onCancel={() => {
         form.setFieldValue("description", "");
+        setSelectedServiceFee(undefined);
       }}
       okType="default"
       okText="Crear"
@@ -165,7 +166,8 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
                           unitMeasure: currentUnitMeasure,
                           value: size * currentPrice,
                           width: 0,
-                          listOfMeasures: activitiesTableValues
+                          listOfMeasures: activitiesTableValues,
+                          complexity: form.getFieldValue("complexity")
                         }
                       : {
                           amount: activitiesTableValues?.reduce(
@@ -186,7 +188,8 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
                           unitMeasure: currentUnitMeasure,
                           value: Number(activityValue.toFixed(2)),
                           width: values.width,
-                          listOfMeasures: activitiesTableValues
+                          listOfMeasures: activitiesTableValues,
+                          complexity: form.getFieldValue("complexity")
                         }
                   );
                   form.resetFields();
@@ -211,7 +214,6 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
         name="addActivity"
         size="middle"
         // TODO: HACER QUE LA COMPLEJIDAD SE PUEDA CAMBIAR AL EDITAR LA ACTIVIDAD
-        initialValues={{ complexity: "Baja" }}
       >
         {/* <Form.Item
           name="description"
@@ -358,6 +360,18 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
                 <Radio.Group
                   buttonStyle="solid"
                   onChange={(value) => {
+                    console.log("🚀 ~ defaultValues.description:", defaultValues.description);
+                    console.log(
+                      "🚀 ~ defaultValues.description:",
+                      serviceFees.find((sf) => sf.taskName === defaultValues.description)
+                    );
+                    serviceFees?.map((serviceFee) => {
+                      if (serviceFee?.taskName === defaultValues.description) {
+                        setSelectedServiceFee(serviceFee);
+                        return
+                      }
+                    });
+                    console.log("🚀 ~ currentServiceFee:", selectedServiceFee);
                     value.target.value === "Alta"
                       ? selectedServiceFee?.complexity.find(
                           (complexity) =>

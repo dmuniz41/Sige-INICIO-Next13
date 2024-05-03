@@ -14,6 +14,7 @@ import { RootState, useAppSelector } from "@/store/store";
 import { useAppDispatch } from "@/hooks/hooks";
 import Table, { ColumnsType } from "antd/es/table";
 import TextArea from "antd/es/input/TextArea";
+import { IServiceFee } from "@/models/serviceFees";
 
 export const EditItemForm = (props: { projectId: string; offerId: string }) => {
   const [form] = Form.useForm();
