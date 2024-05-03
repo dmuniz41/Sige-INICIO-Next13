@@ -14,7 +14,7 @@ export const ActivitiesTable = (props: any) => {
       render: (_, { ...record }) => (
         <span className="flex gap-1">
           {record.description}
-          <span className="flex gap-2">{record.listOfMeasures.map((e) => e.description)}</span>
+          <span className="flex gap-2">{`${record.listOfMeasures.map((e) => e.description)}(Complejidad ${record?.complexity})`}</span>
         </span>
       )
     },

@@ -3,14 +3,16 @@ import { Form, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
+import { AddActivityModal } from "../../../createOffer/createItem/AddActivity";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
+import { editActivityList, selectedActivity, setCurrentItem } from "@/actions/offer";
+import { EditActivityModal } from "../editItem/EditActivity";
+import { EditSvg } from "@/app/global/EditSvg";
 import { IActivity } from "@/models/offer";
 import { PlusSvg } from "@/app/global/PlusSvg";
-import { setCurrentItem } from "@/actions/offer";
 import { useAppDispatch } from "@/hooks/hooks";
 import Table, { ColumnsType } from "antd/es/table";
 import TextArea from "antd/es/input/TextArea";
-import { AddActivityModal } from "../../../createOffer/createItem/AddActivity";
 
 export const CreateItemForm = (props: { projectId: string; offerId: string }) => {
   const { projectId, offerId } = props;
@@ -20,6 +22,8 @@ export const CreateItemForm = (props: { projectId: string; offerId: string }) =>
 
   const [activitiesValues, setActivitiesValues] = useState<IActivity[]>([]);
   const [addActivitiesModal, setAddActivitiesModal] = useState(false);
+  const [editActivityModal, setEditActivityModal] = useState(false);
+  const [rowToEdit, setRowToEdit] = useState<IActivity>();
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
@@ -30,6 +34,28 @@ export const CreateItemForm = (props: { projectId: string; offerId: string }) =>
     form.setFieldValue("activities", [values, ...activitiesValues]);
     setAddActivitiesModal(false);
   };
+
+  const onEditActivity = (values: IActivity) => {
+    const newActivityList: IActivity[] = [];
+    activitiesValues.map((value: IActivity) => {
+      if (value.description === values.description) {
+        newActivityList.push({
+          ...value,
+          amount: values.amount,
+          description: values.description,
+          price: values.price,
+          listOfMeasures: values.listOfMeasures ?? [],
+          unitMeasure: values.unitMeasure,
+          value: values.value
+        });
+      } else {
+        newActivityList.push(value);
+      }
+    });
+    dispatch(editActivityList(newActivityList));
+    setActivitiesValues(newActivityList);
+    setEditActivityModal(false);
+  }
 
   return (
     <Form
@@ -60,6 +86,10 @@ export const CreateItemForm = (props: { projectId: string; offerId: string }) =>
             formName="activities"
             valuesSetter={setActivitiesValues}
             addModalSetter={setAddActivitiesModal}
+            editModalSetter={setEditActivityModal}
+            valueToEditSetter={setRowToEdit}
+            dispatch={dispatch}
+            actionToDispatch={selectedActivity}
             buttonText="Añadir Actividad"
             form={form}
           />
@@ -99,6 +129,16 @@ export const CreateItemForm = (props: { projectId: string; offerId: string }) =>
         onCancel={() => setAddActivitiesModal(false)}
         onCreate={onAddActivity}
       />
+
+      <EditActivityModal
+        open={editActivityModal}
+        onCancel={() => {
+          setEditActivityModal(false);
+          form.setFieldValue("description", "");
+        }}
+        onCreate={onEditActivity}
+        defaultValues={rowToEdit!}
+      />
     </Form>
   );
 };
@@ -109,9 +149,11 @@ const TableFormSection = (props: any) => {
     values,
     valuesSetter,
     addModalSetter,
-    // editModalSetter,
-    // valueToEditSetter,
-    buttonText
+    editModalSetter,
+    valueToEditSetter,
+    buttonText,
+    dispatch,
+    actionToDispatch
   } = props;
 
   const subtotal = useMemo(() => values?.map((value: IActivity) => value.value), [values]);
@@ -121,10 +163,14 @@ const TableFormSection = (props: any) => {
       values.filter((value: IActivity) => JSON.stringify(value) !== JSON.stringify(record))
     );
   };
-  // const handleEdit = (record: IServiceFeeSubItem) => {
-  //   valueToEditSetter(record);
-  //   editModalSetter(true);
-  // };
+  const handleEdit = (record: IActivity) => {
+    const selectedActivity = values.find(
+      (value: IActivity) => value.description === record.description
+    );
+    dispatch(actionToDispatch(selectedActivity));
+    valueToEditSetter(record);
+    editModalSetter(true);
+  };
 
   const columns: ColumnsType<IActivity> = [
     {
@@ -135,7 +181,7 @@ const TableFormSection = (props: any) => {
       render: (_, { ...record }) => (
         <span className="flex gap-1">
           {record.description}
-          <span className="flex gap-2">{`${record.listOfMeasures.map((e) => e.description)}`}</span>
+          <span className="flex gap-2">{`${record.listOfMeasures.map((e) => e.description)}(Complejidad ${record.complexity})`}</span>
         </span>
       )
     },
@@ -184,11 +230,11 @@ const TableFormSection = (props: any) => {
       width: "5%",
       render: (_, { ...record }) => (
         <div className="flex gap-1 justify-center">
-          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleEdit(record)} className="table-see-action-btn">
               <EditSvg width={18} height={18} />
             </button>
-          </Tooltip> */}
+          </Tooltip>
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleDelete(record)} className="table-delete-action-btn">
               <DeleteSvg width={17} height={17} />
@@ -214,11 +260,11 @@ const TableFormSection = (props: any) => {
           pagination={false}
           bordered
           footer={() => (
-            <footer className="flex w-full">
-              <div className="font-bold grow flex w-[90%]">
+            <footer className="flex w-full justify-between pr-1">
+              <div className="font-bold flex">
                 <span>Valor: </span>
               </div>
-              <div className="flex flex-1 pl-1 justify-start font-bold">
+              <div className="flex pl-1 font-bold">
                 <span>
                   ${" "}
                   {subtotal

@@ -26,13 +26,13 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
   const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>("");
   const [selectedServiceFee, setSelectedServiceFee] = useState<IServiceFee>();
   const [activitiesTableValues, setActivitiesTableValues] = useState<
-  {
-    amount: number;
-    description: string;
-    height: number;
-    unitMeasure: string;
-    width: number;
-  }[]
+    {
+      amount: number;
+      description: string;
+      height: number;
+      unitMeasure: string;
+      width: number;
+    }[]
   >([]);
   const [size, setSize] = useState<number>(0);
   const activityValue = useMemo(
@@ -151,25 +151,28 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                       currentUnitMeasure.includes("Metro (m)")
                       ? {
                           amount: values.amount,
-                          description: values.description.value,
+                          description: `${values.description.value}`,
                           height: 0,
                           price: Number(currentPrice.toFixed(2)),
                           size: 0,
                           unitMeasure: currentUnitMeasure,
                           value: size * currentPrice,
                           width: 0,
-                          listOfMeasures: activitiesTableValues
+                          
+                          listOfMeasures: activitiesTableValues,
+                          complexity: form.getFieldValue('complexity')
                         }
                       : {
                           amount: size,
-                          description: values.description.value,
+                          description: `${values.description.value} `,
                           height: values.height,
                           price: Number(currentPrice.toFixed(2)),
                           size: size,
                           unitMeasure: currentUnitMeasure,
                           value: Number(activityValue.toFixed(2)),
                           width: values.width,
-                          listOfMeasures: activitiesTableValues
+                          listOfMeasures: activitiesTableValues,
+                          complexity: form.getFieldValue('complexity')
                         }
                   );
                   form.resetFields();

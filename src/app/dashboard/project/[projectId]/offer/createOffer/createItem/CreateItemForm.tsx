@@ -11,6 +11,8 @@ import TextArea from "antd/es/input/TextArea";
 import Table, { ColumnsType } from "antd/es/table";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
+import { IServiceFeeSubItem } from "@/models/serviceFees";
+import { EditSvg } from "@/app/global/EditSvg";
 
 export const CreateItemForm = (props: { projectId: string }) => {
   const { projectId } = props;
@@ -109,8 +111,8 @@ const TableFormSection = (props: any) => {
     values,
     valuesSetter,
     addModalSetter,
-    // editModalSetter,
-    // valueToEditSetter,
+    editModalSetter,
+    valueToEditSetter,
     buttonText
   } = props;
 
@@ -119,10 +121,10 @@ const TableFormSection = (props: any) => {
   const handleDelete = (record: IActivity) => {
     valuesSetter(values.filter((value: IActivity) => JSON.stringify(value) !== JSON.stringify(record)));
   };
-  // const handleEdit = (record: IServiceFeeSubItem) => {
-  //   valueToEditSetter(record);
-  //   editModalSetter(true);
-  // };
+  const handleEdit = (record: IServiceFeeSubItem) => {
+    valueToEditSetter(record);
+    editModalSetter(true);
+  };
 
   const columns: ColumnsType<IActivity> = [
     {
@@ -133,7 +135,7 @@ const TableFormSection = (props: any) => {
       render: (_, { ...record }) => (
         <span className="flex gap-1">
           {record.description}
-          <span className="flex gap-2">{`${record.listOfMeasures.map((e) => e.description)}`}</span>
+          <span className="flex gap-2">{`${record.listOfMeasures.map((e) => e.description)}(Complejidad ${record.complexity})`}</span>
         </span>
       )
     },
@@ -182,11 +184,11 @@ const TableFormSection = (props: any) => {
       width: "5%",
       render: (_, { ...record }) => (
         <div className="flex gap-1 justify-center">
-          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleEdit(record)} className="table-see-action-btn">
               <EditSvg width={18} height={18} />
             </button>
-          </Tooltip> */}
+          </Tooltip>
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleDelete(record)} className="table-delete-action-btn">
               <DeleteSvg width={17} height={17} />
@@ -212,11 +214,11 @@ const TableFormSection = (props: any) => {
           pagination={false}
           bordered
           footer={() => (
-            <footer className="flex w-full">
-              <div className="font-bold grow flex w-[90%]">
+            <footer className="flex w-full justify-between pr-1">
+              <div className="font-bold flex">
                 <span>Valor: </span>
               </div>
-              <div className="flex flex-1 pl-1 justify-start font-bold">
+              <div className="flex pl-1 font-bold">
                 <span>
                   ${" "}
                   {subtotal

@@ -135,7 +135,7 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
           </div>
         ))}
         <article className="flex items-center justify-end h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-lg">
-          <div className="flex w-[90%] justify-end font-bold">
+          <div className="flex font-bold">
             <h2>VALOR TOTAL : </h2>
           </div>
           <div className="flex px-4">

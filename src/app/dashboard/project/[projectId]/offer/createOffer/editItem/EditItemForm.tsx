@@ -5,7 +5,6 @@ import React, { useMemo, useState } from "react";
 
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { editActivityList, editItem, selectedActivity } from "@/actions/offer";
-import { EditActivityModal } from "./EditActivity";
 import { EditSvg } from "@/app/global/EditSvg";
 import { IActivity, IOffer, IOfferItem } from "@/models/offer";
 import { PlusSvg } from "@/app/global/PlusSvg";
@@ -14,6 +13,7 @@ import { useAppDispatch } from "@/hooks/hooks";
 import Table, { ColumnsType } from "antd/es/table";
 import TextArea from "antd/es/input/TextArea";
 import { AddActivityModal } from "../createItem/AddActivity";
+import { EditActivityModal } from "../../[offerId]/editOffer/editItem/EditActivity";
 
 export const EditItemForm = (props: { projectId: string; offerId: string }) => {
   const [form] = Form.useForm();
@@ -44,7 +44,7 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
   const onEditActivity = (values: IActivity) => {
     const newActivityList: IActivity[] = [];
     activitiesValues.forEach((value: IActivity) => {
-      if (value._id === values._id) {
+      if (value.description === values.description) {
         newActivityList.push({
           ...value,
           amount: values.amount,
@@ -151,7 +151,7 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
           form.resetFields();
         }}
         onCreate={onEditActivity}
-        defaultValues={rowToEdit}
+        defaultValues={rowToEdit!}
       />
     </Form>
   );
@@ -176,7 +176,7 @@ const TableFormSection = (props: any) => {
     valuesSetter(values.filter((value: IActivity) => value.description !== record.description));
   };
   const handleEdit = (record: IActivity) => {
-    const selectedActivity = values.find((value: IActivity) => value._id === record._id);
+    const selectedActivity = values.find((value: IActivity) => value.description === record.description);
     dispatch(actionToDispatch(selectedActivity));
     valueToEditSetter(record);
     editModalSetter(true);
@@ -191,7 +191,7 @@ const TableFormSection = (props: any) => {
       render: (_, { ...record }) => (
         <span className="flex gap-1">
           {record.description}
-          <span className="flex gap-2">{`${record.listOfMeasures.map((e) => e.description)}`}</span>
+          <span className="flex gap-2">{`${record.listOfMeasures.map((e) => e.description)}(Complejidad ${record.complexity})`}</span>
         </span>
       )
     },
@@ -270,11 +270,11 @@ const TableFormSection = (props: any) => {
           pagination={false}
           bordered
           footer={() => (
-            <footer className="flex w-full">
-              <div className="font-bold grow flex w-[90%]">
+            <footer className="flex w-full justify-between pr-1">
+              <div className="font-bold flex">
                 <span>Valor: </span>
               </div>
-              <div className="flex flex-1 pl-1 justify-start font-bold">
+              <div className="flex pl-1 font-bold">
                 <span>
                   ${" "}
                   {subtotal
