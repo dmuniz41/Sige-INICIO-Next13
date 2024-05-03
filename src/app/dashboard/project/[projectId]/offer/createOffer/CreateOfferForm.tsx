@@ -201,11 +201,9 @@ export const CreateOfferForm = (props: { projectId: string }) => {
               <PlusSvg width={20} height={20} />
               Añadir Item
             </button>
-            <article
-              className={`${selectedOffer?.itemsList?.length == 0 && "hidden"} flex items-center h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-md`}
-            >
-              <div className="flex w-[90%] justify-end  font-bold">
-                <h2>VALOR TOTAL: </h2>
+            <article className="flex items-center justify-end h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-lg">
+              <div className="flex font-bold">
+                <h2>VALOR TOTAL : </h2>
               </div>
               <div className="flex px-4">$ {totalValue}</div>
             </article>

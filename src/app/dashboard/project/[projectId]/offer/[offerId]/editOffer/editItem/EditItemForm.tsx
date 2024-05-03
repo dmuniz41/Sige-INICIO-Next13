@@ -14,6 +14,7 @@ import { RootState, useAppSelector } from "@/store/store";
 import { useAppDispatch } from "@/hooks/hooks";
 import Table, { ColumnsType } from "antd/es/table";
 import TextArea from "antd/es/input/TextArea";
+import { IServiceFee } from "@/models/serviceFees";
 
 export const EditItemForm = (props: { projectId: string; offerId: string }) => {
   const [form] = Form.useForm();
@@ -50,7 +51,7 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
           amount: values.amount,
           description: values.description,
           price: values.price,
-          listOfMeasures: values.listOfMeasures ??[],
+          listOfMeasures: values.listOfMeasures ?? [],
           unitMeasure: values.unitMeasure,
           value: values.value
         });
@@ -181,7 +182,9 @@ const TableFormSection = (props: any) => {
     valuesSetter(values.filter((value: IActivity) => value.description !== record.description));
   };
   const handleEdit = (record: IActivity) => {
-    const selectedActivity = values.find((value: IActivity)=> value.description === record.description)
+    const selectedActivity = values.find(
+      (value: IActivity) => value.description === record.description
+    );
     dispatch(actionToDispatch(selectedActivity));
     valueToEditSetter(record);
     editModalSetter(true);
@@ -196,7 +199,7 @@ const TableFormSection = (props: any) => {
       render: (_, { ...record }) => (
         <span className="flex gap-1">
           {record.description}
-          <span className="flex gap-2">{`${record.listOfMeasures.map((e) => e.description)}`}</span>
+          <span className="flex gap-2">{`${record.listOfMeasures.map((e) => e.description)}(Complejidad ${record.complexity})`}</span>
         </span>
       )
     },
