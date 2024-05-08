@@ -151,14 +151,14 @@ export const CreateOfferForm = (props: { projectId: string }) => {
       </Form.Item>
       <section className=" flex w-full gap-2 mb-4 ">
         {selectedOffer?.itemsList?.length == 0 ? (
-          <article className="flex flex-col w-[60%] justify-center items-center border border-border_light py-4 rounded-md">
+          <article className="flex flex-col w-full justify-center items-center border border-border_light py-4 rounded-md">
             <div className="grid">
               <div className="grid place-content-center">
                 <NoDataSvg width={100} height={100} />
               </div>
               <span className="font-bold mb-4">No hay items disponibles</span>
               <button
-                className="toolbar-primary-icon-btn"
+                className="toolbar-secondary-icon-btn"
                 onClick={() => {
                   router.push(`/dashboard/project/${projectId}/offer/createOffer/createItem`);
                 }}
