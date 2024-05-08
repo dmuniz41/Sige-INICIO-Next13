@@ -31,6 +31,7 @@ const initialState: {
     description: "",
     price: 0,
     unitMeasure: "",
+    complexity:"Baja",
     value: 0,
     listOfMeasures: [
       {

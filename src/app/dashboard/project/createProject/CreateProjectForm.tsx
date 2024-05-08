@@ -79,7 +79,7 @@ export const CreateProjectForm = () => {
       requiredMark={"optional"}
       size="middle"
     >
-      <section className=" flex-col mb-4">
+      <section className="flex-col mb-4 shadow-md p-4">
         <article className="grid gap-4">
           <div className="grid w-[50%]">
             <Form.Item
@@ -263,7 +263,7 @@ const TableFormSection = (props: any) => {
 
   return (
     <section className=" flex w-full rounded-md p-2 border border-border_light shadow-sm">
-      <div className="flex w-[15%] h-full p-2 text-center items-center justify-center bg-[#fafafa] rounded-l-md">
+      <div className="flex px-7 h-full text-center items-center justify-center bg-[#fafafa] rounded-l-md">
         <span className="text-base font-bold">{sectionName?.toUpperCase()}</span>
       </div>
       <div className="grid pl-2 w-full gap-2">

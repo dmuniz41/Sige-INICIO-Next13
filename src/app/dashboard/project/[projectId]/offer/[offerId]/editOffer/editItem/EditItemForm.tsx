@@ -53,7 +53,8 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
           price: values.price,
           listOfMeasures: values.listOfMeasures ?? [],
           unitMeasure: values.unitMeasure,
-          value: values.value
+          value: values.value,
+          complexity: values.complexity
         });
       } else {
         newActivityList.push(value);
@@ -94,7 +95,7 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
 
         <div className="flex w-full">
           <TableFormSection
-            sectionName="LISTA DE ACTIVIDADES"
+            sectionName="ACTIVIDADES"
             values={activitiesValues}
             valuesSetter={setActivitiesValues}
             addModalSetter={setAddActivitiesModal}
@@ -175,6 +176,7 @@ const TableFormSection = (props: any) => {
     dispatch,
     actionToDispatch
   } = props;
+  console.log("🚀 ~ TableFormSection ~ values:", values);
 
   const subtotal = useMemo(() => values?.map((value: IActivity) => value.value), [values]);
 
@@ -198,8 +200,7 @@ const TableFormSection = (props: any) => {
       width: "50%",
       render: (_, { ...record }) => (
         <span className="flex gap-1">
-          {record.description}
-          <span className="flex gap-2">{`${record.listOfMeasures.map((e) => e.description)}(Complejidad ${record.complexity})`}</span>
+          {`${record.description}${record.listOfMeasures.map((e) => e.description)}(Complejidad ${record.complexity})`}
         </span>
       )
     },
@@ -265,7 +266,7 @@ const TableFormSection = (props: any) => {
 
   return (
     <section className=" flex w-full rounded-md p-2 border border-border_light shadow-sm">
-      <div className="flex w-[15%] h-full p-2 text-center items-center justify-center bg-[#fafafa] rounded-l-md">
+      <div className="flex px-7 h-full text-center items-center justify-center bg-[#fafafa] rounded-l-md">
         <span className="text-base font-bold">{sectionName?.toUpperCase()}</span>
       </div>
       <div className="grid pl-2 w-full gap-2">

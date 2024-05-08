@@ -176,7 +176,9 @@ const TableFormSection = (props: any) => {
     valuesSetter(values.filter((value: IActivity) => value.description !== record.description));
   };
   const handleEdit = (record: IActivity) => {
-    const selectedActivity = values.find((value: IActivity) => value.description === record.description);
+    const selectedActivity = values.find(
+      (value: IActivity) => value.description === record.description
+    );
     dispatch(actionToDispatch(selectedActivity));
     valueToEditSetter(record);
     editModalSetter(true);
@@ -190,8 +192,7 @@ const TableFormSection = (props: any) => {
       width: "50%",
       render: (_, { ...record }) => (
         <span className="flex gap-1">
-          {record.description}
-          <span className="flex gap-2">{`${record.listOfMeasures.map((e) => e.description)}(Complejidad ${record.complexity})`}</span>
+          {`${record.description}${record.listOfMeasures.map((e) => e.description)}(Complejidad ${record.complexity})`}
         </span>
       )
     },
