@@ -42,8 +42,9 @@ export const ProjectView = (props: { projectId: string }) => {
     router.push(`/dashboard/project/editProject`);
   };
 
+  // ? SETEA UNA PLANTILLA PARA LA OFERTA DONDE LOS ITEM SE AUTOGENERAN CON LOS ITEMS DEL PROYECTO //
   const handleCreateOffer = (): void => {
-    dispatch(clearOffer());
+    dispatch(clearOffer(itemsList));
     router.push(`/dashboard/project/${projectId}/offer/createOffer`);
   };
 

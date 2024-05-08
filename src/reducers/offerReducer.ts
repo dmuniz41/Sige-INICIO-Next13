@@ -114,7 +114,10 @@ export const offerReducer = (state = initialState, action: any) => {
     case types.clearOffer:
       return {
         ...state,
-        selectedOffer: initialState.selectedOffer
+        selectedOffer: {
+          ...initialState.selectedOffer,
+          itemsList: action.payload
+        }
       };
     case types.setFinalOffer:
       return {

@@ -66,6 +66,7 @@ export const CreateProjectForm = () => {
     setItemsValues([...itemsValues, values]);
     setAddItemModal(false);
   };
+  
   return (
     <Form
       form={form}
@@ -176,7 +177,6 @@ export const CreateProjectForm = () => {
             form
               .validateFields()
               .then((values) => {
-                console.log(itemsValues);
                 dispatch(
                   startAddProject({
                     ...values,

@@ -1,4 +1,5 @@
 import { Schema, model, models, Model } from "mongoose";
+import { IOfferItem } from "./offer";
 
 export interface IItem {
   description: string;
@@ -13,7 +14,7 @@ export interface IProject {
   expenses: number;
   finalOfferId: string
   initDate: string;
-  itemsList: IItem[];
+  itemsList: IOfferItem[];
   key: string;
   payMethod: string;
   profits: number;
@@ -65,11 +66,37 @@ const ProjectSchema = new Schema<IProject, Model<IProject>>({
   projectNumber: {
     type: String
   },
-  itemsList: [
-    {
-      description: String
-    }
-  ],
+  itemsList: {
+    type: [
+      {
+        description: String,
+        activities: [
+          {
+            amount: Number,
+            complexity: String,
+            description: String,
+            unitMeasure: String,
+            price: Number,
+            value: Number,
+            size: Number,
+            width: Number,
+            height: Number,
+            listOfMeasures: [
+              {
+                amount: Number,
+                description: String,
+                height: Number,
+                unitMeasure: String,
+                width: Number
+              }
+            ]
+          }
+        ],
+        value: Number
+      }
+    ],
+    required: false
+  },
   status: {
     type: String
   },

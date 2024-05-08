@@ -139,7 +139,6 @@ export const projectsStartLoading = () => {
       .get(`${process.env.NEXT_PUBLIC_API_URL}/project`, { headers: { accessToken: token } })
       .then((resp) => {
         const { listOfProjects } = resp.data;
-        console.log("🚀 ~ .then ~ listOfProjects:", listOfProjects)
         dispatch(projectLoaded(listOfProjects));
       })
       .catch((error: AxiosError) => {
@@ -184,7 +183,6 @@ export const startLoadSelectedProject = (projectId: string) => {
       })
       .then((resp) => {
         const { BDProject } = resp?.data;
-        console.log("🚀 ~ .then ~ BDProject:", BDProject)
         dispatch(selectedProject(BDProject));
       })
       .catch((error: AxiosError) => {
@@ -213,11 +211,11 @@ export const projectLoaded = (projects: IProject[]) => ({
   payload: projects
 });
 
-export const clearOffer = () => {
-  return {
-    type: types.clearOffer
-  };
-};
+export const clearOffer = (itemsList: any) => ({
+
+    type: types.clearOffer,
+    payload: itemsList 
+});
 
 const deleteProject = (id: string) => ({
   type: types.deleteProject,
@@ -225,8 +223,8 @@ const deleteProject = (id: string) => ({
     id
   }
 });
+
 const selectedProject = (project: IProject) => {
-  console.log("🚀 ~ selectedProject ~ project:", project)
   return {
     type: types.loadSelectedProject,
     payload: project
