@@ -169,7 +169,7 @@ export const CreateOfferForm = (props: { projectId: string }) => {
             </div>
           </article>
         ) : (
-          <div className="flex flex-col w-[80%] gap-2">
+          <div className="flex flex-col w-full gap-2">
             <article className="grid grow gap-2">
               {selectedOffer?.itemsList?.map((item, index) => (
                 <article className="flex gap-2 items-center" key={index}>
@@ -209,7 +209,7 @@ export const CreateOfferForm = (props: { projectId: string }) => {
             </article>
           </div>
         )}
-        <article className="flex flex-col border border-border_light w-[40%]  rounded-md">
+        {/* <article className="flex flex-col border border-border_light w-[40%]  rounded-md">
           <div className="w-full border-b p-2 font-bold border-border_light flex justify-center items-center bg-background_light">
             <span>DESCRIPCIÓN DEL PROYECTO</span>
           </div>
@@ -228,7 +228,7 @@ export const CreateOfferForm = (props: { projectId: string }) => {
               </li>
             ))}
           </ul>
-        </article>
+        </article> */}
       </section>
       <Form.Item>
         <button
@@ -254,7 +254,7 @@ export const CreateOfferForm = (props: { projectId: string }) => {
                       .reduce((total, current) => total + current, 0)
                   })
                 );
-                dispatch(clearOffer());
+                // dispatch(clearOffer());
                 router.push(`/dashboard/project/${projectId}/offer`);
                 form.resetFields();
               })

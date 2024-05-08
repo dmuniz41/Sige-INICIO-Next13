@@ -177,7 +177,7 @@ export const setCurrentItem = (item: IOfferItem) => ({
 // * ELIMINA UN ITEM DE LA LISTA DE LA LISTA DE ITEMS EN LA OFERTA * //
 export const deleteItem = (item: IOfferItem) => ({
   type: types.deleteItem,
-  payload: item
+  payload: item?.description
 });
 
 // * EDITA UN ITEM SELECCIONADO * //

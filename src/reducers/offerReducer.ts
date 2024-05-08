@@ -91,7 +91,7 @@ export const offerReducer = (state = initialState, action: any) => {
         selectedOffer: {
           ...state.selectedOffer,
           itemsList: state.selectedOffer.itemsList.filter(
-            (item, index) => !index
+            (item, index) => item.description !== action.payload
           )
         }
       };
