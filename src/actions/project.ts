@@ -1,11 +1,11 @@
 import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
 
-import { IItem, IProject } from "@/models/project";
+import { IProject } from "@/models/project";
 import { Toast } from "@/helpers/customAlert";
 import { types } from "@/types/types";
 import { offersStartLoading, startUpdateOffer } from "./offer";
-import { IOffer } from "@/models/offer";
+import { IOffer, IOfferItem } from "@/models/offer";
 
 //* CREA UN NUEVO PROYECTO *//
 export const startAddProject = ({ ...project }) => {
@@ -231,7 +231,7 @@ const selectedProject = (project: IProject) => {
   };
 };
 
-export const editItemList = (items: IItem[]) => ({
+export const editItemList = (items: IOfferItem[]) => ({
   type: types.editItemList,
   payload: items
 });

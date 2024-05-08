@@ -1,13 +1,12 @@
 "use client";
 import { Form, Modal } from "antd";
-import { IItem } from "@/models/project";
 import TextArea from "antd/es/input/TextArea";
 
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: IItem) => void;
+  onCreate: (values: any) => void;
   onCancel: () => void;
-  defaultValues: IItem | undefined;
+  defaultValues: any | undefined;
 }
 
 export const EditItemModal: React.FC<CollectionCreateFormProps> = ({
@@ -46,7 +45,6 @@ export const EditItemModal: React.FC<CollectionCreateFormProps> = ({
               form
                 .validateFields()
                 .then((values) => {
-                  // !REVISAR ESTE ERROR DE TS //
                   onCreate({...values, _id: defaultValues?._id!});
                   form.resetFields();
                 })

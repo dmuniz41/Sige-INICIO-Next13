@@ -1,10 +1,5 @@
 import { Schema, model, models, Model } from "mongoose";
 import { IOfferItem } from "./offer";
-
-export interface IItem {
-  description: string;
-}
-
 export interface IProject {
   _id: string;
   clientName: string;

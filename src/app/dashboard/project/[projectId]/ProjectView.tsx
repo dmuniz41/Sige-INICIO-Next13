@@ -9,7 +9,8 @@ import React, { useEffect } from "react";
 
 import { clearOffer, startLoadSelectedProject } from "@/actions/project";
 import { EditSvg } from "@/app/global/EditSvg";
-import { IItem, IProject } from "@/models/project";
+import { IOfferItem } from "@/models/offer";
+import { IProject } from "@/models/project";
 import { PDFSvg } from "@/app/global/PDFSvg";
 import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
 import ProjectPDFReport from "@/helpers/ProjectPDFReport";
@@ -36,7 +37,7 @@ export const ProjectView = (props: { projectId: string }) => {
     (state: RootState) => state?.project
   );
 
-  const itemsList = selectedProject.itemsList
+  const itemsList = selectedProject.itemsList;
 
   const handleEdit = (): void => {
     router.push(`/dashboard/project/editProject`);
@@ -188,7 +189,7 @@ export const ProjectView = (props: { projectId: string }) => {
 const ProjectViewTable = (props: any) => {
   const { data } = props;
 
-  const columns: ColumnsType<IItem> = [
+  const columns: ColumnsType<IOfferItem> = [
     {
       title: <span className="font-bold">No.</span>,
       width: "1%",

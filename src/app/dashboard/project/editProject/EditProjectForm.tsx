@@ -1,30 +1,28 @@
 "use client";
 import { Form, Select, SelectProps, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import TextArea from "antd/es/input/TextArea";
+import Table, { ColumnsType } from "antd/es/table";
 
 import { AddItemModal } from "../createProject/AddItem";
-import { clientNomenclatorsStartLoading } from "@/actions/nomenclators/client";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { editItemList, startUpdateProject } from "@/actions/project";
 import { EditItemModal } from "../createProject/EditItem";
 import { EditSvg } from "@/app/global/EditSvg";
 import { IClientNomenclator } from "@/models/nomenclators/client";
-import { IItem, IProject } from "@/models/project";
+import { IProject } from "@/models/project";
 import { INomenclator } from "@/models/nomenclator";
-import { nomenclatorsStartLoading } from "@/actions/nomenclator";
+import { IOfferItem } from "@/models/offer";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RootState, useAppSelector } from "@/store/store";
-import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
-import Table, { ColumnsType } from "antd/es/table";
-import TextArea from "antd/es/input/TextArea";
 
 export const EditProjectForm = () => {
   const [addItemModal, setAddItemModal] = useState(false);
   const [editItemModal, setEditItemModal] = useState(false);
   const [form] = Form.useForm();
-  const [rowToEdit, setRowToEdit] = useState<IItem>();
+  const [rowToEdit, setRowToEdit] = useState<IOfferItem>();
   const currencyNomenclators: string[] | undefined = [];
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -35,17 +33,10 @@ export const EditProjectForm = () => {
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
     (state: RootState) => state?.project
   );
-  const [itemsValues, setItemsValues] = useState<IItem[]>(selectedProject.itemsList);
+  const [itemsValues, setItemsValues] = useState<IOfferItem[]>(selectedProject.itemsList);
   const { clientNomenclators }: { clientNomenclators: IClientNomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
-
-  // useEffect(() => {
-    // setItemsValues(selectedProject?.itemsList);
-    // dispatch(nomenclatorsStartLoading());
-    // dispatch(clientNomenclatorsStartLoading());
-    // dispatch(startLoadServiceFeeAuxiliary());
-  // }, [dispatch, selectedProject]);
 
   const [clientNumber, setClientNumber] = useState(selectedProject.clientNumber);
   const [clientName, setClientName] = useState(selectedProject?.clientName);
@@ -78,7 +69,7 @@ export const EditProjectForm = () => {
   };
 
   const onEditItem = (values: any) => {
-    const newItemList: IItem[] = [];
+    const newItemList: IOfferItem[] = [];
     itemsValues.forEach((value: any) => {
       if (value._id === values._id) {
         newItemList.push({
@@ -250,18 +241,17 @@ const TableFormSection = (props: any) => {
     buttonText
   } = props;
 
-  const handleDelete = (record: IItem) => {
-    valuesSetter(values.filter((value: IItem) => value.description !== record.description));
+  const handleDelete = (record: IOfferItem) => {
+    valuesSetter(values.filter((value: IOfferItem) => value.description !== record.description));
   };
-  const handleEdit = (record: IItem) => {
+  const handleEdit = (record: IOfferItem) => {
     valueToEditSetter(record);
     editModalSetter(true);
   };
 
-  const columns: ColumnsType<IItem> = [
+  const columns: ColumnsType<IOfferItem> = [
     {
       title: <span className="font-bold">No.</span>,
-      // key: "idNumber",
       width: "2%",
       render: (text, record, index) => <span className="flex justify-center">{index + 1}</span>
     },
