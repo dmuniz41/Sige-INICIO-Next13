@@ -134,8 +134,7 @@ const TableFormSection = (props: any) => {
       width: "50%",
       render: (_, { ...record }) => (
         <span className="flex gap-1">
-          {record.description}
-          <span className="flex gap-2">{`${record.listOfMeasures.map((e) => e.description)}(Complejidad ${record.complexity})`}</span>
+          {`${record.description}${record.listOfMeasures.map((e) => e.description)}(Complejidad ${record.complexity})`}
         </span>
       )
     },
