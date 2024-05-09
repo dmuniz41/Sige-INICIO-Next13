@@ -186,7 +186,6 @@ export const startLoadSelectedProject = (projectId: string) => {
         dispatch(selectedProject(BDProject));
       })
       .catch((error: AxiosError) => {
-        console.log("🚀 ~ return ~ error:", error)
         const { message }: any = error?.response?.data;
         console.log("🚀 ~ file: project.ts:179 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar el proyecto seleccionado", "error");

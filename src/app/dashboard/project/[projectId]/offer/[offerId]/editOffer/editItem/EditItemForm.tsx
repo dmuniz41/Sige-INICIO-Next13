@@ -40,7 +40,6 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
     setAddActivitiesModal(false);
   };
 
-  // TODO: Terminar la funcionalidad de editar actividad
   const onEditActivity = (values: IActivity) => {
     const newActivityList: IActivity[] = [];
     activitiesValues.map((value: IActivity) => {

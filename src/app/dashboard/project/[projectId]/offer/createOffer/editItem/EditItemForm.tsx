@@ -40,18 +40,19 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
     form.setFieldValue("activities", [values, ...activitiesValues]);
     setAddActivitiesModal(false);
   };
-
   const onEditActivity = (values: IActivity) => {
     const newActivityList: IActivity[] = [];
-    activitiesValues.forEach((value: IActivity) => {
+    activitiesValues.map((value: IActivity) => {
       if (value.description === values.description) {
         newActivityList.push({
           ...value,
           amount: values.amount,
           description: values.description,
           price: values.price,
+          listOfMeasures: values.listOfMeasures ?? [],
           unitMeasure: values.unitMeasure,
-          value: values.value
+          value: values.value,
+          complexity: values.complexity
         });
       } else {
         newActivityList.push(value);
