@@ -33,8 +33,8 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
     selectedOffer,
     offers,
     itemUpdated,
-    isItemUpdated
-  }: { selectedOffer: IOffer; offers: IOffer[]; itemUpdated: IOfferItem; isItemUpdated: boolean } =
+    isItemUpdated,
+  }: { selectedOffer: IOffer; offers: IOffer[];selectedItem: IOfferItem; itemUpdated: IOfferItem; isItemUpdated: boolean } =
     useAppSelector((state: RootState) => state?.offer);
 
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
@@ -67,14 +67,14 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
         maximumFractionDigits: 2,
         minimumFractionDigits: 2
       }),
-    [selectedOffer, representativePercentage]
-  );
+      [selectedOffer, representativePercentage]
+    );
 
   if (isItemUpdated) {
-    selectedOffer.itemsList.forEach((item, index, itemList) => {
-      if (item.description === itemUpdated.description) {
+    selectedOffer.itemsList.map((item, index, itemList) => {
+      if (item.key === itemUpdated.key) {
         itemList[index] = itemUpdated;
-        dispatch(editItem({ _id: "", description: "", activities: [], value: 0 }, false));
+        dispatch(editItem({ key: "", description: "", activities: [], value: 0 },false));
       }
       return itemList[index];
     });

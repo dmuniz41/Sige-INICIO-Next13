@@ -74,16 +74,16 @@ export const CreateOfferForm = (props: { projectId: string }) => {
   };
 
   if (isItemUpdated) {
-    selectedOffer.itemsList.forEach((item, index, itemList) => {
-      if (item.description === itemUpdated.description) {
+    selectedOffer.itemsList.map((item, index, itemList) => {
+      if (item.key === itemUpdated.key) {
+        console.log("🚀 ~ selectedOffer.itemsList.map ~ itemUpdated.key:", itemUpdated.key)
         itemList[index] = itemUpdated;
-        // TODO: Revisar por que se la pasa un item vacio 
-        dispatch(editItem({ _id: "", description: "", activities: [], value: 0 }, false));
+        dispatch(editItem({ key: "", description: "", activities: [], value: 0 }, false));
       }
       return itemList[index];
     });
   }
-
+  
   const handleEdit = (item: IOfferItem) => {
     dispatch(selectedItem(item));
     router.push(`/dashboard/project/${projectId}/offer/createOffer/editItem`);
@@ -254,7 +254,6 @@ export const CreateOfferForm = (props: { projectId: string }) => {
                       .reduce((total, current) => total + current, 0)
                   })
                 );
-                // dispatch(clearOffer());
                 router.push(`/dashboard/project/${projectId}/offer`);
                 form.resetFields();
               })

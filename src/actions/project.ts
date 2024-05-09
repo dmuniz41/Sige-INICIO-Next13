@@ -212,7 +212,6 @@ export const projectLoaded = (projects: IProject[]) => ({
 });
 
 export const clearOffer = (itemsList: any) => ({
-
     type: types.clearOffer,
     payload: itemsList 
 });

@@ -67,10 +67,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
     setSelectedServiceFee(
       serviceFees?.find((sf) => sf?.taskName === form.getFieldValue("description"))!
     );
-  }, [dispatch, defaultValues, form, currentDescription]);
-
-  console.log(form.getFieldValue("description"));
-  console.log(selectedServiceFee);
+  }, [dispatch, defaultValues, form, currentDescription, serviceFees]);
 
   const columns: ColumnsType<{
     description: string;

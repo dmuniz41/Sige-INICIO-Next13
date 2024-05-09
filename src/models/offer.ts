@@ -19,7 +19,7 @@ export interface IActivity {
   }[];
 }
 export interface IOfferItem {
-  _id: string;
+  key: string;
   description: string;
   activities: IActivity[];
   value: number;
@@ -45,6 +45,7 @@ const OfferSchema = new Schema<IOffer, Model<IOffer>>({
   itemsList: {
     type: [
       {
+        key: String,
         description: String,
         activities: [
           {

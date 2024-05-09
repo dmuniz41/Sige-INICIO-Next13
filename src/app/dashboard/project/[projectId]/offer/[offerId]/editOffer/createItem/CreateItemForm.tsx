@@ -13,6 +13,7 @@ import { PlusSvg } from "@/app/global/PlusSvg";
 import { useAppDispatch } from "@/hooks/hooks";
 import Table, { ColumnsType } from "antd/es/table";
 import TextArea from "antd/es/input/TextArea";
+import { generateRandomString } from "@/helpers/randomStrings";
 
 export const CreateItemForm = (props: { projectId: string; offerId: string }) => {
   const { projectId, offerId } = props;
@@ -55,7 +56,7 @@ export const CreateItemForm = (props: { projectId: string; offerId: string }) =>
     dispatch(editActivityList(newActivityList));
     setActivitiesValues(newActivityList);
     setEditActivityModal(false);
-  }
+  };
 
   return (
     <Form
@@ -106,6 +107,8 @@ export const CreateItemForm = (props: { projectId: string; offerId: string }) =>
                 dispatch(
                   setCurrentItem({
                     ...values,
+                    key: generateRandomString(26),
+                    description: values.description,
                     activities: activitiesValues,
                     value: activitiesValues
                       .map((activity) => activity.value)

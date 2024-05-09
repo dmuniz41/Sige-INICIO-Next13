@@ -21,7 +21,7 @@ const initialState: {
     representativeName: ""
   },
   selectedItem: {
-    _id: "",
+    key: "",
     description: "",
     activities: [],
     value: 0
@@ -31,7 +31,7 @@ const initialState: {
     description: "",
     price: 0,
     unitMeasure: "",
-    complexity:"Baja",
+    complexity: "Baja",
     value: 0,
     listOfMeasures: [
       {
@@ -44,7 +44,7 @@ const initialState: {
     ]
   },
   itemUpdated: {
-    _id: "",
+    key: "",
     description: "",
     activities: [],
     value: 0
@@ -96,6 +96,7 @@ export const offerReducer = (state = initialState, action: any) => {
         }
       };
     case types.editItem:
+      console.log(action.payload.item);
       return {
         ...state,
         itemUpdated: action.payload.item,

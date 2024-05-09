@@ -64,6 +64,7 @@ const ProjectSchema = new Schema<IProject, Model<IProject>>({
   itemsList: {
     type: [
       {
+        key:String,
         description: String,
         activities: [
           {

@@ -1,5 +1,6 @@
 "use client";
 
+import { generateRandomString } from "@/helpers/randomStrings";
 import { Form, Modal} from "antd";
 import TextArea from "antd/es/input/TextArea";
 
@@ -41,6 +42,7 @@ export const AddItemModal: React.FC<CollectionCreateFormProps> = ({ open, onCrea
                 .validateFields()
                 .then((values) => {
                   onCreate({
+                    key: generateRandomString(26),
                     description: values.description,
                     activities: [],
                     value: 0

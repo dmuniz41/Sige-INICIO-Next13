@@ -117,6 +117,8 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
                   editItem(
                     {
                       ...values,
+                      key: selectedItem.key,
+                      description: values.description,
                       activities: activitiesValues,
                       value: activitiesValues
                         .map((activity) => activity.value)
