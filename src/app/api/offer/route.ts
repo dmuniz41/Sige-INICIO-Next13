@@ -55,18 +55,18 @@ export async function POST(request: NextRequest) {
         });
       }
     });
-
+    
     /* SE UTILIZA Promise.all() PARA PODER ESPERAR A QUE TERMINEN TODAS LAS PETICIONES ASINCRONAS A LA BD ANTES DE CONTINUAR FUERA DEL BUCLE
      DE LO CONTRARIO RETORNA UN ARRAY VACIO */
     // ? BUSCA EN LA BD TODOS LOS MATERIALES ASOCIADOS A CADA ACTIVIDAD Y MULTIPLICA SU CANTIDAD POR LA CANTIDAD DE VECES QUE SE REPITE LA ACTIVIDAD
     await Promise.all(
-      uniqueActivities.map(async (ua) => {
-        const actMaterials = await ServiceFee.findOne({ taskName: `${ua.description}` });
+      uniqueActivities.map(async (uniqueActivity) => {
+        const actMaterials = await ServiceFee.findOne({ taskName: `${uniqueActivity.description.trim()}` });
         if (actMaterials?.rawMaterials) {
           actMaterials?.rawMaterials?.forEach((material: IServiceFeeSubItem) => {
             activitiesMaterials.push({
               description: material?.description,
-              amount: material?.amount * ua.amount,
+              amount: material?.amount * uniqueActivity.amount,
               unitMeasure: material?.unitMeasure ?? ""
             });
           });
