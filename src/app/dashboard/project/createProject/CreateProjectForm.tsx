@@ -3,23 +3,27 @@ import { DatePicker, Form, Select, SelectProps, Table, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
+import {  IOfferItem } from "@/models/offer";
 import { AddItemModal } from "./AddItem";
 import { clientNomenclatorsStartLoading } from "@/actions/nomenclators/client";
 import { ColumnsType } from "antd/es/table";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
+import { editItemList, startAddProject } from "@/actions/project";
+import { EditItemModal } from "./EditItem";
+import { EditSvg } from "@/app/global/EditSvg";
 import { IClientNomenclator } from "@/models/nomenclators/client";
-import { IItem } from "@/models/project";
 import { INomenclator } from "@/models/nomenclator";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RootState, useAppSelector } from "@/store/store";
-import { startAddProject } from "@/actions/project";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import TextArea from "antd/es/input/TextArea";
 
 export const CreateProjectForm = () => {
   const [addItemModal, setAddItemModal] = useState(false);
+  const [editItemModal, setEditItemModal] = useState(false);
+  const [rowToEdit, setRowToEdit] = useState<IOfferItem>();
   const [clientNumber, setClientNumber] = useState(0);
   const [form] = Form.useForm();
   const [itemsValues, setItemsValues]: any = useState([]);
@@ -66,6 +70,24 @@ export const CreateProjectForm = () => {
     setItemsValues([...itemsValues, values]);
     setAddItemModal(false);
   };
+
+    const onEditItem = (values: any) => {
+      const newItemList: IOfferItem[] = [];
+      itemsValues.forEach((value: any) => {
+        if (value._id === values._id) {
+          newItemList.push({
+            ...value,
+            description: values.description
+          });
+        } else {
+          newItemList.push(value);
+        }
+      });
+      dispatch(editItemList(newItemList));
+      setItemsValues(newItemList);
+      setEditItemModal(false);
+    };
+  
   return (
     <Form
       form={form}
@@ -163,6 +185,8 @@ export const CreateProjectForm = () => {
             formName="itemsList"
             valuesSetter={setItemsValues}
             addModalSetter={setAddItemModal}
+            editModalSetter={setEditItemModal}
+            valueToEditSetter={setRowToEdit}
             buttonText="Añadir Servicio"
             form={form}
           />
@@ -176,7 +200,7 @@ export const CreateProjectForm = () => {
             form
               .validateFields()
               .then((values) => {
-                console.log(itemsValues);
+                console.log(itemsValues)
                 dispatch(
                   startAddProject({
                     ...values,
@@ -204,6 +228,12 @@ export const CreateProjectForm = () => {
         onCancel={() => setAddItemModal(false)}
         onCreate={onAddItem}
       />
+      <EditItemModal
+        open={editItemModal}
+        onCancel={() => setEditItemModal(false)}
+        onCreate={onEditItem}
+        defaultValues={rowToEdit}
+      />
     </Form>
   );
 };
@@ -214,20 +244,20 @@ const TableFormSection = (props: any) => {
     values,
     valuesSetter,
     addModalSetter,
-    // editModalSetter,
-    // valueToEditSetter,
+    editModalSetter,
+    valueToEditSetter,
     buttonText
   } = props;
 
-  const handleDelete = (record: IItem) => {
-    valuesSetter(values.filter((value: IItem) => value.description !== record.description));
+  const handleDelete = (record: IOfferItem) => {
+    valuesSetter(values.filter((value: IOfferItem) => value.description !== record.description));
   };
-  // const handleEdit = (record: IServiceFeeSubItem) => {
-  //   valueToEditSetter(record);
-  //   editModalSetter(true);
-  // };
+  const handleEdit = (record: IOfferItem) => {
+    valueToEditSetter(record);
+    editModalSetter(true);
+  };
 
-  const columns: ColumnsType<IItem> = [
+  const columns: ColumnsType<IOfferItem> = [
     {
       title: <span className="font-bold">No.</span>,
       width: "5%",
@@ -246,11 +276,11 @@ const TableFormSection = (props: any) => {
       width: "5%",
       render: (_, { ...record }) => (
         <div className="flex gap-1 justify-center">
-          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleEdit(record)} className="table-see-action-btn">
               <EditSvg width={18} height={18} />
             </button>
-          </Tooltip> */}
+          </Tooltip>
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleDelete(record)} className="table-delete-action-btn">
               <DeleteSvg width={17} height={17} />

@@ -21,7 +21,7 @@ const initialState: {
     representativeName: ""
   },
   selectedItem: {
-    _id: "",
+    key: "",
     description: "",
     activities: [],
     value: 0
@@ -31,7 +31,7 @@ const initialState: {
     description: "",
     price: 0,
     unitMeasure: "",
-    complexity:"Baja",
+    complexity: "Baja",
     value: 0,
     listOfMeasures: [
       {
@@ -44,7 +44,7 @@ const initialState: {
     ]
   },
   itemUpdated: {
-    _id: "",
+    key: "",
     description: "",
     activities: [],
     value: 0
@@ -91,11 +91,12 @@ export const offerReducer = (state = initialState, action: any) => {
         selectedOffer: {
           ...state.selectedOffer,
           itemsList: state.selectedOffer.itemsList.filter(
-            (item, index) => !index
+            (item, index) => item.description !== action.payload
           )
         }
       };
     case types.editItem:
+      console.log(action.payload.item);
       return {
         ...state,
         itemUpdated: action.payload.item,
@@ -114,7 +115,10 @@ export const offerReducer = (state = initialState, action: any) => {
     case types.clearOffer:
       return {
         ...state,
-        selectedOffer: initialState.selectedOffer
+        selectedOffer: {
+          ...initialState.selectedOffer,
+          itemsList: action.payload
+        }
       };
     case types.setFinalOffer:
       return {

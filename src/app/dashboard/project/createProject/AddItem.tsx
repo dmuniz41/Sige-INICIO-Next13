@@ -1,12 +1,12 @@
 "use client";
 
+import { generateRandomString } from "@/helpers/randomStrings";
 import { Form, Modal} from "antd";
-import { IItem } from "@/models/project";
 import TextArea from "antd/es/input/TextArea";
 
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: IItem) => void;
+  onCreate: (values: any) => void;
   onCancel: () => void;
 }
 
@@ -41,7 +41,12 @@ export const AddItemModal: React.FC<CollectionCreateFormProps> = ({ open, onCrea
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate(values);
+                  onCreate({
+                    key: generateRandomString(26),
+                    description: values.description,
+                    activities: [],
+                    value: 0
+                  });
                   form.resetFields();
                 })
                 .catch((error) => {

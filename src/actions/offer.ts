@@ -177,14 +177,18 @@ export const setCurrentItem = (item: IOfferItem) => ({
 // * ELIMINA UN ITEM DE LA LISTA DE LA LISTA DE ITEMS EN LA OFERTA * //
 export const deleteItem = (item: IOfferItem) => ({
   type: types.deleteItem,
-  payload: item
+  payload: item?.description
 });
 
 // * EDITA UN ITEM SELECCIONADO * //
-export const editItem = (item: IOfferItem, isItemUpdated: boolean) => ({
-  type: types.editItem,
-  payload: { item: item, isItemUpdated: isItemUpdated }
-});
+export const editItem = (item: IOfferItem, isItemUpdated: boolean) => {
+  console.log("🚀 ~ editItem ~ isItemUpdated:", isItemUpdated)
+  console.log("🚀 ~ editItem ~ item:", item)
+  return {
+    type: types.editItem,
+    payload: { item: item, isItemUpdated: isItemUpdated }
+  };
+};
 
 // * ESTABLECE EN EL ESTADO GLOBAL EL ID DE LA OFERTA FINAL DEL PROYECTO SELECCIONADO * //
 export const setFinalOffer = (id: string) => ({

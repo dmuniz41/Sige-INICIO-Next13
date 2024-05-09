@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
     }
     await connectDB();
     const BDProject = await Project.findById(projectId);
+    console.log("🚀 ~ GET ~ BDProject:", BDProject)
     
     return new NextResponse(
       JSON.stringify({

@@ -74,16 +74,16 @@ export const CreateOfferForm = (props: { projectId: string }) => {
   };
 
   if (isItemUpdated) {
-    selectedOffer.itemsList.forEach((item, index, itemList) => {
-      if (item.description === itemUpdated.description) {
+    selectedOffer.itemsList.map((item, index, itemList) => {
+      if (item.key === itemUpdated.key) {
+        console.log("🚀 ~ selectedOffer.itemsList.map ~ itemUpdated.key:", itemUpdated.key)
         itemList[index] = itemUpdated;
-        // TODO: Revisar por que se la pasa un item vacio 
-        dispatch(editItem({ _id: "", description: "", activities: [], value: 0 }, false));
+        dispatch(editItem({ key: "", description: "", activities: [], value: 0 }, false));
       }
       return itemList[index];
     });
   }
-
+  
   const handleEdit = (item: IOfferItem) => {
     dispatch(selectedItem(item));
     router.push(`/dashboard/project/${projectId}/offer/createOffer/editItem`);
@@ -151,14 +151,14 @@ export const CreateOfferForm = (props: { projectId: string }) => {
       </Form.Item>
       <section className=" flex w-full gap-2 mb-4 ">
         {selectedOffer?.itemsList?.length == 0 ? (
-          <article className="flex flex-col w-[60%] justify-center items-center border border-border_light py-4 rounded-md">
+          <article className="flex flex-col w-full justify-center items-center border border-border_light py-4 rounded-md">
             <div className="grid">
               <div className="grid place-content-center">
                 <NoDataSvg width={100} height={100} />
               </div>
               <span className="font-bold mb-4">No hay items disponibles</span>
               <button
-                className="toolbar-primary-icon-btn"
+                className="toolbar-secondary-icon-btn"
                 onClick={() => {
                   router.push(`/dashboard/project/${projectId}/offer/createOffer/createItem`);
                 }}
@@ -169,7 +169,7 @@ export const CreateOfferForm = (props: { projectId: string }) => {
             </div>
           </article>
         ) : (
-          <div className="flex flex-col w-[80%] gap-2">
+          <div className="flex flex-col w-full gap-2">
             <article className="grid grow gap-2">
               {selectedOffer?.itemsList?.map((item, index) => (
                 <article className="flex gap-2 items-center" key={index}>
@@ -209,7 +209,7 @@ export const CreateOfferForm = (props: { projectId: string }) => {
             </article>
           </div>
         )}
-        <article className="flex flex-col border border-border_light w-[40%]  rounded-md">
+        {/* <article className="flex flex-col border border-border_light w-[40%]  rounded-md">
           <div className="w-full border-b p-2 font-bold border-border_light flex justify-center items-center bg-background_light">
             <span>DESCRIPCIÓN DEL PROYECTO</span>
           </div>
@@ -228,7 +228,7 @@ export const CreateOfferForm = (props: { projectId: string }) => {
               </li>
             ))}
           </ul>
-        </article>
+        </article> */}
       </section>
       <Form.Item>
         <button
@@ -254,7 +254,6 @@ export const CreateOfferForm = (props: { projectId: string }) => {
                       .reduce((total, current) => total + current, 0)
                   })
                 );
-                dispatch(clearOffer());
                 router.push(`/dashboard/project/${projectId}/offer`);
                 form.resetFields();
               })
