@@ -96,7 +96,6 @@ export const offerReducer = (state = initialState, action: any) => {
         }
       };
     case types.editItem:
-      console.log(action.payload.item);
       return {
         ...state,
         itemUpdated: action.payload.item,
