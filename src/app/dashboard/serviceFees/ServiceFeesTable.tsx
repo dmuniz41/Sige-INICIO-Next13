@@ -1,8 +1,11 @@
 "use client";
-import { Button, Input, Space, Table, Tooltip } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Button, Input, Space, Spin, Table, Tooltip } from "antd";
+import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Highlighter from "react-highlight-words";
+import moment from "moment";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Swal from "sweetalert2";
 import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
@@ -21,21 +24,18 @@ import { SeeSvg } from "@/app/global/SeeSvg";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import {
   loadSelectedServiceFee,
   serviceFeeStartLoading,
   startDeleteServiceFee
 } from "@/actions/serviceFee";
-import moment from "moment";
 import PDFReport from "@/helpers/PDFReport";
 
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
   {
     ssr: false,
-    loading: () => <p>Loading...</p>
+    loading: () => <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
   }
 );
 

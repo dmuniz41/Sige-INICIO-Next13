@@ -304,7 +304,7 @@ const ServiceFeeTaskTable: React.FC = () => {
                 canDelete
                   ? "cursor-pointer hover:bg-secondary-400-400 ease-in-out duration-300"
                   : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2rem] h-[2rem] text-xl rounded-md bg-secondary-600 text-white-100`}
+              } flex justify-center items-center p-2 text-xl rounded-md bg-secondary-600 text-white-100`}
               onClick={() => handleEdit(record)}
             >
               <EditSvg width={20} height={20} />
@@ -317,7 +317,7 @@ const ServiceFeeTaskTable: React.FC = () => {
                 canDelete
                   ? "cursor-pointer hover:bg-danger-400 ease-in-out duration-300"
                   : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2rem] h-[2rem] text-xl rounded-md bg-danger-600 text-white-100`}
+              } flex justify-center items-center p-2 text-xl rounded-md bg-danger-600 text-white-100`}
               onClick={() => handleDelete(record)}
             >
               <DeleteSvg width={20} height={20} />

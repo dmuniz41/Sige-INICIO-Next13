@@ -1,6 +1,9 @@
 "use client";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Spin, Tooltip } from "antd";
+import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
 
 import { CheckSvg } from "@/app/global/CheckSvg";
 import { CircleCheckSvg } from "@/app/global/CircleCheckSvg";
@@ -16,16 +19,14 @@ import { MaterialsListModal } from "./MaterialsTable";
 import { PDFSvg } from "@/app/global/PDFSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { setFinalOfferId } from "@/actions/project";
-import { Tooltip } from "antd";
 import { useAppDispatch } from "@/hooks/hooks";
 import OfferPDFReport from "@/helpers/OfferPDFReport";
-import dynamic from "next/dynamic";
 
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
   {
     ssr: false,
-    loading: () => <p>Loading...</p>
+    loading: () => <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
   }
 );
 
