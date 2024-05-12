@@ -76,7 +76,6 @@ export const CreateOfferForm = (props: { projectId: string }) => {
   if (isItemUpdated) {
     selectedOffer.itemsList.map((item, index, itemList) => {
       if (item.key === itemUpdated.key) {
-        console.log("🚀 ~ selectedOffer.itemsList.map ~ itemUpdated.key:", itemUpdated.key)
         itemList[index] = itemUpdated;
         dispatch(editItem({ key: "", description: "", activities: [], value: 0 }, false));
       }

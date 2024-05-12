@@ -1,11 +1,12 @@
 "use client";
-
+import { LoadingOutlined } from "@ant-design/icons";
 import { RootState, useAppSelector } from "@/store/store";
-import { Tag } from "antd";
+import { Spin, Tag } from "antd";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import React, { useEffect } from "react";
+import Table, { ColumnsType } from "antd/es/table";
 
 import { clearOffer, startLoadSelectedProject } from "@/actions/project";
 import { EditSvg } from "@/app/global/EditSvg";
@@ -14,13 +15,12 @@ import { IProject } from "@/models/project";
 import { PDFSvg } from "@/app/global/PDFSvg";
 import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
 import ProjectPDFReport from "@/helpers/ProjectPDFReport";
-import Table, { ColumnsType } from "antd/es/table";
 
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
   {
     ssr: false,
-    loading: () => <p>Loading...</p>
+    loading: () => <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
   }
 );
 
@@ -38,6 +38,7 @@ export const ProjectView = (props: { projectId: string }) => {
   );
 
   const itemsList = selectedProject.itemsList;
+  console.log("🚀 ~ ProjectView ~ itemsList:", itemsList)
 
   const handleEdit = (): void => {
     router.push(`/dashboard/project/editProject`);
@@ -66,7 +67,7 @@ export const ProjectView = (props: { projectId: string }) => {
             )}
             <PDFDownloadLink
               className=" flex w-[2.5rem] h-[2.5rem]"
-              document={<ProjectPDFReport data={selectedProject} itemsList={itemsList} />}
+              document={<ProjectPDFReport data={selectedProject} itemsList={selectedProject?.itemsList} />}
               fileName={`${selectedProject?.projectName}`}
             >
               {({ blob, url, loading, error }) =>

@@ -215,52 +215,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
         name="addActivity"
         size="middle"
         initialValues={{ complexity: defaultValues?.complexity }}
-        // TODO: HACER QUE LA COMPLEJIDAD SE PUEDA CAMBIAR AL EDITAR LA ACTIVIDAD
       >
-        {/* <Form.Item
-          name="description"
-          label="Descripción"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
-          <Select
-            autoFocus
-            allowClear
-            labelInValue
-            style={{ width: "100%" }}
-            options={listOfActivities}
-            onSelect={(value) => {
-              const currentServiceFee = serviceFees.find(
-                (serviceFee) => serviceFee.taskName === value.label
-              );
-              setSelectedServiceFee(currentServiceFee!);
-              setCurrentUnitMeasure(currentServiceFee?.unitMeasure!);
-              setCurrentPrice(0);
-              setActivitiesTableValues([]);
-              setSize(0);
-
-              form.setFieldsValue({
-                unitMeasure: selectedServiceFee?.unitMeasure,
-                price: form.getFieldValue("description")?.value,
-                height: 0,
-                width: 0,
-                amount: 0,
-                amountOfUnits: 0,
-                size: 0,
-                complexity: null
-              });
-            }}
-            showSearch
-            optionFilterProp="children"
-            filterOption={(input: any, option: any) =>
-              (option?.label ?? "").toLowerCase().includes(input)
-            }
-            filterSort={(optionA: any, optionB: any) =>
-              (optionA?.label ?? "")
-                .toLowerCase()
-                .localeCompare((optionB?.label ?? "").toLowerCase())
-            }
-          />
-        </Form.Item> */}
         <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Descripción:</span>
           <span>{defaultValues?.description}</span>
@@ -371,10 +326,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
                   buttonStyle="solid"
                   onChange={(value) => {
                     serviceFees?.map((serviceFee) => {
-                      // console.log(serviceFee?.taskName);
-                      // console.log(defaultValues?.description);
-                      // console.log(defaultValues?.description === selectedServiceFee?.taskName);
-                      if (serviceFee?.taskName === defaultValues?.description) {
+                      if (serviceFee?.taskName === defaultValues?.description.trim()) {
                         setSelectedServiceFee(serviceFee);
                       }
                     });

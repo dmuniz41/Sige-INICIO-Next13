@@ -67,6 +67,7 @@ export const CreateProjectForm = () => {
   };
 
   const onAddItem = (values: any) => {
+    console.log("🚀 ~ onAddItem ~ values:", values)
     setItemsValues([...itemsValues, values]);
     setAddItemModal(false);
   };
@@ -227,6 +228,7 @@ export const CreateProjectForm = () => {
         open={addItemModal}
         onCancel={() => setAddItemModal(false)}
         onCreate={onAddItem}
+        itemsList={itemsValues}
       />
       <EditItemModal
         open={editItemModal}

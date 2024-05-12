@@ -101,12 +101,38 @@ function checkStrEmpty(str) {
 }
 
 const fields = [
-  { title: 'No.', value: 'index', width: "1"   },
+  {
+    title: "No.",
+    custom: true,
+    component: (item) => (
+      <View
+        style={{
+          display: "flex",
+          flex: 1,
+          flexDirection: "column",
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          backgroundColor: "red"
+        }}
+      >
+        <Text
+          style={{
+            fontSize: "8pt"
+          }}
+        >
+          {item?.idNumber}
+        </Text>
+      </View>
+    ),
+    width: "5"
+  },
   {
     title: "DESCRIPCIÓN DEL SERVICIO",
     custom: true,
     component: (item) => `${item?.description}`,
-    width: "100"
+    width: "95"
   }
 ];
 
@@ -134,9 +160,9 @@ const CustomTablePDF = (props) => {
         (item, idx) =>
           item && (
             <View key={idx} style={styles.tableRow}>
-              <View wrap={false} style={[tableCol, { width: "5%" }]}>
+              {/* <View wrap={false} style={[tableCol, { width: "5%" }]}>
                 <Text style={[styles.tableCell, { textAlign: "center" }]}>{idx + 1}</Text>
-              </View>
+              </View> */}
               {fields.map((_item, _idx) => {
                 let val = item[_item.value] || "";
                 let value_alt = (_item.value_alt && item[_item.value_alt]) || "";
@@ -347,7 +373,8 @@ export default function ProjectPDFReport(props) {
                 backgroundColor: "#F3DEBE",
                 width: "100%",
                 borderStyle: "solid",
-                borderBottom: 1
+                borderBottom: 1,
+                borderLeft: 1
               }}
             >
               <Text
@@ -369,7 +396,8 @@ export default function ProjectPDFReport(props) {
                 flexDirection: "column",
                 width: "100%",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
+                // backgroundColor:'red'
               }}
             >
               <Text

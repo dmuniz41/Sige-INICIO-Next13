@@ -181,14 +181,10 @@ export const deleteItem = (item: IOfferItem) => ({
 });
 
 // * EDITA UN ITEM SELECCIONADO * //
-export const editItem = (item: IOfferItem, isItemUpdated: boolean) => {
-  console.log("🚀 ~ editItem ~ isItemUpdated:", isItemUpdated)
-  console.log("🚀 ~ editItem ~ item:", item)
-  return {
-    type: types.editItem,
-    payload: { item: item, isItemUpdated: isItemUpdated }
-  };
-};
+export const editItem = (item: IOfferItem, isItemUpdated: boolean) => ({
+  type: types.editItem,
+  payload: { item: item, isItemUpdated: isItemUpdated }
+});
 
 // * ESTABLECE EN EL ESTADO GLOBAL EL ID DE LA OFERTA FINAL DEL PROYECTO SELECCIONADO * //
 export const setFinalOffer = (id: string) => ({

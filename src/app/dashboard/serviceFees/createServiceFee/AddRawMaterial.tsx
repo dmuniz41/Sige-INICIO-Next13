@@ -15,19 +15,27 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel
+}) => {
   const [currentPrice, setCurrentPrice] = useState<number>(0);
   const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>("");
   const [rawMaterialValue, setRawMaterialValue] = useState<number>(0);
-  const { materials }: { materials: IMaterial[] } = useAppSelector((state: RootState) => state?.material);
-  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
+  const { materials }: { materials: IMaterial[] } = useAppSelector(
+    (state: RootState) => state?.material
+  );
+  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector(
+    (state: RootState) => state?.nomenclator
+  );
   const DBMaterials: INomenclator[] = [];
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(materialsStartLoading("653957480a9e16fed4c1bbd5"));
   }, [dispatch]);
-  
+
   nomenclators.map((nomenclator: INomenclator) => {
     if (nomenclator.category === "Material") {
       DBMaterials.push(nomenclator);
@@ -36,7 +44,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
   const listOfMaterials: SelectProps["options"] = DBMaterials.map((material) => {
     return {
       label: `${material.code}`,
-      value: `${material.code}`,
+      value: `${material.code}`
     };
   });
 
@@ -56,15 +64,11 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
       onCancel={onCancel}
       okType="default"
       okText="Crear"
-      width={'600px'}
+      width={"600px"}
       cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button
-            key="2"
-            className="modal-btn-danger"
-            onClick={onCancel}
-          >
+          <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
           <button
@@ -74,7 +78,13 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate({ ...values, description: values.description.label, unitMeasure: currentUnitMeasure, price: currentPrice, value: rawMaterialValue });
+                  onCreate({
+                    ...values,
+                    description: values.description.label,
+                    unitMeasure: currentUnitMeasure,
+                    price: currentPrice,
+                    value: rawMaterialValue
+                  });
                   form.resetFields();
                   setRawMaterialValue(0);
                   setCurrentPrice(0);
@@ -87,11 +97,15 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
           >
             Añadir
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form form={form} layout="horizontal" name="addRawMaterial" size="middle">
-        <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="description"
+          label="Descripción"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select
             autoFocus
             allowClear
@@ -99,23 +113,39 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
             style={{ width: "100%" }}
             options={listOfMaterials}
             onSelect={(value) => {
-              const selectedMaterial = materials.find((material) => `${material.category} ${material.materialName}` === value.label);
+              const selectedMaterial = materials.find(
+                (material) =>
+                  `${material.category} ${material.materialName}`.trim().toLowerCase() ===
+                  String(value.label).trim().toLowerCase()
+              );
               setCurrentUnitMeasure(selectedMaterial?.unitMeasure!);
               setCurrentPrice(selectedMaterial?.costPerUnit!);
 
               form.setFieldsValue({
                 unitMeasure: selectedMaterial?.unitMeasure,
-                price: form.getFieldValue("description")?.value,
+                price: form.getFieldValue("description")?.value
               });
             }}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-            filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+            filterOption={(input: any, option: any) =>
+              (option?.label ?? "").toLowerCase().includes(input)
+            }
+            filterSort={(optionA: any, optionB: any) =>
+              (optionA?.label ?? "")
+                .toLowerCase()
+                .localeCompare((optionB?.label ?? "").toLowerCase())
+            }
           />
         </Form.Item>
-        <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber min={0}
+        <Form.Item
+          name="amount"
+          label="Cantidad"
+          className="w-[10rem]"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
+          <InputNumber
+            min={0}
             onChange={(value: number | null) => {
               setRawMaterialValue(value! * currentPrice);
             }}
