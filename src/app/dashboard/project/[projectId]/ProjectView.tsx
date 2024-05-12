@@ -38,6 +38,7 @@ export const ProjectView = (props: { projectId: string }) => {
   );
 
   const itemsList = selectedProject.itemsList;
+  console.log("🚀 ~ ProjectView ~ itemsList:", itemsList)
 
   const handleEdit = (): void => {
     router.push(`/dashboard/project/editProject`);
@@ -66,7 +67,7 @@ export const ProjectView = (props: { projectId: string }) => {
             )}
             <PDFDownloadLink
               className=" flex w-[2.5rem] h-[2.5rem]"
-              document={<ProjectPDFReport data={selectedProject} itemsList={itemsList} />}
+              document={<ProjectPDFReport data={selectedProject} itemsList={selectedProject?.itemsList} />}
               fileName={`${selectedProject?.projectName}`}
             >
               {({ blob, url, loading, error }) =>

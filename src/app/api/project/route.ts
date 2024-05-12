@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
 
     const newProject = new Project({
       ...project,
-      itemsList: project.itemsList,
+      itemsList: project.itemsList ?? [],
       finalOfferId: project.finalOfferId ?? "",
       projectNumber: newProjectNumber,
       key: newKey
@@ -171,7 +171,7 @@ export async function GET(request: NextRequest) {
 
     await connectDB();
     const listOfProjects = (await Project.find()).reverse();
-    
+
     return new NextResponse(
       JSON.stringify({
         ok: true,
