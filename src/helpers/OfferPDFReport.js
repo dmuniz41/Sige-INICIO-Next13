@@ -75,7 +75,8 @@ const styles = StyleSheet.create({
   },
   tableCell: {
     margin: 2,
-    fontSize: "10pt"
+    fontSize: "10pt",
+    justifyContent: 'center',
   },
   textCenter: {
     textAlign: "center"
@@ -93,7 +94,8 @@ export default function OfferPDFReport(props) {
     {
       title: "Descripción",
       custom: true,
-      component: (item) => `${item.description}`,
+      component: (item) =>
+        `${item.description} ${item.listOfMeasures.map((e) => e.description)} (Complejidad ${item.complexity})`,
       width: "50"
     },
     {
@@ -343,7 +345,8 @@ const CustomTablePDF = (props) => {
     borderColor: BORDER_COLOR,
     borderLeft: "1px",
     borderBottom: "0px",
-    borderTopWidth: "1px"
+    borderTopWidth: "1px",
+    justifyContent: 'center'
   };
   return (
     <View style={styles.subsectionTable}>
