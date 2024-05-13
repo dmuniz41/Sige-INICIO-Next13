@@ -250,7 +250,8 @@ export const CreateOfferForm = (props: { projectId: string }) => {
                     )?.percentage,
                     value: selectedOffer?.itemsList
                       ?.map((item) => item.value)
-                      .reduce((total, current) => total + current, 0)
+                      .reduce((total, current) => total + current, 0),
+                    version:"v1"
                   })
                 );
                 router.push(`/dashboard/project/${projectId}/offer`);

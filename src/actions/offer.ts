@@ -19,7 +19,8 @@ export const startAddOffer = ({ ...offer }: any) => {
           projectId: offer?.projectId,
           value: offer?.value,
           representativeName: offer?.representativeName,
-          representationPercentage: offer?.representationPercentage
+          representationPercentage: offer?.representationPercentage,
+          version: offer?.version
         },
         { headers: { accessToken: token } }
       )

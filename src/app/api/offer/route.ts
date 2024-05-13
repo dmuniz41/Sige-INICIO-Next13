@@ -55,13 +55,15 @@ export async function POST(request: NextRequest) {
         });
       }
     });
-    
+
     /* SE UTILIZA Promise.all() PARA PODER ESPERAR A QUE TERMINEN TODAS LAS PETICIONES ASINCRONAS A LA BD ANTES DE CONTINUAR FUERA DEL BUCLE
      DE LO CONTRARIO RETORNA UN ARRAY VACIO */
     // ? BUSCA EN LA BD TODOS LOS MATERIALES ASOCIADOS A CADA ACTIVIDAD Y MULTIPLICA SU CANTIDAD POR LA CANTIDAD DE VECES QUE SE REPITE LA ACTIVIDAD
     await Promise.all(
       uniqueActivities.map(async (uniqueActivity) => {
-        const actMaterials = await ServiceFee.findOne({ taskName: `${uniqueActivity.description.trim()}` });
+        const actMaterials = await ServiceFee.findOne({
+          taskName: `${uniqueActivity.description.trim()}`
+        });
         if (actMaterials?.rawMaterials) {
           actMaterials?.rawMaterials?.forEach((material: IServiceFeeSubItem) => {
             activitiesMaterials.push({
@@ -95,13 +97,13 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    let DBOffer = await Offer.findOne({ projectName: offer.projectName });
+    let DBOffer = await Offer.findOne({ key: offer.key });
 
     if (DBOffer) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Ya existe una oferta con ese nombre"
+          message: "La oferta a crear ya existe"
         },
         {
           status: 409
@@ -117,7 +119,8 @@ export async function POST(request: NextRequest) {
       materialsList: uniqueMaterials,
       key: newKey,
       isFinalOffer: offer.isFinalOffer ?? false,
-      value: finalValue
+      value: finalValue,
+      version: offer.version ?? ""
     });
 
     await newOffer.save();
@@ -149,7 +152,6 @@ export async function POST(request: NextRequest) {
       );
     }
   }
-    
 }
 
 export async function GET(request: NextRequest) {

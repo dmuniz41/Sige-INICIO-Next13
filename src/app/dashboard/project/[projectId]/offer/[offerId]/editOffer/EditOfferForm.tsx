@@ -33,9 +33,14 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
     selectedOffer,
     offers,
     itemUpdated,
-    isItemUpdated,
-  }: { selectedOffer: IOffer; offers: IOffer[];selectedItem: IOfferItem; itemUpdated: IOfferItem; isItemUpdated: boolean } =
-    useAppSelector((state: RootState) => state?.offer);
+    isItemUpdated
+  }: {
+    selectedOffer: IOffer;
+    offers: IOffer[];
+    selectedItem: IOfferItem;
+    itemUpdated: IOfferItem;
+    isItemUpdated: boolean;
+  } = useAppSelector((state: RootState) => state?.offer);
 
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
     (state: RootState) => state?.project
@@ -67,14 +72,14 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
         maximumFractionDigits: 2,
         minimumFractionDigits: 2
       }),
-      [selectedOffer, representativePercentage]
-    );
+    [selectedOffer, representativePercentage]
+  );
 
   if (isItemUpdated) {
     selectedOffer.itemsList.map((item, index, itemList) => {
       if (item.key === itemUpdated.key) {
         itemList[index] = itemUpdated;
-        dispatch(editItem({ key: "", description: "", activities: [], value: 0 },false));
+        dispatch(editItem({ key: "", description: "", activities: [], value: 0 }, false));
       }
       return itemList[index];
     });
@@ -197,7 +202,8 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
                       representationPercentage: representativeNomenclators?.find(
                         (representative) => representative?.name === values?.representativeName
                       )?.percentage,
-                      projectName: `${selectedProject?.projectName} v${offers.length + 1}`,
+                      projectName: `${selectedProject?.projectName}`,
+                      version: `v${offers.length + 1}`,
                       value: selectedOffer?.itemsList
                         ?.map((item) => item.value)
                         .reduce((total, current) => total + current, 0)

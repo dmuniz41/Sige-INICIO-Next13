@@ -108,7 +108,7 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
                   clientInfo={clientInfo}
                   representativeInfo={representativeInfo}
                   data={selectedOffer?.itemsList}
-                  title={selectedOffer.projectName}
+                  title={selectedOffer?.projectName}
                   totalValue={selectedOffer?.value}
                 />
               }
@@ -134,7 +134,7 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
       </article>
       <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-4">
         <h1 className="flex gap-4 text-xl font-bold mb-2">
-          {selectedOffer?.projectName}
+          {`${selectedOffer?.projectName} (${selectedOffer?.version})`}
           {selectedOffer?.isFinalOffer ? (
             <div className="text-success-500 flex items-center">
               <CircleCheckSvg />
@@ -173,4 +173,3 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
     </>
   );
 };
- 
