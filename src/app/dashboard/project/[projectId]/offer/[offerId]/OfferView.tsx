@@ -49,12 +49,15 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
   const { selectedOffer }: { selectedOffer: IOffer } = useAppSelector(
     (state: RootState) => state?.offer
   );
+
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
     (state: RootState) => state?.project
   );
+
   const { clientNomenclators }: { clientNomenclators: IClientNomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
+
   const {
     representativeNomenclators
   }: { representativeNomenclators: IRepresentativeNomenclator[] } = useAppSelector(
@@ -64,11 +67,11 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
   const clientInfo = clientNomenclators.find(
     (clientNomenclator) => clientNomenclator.name === selectedProject?.clientName
   );
+
   const representativeInfo = representativeNomenclators.find(
     (representativeNomenclator) =>
       representativeNomenclator.name === selectedOffer?.representativeName
   );
-  console.log("🚀 ~ OfferView ~ representativeInfo:", representativeInfo);
 
   const setOfferAsFinal = () => {
     dispatch(setFinalOfferId(selectedProject, selectedOffer));
@@ -105,7 +108,7 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
                   clientInfo={clientInfo}
                   representativeInfo={representativeInfo}
                   data={selectedOffer?.itemsList}
-                  title={`${selectedOffer?.projectName}`}
+                  title={selectedOffer.projectName}
                   totalValue={selectedOffer?.value}
                 />
               }
@@ -170,3 +173,4 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
     </>
   );
 };
+ 

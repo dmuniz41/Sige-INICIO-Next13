@@ -329,32 +329,6 @@ export default function OfferPDFReport(props) {
                 </Text>
               </View>
             </View>
-            {/* <View
-              style={{
-                display: "flex",
-                backgroundColor: "#cccccc",
-                flexGrow: 1,
-                borderLeftStyle: "solid",
-                borderRightWidth: 1,
-                borderBottomWidth: 1,
-                padding: 2
-              }}
-            >
-              <Text
-                style={{
-                  // fontFamily: "Arial",
-                  fontWeight: "bold",
-                  // textAlign: "center",
-                  fontSize: 10
-                }}
-              >
-                ${" "}
-                {totalValue?.toLocaleString("DE", {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
-                })}
-              </Text>
-            </View> */}
           </View>
         </View>
       </Page>
