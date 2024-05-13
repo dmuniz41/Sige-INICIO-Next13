@@ -21,6 +21,7 @@ import { RootState, useAppSelector } from "@/store/store";
 import { setFinalOfferId } from "@/actions/project";
 import { useAppDispatch } from "@/hooks/hooks";
 import OfferPDFReport from "@/helpers/OfferPDFReport";
+import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
@@ -48,14 +49,29 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
   const { selectedOffer }: { selectedOffer: IOffer } = useAppSelector(
     (state: RootState) => state?.offer
   );
+
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
     (state: RootState) => state?.project
   );
+
   const { clientNomenclators }: { clientNomenclators: IClientNomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
 
-  const clientInfo = clientNomenclators.find((cn) => cn.name === selectedProject?.clientName);
+  const {
+    representativeNomenclators
+  }: { representativeNomenclators: IRepresentativeNomenclator[] } = useAppSelector(
+    (state: RootState) => state?.nomenclator
+  );
+
+  const clientInfo = clientNomenclators.find(
+    (clientNomenclator) => clientNomenclator.name === selectedProject?.clientName
+  );
+
+  const representativeInfo = representativeNomenclators.find(
+    (representativeNomenclator) =>
+      representativeNomenclator.name === selectedOffer?.representativeName
+  );
 
   const setOfferAsFinal = () => {
     dispatch(setFinalOfferId(selectedProject, selectedOffer));
@@ -90,8 +106,9 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
               document={
                 <OfferPDFReport
                   clientInfo={clientInfo}
+                  representativeInfo={representativeInfo}
                   data={selectedOffer?.itemsList}
-                  title={`${selectedOffer?.projectName}`}
+                  title={selectedOffer?.projectName}
                   totalValue={selectedOffer?.value}
                 />
               }
@@ -117,7 +134,7 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
       </article>
       <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-4">
         <h1 className="flex gap-4 text-xl font-bold mb-2">
-          {selectedOffer?.projectName}
+          {`${selectedOffer?.projectName} (${selectedOffer?.version})`}
           {selectedOffer?.isFinalOffer ? (
             <div className="text-success-500 flex items-center">
               <CircleCheckSvg />

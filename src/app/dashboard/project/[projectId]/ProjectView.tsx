@@ -38,7 +38,6 @@ export const ProjectView = (props: { projectId: string }) => {
   );
 
   const itemsList = selectedProject.itemsList;
-  console.log("🚀 ~ ProjectView ~ itemsList:", itemsList)
 
   const handleEdit = (): void => {
     router.push(`/dashboard/project/editProject`);

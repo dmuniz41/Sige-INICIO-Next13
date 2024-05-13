@@ -19,7 +19,7 @@ export interface IActivity {
   }[];
 }
 export interface IOfferItem {
-  idNumber?: number
+  idNumber?: number;
   key: string;
   description: string;
   activities: IActivity[];
@@ -36,6 +36,7 @@ export interface IOffer {
   isFinalOffer?: boolean;
   representationPercentage: number;
   representativeName: string;
+  version: string;
 }
 
 const OfferSchema = new Schema<IOffer, Model<IOffer>>({
@@ -109,6 +110,10 @@ const OfferSchema = new Schema<IOffer, Model<IOffer>>({
   representationPercentage: {
     type: Number,
     required: true
+  },
+  version: {
+    type: String,
+    required: false
   }
 });
 

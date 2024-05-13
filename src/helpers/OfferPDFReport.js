@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   clientInfoElementHeader: {
     fontSize: "10pt",
     fontWeight: "bold",
-    marginRight: "2px",
+    marginRight: "2px"
     // fontFamily: "Arial"
   },
   clientInfoElementText: {
@@ -70,12 +70,13 @@ const styles = StyleSheet.create({
   tableCellHeader: {
     margin: 2,
     fontSize: "10pt",
-    fontWeight: "bold",
+    fontWeight: "bold"
     // fontFamily: "Arial"
   },
   tableCell: {
     margin: 2,
-    fontSize: "10pt"
+    fontSize: "10pt",
+    justifyContent: 'center',
   },
   textCenter: {
     textAlign: "center"
@@ -87,13 +88,14 @@ function checkStrEmpty(str) {
 }
 
 export default function OfferPDFReport(props) {
-  const { clientInfo, data, title, totalValue } = props;
+  const { clientInfo, data, title, totalValue, representativeInfo } = props;
 
   const fields = [
     {
       title: "Descripción",
       custom: true,
-      component: (item) => `${item.description}`,
+      component: (item) =>
+        `${item.description} ${item.listOfMeasures.map((e) => e.description)} (Complejidad ${item.complexity})`,
       width: "50"
     },
     {
@@ -137,6 +139,24 @@ export default function OfferPDFReport(props) {
     <Document>
       <Page wrap orientation="landscape" size={"LETTER"} style={styles.body}>
         {/* ENCABEZADO DONDE VA LA INFO DE EL CLIENTE Y LA AGENCIA DE REPRESENTACION */}
+        <View style={styles.clientInfoSectionContainer}>
+          <View style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+            <Text style={styles.clientInfoElementHeader}>Entidad Ofertante:</Text>
+            <Text style={styles.clientInfoElementText}>{representativeInfo?.name}</Text>
+          </View>
+          <View style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+            <Text style={styles.clientInfoElementHeader}>Domicilio Legal:</Text>
+            <Text style={styles.clientInfoElementText}>{representativeInfo?.address}</Text>
+          </View>
+          <View style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+            <Text style={styles.clientInfoElementHeader}>Email:</Text>
+            <Text style={styles.clientInfoElementText}>{representativeInfo?.email}</Text>
+          </View>
+          <View style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+            <Text style={styles.clientInfoElementHeader}>Teléfono:</Text>
+            <Text style={styles.clientInfoElementText}>{representativeInfo?.phoneNumber}</Text>
+          </View>
+        </View>
         <View style={styles.clientInfoSectionContainer}>
           <View style={{ display: "flex", flexDirection: "row", width: "100%" }}>
             <Text style={styles.clientInfoElementHeader}>Entidad Encargante:</Text>
@@ -220,7 +240,7 @@ export default function OfferPDFReport(props) {
                         style={{
                           //  fontFamily: "Arial",
                           fontWeight: "bold",
-                          fontSize: "10pt"
+                          fontSize: 10
                         }}
                       >
                         {item.description}
@@ -230,10 +250,10 @@ export default function OfferPDFReport(props) {
                       style={{
                         display: "flex",
                         backgroundColor: "#cccccc",
-                        alignItems: "center",
                         flexGrow: 1,
                         borderLeftStyle: "solid",
-                        borderLeftWidth: "1px"
+                        borderLeftWidth: "1px",
+                        padding: 2
                       }}
                     >
                       <Text
@@ -262,51 +282,54 @@ export default function OfferPDFReport(props) {
             <View
               style={{
                 display: "flex",
+                flexDirection: "row",
                 backgroundColor: "#cccccc",
                 borderLeftStyle: "solid",
                 borderLeftWidth: 1,
-                borderRightWidth: 1,
                 borderBottomWidth: 1,
-                borderStyle: "solid",
-                width: "90.5%",
-                padding: 2
-              }}
-            >
-              <Text
-                style={{
-                  //  fontFamily: "Arial",
-                  fontWeight: "bold",
-                  fontSize: "10pt"
-                }}
-              >
-                VALOR TOTAL
-              </Text>
-            </View>
-            <View
-              style={{
-                display: "flex",
-                backgroundColor: "#cccccc",
-                alignItems: "center",
-                flexGrow: 1,
-                borderLeftStyle: "solid",
                 borderRightWidth: 1,
-                borderBottomWidth: 1
+                borderStyle: "solid",
+                width: "100%",
+                paddingRight: 13,
+                justifyContent: "space-between"
               }}
             >
-              <Text
+              <View
                 style={{
-                  // fontFamily: "Arial",
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  fontSize: 10
+                  display: "flex",
+                  padding: 2
                 }}
               >
-                ${" "}
-                {totalValue?.toLocaleString("DE", {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
-                })}
-              </Text>
+                <Text
+                  style={{
+                    //  fontFamily: "Arial",
+                    fontWeight: "bold",
+                    fontSize: "10pt"
+                  }}
+                >
+                  VALOR TOTAL
+                </Text>
+              </View>
+              <View
+                style={{
+                  display: "flex",
+                  padding: 2
+                }}
+              >
+                <Text
+                  style={{
+                    // fontFamily: "Arial",
+                    fontWeight: "bold",
+                    fontSize: 10
+                  }}
+                >
+                  ${" "}
+                  {totalValue?.toLocaleString("DE", {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2
+                  })}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -322,7 +345,8 @@ const CustomTablePDF = (props) => {
     borderColor: BORDER_COLOR,
     borderLeft: "1px",
     borderBottom: "0px",
-    borderTopWidth: "1px"
+    borderTopWidth: "1px",
+    justifyContent: 'center'
   };
   return (
     <View style={styles.subsectionTable}>
