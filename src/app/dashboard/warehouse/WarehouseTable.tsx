@@ -1,35 +1,32 @@
 "use client";
-
+import { Button, Input, Space, Table, Tooltip } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, Tooltip } from "antd";
-import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
-import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
+import type { FilterConfirmProps } from "antd/es/table/interface";
+import type { InputRef } from "antd";
 
 import { useAppDispatch } from "@/hooks/hooks";
 import { RootState, useAppSelector } from "@/store/store";
-import { Toast } from "@/helpers/customAlert";
 import {
   startAddWarehouse,
   startDeleteWarehouse,
   startUpdateWarehouse,
   warehousesStartLoading,
-  selectedWarehouse
 } from "@/actions/warehouse";
 import { CreateWarehouseForm } from "./CreateWarehouseForm";
-import { EditWarehouseForm } from "./EditWarehouseForm";
-import { materialsStartLoading } from "@/actions/material";
-import Swal from "sweetalert2";
-import { useSession } from "next-auth/react";
-import { PlusSvg } from "../../global/PlusSvg";
-import { SeeSvg } from "../../global/SeeSvg";
-import { EditSvg } from "../../global/EditSvg";
 import { DeleteSvg } from "../../global/DeleteSvg";
-import { RefreshSvg } from "@/app/global/RefreshSvg";
-import { useRouter } from "next/navigation";
+import { EditSvg } from "../../global/EditSvg";
+import { EditWarehouseForm } from "./EditWarehouseForm";
 import { IWarehouse } from "@/models/warehouse";
+import { materialsStartLoading } from "@/actions/material";
+import { PlusSvg } from "../../global/PlusSvg";
+import { RefreshSvg } from "@/app/global/RefreshSvg";
+import { SeeSvg } from "../../global/SeeSvg";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import Swal from "sweetalert2";
 
 type DataIndex = keyof IWarehouse;
 

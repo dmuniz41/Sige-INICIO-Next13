@@ -1,11 +1,10 @@
 "use client";
-
-import { useState } from "react";
 import { Form, InputNumber, Modal, Select, SelectProps } from "antd";
+import { useState } from "react";
 
+import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 import { IServiceFeeSubItem } from "@/models/serviceFees";
 import { RootState, useAppSelector } from "@/store/store";
-import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 
 interface CollectionCreateFormProps {
   open: boolean;
@@ -41,21 +40,21 @@ export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps>
   const [form] = Form.useForm();
   return (
     <Modal
-      width={650}
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
           <span className="font-bold text-lg">Gastos Administrativos</span>
         </div>
       }
-      style={{ textAlign: "left" }}
-      centered
-      open={open}
-      destroyOnClose
-      onCancel={onCancel}
-      okType="default"
-      okText="Crear"
       cancelText="Cancelar"
+      centered
+      destroyOnClose
+      okText="Crear"
+      okType="default"
+      onCancel={onCancel}
+      open={open}
+      style={{ textAlign: "left" }}
+      width={"1000px"}
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
           <button key="2" className="modal-btn-danger" onClick={onCancel}>

@@ -1,6 +1,6 @@
 "use client";
+import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
 
-import { Form, Input, InputNumber, Modal, Select, SelectProps, Tag } from "antd";
 import { INomenclator } from "@/models/nomenclator";
 import { IServiceFeeTask } from "@/models/serviceFeeTask";
 import { RootState, useAppSelector } from "@/store/store";
@@ -48,14 +48,15 @@ export const CreateServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({
           <span className="font-bold text-lg">Nueva Tarea</span>
         </div>
       }
-      style={{ textAlign: "left" }}
-      centered
-      open={open}
-      destroyOnClose
-      onCancel={onCancel}
-      okType="default"
-      okText="Crear"
       cancelText="Cancelar"
+      centered
+      destroyOnClose
+      okText="Crear"
+      okType="default"
+      onCancel={onCancel}
+      open={open}
+      style={{ textAlign: "left" }}
+      width={"800px"}
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
           <button key="2" className="modal-btn-danger" onClick={onCancel}>

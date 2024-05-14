@@ -41,13 +41,14 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({
         </div>
       }
       style={{ textAlign: "left" }}
-      centered
-      open={open}
-      destroyOnClose
-      onCancel={onCancel}
-      okType="default"
-      okText="Crear"
       cancelText="Cancelar"
+      centered
+      destroyOnClose
+      okText="Crear"
+      okType="default"
+      onCancel={onCancel}
+      open={open}
+      width={"1000px"}
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
           <button key="2" className="modal-btn-danger" onClick={onCancel}>
@@ -113,21 +114,22 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({
           className="w-[10rem]"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <InputNumber min={0}
+          <InputNumber
+            min={0}
             onChange={(value: number | null) => {
               setTaskValue(value! * price);
             }}
           />
         </Form.Item>
-        <div className=" flex gap-2 pl-2">
+        <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Unidad de Medida:</span>
           <span>{!unitMeasure ? "" : unitMeasure}</span>
         </div>
-        <div className=" flex gap-2 pl-2">
+        <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Precio:</span>
           <span>${!price ? 0 : price?.toFixed(2)}</span>
         </div>
-        <div className=" flex gap-2 pl-2">
+        <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Importe:</span>
           <span>${!taskValue ? 0 : taskValue?.toFixed(2)}</span>
         </div>

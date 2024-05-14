@@ -42,21 +42,21 @@ export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps>
   const [form] = Form.useForm();
   return (
     <Modal
-      width={650}
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
           <span className="font-bold text-lg">Gastos de Transportación</span>
         </div>
       }
-      style={{ textAlign: "left" }}
-      centered
-      open={open}
-      destroyOnClose
-      onCancel={onCancel}
-      okType="default"
-      okText="Crear"
       cancelText="Cancelar"
+      centered
+      destroyOnClose
+      okText="Crear"
+      okType="default"
+      onCancel={onCancel}
+      open={open}
+      style={{ textAlign: "left" }}
+      width={"1000px"}
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
           <button key="2" className="modal-btn-danger" onClick={onCancel}>
@@ -130,7 +130,8 @@ export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps>
           className="w-[10rem]"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <InputNumber min={0}
+          <InputNumber
+            min={0}
             onChange={(value: number | null) => {
               setCurrentPrice(value! * currentTransportationExpense?.value!);
             }}
