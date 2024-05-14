@@ -3,22 +3,30 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "./randomStrings";
 import Nomenclator, { INomenclator } from "@/models/nomenclator";
-import ServiceFee, { IServiceFee} from "@/models/serviceFees";
+import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 
-// ? Cuando se modifica el valor de un nomenclador asociado a un material del almacen(categoria + nombre) se actualizan todas las fichas de costo que utilizan ese material y se vuelven a calcular sus precios ?//
+// ? CUANDO SE MODIFICA EL VALOR DE UN NOMENCLADOR ASOCIADO A UN MATERIAL DEL ALMACEN(CATEGORIA + NOMBRE) SE ACTUALIZAN TODAS LAS FICHAS DE COSTO QUE UTILIZAN ESE MATERIAL Y SE VUELVEN A CALCULAR SUS PRECIOS ?//
 
-export const updateServiceFeesMaterials = async (materialNomenclator: INomenclator, serviceFees: IServiceFee[], accessToken: string) => {
+export const updateServiceFeesMaterials = async (
+  materialNomenclator: INomenclator,
+  serviceFees: IServiceFee[]
+) => {
+  //? BUSCA EN CADA LISTA DE MATERIAS PRIMAS DE CADA TARIFA DE SERVICIO SI EXISTE EL MATERIAL QUE SE PASA POR PARÁMETRO. SI EXISTE, ACTUALIZA EL VALOR DE LA TARIFA DE SERVICIO CON EL NUEVO VALOR DEL MATERIAL ?//
+
   const serviceFeesToUpdate: IServiceFee[] = [];
   serviceFees.forEach((serviceFee, index, serviceFees) => {
     let rawMaterials = serviceFees[index].rawMaterials;
     rawMaterials.forEach((rawMaterial, index, rawMaterials) => {
-      if (rawMaterial.description === materialNomenclator.code) {
+      if (
+        rawMaterial.description.trim().toLowerCase() ===
+        materialNomenclator.code.trim().toLowerCase()
+      ) {
         rawMaterials[index] = {
           description: rawMaterial.description,
           unitMeasure: rawMaterial.unitMeasure,
           amount: rawMaterial.amount,
           price: materialNomenclator.value ?? 0,
-          value: materialNomenclator.value! * rawMaterial.amount,
+          value: materialNomenclator.value! * rawMaterial.amount
         };
         return rawMaterials[index];
       }
@@ -26,20 +34,45 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
   });
   serviceFees.map((serviceFee) =>
     serviceFee.rawMaterials.map((rawMaterial) => {
-      if (rawMaterial.description === materialNomenclator.code) serviceFeesToUpdate.push(serviceFee);
+      if (
+        rawMaterial.description.trim().toLowerCase() ===
+        materialNomenclator.code.trim().toLowerCase()
+      )
+        serviceFeesToUpdate.push(serviceFee);
     })
   );
 
   serviceFeesToUpdate.map(async (serviceFee) => {
     try {
       await connectDB();
-      const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
-      const taskListSubtotal: number = serviceFee.taskList.reduce((total, currentValue) => total + currentValue.value, 0);
-      const equipmentDepreciationSubtotal: number = serviceFee.equipmentDepreciation.reduce((total, currentValue) => total + currentValue.value, 0);
-      const equipmentMaintenanceSubtotal: number = serviceFee.equipmentMaintenance.reduce((total, currentValue) => total + currentValue.value, 0);
-      const administrativeExpensesSubtotal: number = serviceFee.administrativeExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-      const transportationExpensesSubtotal: number = serviceFee.transportationExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-      const hiredPersonalExpensesSubtotal: number = serviceFee.hiredPersonalExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+      const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce(
+        (total, currentValue) => total + currentValue.value,
+        0
+      );
+      const taskListSubtotal: number = serviceFee.taskList.reduce(
+        (total, currentValue) => total + currentValue.value,
+        0
+      );
+      const equipmentDepreciationSubtotal: number = serviceFee.equipmentDepreciation.reduce(
+        (total, currentValue) => total + currentValue.value,
+        0
+      );
+      const equipmentMaintenanceSubtotal: number = serviceFee.equipmentMaintenance.reduce(
+        (total, currentValue) => total + currentValue.value,
+        0
+      );
+      const administrativeExpensesSubtotal: number = serviceFee.administrativeExpenses.reduce(
+        (total, currentValue) => total + currentValue.value,
+        0
+      );
+      const transportationExpensesSubtotal: number = serviceFee.transportationExpenses.reduce(
+        (total, currentValue) => total + currentValue.value,
+        0
+      );
+      const hiredPersonalExpensesSubtotal: number = serviceFee.hiredPersonalExpenses.reduce(
+        (total, currentValue) => total + currentValue.value,
+        0
+      );
 
       const expensesTotalValue: number =
         rawMaterialsSubtotal +
@@ -50,16 +83,20 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
         administrativeExpensesSubtotal +
         hiredPersonalExpensesSubtotal;
 
-      const BDNomenclator = await Nomenclator.findOne({ category: "Tarifa de Servicio", code: serviceFee.nomenclatorId });
+      const BDNomenclator = await Nomenclator.findOne({
+        category: "Tarifa de Servicio",
+        code: serviceFee.nomenclatorId
+      });
 
-      // * El precio final se calcula (Suma de el valor de todos los gastos + valor del margen comercial + el valor del impuesto de la ONAT)
+      //? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + EL VALOR DEL IMPUESTO DE LA ONAT) ?//
+
       const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
       const ONATValue = expensesTotalValue * (serviceFee.ONAT / 100);
       const artisticTalentValue = expensesTotalValue * (serviceFee.artisticTalent / 100);
       const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
 
+      //? CALCULA EL VALOR DE LOS 3 NIVELES DE COMPLEJIDAD EN DEPENDENCIA DEL COEFICIENTE ASIGNADO ?//
 
-      // * Calcula el valor de los 3 niveles de complejidad en dependencia del coeficiente asignado
       const complexityValues = serviceFee?.complexity?.map((complexity) => {
         return {
           name: complexity?.name,
@@ -69,14 +106,15 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
         };
       });
 
-      //* Si se modifica el valor de una tarifa se modifica tambien el valor del nomenclador asociado
+      //? SI SE MODIFICA EL VALOR DE UNA TARIFA SE MODIFICA TAMBIEN EL VALOR DEL NOMENCLADOR ASOCIADO ?//
+
       if (!BDNomenclator) {
         const newKey = generateRandomString(26);
         const newNomenclator = new Nomenclator({
           key: newKey,
           code: serviceFee.nomenclatorId,
           category: "Tarifa de Servicio",
-          value: salePrice,
+          value: salePrice
         });
         await newNomenclator.save();
       } else {
@@ -85,7 +123,7 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
           {
             category: "Tarifa de Servicio",
             code: serviceFee.nomenclatorId,
-            value: salePrice,
+            value: salePrice
           },
           { new: true }
         );
@@ -123,7 +161,7 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
           artisticTalent: serviceFee.artisticTalent,
           artisticTalentValue: artisticTalentValue,
           salePrice: salePrice,
-          salePriceUSD: salePrice / serviceFee?.currencyChange,
+          salePriceUSD: salePrice / serviceFee?.currencyChange
         },
         { new: true }
       );
@@ -131,29 +169,28 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
       return new NextResponse(
         JSON.stringify({
           ok: true,
-          updatedServiceFee,
+          updatedServiceFee
         }),
         {
           headers: {
             "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json",
-          },
+            "Content-Type": "application/json"
+          }
         }
-        );
+      );
     } catch (error) {
       console.log("🚀 ~ PUT ~ error:", error);
       if (error instanceof Error) {
         return NextResponse.json(
           {
             ok: false,
-            message: error.message,
+            message: error.message
           },
           {
-            status: 400,
+            status: 400
           }
         );
       }
     }
   });
 };
-
