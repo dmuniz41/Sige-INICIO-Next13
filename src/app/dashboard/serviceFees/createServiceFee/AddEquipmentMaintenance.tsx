@@ -1,10 +1,10 @@
 "use client";
-
-import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
-import { RootState, useAppSelector } from "@/store/store";
-import { IServiceFeeSubItem } from "@/models/serviceFees";
+import { Form, InputNumber, Modal, Select, SelectProps } from "antd";
 import { useState } from "react";
+
 import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
+import { IServiceFeeSubItem } from "@/models/serviceFees";
+import { RootState, useAppSelector } from "@/store/store";
 
 interface CollectionCreateFormProps {
   open: boolean;
@@ -47,13 +47,14 @@ export const AddEquipmentMaintenanceModal: React.FC<CollectionCreateFormProps> =
         </div>
       }
       style={{ textAlign: "left" }}
-      centered
-      open={open}
-      destroyOnClose
-      onCancel={onCancel}
-      okType="default"
-      okText="Crear"
       cancelText="Cancelar"
+      centered
+      destroyOnClose
+      okText="Crear"
+      okType="default"
+      onCancel={onCancel}
+      open={open}
+      width={"1000px"}
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
           <button key="2" className="modal-btn-danger" onClick={onCancel}>

@@ -25,7 +25,6 @@ export const MaterialsListModal: React.FC<CollectionCreateFormProps> = ({
   onCancel,
   values
 }) => {
-  
   let PDFReportData: { description: string; amount: number; unitMeasure: string }[] =
     values?.values!;
   const fields = [
@@ -36,12 +35,6 @@ export const MaterialsListModal: React.FC<CollectionCreateFormProps> = ({
       width: "60"
     },
     {
-      title: "Unidad de Medida",
-      custom: true,
-      component: (item: any) => `${item.unitMeasure}`,
-      width: "30"
-    },
-    {
       title: "Cantidad",
       custom: true,
       component: (item: any) =>
@@ -50,24 +43,24 @@ export const MaterialsListModal: React.FC<CollectionCreateFormProps> = ({
           minimumFractionDigits: 2
         })}`,
       width: "10"
+    },
+    {
+      title: "Unidad de Medida",
+      custom: true,
+      component: (item: any) => `${item.unitMeasure}`,
+      width: "30"
     }
   ];
 
   const columns: ColumnsType<{ description: string; amount: number; unitMeasure: string }> = [
     {
-      title: "Nombre del Material",
+      title: <span className="font-bold">Nombre del Material</span>,
       dataIndex: "description",
       key: "description",
       width: "60%"
     },
     {
-      title: "Unidad de Medida",
-      dataIndex: "unitMeasure",
-      key: "unitMeasure",
-      width: "15%"
-    },
-    {
-      title: "Cantidad",
+      title: <span className="font-bold">Cantidad</span>,
       dataIndex: "amount",
       key: "amount",
       width: "10%",
@@ -82,6 +75,12 @@ export const MaterialsListModal: React.FC<CollectionCreateFormProps> = ({
       sorter: {
         compare: (a, b) => a.amount - b.amount
       }
+    },
+    {
+      title: <span className="font-bold">Unidad de Medida</span>,
+      dataIndex: "unitMeasure",
+      key: "unitMeasure",
+      width: "15%"
     }
   ];
 

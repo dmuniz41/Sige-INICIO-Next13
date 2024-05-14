@@ -3,7 +3,7 @@ import { DatePicker, Form, Select, SelectProps, Table, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-import {  IOfferItem } from "@/models/offer";
+import { IOfferItem } from "@/models/offer";
 import { AddItemModal } from "./AddItem";
 import { clientNomenclatorsStartLoading } from "@/actions/nomenclators/client";
 import { ColumnsType } from "antd/es/table";
@@ -67,28 +67,28 @@ export const CreateProjectForm = () => {
   };
 
   const onAddItem = (values: any) => {
-    console.log("🚀 ~ onAddItem ~ values:", values)
+    console.log("🚀 ~ onAddItem ~ values:", values);
     setItemsValues([...itemsValues, values]);
     setAddItemModal(false);
   };
 
-    const onEditItem = (values: any) => {
-      const newItemList: IOfferItem[] = [];
-      itemsValues.forEach((value: any) => {
-        if (value._id === values._id) {
-          newItemList.push({
-            ...value,
-            description: values.description
-          });
-        } else {
-          newItemList.push(value);
-        }
-      });
-      dispatch(editItemList(newItemList));
-      setItemsValues(newItemList);
-      setEditItemModal(false);
-    };
-  
+  const onEditItem = (values: any) => {
+    const newItemList: IOfferItem[] = [];
+    itemsValues.forEach((value: any) => {
+      if (value._id === values._id) {
+        newItemList.push({
+          ...value,
+          description: values.description
+        });
+      } else {
+        newItemList.push(value);
+      }
+    });
+    dispatch(editItemList(newItemList));
+    setItemsValues(newItemList);
+    setEditItemModal(false);
+  };
+
   return (
     <Form
       form={form}
@@ -201,7 +201,6 @@ export const CreateProjectForm = () => {
             form
               .validateFields()
               .then((values) => {
-                console.log(itemsValues)
                 dispatch(
                   startAddProject({
                     ...values,
@@ -210,6 +209,7 @@ export const CreateProjectForm = () => {
                     status: "Pendiente de Oferta",
                     expenses: 0,
                     profits: 0,
+                    totalValue: 0,
                     initDate: values.initDate.format("MM/DD/YYYY"),
                     deliveryDate: values.deliveryDate.format("MM/DD/YYYY")
                   })

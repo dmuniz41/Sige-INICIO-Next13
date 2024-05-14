@@ -80,7 +80,8 @@ const CustomTablePDF = (props) => {
     borderBottomColor: "#000",
     borderRightWidth: 1,
     borderLeftWidth: 0,
-    borderTopWidth: 1
+    borderTopWidth: 1,
+    justifyContent: "center"
   };
   return (
     <View style={styles.table}>

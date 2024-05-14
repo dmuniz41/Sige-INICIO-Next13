@@ -1,13 +1,14 @@
 "use client";
 
-import { Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
-import { INomenclator } from "@/models/nomenclator";
-import { RootState, useAppSelector } from "@/store/store";
-import { IServiceFeeSubItem } from "@/models/serviceFees";
+import { Form, InputNumber, Modal, Select, SelectProps } from "antd";
 import { useEffect, useState } from "react";
+
 import { IMaterial } from "@/models/material";
-import { useAppDispatch } from "@/hooks/hooks";
+import { INomenclator } from "@/models/nomenclator";
+import { IServiceFeeSubItem } from "@/models/serviceFees";
 import { materialsStartLoading } from "@/actions/material";
+import { RootState, useAppSelector } from "@/store/store";
+import { useAppDispatch } from "@/hooks/hooks";
 
 interface CollectionCreateFormProps {
   open: boolean;
@@ -57,15 +58,15 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
           <span className="font-bold text-lg">Nueva Materia Prima</span>
         </div>
       }
-      style={{ textAlign: "left" }}
-      centered
-      open={open}
-      destroyOnClose
-      onCancel={onCancel}
-      okType="default"
-      okText="Crear"
-      width={"600px"}
       cancelText="Cancelar"
+      centered
+      destroyOnClose
+      okText="Crear"
+      okType="default"
+      onCancel={onCancel}
+      open={open}
+      style={{ textAlign: "left" }}
+      width={"1000px"}
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
           <button key="2" className="modal-btn-danger" onClick={onCancel}>

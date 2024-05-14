@@ -1,9 +1,8 @@
 "use client";
-
 import { Form, Input, InputNumber, Modal } from "antd";
-import { IServiceFeeSubItem } from "@/models/serviceFees";
 import { useState } from "react";
 
+import { IServiceFeeSubItem } from "@/models/serviceFees";
 interface CollectionCreateFormProps {
   open: boolean;
   onCreate: (values: IServiceFeeSubItem) => void;
@@ -21,21 +20,21 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
   const [form] = Form.useForm();
   return (
     <Modal
-      width={650}
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
           <span className="font-bold text-lg">Gastos de Personal Contratado</span>
         </div>
       }
-      style={{ textAlign: "left" }}
-      centered
-      open={open}
-      destroyOnClose
-      onCancel={onCancel}
-      okType="default"
-      okText="Crear"
       cancelText="Cancelar"
+      centered
+      destroyOnClose
+      okText="Crear"
+      okType="default"
+      onCancel={onCancel}
+      open={open}
+      style={{ textAlign: "left" }}
+      width={"1000px"}
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
           <button key="2" className="modal-btn-danger" onClick={onCancel}>

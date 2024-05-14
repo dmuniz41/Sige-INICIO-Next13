@@ -163,11 +163,21 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                           complexity: form.getFieldValue("complexity")
                         }
                       : {
-                          amount: size,
+                          amount: activitiesTableValues.reduce(
+                            (total, currentValue) =>
+                              total +
+                              currentValue.amount * currentValue.width * currentValue.height,
+                            0
+                          ),
                           description: values.description.value,
                           height: values.height,
                           price: Number(currentPrice.toFixed(2)),
-                          size: size,
+                          size: activitiesTableValues.reduce(
+                            (total, currentValue) =>
+                              total +
+                              currentValue.amount * currentValue.width * currentValue.height,
+                            0
+                          ),
                           unitMeasure: currentUnitMeasure,
                           value: Number(activityValue.toFixed(2)),
                           width: values.width,
