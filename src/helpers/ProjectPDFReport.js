@@ -1,11 +1,11 @@
-import { Page, Text, Document, StyleSheet, View, Font, Image, Svg } from "@react-pdf/renderer";
+import { Page, Text, Document, StyleSheet, View, Font, Image } from "@react-pdf/renderer";
 import font from "../assets/Montserrat-Regular.ttf";
 import fontBold from "../assets/Montserrat-Bold.ttf";
-import logo from "../assets/inicioLogoPNG.jpg";
 
 Font.register({ family: "Montserrat-Regular", src: font });
 Font.register({ family: "Montserrat-Bold", src: fontBold });
 
+const imagePath = require("../assets/inicioLogoPNG.jpg");
 const BORDER_COLOR = "#000";
 const BORDER_STYLE = "solid";
 
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   body: {
     paddingTop: 25,
     paddingBottom: 10,
-    paddingHorizontal: 35,
+    paddingHorizontal: 35
   },
   header: {
     marginBottom: 20,
@@ -200,12 +200,40 @@ export default function ProjectPDFReport(props) {
     <Document>
       <Page wrap orientation="portrait" size={"LETTER"} style={styles.body}>
         <View
+          style={{
+            display: "flex",
+            width: "100%",
+            flexDirection: "column",
+            gap: "2px",
+            marginBottom: 5
+          }}
+        >
+          <View>
+            <Image
+              style={{ display: "flex", width: 80, aspectRatio: "16/9" }}
+              src={imagePath.default.src}
+              alt="INICIO_LOGO"
+            />
+          </View>
+          <View style={{ display: "flex", width: "50%", height: "10px", flexDirection: "row" }}>
+            <View
+              style={{ backgroundColor: "#ff6600", display: "flex", width: "33%", height: "5px" }}
+            ></View>
+            <View
+              style={{ backgroundColor: "#34b042", display: "flex", width: "33%", height: "5px" }}
+            ></View>
+            <View
+              style={{ backgroundColor: "purple", display: "flex", width: "33%", height: "5px" }}
+            ></View>
+          </View>
+        </View>
+        <View
           style={{ display: "flex", width: "100%", justifyContent: "center", flexDirection: "row" }}
         >
           <Text
             style={{
               fontFamily: "Montserrat-Bold",
-              fontSize: "14pt",
+              fontSize: "14pt"
             }}
           >
             SOLICITUD DE SERVICIO
@@ -367,7 +395,7 @@ export default function ProjectPDFReport(props) {
                 backgroundColor: "#F3DEBE",
                 width: "100%",
                 borderStyle: "solid",
-                borderBottom: 1,
+                borderBottom: 1
               }}
             >
               <Text
