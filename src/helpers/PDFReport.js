@@ -1,7 +1,9 @@
 import { Page, Text, Document, StyleSheet, View, Font } from "@react-pdf/renderer";
-// import source from "@/assets/arial-font/arialceb.ttf";
+import font from "../assets/Montserrat-Regular.ttf";
+import fontBold from "../assets/Montserrat-Bold.ttf";
 
-// Font.register({ family: "Arial", src: source, fontStyle: "normal", fontWeight: "bold" });
+Font.register({ family: "Montserrat-Regular", src: font });
+Font.register({ family: "Montserrat-Bold", src: fontBold });
 
 const BORDER_COLOR = "#000";
 const BORDER_STYLE = "solid";
@@ -11,7 +13,8 @@ const styles = StyleSheet.create({
   body: {
     paddingTop: 25,
     paddingBottom: 10,
-    paddingHorizontal: 35
+    paddingHorizontal: 35,
+    fontFamily: "Montserrat-Regular"
   },
   header: {
     marginBottom: 20,
@@ -19,7 +22,7 @@ const styles = StyleSheet.create({
   },
   subheader: {
     fontSize: 14,
-    fontWeight: "black",
+    fontFamily: "Montserrat-Bold",
     color: "black",
     marginBottom: 5
   },
@@ -54,14 +57,13 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   tableCellHeader: {
-    margin: 2,
-    fontSize: "10pt",
-    fontWeight: "bold",
-    // fontFamily: "Arial"
+    margin: 1,
+    fontSize: 8,
+    fontFamily: "Montserrat-Bold"
   },
   tableCell: {
     margin: 2,
-    fontSize: 10
+    fontSize: 8
   },
   textCenter: {
     textAlign: "center"

@@ -3,6 +3,8 @@ import { generateRandomString } from "@/helpers/randomStrings";
 import { NextResponse } from "next/server";
 import { verifyJWT } from "@/libs/jwt";
 import ServiceFeeTask, { IServiceFeeTask } from "@/models/serviceFeeTask";
+import { updateServiceFeeWhenTask } from "@/helpers/updateServiceFeeWhenTask";
+import ServiceFee from "@/models/serviceFees";
 
 export async function POST(request: Request) {
   const { ...serviceFeeTask }: IServiceFeeTask = await request.json();
@@ -161,6 +163,8 @@ export async function PUT(request: Request) {
       },
       { new: true }
     );
+
+    await updateServiceFeeWhenTask(updatedServiceFeeTask, await ServiceFee.find());
 
     return new NextResponse(
       JSON.stringify({

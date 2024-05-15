@@ -65,10 +65,10 @@ export const ServiceFeeViewTableSection = (props: any) => {
           bordered
           footer={() => (
             <footer className="flex w-full">
-              <div className="font-bold grow flex w-[90%]">
+              <div className="font-bold flex w-[91%]">
                 <span>Subtotal: </span>
               </div>
-              <div className="flex w-[9%] pl-1 justify-start">
+              <div className="flex font-bold">
                 <span>
                   ${" "}
                   {subtotal?.toLocaleString("DE", {

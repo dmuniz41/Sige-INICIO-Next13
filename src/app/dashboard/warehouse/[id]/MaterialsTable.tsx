@@ -108,13 +108,13 @@ const MaterialsTable: React.FC = () => {
       title: "Nombre",
       custom: true,
       component: (item: any) => `${item.materialName}`,
-      width: "20"
+      width: "15"
     },
     {
       title: "Descripción",
       custom: true,
       component: (item: any) => `${item.description}`,
-      width: "20"
+      width: "15"
     },
     {
       title: "Coste Unitario",
@@ -124,7 +124,7 @@ const MaterialsTable: React.FC = () => {
           maximumFractionDigits: 2,
           minimumFractionDigits: 2
         })}`,
-      width: "10"
+      width: "15"
     },
     {
       title: "Existencias",
@@ -140,7 +140,7 @@ const MaterialsTable: React.FC = () => {
       title: "U/M",
       custom: true,
       component: (item: any) => `${item.unitMeasure}`,
-      width: "10"
+      width: "15"
     },
     {
       title: "Proveedor",
@@ -627,7 +627,7 @@ const MaterialsTable: React.FC = () => {
           <Tooltip placement="top" title={"Generar Reporte"} arrow={{ pointAtCenter: true }}>
             <PDFDownloadLink
               document={
-                <PDFReport fields={fields} data={PDFReportData} title={"REPORTE DE ALMACEN "} />
+                <PDFReport fields={fields} data={PDFReportData} title={"REPORTE DE ALMACÉN "} />
               }
               fileName={`Reporte de almacén (${currentDate})`}
             >

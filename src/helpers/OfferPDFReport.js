@@ -1,7 +1,9 @@
 import { Page, Text, Document, StyleSheet, View, Font } from "@react-pdf/renderer";
-// import font from "../assets/arial-font/arialceb.ttf";
+import font from "../assets/Montserrat-Regular.ttf";
+import fontBold from "../assets/Montserrat-Bold.ttf";
 
-// Font.register({ family: "Arial", src: font, fontStyle: "normal", fontWeight: "bold" });
+Font.register({ family: "Montserrat-Regular", src: font });
+Font.register({ family: "Montserrat-Bold", src: fontBold });
 
 const BORDER_COLOR = "#000";
 const BORDER_STYLE = "solid";
@@ -10,7 +12,8 @@ const styles = StyleSheet.create({
   body: {
     paddingTop: 25,
     paddingBottom: 10,
-    paddingHorizontal: 25
+    paddingHorizontal: 25,
+    fontFamily: "Montserrat-Regular"
   },
 
   // ? ESTILOS DE LA SECCION DE LA INFO DEL CLIENTE //
@@ -20,19 +23,18 @@ const styles = StyleSheet.create({
     borderWidth: "1px",
     display: "flex",
     flexDirection: "column",
-    gap: "2px",
+    gap: "1px",
     width: "100%",
-    padding: 4,
-    marginBottom: 5
+    padding: 2,
+    marginBottom: 3
   },
   clientInfoElementHeader: {
-    fontSize: "10pt",
-    fontWeight: "bold",
-    marginRight: "2px"
-    // fontFamily: "Arial"
+    fontSize: 8,
+    marginRight: "2px",
+    fontFamily: "Montserrat-Bold"
   },
   clientInfoElementText: {
-    fontSize: "10pt"
+    fontSize: 8
   },
 
   // ? ESTILOS DE LA SECCION DE LA LISTA DE ITEMS //
@@ -69,14 +71,13 @@ const styles = StyleSheet.create({
   },
   tableCellHeader: {
     margin: 2,
-    fontSize: "10pt",
-    fontWeight: "bold"
-    // fontFamily: "Arial"
+    fontSize: 8,
+    fontFamily: "Montserrat-Bold"
   },
   tableCell: {
     margin: 2,
-    fontSize: "10pt",
-    justifyContent: 'center',
+    fontSize: 8,
+    justifyContent: "center"
   },
   textCenter: {
     textAlign: "center"
@@ -212,9 +213,8 @@ export default function OfferPDFReport(props) {
                 >
                   <Text
                     style={{
-                      fontSize: 10,
-                      // fontFamily: "Arial",
-                      fontWeight: "bold",
+                      fontSize: 8,
+                      fontFamily: "Montserrat-Bold",
                       textAlign: "center"
                     }}
                   >
@@ -238,9 +238,8 @@ export default function OfferPDFReport(props) {
                     >
                       <Text
                         style={{
-                          //  fontFamily: "Arial",
-                          fontWeight: "bold",
-                          fontSize: 10
+                          fontFamily: "Montserrat-Bold",
+                          fontSize: 8
                         }}
                       >
                         {item.description}
@@ -258,10 +257,9 @@ export default function OfferPDFReport(props) {
                     >
                       <Text
                         style={{
-                          // fontFamily: "Arial",
-                          fontWeight: "bold",
+                          fontFamily: "Montserrat-Bold",
                           textAlign: "center",
-                          fontSize: 10
+                          fontSize: 8
                         }}
                       >
                         ${" "}
@@ -302,9 +300,8 @@ export default function OfferPDFReport(props) {
               >
                 <Text
                   style={{
-                    //  fontFamily: "Arial",
-                    fontWeight: "bold",
-                    fontSize: "10pt"
+                    fontFamily: "Montserrat-Bold",
+                    fontSize: 8
                   }}
                 >
                   VALOR TOTAL
@@ -318,9 +315,8 @@ export default function OfferPDFReport(props) {
               >
                 <Text
                   style={{
-                    // fontFamily: "Arial",
-                    fontWeight: "bold",
-                    fontSize: 10
+                    fontFamily: "Montserrat-Bold",
+                    fontSize: 8
                   }}
                 >
                   ${" "}
@@ -330,6 +326,38 @@ export default function OfferPDFReport(props) {
                   })}
                 </Text>
               </View>
+            </View>
+          </View>
+        </View>
+        <View
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexDirection: "row",
+            paddingHorizontal: 100,
+            marginTop: 60
+          }}
+        >
+          <View style={{ display: "flex" }}>
+            <Text> ___________________</Text>
+            <View
+              style={{
+                display: "flex",
+                alignItems: "center"
+              }}
+            >
+              <Text style={{ fontSize: 8 }}>{representativeInfo?.name}</Text>
+            </View>
+          </View>
+          <View style={{ display: "flex" }}>
+            <Text> ___________________</Text>
+            <View
+              style={{
+                display: "flex",
+                alignItems: "center"
+              }}
+            >
+              <Text style={{ fontSize: 8 }}>{clientInfo?.name}</Text>
             </View>
           </View>
         </View>
@@ -346,7 +374,7 @@ const CustomTablePDF = (props) => {
     borderLeft: "1px",
     borderBottom: "0px",
     borderTopWidth: "1px",
-    justifyContent: 'center'
+    justifyContent: "center"
   };
   return (
     <View style={styles.subsectionTable}>

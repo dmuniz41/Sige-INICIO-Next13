@@ -26,6 +26,7 @@ import { DeleteSvg } from "@/app/global/DeleteSvg";
 import Table, { ColumnsType } from "antd/es/table";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { EditRawMaterialModal } from "./EditRawMaterial";
+import Swal from "sweetalert2";
 
 export const EditServiceFeeForm = () => {
   const [form] = Form.useForm();
@@ -616,27 +617,28 @@ export const EditServiceFeeForm = () => {
 };
 
 export const TableFormSection = (props: any) => {
-  const {
-    sectionName,
-    values,
-    valuesSetter,
-    addModalSetter,
-    // editModalSetter,
-    // valueToEditSetter,
-    buttonText
-  } = props;
+  const { sectionName, values, valuesSetter, addModalSetter, buttonText } = props;
 
   const subtotal = useMemo(() => values?.map((value: IServiceFeeSubItem) => value.value), [values]);
 
   const handleDelete = (record: IServiceFeeSubItem) => {
-    valuesSetter(
-      values.filter((value: IServiceFeeSubItem) => value.description !== record.description)
-    );
+    Swal.fire({
+      title: "Eliminar Proyecto",
+      text: "Está seguro que desea eliminar este elemento",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Eliminar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        valuesSetter(
+          values.filter((value: IServiceFeeSubItem) => value.description !== record.description)
+        );
+      }
+    });
   };
-  // const handleEdit = (record: IServiceFeeSubItem) => {
-  //   valueToEditSetter(record);
-  //   editModalSetter(true);
-  // };
 
   const columns: ColumnsType<IServiceFeeSubItem> = [
     {
@@ -690,11 +692,6 @@ export const TableFormSection = (props: any) => {
       width: "5%",
       render: (_, { ...record }) => (
         <div className="flex gap-1 justify-center">
-          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
-            <button onClick={() => handleEdit(record)} className="table-see-action-btn">
-              <EditSvg width={18} height={18} />
-            </button>
-          </Tooltip> */}
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleDelete(record)} className="table-delete-action-btn">
               <DeleteSvg width={17} height={17} />
@@ -721,10 +718,10 @@ export const TableFormSection = (props: any) => {
           bordered
           footer={() => (
             <footer className="flex w-full">
-              <div className="font-bold grow flex w-[90%]">
+              <div className="font-bold flex w-[87.4%]">
                 <span>Subtotal: </span>
               </div>
-              <div className="flex flex-1 pl-1 justify-start font-bold">
+              <div className="flex justify-start font-bold">
                 <span>
                   ${" "}
                   {subtotal
