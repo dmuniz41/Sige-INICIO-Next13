@@ -71,8 +71,8 @@ export const ServiceFeeView = () => {
               Creador: <span className="font-normal">INICIO</span>
             </label>
             <label className="font-bold">
-              Cantidad de trabajadores:{" "}
-              <span className="font-normal">{selectedServiceFee?.workersAmount}</span>
+              Cantidad de trabajadores:
+              <span className="font-normal"> {selectedServiceFee?.workersAmount}</span>
             </label>
           </div>
           <div className="flex w-[20%] flex-col">

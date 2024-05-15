@@ -1,8 +1,10 @@
 import { Page, Text, Document, StyleSheet, View, Font, Image, Svg } from "@react-pdf/renderer";
-// import font from "../assets/arial-font/arialceb.ttf";
-// import logo from "../assets/inicioLogoPNG.jpg";
+import font from "../assets/Montserrat-Regular.ttf";
+import fontBold from "../assets/Montserrat-Bold.ttf";
+import logo from "../assets/inicioLogoPNG.jpg";
 
-// Font.register({ family: "Arial", src: font, fontStyle: "normal", fontWeight: "bold" });
+Font.register({ family: "Montserrat-Regular", src: font });
+Font.register({ family: "Montserrat-Bold", src: fontBold });
 
 const BORDER_COLOR = "#000";
 const BORDER_STYLE = "solid";
@@ -11,7 +13,7 @@ const styles = StyleSheet.create({
   body: {
     paddingTop: 25,
     paddingBottom: 10,
-    paddingHorizontal: 35
+    paddingHorizontal: 35,
   },
   header: {
     marginBottom: 20,
@@ -53,8 +55,7 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   labelText: {
-    // fontFamily: "Arial",
-    fontWeight: "bold",
+    fontFamily: "Montserrat-Bold",
     fontSize: "8pt"
   },
   infoText: {
@@ -87,8 +88,7 @@ const styles = StyleSheet.create({
   tableCellHeader: {
     margin: 2,
     fontSize: "8pt",
-    fontWeight: "bold"
-    // fontFamily: "Arial"
+    fontFamily: "Montserrat-Bold"
   },
   tableCell: {
     margin: 2,
@@ -160,9 +160,6 @@ const CustomTablePDF = (props) => {
         (item, idx) =>
           item && (
             <View key={idx} style={styles.tableRow}>
-              {/* <View wrap={false} style={[tableCol, { width: "5%" }]}>
-                <Text style={[styles.tableCell, { textAlign: "center" }]}>{idx + 1}</Text>
-              </View> */}
               {fields.map((_item, _idx) => {
                 let val = item[_item.value] || "";
                 let value_alt = (_item.value_alt && item[_item.value_alt]) || "";
@@ -207,9 +204,8 @@ export default function ProjectPDFReport(props) {
         >
           <Text
             style={{
-              //  fontFamily: "Arial",
+              fontFamily: "Montserrat-Bold",
               fontSize: "14pt",
-              fontWeight: "bold"
             }}
           >
             SOLICITUD DE SERVICIO
@@ -286,9 +282,8 @@ export default function ProjectPDFReport(props) {
               >
                 <Text
                   style={{
-                    // fontFamily: "Arial",
+                    fontFamily: "Montserrat-Bold",
                     fontSize: "8pt",
-                    fontWeight: "bold",
                     textAlign: "center"
                   }}
                 >
@@ -331,8 +326,7 @@ export default function ProjectPDFReport(props) {
                 <Text
                   style={{
                     fontSize: "8pt",
-                    fontWeight: "bold",
-                    // fontFamily: "Arial",
+                    fontFamily: "Montserrat-Bold",
                     textAlign: "center"
                   }}
                 >
@@ -374,14 +368,12 @@ export default function ProjectPDFReport(props) {
                 width: "100%",
                 borderStyle: "solid",
                 borderBottom: 1,
-                borderLeft: 1
               }}
             >
               <Text
                 style={{
                   margin: 2,
-                  // fontFamily: "Arial",
-                  fontWeight: "bold",
+                  fontFamily: "Montserrat-Bold",
                   textAlign: "center",
                   fontSize: "8pt"
                 }}
@@ -396,14 +388,12 @@ export default function ProjectPDFReport(props) {
                 flexDirection: "column",
                 width: "100%",
                 justifyContent: "center",
-                alignItems: "center",
-                // backgroundColor:'red'
+                alignItems: "center"
               }}
             >
               <Text
                 style={{
-                  // fontFamily: "Arial",
-                  fontWeight: "bold",
+                  fontFamily: "Montserrat-Bold",
                   fontSize: "8pt",
                   textAlign: "center",
                   justifyContent: "center",
