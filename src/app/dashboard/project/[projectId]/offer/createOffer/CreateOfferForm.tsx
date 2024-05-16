@@ -2,6 +2,7 @@
 import { Form, Select, SelectProps, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
+import Swal from "sweetalert2";
 
 import { changeProjectStatus, clearOffer } from "@/actions/project";
 import { IOffer, IOfferItem } from "@/models/offer";
@@ -17,7 +18,6 @@ import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import { EditSvg } from "@/app/global/EditSvg";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
-import Swal from "sweetalert2";
 
 export const CreateOfferForm = (props: { projectId: string }) => {
   const [form] = Form.useForm();
@@ -208,26 +208,6 @@ export const CreateOfferForm = (props: { projectId: string }) => {
             </article>
           </div>
         )}
-        {/* <article className="flex flex-col border border-border_light w-[40%]  rounded-md">
-          <div className="w-full border-b p-2 font-bold border-border_light flex justify-center items-center bg-background_light">
-            <span>DESCRIPCIÓN DEL PROYECTO</span>
-          </div>
-          <ul className=" flex flex-col">
-            {selectedProject?.itemsList?.map((item, index) => (
-              <li
-                key={index}
-                className=" flex w-full items-center gap-2 border-b border-border_light"
-              >
-                <div className=" flex w-10 justify-center font-bold border-r border-border_light items-center h-full">
-                  <p>{index + 1}</p>
-                </div>
-                <div className="flex bg-red flex-1">
-                  <p className="w-fit">{item.description}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </article> */}
       </section>
       <Form.Item>
         <button
