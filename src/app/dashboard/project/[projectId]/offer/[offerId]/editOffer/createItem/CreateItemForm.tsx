@@ -25,8 +25,6 @@ export const CreateItemForm = (props: { projectId: string; offerId: string }) =>
     selectedOffer: IOffer;
   } = useAppSelector((state: RootState) => state?.offer);
 
-  console.log("🚀 ~ CreateItemForm ~ selectedOffer:", selectedOffer.itemsList);
-
   const [activitiesValues, setActivitiesValues] = useState<IActivity[]>([]);
   const [addActivitiesModal, setAddActivitiesModal] = useState(false);
   const [editActivityModal, setEditActivityModal] = useState(false);
