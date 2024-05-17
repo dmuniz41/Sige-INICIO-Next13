@@ -7,16 +7,25 @@ import { AddActivityModal } from "../../../createOffer/createItem/AddActivity";
 import { editActivityList, selectedActivity, setCurrentItem } from "@/actions/offer";
 import { EditActivityModal } from "../editItem/EditActivity";
 import { generateRandomString } from "@/helpers/randomStrings";
-import { IActivity } from "@/models/offer";
+import { IActivity, IOffer } from "@/models/offer";
 import { ItemTableSection } from "../../../createOffer/ItemTableSection";
 import { useAppDispatch } from "@/hooks/hooks";
 import TextArea from "antd/es/input/TextArea";
+import { RootState, useAppSelector } from "@/store/store";
 
 export const CreateItemForm = (props: { projectId: string; offerId: string }) => {
+  const [form] = Form.useForm();
   const { projectId, offerId } = props;
   const dispatch = useAppDispatch();
-  const [form] = Form.useForm();
   const router = useRouter();
+
+  const {
+    selectedOffer
+  }: {
+    selectedOffer: IOffer;
+  } = useAppSelector((state: RootState) => state?.offer);
+
+  console.log("🚀 ~ CreateItemForm ~ selectedOffer:", selectedOffer.itemsList);
 
   const [activitiesValues, setActivitiesValues] = useState<IActivity[]>([]);
   const [addActivitiesModal, setAddActivitiesModal] = useState(false);
@@ -73,7 +82,24 @@ export const CreateItemForm = (props: { projectId: string; offerId: string }) =>
           className="mb-3 w-[35%]"
           name="description"
           label={<span className="font-bold text-md">Descripción</span>}
-          rules={[{ required: true, message: "Campo requerido" }]}
+          rules={[
+            { required: true, message: "Campo requerido" },
+            {
+              message: "Ya existe un item con esa descripción",
+              validator: (_, value: string) => {
+                if (
+                  !selectedOffer?.itemsList.some(
+                    (item) =>
+                      item?.description?.trim().toLowerCase() === value?.trim().toLowerCase()
+                  )
+                ) {
+                  return Promise.resolve();
+                } else {
+                  return Promise.reject("Ya existe un item con esa descripción");
+                }
+              }
+            }
+          ]}
         >
           <TextArea rows={4} />
         </Form.Item>
