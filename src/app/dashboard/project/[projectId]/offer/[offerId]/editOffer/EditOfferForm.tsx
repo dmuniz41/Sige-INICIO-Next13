@@ -16,6 +16,7 @@ import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import { Item } from "../Item";
+import Swal from "sweetalert2";
 
 export const EditOfferForm = (props: { projectId: string; offerId: string }) => {
   const [form] = Form.useForm();
@@ -91,7 +92,20 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
   };
 
   const handleDeleteItem = (item: IOfferItem) => {
-    dispatch(deleteItem(item));
+    Swal.fire({
+      title: "Eliminar Item",
+      text: "Desea eliminar el item seleccionado",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Eliminar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteItem(item));
+      }
+    });
   };
 
   const onFinishFailed = (errorInfo: any) => {

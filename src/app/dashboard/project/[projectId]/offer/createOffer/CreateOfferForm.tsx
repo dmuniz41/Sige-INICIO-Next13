@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import Swal from "sweetalert2";
 
-import { changeProjectStatus, clearOffer } from "@/actions/project";
+import { changeProjectStatus,  } from "@/actions/project";
 import { IOffer, IOfferItem } from "@/models/offer";
 import { IProject } from "@/models/project";
 import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";

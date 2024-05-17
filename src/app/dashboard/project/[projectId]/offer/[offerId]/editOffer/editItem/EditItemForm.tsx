@@ -83,9 +83,26 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
           className="mb-3 w-[35%]"
           name="description"
           label={<span className="font-bold text-md">Descripción</span>}
-          rules={[{ required: true, message: "Campo requerido" }]}
+          rules={[
+            { required: true, message: "Campo requerido" },
+            {
+              message: "Ya existe un item con esa descripción",
+              validator: (_, value: string) => {
+                if (
+                  !selectedOffer?.itemsList.some(
+                    (item) =>
+                      item?.description?.trim().toLowerCase() === value?.trim().toLowerCase()
+                  )
+                ) {
+                  return Promise.resolve();
+                } else {
+                  return Promise.reject("Ya existe un item con esa descripción");
+                }
+              }
+            }
+          ]}
         >
-          <TextArea rows={4} onChange={(value) => setDescription(String(value.target.value))} />
+          <TextArea rows={4} />
         </Form.Item>
 
         <div className="flex w-full">

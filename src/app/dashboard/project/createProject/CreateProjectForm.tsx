@@ -19,6 +19,7 @@ import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import TextArea from "antd/es/input/TextArea";
+import { IProject } from "@/models/project";
 
 export const CreateProjectForm = () => {
   const [addItemModal, setAddItemModal] = useState(false);
@@ -37,6 +38,9 @@ export const CreateProjectForm = () => {
     dispatch(startLoadServiceFeeAuxiliary());
   }, [dispatch]);
 
+  const { projects }: { projects: IProject[] } = useAppSelector(
+    (state: RootState) => state?.project
+  );
   const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
@@ -67,7 +71,6 @@ export const CreateProjectForm = () => {
   };
 
   const onAddItem = (values: any) => {
-    console.log("🚀 ~ onAddItem ~ values:", values);
     setItemsValues([...itemsValues, values]);
     setAddItemModal(false);
   };
@@ -135,11 +138,27 @@ export const CreateProjectForm = () => {
               className="mb-3"
               label={<span className="font-bold text-md">Proyecto</span>}
               name="projectName"
-              rules={[{ required: true, message: "Campo requerido" }]}
+              rules={[
+                { required: true, message: "Campo requerido" },
+                {
+                  message: "Ya existe un proyecto con ese nombre",
+                  validator: (_, value: string) => {
+                    if (
+                      !projects.some(
+                        (project) =>
+                          project?.projectName?.trim().toLowerCase() === value?.trim().toLowerCase()
+                      )
+                    ) {
+                      return Promise.resolve();
+                    } else {
+                      return Promise.reject("Ya existe un proyecto con ese nombre");
+                    }
+                  }
+                }
+              ]}
             >
               <TextArea rows={3} />
             </Form.Item>
-
             <Form.Item
               className="mb-3"
               label={<span className="font-bold text-md">Fecha de creación</span>}
@@ -196,7 +215,7 @@ export const CreateProjectForm = () => {
       <Form.Item>
         <button
           type="submit"
-          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
+          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
           onClick={() => {
             form
               .validateFields()
@@ -235,6 +254,7 @@ export const CreateProjectForm = () => {
         onCancel={() => setEditItemModal(false)}
         onCreate={onEditItem}
         defaultValues={rowToEdit}
+        itemsList={itemsValues}
       />
     </Form>
   );

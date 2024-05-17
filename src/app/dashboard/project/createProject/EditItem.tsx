@@ -7,13 +7,15 @@ interface CollectionCreateFormProps {
   onCreate: (values: any) => void;
   onCancel: () => void;
   defaultValues: any | undefined;
+  itemsList: any[];
 }
 
 export const EditItemModal: React.FC<CollectionCreateFormProps> = ({
   open,
   onCreate,
   onCancel,
-  defaultValues
+  defaultValues,
+  itemsList
 }) => {
   const [form] = Form.useForm();
   return (
@@ -45,7 +47,7 @@ export const EditItemModal: React.FC<CollectionCreateFormProps> = ({
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate({...values, _id: defaultValues?._id!});
+                  onCreate({ ...values, _id: defaultValues?._id! });
                   form.resetFields();
                 })
                 .catch((error) => {
@@ -68,7 +70,24 @@ export const EditItemModal: React.FC<CollectionCreateFormProps> = ({
         <Form.Item
           name="description"
           label="Descripción"
-          rules={[{ required: true, message: "Campo requerido" }]}
+          rules={[
+            { required: true, message: "Campo requerido" },
+            {
+              message: "Ya existe un item con esa descripción",
+              validator: (_, value: string) => {
+                if (
+                  !itemsList.some(
+                    (item) =>
+                      item?.description?.trim().toLowerCase() === value?.trim().toLowerCase()
+                  )
+                ) {
+                  return Promise.resolve();
+                } else {
+                  return Promise.reject("Ya existe un item con esa descripción");
+                }
+              }
+            }
+          ]}
         >
           <TextArea rows={3} />
         </Form.Item>
