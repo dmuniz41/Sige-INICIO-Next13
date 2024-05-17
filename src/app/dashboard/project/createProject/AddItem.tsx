@@ -68,7 +68,24 @@ export const AddItemModal: React.FC<CollectionCreateFormProps> = ({
         <Form.Item
           name="description"
           label="Descripción"
-          rules={[{ required: true, message: "Campo requerido" }]}
+          rules={[
+            { required: true, message: "Campo requerido" },
+            {
+              message: "Ya existe un item con esa descripción",
+              validator: (_, value: string) => {
+                if (
+                  !itemsList.some(
+                    (item) =>
+                      item?.description?.trim().toLowerCase() === value?.trim().toLowerCase()
+                  )
+                ) {
+                  return Promise.resolve();
+                } else {
+                  return Promise.reject("Ya existe un item con esa descripción");
+                }
+              }
+            }
+          ]}
         >
           <TextArea rows={3} />
         </Form.Item>
