@@ -4,6 +4,7 @@ export interface IServiceFeeAuxiliary {
   _id: string;
   key: string;
   calculationCoefficient: number;
+  indirectSalariesCoefficient: number;
   mermaCoefficient: number;
   currencyChange: number;
   officialCurrencyChangeCoefficient: number;
@@ -43,6 +44,9 @@ const ServiceFeeAuxiliarySchema = new Schema<IServiceFeeAuxiliary, Model<IServic
     type: [String]
   },
   calculationCoefficient: {
+    type: Number
+  },
+  indirectSalariesCoefficient: {
     type: Number
   },
   officialCurrencyChangeCoefficient: {

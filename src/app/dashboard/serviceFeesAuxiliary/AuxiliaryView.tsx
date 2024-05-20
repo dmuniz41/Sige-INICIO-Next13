@@ -34,6 +34,7 @@ export const AuxiliaryView = () => {
       startUpdateServiceFeeAuxiliary({
         _id: serviceFeeAuxiliary?._id,
         administrativeExpensesCoefficients: values.administrativeExpenses,
+        indirectSalariesCoefficient: values.indirectSalariesCoefficient,
         calculationCoefficient: values.calculationCoefficient,
         currency: serviceFeeAuxiliary?.currency,
         currencyChange: values?.currencyChange,
@@ -44,7 +45,7 @@ export const AuxiliaryView = () => {
         mermaCoefficient: values.mermaCoefficient,
         officialCurrencyChangeCoefficient: values.officialCurrencyChangeCoefficient,
         payMethod: values.payMethod,
-        transportationExpensesCoefficients: values.transportationExpenses,
+        transportationExpensesCoefficients: values.transportationExpenses
       })
     );
     setEditing(false);
@@ -81,9 +82,21 @@ export const AuxiliaryView = () => {
             </button>
           </article>
           <article className=" flex flex-col items-start gap-3 p-4 rounded-md shadow-lg animate-fade animate-once animate-duration-200">
-            <AuxiliarySection data={serviceFeeAuxiliary?.administrativeExpensesCoefficients} columns={columns} sectionName="Gastos Administrativos" />
-            <AuxiliarySection data={serviceFeeAuxiliary?.equipmentDepreciationCoefficients} columns={columns} sectionName="Depreciación de Equipos" />
-            <AuxiliarySection data={serviceFeeAuxiliary?.equipmentMaintenanceCoefficients} columns={columns} sectionName="Mantenimiento de Equipos" />
+            <AuxiliarySection
+              data={serviceFeeAuxiliary?.administrativeExpensesCoefficients}
+              columns={columns}
+              sectionName="Gastos Administrativos"
+            />
+            <AuxiliarySection
+              data={serviceFeeAuxiliary?.equipmentDepreciationCoefficients}
+              columns={columns}
+              sectionName="Depreciación de Equipos"
+            />
+            <AuxiliarySection
+              data={serviceFeeAuxiliary?.equipmentMaintenanceCoefficients}
+              columns={columns}
+              sectionName="Mantenimiento de Equipos"
+            />
             <AuxiliarySection
               data={serviceFeeAuxiliary?.transportationExpensesCoefficients}
               columns={columns}
@@ -93,24 +106,28 @@ export const AuxiliaryView = () => {
               data={[
                 {
                   name: "Coeficiente de Cálculo",
-                  value: serviceFeeAuxiliary?.calculationCoefficient,
+                  value: serviceFeeAuxiliary?.calculationCoefficient
                 },
                 {
                   name: "Coeficiente de Cambio Monetario Oficial",
-                  value: serviceFeeAuxiliary?.officialCurrencyChangeCoefficient,
+                  value: serviceFeeAuxiliary?.officialCurrencyChangeCoefficient
                 },
                 {
                   name: "Cambio Informal",
-                  value: serviceFeeAuxiliary?.informalCurrencyChange,
+                  value: serviceFeeAuxiliary?.informalCurrencyChange
                 },
                 {
                   name: "Coeficiente de Merma",
-                  value: serviceFeeAuxiliary?.mermaCoefficient,
+                  value: serviceFeeAuxiliary?.mermaCoefficient
                 },
                 {
                   name: "Cambio de Moneda",
-                  value: serviceFeeAuxiliary?.currencyChange,
+                  value: serviceFeeAuxiliary?.currencyChange
                 },
+                {
+                  name: "Coeficiente de Salarios Indirectos",
+                  value: serviceFeeAuxiliary?.indirectSalariesCoefficient
+                }
               ]}
               columns={columns}
               sectionName="Otros"

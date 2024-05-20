@@ -134,6 +134,7 @@ export const CreateServiceFeeForm = () => {
   };
 
   const onAddHiredPersonalExpenses = (values: any) => {
+    console.log("🚀 ~ onAddHiredPersonalExpenses ~ values:", values)
     setHiredPersonalExpensesValues([
       {
         description: "Gasto de salarios indirectos",
@@ -333,7 +334,7 @@ export const CreateServiceFeeForm = () => {
         form={form}
       />
       <TableFormSection
-        sectionName={`Gastos\n Personal Contratado`}
+        sectionName={`Gastos Personal Contratado`}
         values={hiredPersonalExpensesValues}
         formName="hiredPersonalExpenses"
         valuesSetter={setHiredPersonalExpensesValues}
@@ -382,7 +383,7 @@ export const CreateServiceFeeForm = () => {
         >
           <InputNumber min={0} />
         </Form.Item>
-        {/* commercialMargin */}
+        {/* CommercialMargin */}
         <Form.Item
           className="mb-3 "
           label={<span className="font-bold text-md">Margen Comercial (%)</span>}

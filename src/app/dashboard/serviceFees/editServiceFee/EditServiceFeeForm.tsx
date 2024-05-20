@@ -623,7 +623,7 @@ export const TableFormSection = (props: any) => {
 
   const handleDelete = (record: IServiceFeeSubItem) => {
     Swal.fire({
-      title: "Eliminar Proyecto",
+      title: "Eliminar",
       text: "Está seguro que desea eliminar este elemento",
       icon: "warning",
       showCancelButton: true,
