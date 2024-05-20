@@ -84,10 +84,10 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
       >
         {/* Salarios Indirectos */}
         <section className="flex flex-1 gap-2">
-          <Form.Item name="indirectSalariesDescription" className="w-[10rem]" label="Descripción">
+          <Form.Item name="indirectSalariesDescription" className="w-[20rem]" label="Descripción">
             <Input style={{ width: "100%" }} />
           </Form.Item>
-          <Form.Item name="unitMeasure" className="w-[10rem]" label="Unidad de Medida">
+          <Form.Item name="unitMeasure" className="w-[10rem] hidden" label="Unidad de Medida">
             <Input />
           </Form.Item>
           <Form.Item
@@ -125,10 +125,10 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
         </section>
         {/* Subcontratación */}
         <section className="flex flex-1 gap-2">
-          <Form.Item name="subcontractExpenseDescription" className="w-[10rem]">
+          <Form.Item name="subcontractExpenseDescription" className="w-[20rem]">
             <Input style={{ width: "100%" }} />
           </Form.Item>
-          <Form.Item name="unitMeasure" className="w-[10rem]">
+          <Form.Item name="unitMeasure" className="w-[10rem] hidden">
             <Input />
           </Form.Item>
           <Form.Item

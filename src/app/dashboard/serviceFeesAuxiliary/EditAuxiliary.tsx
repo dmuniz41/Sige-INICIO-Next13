@@ -66,6 +66,10 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
         {
           name: "currencyChange",
           value: defaultValues?.currencyChange
+        },
+        {
+          name: "indirectSalariesCoefficient",
+          value: defaultValues?.indirectSalariesCoefficient
         }
       ]}
     >
@@ -115,6 +119,16 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
             className="mb-3 flex-1"
             label={<span className="font-bold text-md">Coeficiente de Merma</span>}
             name="mermaCoefficient"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+        </div>
+        <div className="flex gap-2 pr-[13rem]">
+          <Form.Item
+            className="mb-3 flex-1"
+            label={<span className="font-bold text-md">Coeficiente de Salarios Indirectos</span>}
+            name="indirectSalariesCoefficient"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
             <InputNumber min={0} />
