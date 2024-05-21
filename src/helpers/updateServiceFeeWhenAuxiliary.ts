@@ -34,6 +34,7 @@ export const updateServiceFeeWhenAuxiliary = async (
     const equipmentDepreciation = serviceFees[index].equipmentDepreciation;
     const equipmentMaintenance = serviceFees[index].equipmentMaintenance;
     const transportationExpenses = serviceFees[index].transportationExpenses;
+    const hiredPersonalExpenses = serviceFees[index].hiredPersonalExpenses;
 
     serviceFee.currencyChange = auxiliary.currencyChange;
 
@@ -112,8 +113,22 @@ export const updateServiceFeeWhenAuxiliary = async (
         transportationExpenses.splice(index, 1);
       }
     });
-  });
 
+    hiredPersonalExpenses.forEach((hiredPersonalExpense, index, hiredPersonalExpenses)=>{
+      if(hiredPersonalExpense.description === "Gasto de salarios indirectos"){
+        const price = auxiliary.indirectSalariesCoefficient
+        hiredPersonalExpenses[index] = {
+          description: hiredPersonalExpense.description,
+          unitMeasure: hiredPersonalExpense.unitMeasure,
+          amount: hiredPersonalExpense.amount,
+          price: price,
+          value: price * hiredPersonalExpense.amount
+        };
+        return hiredPersonalExpenses[index];
+      };
+    })
+  });
+  
   serviceFees.map(async (serviceFee) => {
     try {
       await connectDB();
