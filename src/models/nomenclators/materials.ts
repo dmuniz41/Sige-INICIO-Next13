@@ -16,7 +16,7 @@ const MaterialNomenclatorSchema = new Schema<IMaterialNomenclator, Model<IMateri
   },
   name: {
     type: String,
-    required: [true, "La categoría es requerida"]
+    required: [true, "El nombre es requerido"]
   },
   isDecrease: {
     type: Boolean,

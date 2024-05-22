@@ -23,6 +23,7 @@ import {
   startUpdateMaterialNomenclator
 } from "@/actions/nomenclators/material";
 import { InfoCircleSvg } from "@/app/global/InfoCircleSvg";
+import { CreateMaterialNomenclatorForm } from "./CreateMaterialNomenclatorForm";
 
 type DataIndex = keyof IMaterialNomenclator;
 
@@ -279,11 +280,11 @@ const MaterialsNomenclatorsTable: React.FC = () => {
         pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
         className="shadow-md"
       />
-      {/* <CreateMaterialNomenclatorForm
+      <CreateMaterialNomenclatorForm
         open={createNewModal}
         onCancel={() => setCreateNewModal(false)}
         onCreate={onCreate}
-      /> */}
+      />
       {/* <EditMaterialNomenclatorForm
         open={editModal}
         onCancel={() => setEditModal(false)}

@@ -11,7 +11,7 @@ export const startAddMaterialNomenclator = ({ ...materialNomenclator }): any => 
     await axios
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`,
-        { materialNomenclator },
+        { ...materialNomenclator },
         { headers: { accessToken: token } }
       )
       .then(() => {
@@ -37,7 +37,7 @@ export const startUpdateMaterialNomenclator = ({ ...materialNomenclator }): any 
     await axios
       .put(
         `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`,
-        { materialNomenclator },
+        { ...materialNomenclator },
         { headers: { accessToken: token } }
       )
       .then(() => {
