@@ -227,10 +227,6 @@ const NomenclatorsTable: React.FC = () => {
           value: "Categoría de tarea"
         },
         {
-          text: "Nombre de Cliente",
-          value: "Nombre de Cliente"
-        },
-        {
           text: "Moneda",
           value: "Moneda"
         }

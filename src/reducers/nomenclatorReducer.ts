@@ -3,7 +3,8 @@ import { types } from "../types/types";
 const initialState = {
   nomenclators: [],
   clientNomenclators:[],
-  representativeNomenclators:[]
+  representativeNomenclators:[],
+  materialsNomenclators:[],
 };
 
 export const nomenclatorReducer = (state = initialState, action:any) => {
@@ -62,6 +63,25 @@ export const nomenclatorReducer = (state = initialState, action:any) => {
       return {
         ...state,
         representativeNomenclators: [...action.payload],
+      };
+
+    // * NOMENCLADORES DE MATERIALES
+    case types.addMaterialNomenclator:
+      return {
+        ...state,
+      };
+    case types.deleteMaterialNomenclator:
+      return {
+        ...state,
+      };
+    case types.updateMaterialNomenclator:
+      return {
+        ...state,
+      };
+    case types.materialNomenclatorsLoaded:
+      return {
+        ...state,
+        materialsNomenclators: [...action.payload],
       };
 
     default:
