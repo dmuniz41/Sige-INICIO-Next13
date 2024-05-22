@@ -41,10 +41,6 @@ const category: SelectProps["options"] = [
     value: "Categoría de tarea",
   },
   {
-    label: "Nombre de Cliente",
-    value: "Nombre de Cliente",
-  },
-  {
     label: "Moneda",
     value: "Moneda",
   },

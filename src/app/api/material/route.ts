@@ -9,6 +9,7 @@ import Nomenclator, { INomenclator } from "@/models/nomenclator";
 import Operation from "@/models/operation";
 import ServiceFee from "@/models/serviceFees";
 import Warehouse from "@/models/warehouse";
+import { ModifyResult } from "mongoose";
 
 export async function POST(request: NextRequest) {
   const { ...material }: any = await request.json();
@@ -94,7 +95,7 @@ export async function POST(request: NextRequest) {
         );
       } else {
         // ? SI LAS EXISTENCIAS DESPUES DE EXTRAER EL MATERIAL ES CERO ELIMINA EL MATERIAL //
-        //! REVISAR ESTE ERROR DE TS // 
+        //! REVISAR ESTE ERROR DE TS //
         if (newTotal === 0) {
           let code = BDMaterial.code;
           let deletedMaterial: IMaterial = (await Material.findOneAndDelete({ code })) as IMaterial;
@@ -246,11 +247,7 @@ export async function POST(request: NextRequest) {
           { value: maxPrice },
           { new: true }
         );
-        await updateServiceFeesMaterials(
-          updatedNMaterialNomenclator,
-          await ServiceFee.find(),
-          accessToken
-        );
+        await updateServiceFeesMaterials(updatedNMaterialNomenclator, await ServiceFee.find());
       }
 
       return new NextResponse(
@@ -315,7 +312,7 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ GET ~ error:", error)
+      console.log("🚀 ~ GET ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
@@ -442,11 +439,7 @@ export async function PUT(request: NextRequest) {
           { value: maxPrice },
           { new: true }
         );
-        await updateServiceFeesMaterials(
-          updatedNMaterialNomenclator,
-          await ServiceFee.find(),
-          accessToken
-        );
+        await updateServiceFeesMaterials(updatedNMaterialNomenclator, await ServiceFee.find());
       }
     }
 
@@ -514,9 +507,11 @@ export async function DELETE(request: NextRequest) {
 
     // ? ACTUALIZA EL VALOR TOTAL DEL ALMACEN SI SE ELIMINA UN MATERIAL //
 
-    const deletedMaterial = await Material.findOneAndDelete({ code: params.get("code") });
+    const deletedMaterial = await Material.findOneAndDelete({
+      code: params.get("code")
+    });
     const DBWarehouse = await Warehouse.findById(params.get("warehouse"));
-    let newWarehouseValue = DBWarehouse.totalValue - deletedMaterial.materialTotalValue;
+    let newWarehouseValue = DBWarehouse.totalValue - deletedMaterial.materialTotalValue!;
     await Warehouse.findByIdAndUpdate(params.get("warehouse"), { totalValue: newWarehouseValue });
 
     // ? CALCULA EL MAYOR VALOR DENTRO DE UN GRUPO DE MATERIALES CON IGUAL CATEGORIA Y NOMBRE //
@@ -526,7 +521,7 @@ export async function DELETE(request: NextRequest) {
       materialName: deletedMaterial.materialName
     });
     if (materialList.length == 0) {
-      await await Nomenclator.findOneAndDelete({
+      await Nomenclator.findOneAndDelete({
         category: "Material",
         code: `${deletedMaterial.category} ${deletedMaterial.materialName}`
       });
@@ -544,11 +539,7 @@ export async function DELETE(request: NextRequest) {
         { value: maxPrice },
         { new: true }
       );
-      await updateServiceFeesMaterials(
-        updatedNMaterialNomenclator,
-        await ServiceFee.find(),
-        accessToken
-      );
+      await updateServiceFeesMaterials(updatedNMaterialNomenclator, await ServiceFee.find());
     }
     return new NextResponse(
       JSON.stringify({
@@ -565,7 +556,7 @@ export async function DELETE(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ DELETE ~ error:", error)
+      console.log("🚀 ~ DELETE ~ error:", error);
       return NextResponse.json(
         {
           ok: false,

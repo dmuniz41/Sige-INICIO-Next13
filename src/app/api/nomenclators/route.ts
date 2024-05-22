@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import Nomenclator from "@/models/nomenclator";
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
+import Nomenclator from "@/models/nomenclator";
 
 export async function POST(request: NextRequest) {
   const { category, code } = await request.json();

@@ -57,7 +57,7 @@ export const startUpdateMaterialNomenclator = ({ ...materialNomenclator }): any 
 };
 
 // * ELIMINA UN NOMENCLADOR DE MATERIAL POR SU ID //
-export const startDeleteNomenclator = (id: string): any => {
+export const startDeleteMaterialNomenclator = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios

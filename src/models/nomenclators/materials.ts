@@ -6,6 +6,7 @@ export interface IMaterialNomenclator {
   name: string;
   // ?TRUE SI EL MATERIAL ES CONSIDERADO GASTABLE POR LO QUE SE MUTIPLICA SU PRECIO POR EL COEFICIENTE DE MERMA EN LA FICHA DE COSTO ?//
   isDecrease: boolean;
+  value: number;
 }
 
 const MaterialNomenclatorSchema = new Schema<IMaterialNomenclator, Model<IMaterialNomenclator>>({
@@ -19,7 +20,11 @@ const MaterialNomenclatorSchema = new Schema<IMaterialNomenclator, Model<IMateri
   },
   isDecrease: {
     type: Boolean,
-    required:[true, "Es necesario indicar si es gastable o no"]
+    required: [true, "Es necesario indicar si es gastable o no"]
+  },
+  value: {
+    type: Number,
+    required: false
   }
 });
 
