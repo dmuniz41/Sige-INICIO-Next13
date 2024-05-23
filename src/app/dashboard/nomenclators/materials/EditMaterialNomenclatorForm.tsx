@@ -1,29 +1,40 @@
 "use client";
+import { Checkbox, CheckboxProps, Form, Input, Modal } from "antd";
+import { useEffect, useState } from "react";
 
 import { IMaterialNomenclator } from "@/models/nomenclators/materials";
-import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
-import { Checkbox, Form, Input, InputNumber, Modal } from "antd";
-import { useState } from "react";
 
 interface CollectionCreateFormProps {
   open: boolean;
   onCreate: (values: IMaterialNomenclator) => void;
   onCancel: () => void;
+  defaultValues: IMaterialNomenclator;
 }
+// ? INTERACCIÓN RARA CUANDO SE EDITAN A LA VEZ EL NOMBRE Y EL CAMPO BOLEANO ?//
 
-export const CreateMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
+export const EditMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
   open,
   onCreate,
-  onCancel
+  onCancel,
+  defaultValues
 }) => {
-  const [isDecrease, setIsDecrease] = useState<boolean>(false);
+  const [isDecrease, setIsDecrease] = useState<boolean>();
+
+  useEffect(() => {
+    setIsDecrease(defaultValues?.isDecrease);
+  }, [defaultValues]);
+
+  const onChange: CheckboxProps["onChange"] = (e) => {
+    setIsDecrease(e.target.checked);
+  };
+
   const [form] = Form.useForm();
   return (
     <Modal
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-bold text-lg">Nuevo Nomenclador de Material</span>
+          <span className="font-bold text-lg">Editar Nomenclador de Material</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -37,7 +48,7 @@ export const CreateMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> 
       width={"600px"}
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button key="2" className="modal-btn-danger " onClick={onCancel}>
+          <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
           <button
@@ -48,7 +59,6 @@ export const CreateMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> 
                 .validateFields()
                 .then((values) => {
                   onCreate({ ...values, isDecrease: isDecrease });
-                  setIsDecrease(false);
                   form.resetFields();
                 })
                 .catch((error) => {
@@ -56,12 +66,23 @@ export const CreateMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> 
                 });
             }}
           >
-            Crear
+            Editar
           </button>
         </div>
       ]}
     >
-      <Form form={form} layout="vertical" name="createMaterialNomenclator" size="middle">
+      <Form
+        form={form}
+        layout="vertical"
+        name="editMaterialNomenclator"
+        size="middle"
+        fields={[
+          {
+            name: "name",
+            value: defaultValues?.name
+          }
+        ]}
+      >
         <Form.Item
           name="name"
           label="Nombre"
@@ -70,7 +91,7 @@ export const CreateMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> 
           <Input />
         </Form.Item>
         <Form.Item name="isDecrease">
-          <Checkbox checked={isDecrease} onChange={(e) => setIsDecrease(e.target.checked)}>
+          <Checkbox checked={isDecrease} onChange={onChange}>
             Gastable
           </Checkbox>
         </Form.Item>

@@ -1,5 +1,5 @@
 "use client";
-import { Badge, Button, Input, Space, Table, Tag, Tooltip } from "antd";
+import { Badge, Button, Form, Input, Space, Table, Tag, Tooltip } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useSession } from "next-auth/react";
 import Highlighter from "react-highlight-words";
@@ -24,6 +24,7 @@ import {
 } from "@/actions/nomenclators/material";
 import { InfoCircleSvg } from "@/app/global/InfoCircleSvg";
 import { CreateMaterialNomenclatorForm } from "./CreateMaterialNomenclatorForm";
+import { EditMaterialNomenclatorForm } from "./EditMaterialNomenclatorForm";
 
 type DataIndex = keyof IMaterialNomenclator;
 
@@ -36,6 +37,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
   const { data: sessionData } = useSession();
   const dispatch = useAppDispatch();
   const searchInput = useRef<InputRef>(null);
+  const [form] = Form.useForm();
 
   const canList = sessionData?.user.role.includes("Listar Nomencladores");
   const canCreate = sessionData?.user.role.includes("Crear Nomenclador");
@@ -285,12 +287,12 @@ const MaterialsNomenclatorsTable: React.FC = () => {
         onCancel={() => setCreateNewModal(false)}
         onCreate={onCreate}
       />
-      {/* <EditMaterialNomenclatorForm
+      <EditMaterialNomenclatorForm
         open={editModal}
-        onCancel={() => setEditModal(false)}
+        onCancel={() => {setEditModal(false); form.resetFields()}}
         onCreate={onEdit}
         defaultValues={selectedNomenclator!}
-      /> */}
+      />
     </>
   );
 };
