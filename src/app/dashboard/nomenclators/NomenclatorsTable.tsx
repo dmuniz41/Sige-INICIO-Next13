@@ -203,10 +203,6 @@ const NomenclatorsTable: React.FC = () => {
           value: "Cargo de trabajador"
         },
         {
-          text: "Categoría de material",
-          value: "Categoría de material"
-        },
-        {
           text: "Unidad de medida",
           value: "Unidad de medida"
         },

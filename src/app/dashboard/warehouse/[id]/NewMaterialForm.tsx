@@ -3,6 +3,7 @@
 import { DatePicker, Form, Input, InputNumber, Modal, Select, SelectProps } from "antd";
 import { INomenclator } from "@/models/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
+import { IMaterialNomenclator } from "@/models/nomenclators/materials";
 interface Values {
   category: string;
   costPerUnit: number;
@@ -25,12 +26,11 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({
   onCancel
 }) => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-  const materialCategory: string[] | undefined = [];
+  const { materialsNomenclators }: {materialsNomenclators: IMaterialNomenclator[]} = useAppSelector((state: RootState) => state?.nomenclator);
   const unitMeasures: string[] | undefined = [];
   const providers: string[] | undefined = [];
 
   nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Categoría de material") materialCategory.push(nomenclator.code);
     if (nomenclator.category === "Unidad de medida") {
       unitMeasures.push(nomenclator.code);
     }
@@ -39,10 +39,10 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({
     }
   });
 
-  const category: SelectProps["options"] = materialCategory.map((materialCategory) => {
+  const category: SelectProps["options"] = materialsNomenclators.map((materialNomenclator) => {
     return {
-      label: `${materialCategory}`,
-      value: `${materialCategory}`
+      label: `${materialNomenclator.name}`,
+      value: `${materialNomenclator.name}`
     };
   });
 

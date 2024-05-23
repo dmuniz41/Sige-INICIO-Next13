@@ -20,6 +20,7 @@ import { TableFormSection } from "../editServiceFee/EditServiceFeeForm";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useRouter } from "next/navigation";
 import TextArea from "antd/es/input/TextArea";
+import { materialNomenclatorsStartLoading } from "@/actions/nomenclators/material";
 
 export const CreateServiceFeeForm = () => {
   const [form] = Form.useForm();
@@ -47,6 +48,7 @@ export const CreateServiceFeeForm = () => {
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
+    dispatch(materialNomenclatorsStartLoading());
     dispatch(startLoadServiceFeeAuxiliary());
     dispatch(startLoadServiceFeesTasks());
   }, [dispatch]);

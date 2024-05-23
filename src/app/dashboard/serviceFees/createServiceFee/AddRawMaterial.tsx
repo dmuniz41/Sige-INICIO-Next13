@@ -1,5 +1,4 @@
 "use client";
-
 import { Form, InputNumber, Modal, Select, SelectProps } from "antd";
 import { useEffect, useState } from "react";
 
@@ -9,6 +8,8 @@ import { IServiceFeeSubItem } from "@/models/serviceFees";
 import { materialsStartLoading } from "@/actions/material";
 import { RootState, useAppSelector } from "@/store/store";
 import { useAppDispatch } from "@/hooks/hooks";
+import { IMaterialNomenclator } from "@/models/nomenclators/materials";
+import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 
 interface CollectionCreateFormProps {
   open: boolean;
@@ -27,12 +28,21 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
   const { materials }: { materials: IMaterial[] } = useAppSelector(
     (state: RootState) => state?.material
   );
-  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector(
-    (state: RootState) => state?.nomenclator
+
+  const {
+    nomenclators,
+    materialsNomenclators
+  }: { nomenclators: INomenclator[]; materialsNomenclators: IMaterialNomenclator[] } =
+    useAppSelector((state: RootState) => state?.nomenclator);
+
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
+    (state: RootState) => state?.serviceFee
   );
+
   const DBMaterials: INomenclator[] = [];
   const dispatch = useAppDispatch();
 
+  // TODO: QUITAR EL ID DEL ALMACEN HARCODEADO //
   useEffect(() => {
     dispatch(materialsStartLoading("653957480a9e16fed4c1bbd5"));
   }, [dispatch]);
@@ -119,8 +129,19 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
                   `${material.category} ${material.materialName}`.trim().toLowerCase() ===
                   String(value.label).trim().toLowerCase()
               );
+              const materialNomenclator = materialsNomenclators.find(
+                (mn) =>
+                  mn.name.trim().toLocaleLowerCase() ===
+                  selectedMaterial?.category.trim().toLocaleLowerCase()
+              );
               setCurrentUnitMeasure(selectedMaterial?.unitMeasure!);
-              setCurrentPrice(selectedMaterial?.costPerUnit!);
+              if (materialNomenclator?.isDecrease) {
+                setCurrentPrice(
+                  selectedMaterial?.costPerUnit! * serviceFeeAuxiliary?.indirectSalariesCoefficient
+                );
+              } else {
+                setCurrentPrice(selectedMaterial?.costPerUnit!);
+              }
 
               form.setFieldsValue({
                 unitMeasure: selectedMaterial?.unitMeasure,
