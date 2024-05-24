@@ -38,6 +38,7 @@ import { RootState, useAppSelector } from "@/store/store";
 import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
 import PDFReport from "@/helpers/PDFReport";
+import { materialNomenclatorsStartLoading } from "@/actions/nomenclators/material";
 
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
@@ -79,7 +80,6 @@ const MaterialsTable: React.FC = () => {
   const [selectedRow, setSelectedRow] = useState<DataType>();
   const [filteredData, setFilteredData] = useState<DataType[]>();
   const searchInput = useRef<InputRef>(null);
-  const materialCategory: string[] | undefined = [];
   const { data: sessionData } = useSession();
 
   const canList = sessionData?.user.role.includes("Listar Materiales");
@@ -95,6 +95,7 @@ const MaterialsTable: React.FC = () => {
   useEffect(() => {
     dispatch(materialsStartLoading(selectedWarehouse));
     dispatch(nomenclatorsStartLoading());
+    dispatch(materialNomenclatorsStartLoading());
   }, [dispatch, selectedWarehouse]);
 
   const fields = [

@@ -11,7 +11,7 @@ export const startAddMaterialNomenclator = ({ ...materialNomenclator }): any => 
     await axios
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`,
-        { materialNomenclator },
+        { ...materialNomenclator },
         { headers: { accessToken: token } }
       )
       .then(() => {
@@ -37,7 +37,7 @@ export const startUpdateMaterialNomenclator = ({ ...materialNomenclator }): any 
     await axios
       .put(
         `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`,
-        { materialNomenclator },
+        { ...materialNomenclator },
         { headers: { accessToken: token } }
       )
       .then(() => {
@@ -57,7 +57,7 @@ export const startUpdateMaterialNomenclator = ({ ...materialNomenclator }): any 
 };
 
 // * ELIMINA UN NOMENCLADOR DE MATERIAL POR SU ID //
-export const startDeleteNomenclator = (id: string): any => {
+export const startDeleteMaterialNomenclator = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios

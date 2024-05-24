@@ -15,10 +15,10 @@ export const materialReducer = (state = initialState, action:any) => {
       return {
         ...state,
       };
-    case types.editMinimumExistences:
-      return {
-        ...state,
-      };
+    // case types.editMinimumExistences:
+    //   return {
+    //     ...state,
+    //   };
     case types.materialsLoaded:
       return {
         ...state,

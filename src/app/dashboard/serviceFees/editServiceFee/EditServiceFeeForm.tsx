@@ -27,6 +27,7 @@ import Table, { ColumnsType } from "antd/es/table";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { EditRawMaterialModal } from "./EditRawMaterial";
 import Swal from "sweetalert2";
+import { materialNomenclatorsStartLoading } from "@/actions/nomenclators/material";
 
 export const EditServiceFeeForm = () => {
   const [form] = Form.useForm();
@@ -79,6 +80,7 @@ export const EditServiceFeeForm = () => {
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
+    dispatch(materialNomenclatorsStartLoading());
     dispatch(startLoadServiceFeeAuxiliary());
     dispatch(startLoadServiceFeesTasks());
     setRawMaterialsValues(selectedServiceFee?.rawMaterials);

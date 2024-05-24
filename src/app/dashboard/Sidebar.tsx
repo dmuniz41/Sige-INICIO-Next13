@@ -286,13 +286,21 @@ const items: MenuProps["items"] = [
           </Link>
         ),
         key: "representatives"
+      },
+      {
+        label: (
+          <Link prefetch href="/dashboard/nomenclators/materials">
+            Materiales
+          </Link>
+        ),
+        key: "materials"
       }
     ]
   }
 ];
 
 export const Sidebar: React.FC = () => {
-  const [current, setCurrent] = useState("users");
+  const [current, setCurrent] = useState("");
 
   const onClick: MenuProps["onClick"] = (e) => {
     setCurrent(e.key);
