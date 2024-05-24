@@ -135,6 +135,8 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
                   selectedMaterial?.category.trim().toLocaleLowerCase()
               );
               setCurrentUnitMeasure(selectedMaterial?.unitMeasure!);
+
+              // ? SI EL MATERIAL ES GASTABLE SE LE APLICA EL COEFICIENTE DE MERMA AL PRECIO DEL MATERIAL, EN CASO CONTRARIO MANTIENE EL PRECIO ORIGINAL?//
               if (materialNomenclator?.isDecrease) {
                 setCurrentPrice(
                   selectedMaterial?.costPerUnit! * serviceFeeAuxiliary?.indirectSalariesCoefficient
@@ -142,10 +144,12 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
               } else {
                 setCurrentPrice(selectedMaterial?.costPerUnit!);
               }
+              setRawMaterialValue(0);
 
               form.setFieldsValue({
                 unitMeasure: selectedMaterial?.unitMeasure,
-                price: form.getFieldValue("description")?.value
+                price: form.getFieldValue("description")?.value,
+                amount: 0
               });
             }}
             showSearch
