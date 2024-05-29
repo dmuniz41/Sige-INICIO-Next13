@@ -11,7 +11,10 @@ export const updateServiceFeesMaterials = async (
   materialNomenclator: INomenclator,
   serviceFees: IServiceFee[]
 ) => {
+  console.log("🚀 ~ materialNomenclator:", materialNomenclator)
   //? BUSCA EN CADA LISTA DE MATERIAS PRIMAS DE CADA TARIFA DE SERVICIO SI EXISTE EL MATERIAL QUE SE PASA POR PARÁMETRO. SI EXISTE, ACTUALIZA EL VALOR DE LA TARIFA DE SERVICIO CON EL NUEVO VALOR DEL MATERIAL ?//
+
+  // TODO: HACER QUE SI SE ACTUALIZA EL PRECIO DE UN MATERIAL GASTABLE EN EL ALMACEN SE LE APLIQUE EL COEFICIENTE DE MERMA AL NUEVO PRECIO //
 
   const serviceFeesToUpdate: IServiceFee[] = [];
   serviceFees.forEach((serviceFee, index, serviceFees) => {
