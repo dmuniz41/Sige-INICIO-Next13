@@ -83,9 +83,11 @@ export async function POST(request: NextRequest) {
     })) as INomenclator;
 
     // ? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
-    const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
-    const ONATValue = expensesTotalValue * (serviceFee?.ONAT / 100);
+    // ? EL PRECIO ARTI
     const artisticTalentValue = expensesTotalValue * (serviceFee?.artisticTalent / 100);
+    const comercialMarginValue =
+      (expensesTotalValue + artisticTalentValue) * (serviceFee?.commercialMargin / 100);
+    const ONATValue = expensesTotalValue * (serviceFee?.ONAT / 100);
     const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
 
     // ? CALCULA EL VALOR DE LOS 3 NIVELES DE COMPLEJIDAD EN DEPENDENCIA DEL COEFICIENTE ASIGNADO //
