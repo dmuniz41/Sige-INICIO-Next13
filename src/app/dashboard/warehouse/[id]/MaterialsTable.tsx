@@ -39,6 +39,7 @@ import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
 import PDFReport from "@/helpers/PDFReport";
 import { materialNomenclatorsStartLoading } from "@/actions/nomenclators/material";
+import { IMaterialNomenclator } from "@/models/nomenclators/materials";
 
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
@@ -157,16 +158,14 @@ const MaterialsTable: React.FC = () => {
     data = [];
   }
 
-  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
+  const { nomenclators, materialsNomenclators }:{nomenclators: INomenclator[], materialsNomenclators: IMaterialNomenclator[]} = useAppSelector((state: RootState) => state?.nomenclator);
 
   const categoryFilter: any[] = [];
-  nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Categoría de material") {
-      categoryFilter.push({
-        text: `${nomenclator.code}`,
-        value: `${nomenclator.code}`
-      });
-    }
+  materialsNomenclators.map((materialNomenclator) => {
+    categoryFilter.push({
+      text: `${materialNomenclator.name}`,
+      value: `${materialNomenclator.name}`
+    });
   });
 
   let PDFReportData: DataType[] = [];
