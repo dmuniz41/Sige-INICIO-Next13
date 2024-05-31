@@ -5,32 +5,46 @@ export interface IServiceFeeTask {
   amount: number;
   category: string;
   description: string;
-  price: number;
+  // price: number;
   unitMeasure: string;
   key?: string;
+  complexity: IServiceFeeTaskComplexity[];
+}
+
+export interface IServiceFeeTaskComplexity {
+  name: "Alta" | "Media" | "Baja";
+  value: number;
+  time: number;
 }
 
 export const ServiceFeeTaskSchema = new Schema<IServiceFeeTask, Model<IServiceFeeTask>>({
   amount: {
-    type: Number,
+    type: Number
   },
   key: {
-    type: String,
+    type: String
   },
   category: {
-    type: String,
+    type: String
   },
   description: {
     type: String,
     required: true,
-    unique: true,
+    unique: true
   },
-  price: {
-    type: Number,
-  },
+  // price: {
+  //   type: Number,
+  // },
+  complexity: [
+    {
+      name: String,
+      value: Number,
+      time: Number
+    }
+  ],
   unitMeasure: {
-    type: String,
-  },
+    type: String
+  }
 });
 
 const ServiceFeeTask = models.ServiceFeeTask || model("ServiceFeeTask", ServiceFeeTaskSchema);

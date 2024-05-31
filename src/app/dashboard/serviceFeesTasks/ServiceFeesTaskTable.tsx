@@ -113,14 +113,15 @@ const ServiceFeeTaskTable: React.FC = () => {
   };
 
   const onCreate = (values: any): void => {
+    console.log("🚀 ~ onCreate ~ values:", values)
     dispatch(
       startAddServiceFeeTask({
         description: values.description,
         category: values.category,
         amount: values.amount,
-        price: values.price,
+        // price: values.price,
         unitMeasure: values.unitMeasure,
-        complexityLevels: values.complexityLevels
+        complexity: values.complexity
       })
     );
     setCreateTaskModal(false);
@@ -135,7 +136,7 @@ const ServiceFeeTaskTable: React.FC = () => {
         amount: values.amount,
         price: values.price,
         unitMeasure: values.unitMeasure,
-        complexityLevels: values.complexityLevels
+        complexity: values.complexity
       })
     );
     setEditTaskModal(false);
@@ -273,24 +274,24 @@ const ServiceFeeTaskTable: React.FC = () => {
       onFilter: (value: any, record: any) => record.unitMeasure.startsWith(value),
       filterSearch: true
     },
-    {
-      title: <span className="font-bold">Precio</span>,
-      dataIndex: "price",
-      key: "price",
-      width: "10%",
-      render: (value) => (
-        <span>
-          ${" "}
-          {value.toLocaleString("DE", {
-            maximumFractionDigits: 2,
-            minimumFractionDigits: 2
-          })}
-        </span>
-      ),
-      sorter: {
-        compare: (a, b) => a.price - b.price
-      }
-    },
+    // {
+    //   title: <span className="font-bold">Precio</span>,
+    //   dataIndex: "price",
+    //   key: "price",
+    //   width: "10%",
+    //   render: (value) => (
+    //     <span>
+    //       ${" "}
+    //       {value.toLocaleString("DE", {
+    //         maximumFractionDigits: 2,
+    //         minimumFractionDigits: 2
+    //       })}
+    //     </span>
+    //   ),
+    //   sorter: {
+    //     compare: (a, b) => a.price - b.price
+    //   }
+    // },
     {
       title: <span className="font-bold">Acciones</span>,
       key: "actions",

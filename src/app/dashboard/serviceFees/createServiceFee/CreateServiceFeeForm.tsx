@@ -136,7 +136,6 @@ export const CreateServiceFeeForm = () => {
   };
 
   const onAddHiredPersonalExpenses = (values: any) => {
-    console.log("🚀 ~ onAddHiredPersonalExpenses ~ values:", values)
     setHiredPersonalExpensesValues([
       {
         description: "Gasto de salarios indirectos",

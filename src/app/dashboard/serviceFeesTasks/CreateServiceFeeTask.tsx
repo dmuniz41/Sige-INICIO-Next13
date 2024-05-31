@@ -69,7 +69,26 @@ export const CreateServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate(values);
+                  onCreate({
+                    ...values,
+                    complexity: [
+                      {
+                        name: "Alta",
+                        value: values.highComplexity,
+                        time: values.highComplexityTime
+                      },
+                      {
+                        name: "Media",
+                        value: values.mediumComplexity,
+                        time: values.mediumComplexityTime
+                      },
+                      {
+                        name: "Baja",
+                        value: values.lowComplexity,
+                        time: values.lowComplexityTime
+                      }
+                    ]
+                  });
                   form.resetFields();
                 })
                 .catch((error) => {
@@ -133,19 +152,68 @@ export const CreateServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({
           />
         </Form.Item>
         <Form.Item
+          initialValue={1}
           name="amount"
           label="Cantidad"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
           <InputNumber min={0} />
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           name="price"
           label="Precio"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
           <InputNumber min={0} />
-        </Form.Item>
+        </Form.Item> */}
+        <span className="flex mb-2 font-bold">Complejidad:</span>
+        <div className="flex gap-2">
+          <Form.Item
+            name="highComplexity"
+            label="Alta"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+          <Form.Item
+            name="mediumComplexity"
+            label="Media"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+          <Form.Item
+            name="lowComplexity"
+            label="Baja"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+        </div>
+        <span className="flex mb-2 font-bold">Tiempo por Complejidad (h):</span>
+        <div className="flex gap-2">
+          <Form.Item
+            name="highComplexityTime"
+            label="Alta"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+          <Form.Item
+            name="mediumComplexityTime"
+            label="Media"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+          <Form.Item
+            name="lowComplexityTime"
+            label="Baja"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+        </div>
       </Form>
     </Modal>
   );

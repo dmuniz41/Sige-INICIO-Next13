@@ -73,18 +73,21 @@ export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({
                 .then((values) => {
                   onCreate({
                     ...values,
-                    complexityLevels: [
+                    complexity: [
                       {
                         name: "Alta",
-                        coefficient: values.high
+                        value: values.highComplexity,
+                        time: values.highComplexityTime
                       },
                       {
                         name: "Media",
-                        coefficient: values.medium
+                        value: values.mediumComplexity,
+                        time: values.mediumComplexityTime
                       },
                       {
                         name: "Baja",
-                        coefficient: values.low
+                        value: values.lowComplexity,
+                        time: values.lowComplexityTime
                       }
                     ]
                   });
@@ -123,9 +126,33 @@ export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({
             value: defaultValues?.amount
           },
           {
-            name: "price",
-            value: defaultValues?.price
+            name: "highComplexity",
+            value: defaultValues?.complexity[0].value
+          },
+          {
+            name: "mediumComplexity",
+            value: defaultValues?.complexity[1].value
+          },
+          {
+            name: "lowComplexity",
+            value: defaultValues?.complexity[2].value
+          },
+          {
+            name: "highComplexityTime",
+            value: defaultValues?.complexity[0].time
+          },
+          {
+            name: "mediumComplexityTime",
+            value: defaultValues?.complexity[1].time
+          },
+          {
+            name: "lowComplexityTime",
+            value: defaultValues?.complexity[2].time
           }
+          // {
+          //   name: "price",
+          //   value: defaultValues?.price
+          // }
         ]}
       >
         <Form.Item
@@ -184,13 +211,61 @@ export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({
         >
           <InputNumber min={0} />
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           name="price"
           label="Precio"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
           <InputNumber min={0} />
-        </Form.Item>
+        </Form.Item> */}
+        <span className="flex mb-2 font-bold">Complejidad:</span>
+        <div className="flex gap-2">
+          <Form.Item
+            name="highComplexity"
+            label="Alta"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+          <Form.Item
+            name="mediumComplexity"
+            label="Media"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+          <Form.Item
+            name="lowComplexity"
+            label="Baja"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+        </div>
+        <span className="flex mb-2 font-bold">Tiempo por Complejidad (h):</span>
+        <div className="flex gap-2">
+          <Form.Item
+            name="highComplexityTime"
+            label="Alta"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+          <Form.Item
+            name="mediumComplexityTime"
+            label="Media"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+          <Form.Item
+            name="lowComplexityTime"
+            label="Baja"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+        </div>
       </Form>
     </Modal>
   );

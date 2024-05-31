@@ -720,7 +720,7 @@ export const TableFormSection = (props: any) => {
           bordered
           footer={() => (
             <footer className="flex w-full">
-              <div className="font-bold flex w-[87.4%]">
+              <div className="font-bold flex w-[86.2%]">
                 <span>Subtotal: </span>
               </div>
               <div className="flex justify-start font-bold">
