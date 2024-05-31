@@ -56,21 +56,22 @@ export const CreateItemForm = (props: { projectId: string }) => {
           label={<span className="font-bold text-md">Descripción</span>}
           rules={[
             { required: true, message: "Campo requerido" },
-            {
-              message: "Ya existe un item con esa descripción",
-              validator: (_, value: string) => {
-                if (
-                  !selectedOffer?.itemsList.some(
-                    (item) =>
-                      item?.description?.trim().toLowerCase() === value?.trim().toLowerCase()
-                  )
-                ) {
-                  return Promise.resolve();
-                } else {
-                  return Promise.reject("Ya existe un item con esa descripción");
-                }
-              }
-            }
+            // TODO: REVISAR ESTE VALIDADOR
+            // {
+            //   message: "Ya existe un item con esa descripción",
+            //   validator: (_, value: string) => {
+            //     if (
+            //       !selectedOffer?.itemsList.some(
+            //         (item) =>
+            //           item?.description?.trim().toLowerCase() === value?.trim().toLowerCase()
+            //       )
+            //     ) {
+            //       return Promise.resolve();
+            //     } else {
+            //       return Promise.reject("Ya existe un item con esa descripción");
+            //     }
+            //   }
+            // }
           ]}
         >
           <TextArea rows={4} />
