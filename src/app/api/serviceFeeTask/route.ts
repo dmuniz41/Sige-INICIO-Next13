@@ -125,8 +125,9 @@ export async function GET(request: NextRequest) {
     }
   }
 }
-
+// TODO: PROBAR ESTA FORMA DE ACTUALIZAR ELEMENTOS UTILIZANDO QUERY PARAMS //
 export async function PUT(request: NextRequest) {
+  const params = request.nextUrl.searchParams;
   const { ...serviceFeeTask }: IServiceFeeTask = await request.json();
   const accessToken = request.headers.get("accessToken");
 
@@ -144,7 +145,7 @@ export async function PUT(request: NextRequest) {
     }
     await connectDB();
 
-    if (!(await ServiceFeeTask.findById({ _id: serviceFeeTask?._id }))) {
+    if (!(await ServiceFeeTask.findById({ _id: params.get("id") }))) {
       return NextResponse.json(
         {
           ok: false,
@@ -157,7 +158,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const updatedServiceFeeTask = await ServiceFeeTask.findByIdAndUpdate(
-      { _id: serviceFeeTask?._id },
+      { _id: params.get("id") },
       {
         amount: serviceFeeTask.amount,
         category: serviceFeeTask.category,

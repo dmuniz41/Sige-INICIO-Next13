@@ -12,14 +12,7 @@ export const startAddServiceFeeTask = ({ ...serviceFeeTask }): any => {
     await axios
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/serviceFeeTask`,
-        {
-          key: serviceFeeTask.key,
-          amount: serviceFeeTask.amount,
-          category: serviceFeeTask.category,
-          description: serviceFeeTask.description,
-          price: serviceFeeTask.price,
-          unitMeasure: serviceFeeTask.unitMeasure
-        },
+        { ...serviceFeeTask },
         { headers: { accessToken: token } }
       )
       .then((serviceFeeTask) => {
@@ -44,16 +37,8 @@ export const startUpdateServiceFeeTask = ({ ...serviceFeeTask }): any => {
   return async (dispatch: any) => {
     await axios
       .put(
-        `${process.env.NEXT_PUBLIC_API_URL}/serviceFeeTask`,
-        {
-          _id: serviceFeeTask._id,
-          key: serviceFeeTask.key,
-          amount: serviceFeeTask.amount,
-          category: serviceFeeTask.category,
-          description: serviceFeeTask.description,
-          price: serviceFeeTask.price,
-          unitMeasure: serviceFeeTask.unitMeasure
-        },
+        `${process.env.NEXT_PUBLIC_API_URL}/serviceFeeTask?id=${serviceFeeTask._id}`,
+        { ...serviceFeeTask },
         { headers: { accessToken: token } }
       )
       .then((serviceFeeTask) => {
