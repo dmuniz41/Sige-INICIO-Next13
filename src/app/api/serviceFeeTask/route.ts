@@ -1,12 +1,12 @@
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { verifyJWT } from "@/libs/jwt";
 import ServiceFeeTask, { IServiceFeeTask } from "@/models/serviceFeeTask";
 import { updateServiceFeeWhenTask } from "@/helpers/updateServiceFeeWhenTask";
 import ServiceFee from "@/models/serviceFees";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const { ...serviceFeeTask }: IServiceFeeTask = await request.json();
   const accessToken = request.headers.get("accessToken");
 
@@ -45,8 +45,9 @@ export async function POST(request: Request) {
       amount: serviceFeeTask.amount,
       category: serviceFeeTask.category,
       description: serviceFeeTask.description,
-      price: serviceFeeTask.price,
+      // price: serviceFeeTask.price,
       unitMeasure: serviceFeeTask.unitMeasure,
+      complexity: serviceFeeTask.complexity,
       key: newKey
     });
 
@@ -79,7 +80,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -122,7 +123,7 @@ export async function GET(request: Request) {
   }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   const { ...serviceFeeTask }: IServiceFeeTask = await request.json();
   const accessToken = request.headers.get("accessToken");
 
@@ -158,8 +159,9 @@ export async function PUT(request: Request) {
         amount: serviceFeeTask.amount,
         category: serviceFeeTask.category,
         description: serviceFeeTask.description,
-        price: serviceFeeTask.price,
-        unitMeasure: serviceFeeTask.unitMeasure,
+        // price: serviceFeeTask.price,
+        complexity: serviceFeeTask.complexity,
+        unitMeasure: serviceFeeTask.unitMeasure
       },
       { new: true }
     );
@@ -193,8 +195,8 @@ export async function PUT(request: Request) {
   }
 }
 
-export async function PATCH(request: Request) {
-  const { id } = await request.json();
+export async function DELETE(request: NextRequest) {
+  const params = request.nextUrl.searchParams;
   const accessToken = request.headers.get("accessToken");
 
   try {
@@ -211,14 +213,14 @@ export async function PATCH(request: Request) {
     }
     await connectDB();
 
-    if (!(await ServiceFeeTask.findById(id))) {
+    if (!(await ServiceFeeTask.findById(params.get("id")))) {
       return NextResponse.json({
         ok: true,
-        message: "La tarea a borrar no existe",
+        message: "La tarea a borrar no existe"
       });
     }
 
-    const deletedServiceFeeTask = await ServiceFeeTask.findByIdAndDelete(id);
+    const deletedServiceFeeTask = await ServiceFeeTask.findById(params.get("id"));
 
     return new NextResponse(
       JSON.stringify({
