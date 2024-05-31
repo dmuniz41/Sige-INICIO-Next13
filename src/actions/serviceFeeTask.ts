@@ -18,7 +18,7 @@ export const startAddServiceFeeTask = ({ ...serviceFeeTask }): any => {
           category: serviceFeeTask.category,
           description: serviceFeeTask.description,
           price: serviceFeeTask.price,
-          unitMeasure: serviceFeeTask.unitMeasure,
+          unitMeasure: serviceFeeTask.unitMeasure
         },
         { headers: { accessToken: token } }
       )
@@ -27,7 +27,7 @@ export const startAddServiceFeeTask = ({ ...serviceFeeTask }): any => {
         dispatch(startLoadServiceFeesTasks());
         Toast.fire({
           icon: "success",
-          title: `Tarea Creada`,
+          title: `Tarea Creada`
         });
       })
       .catch((error: AxiosError) => {
@@ -52,7 +52,7 @@ export const startUpdateServiceFeeTask = ({ ...serviceFeeTask }): any => {
           category: serviceFeeTask.category,
           description: serviceFeeTask.description,
           price: serviceFeeTask.price,
-          unitMeasure: serviceFeeTask.unitMeasure,
+          unitMeasure: serviceFeeTask.unitMeasure
         },
         { headers: { accessToken: token } }
       )
@@ -61,7 +61,7 @@ export const startUpdateServiceFeeTask = ({ ...serviceFeeTask }): any => {
         dispatch(startLoadServiceFeesTasks());
         Toast.fire({
           icon: "success",
-          title: `Tarea Actualizada`,
+          title: `Tarea Actualizada`
         });
       })
       .catch((error: AxiosError) => {
@@ -95,19 +95,21 @@ export const startDeleteServiceFeeTask = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .patch(`${process.env.NEXT_PUBLIC_API_URL}/serviceFeeTask`, { id }, { headers: { accessToken: token } })
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/serviceFeeTask?id=${id}`, {
+        headers: { accessToken: token }
+      })
       .then(() => {
         dispatch(deleteServiceFeeTask(id));
         dispatch(startLoadServiceFeesTasks());
         Toast.fire({
           icon: "success",
-          title: "Tarea Eliminada",
+          title: "Tarea Eliminada"
         });
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
         console.log("🚀 ~ file: serviceFeeTask.ts:106 ~ return ~ message:", message);
-        Swal.fire("Error", 'Error al eliminar la tarea', "error");
+        Swal.fire("Error", "Error al eliminar la tarea", "error");
       });
   };
 };
@@ -119,8 +121,8 @@ const addServiceFeeTask = ({ ...serviceFeeTask }) => ({
     category: serviceFeeTask.category,
     description: serviceFeeTask.description,
     price: serviceFeeTask.price,
-    unitMeasure: serviceFeeTask.unitMeasure,
-  },
+    unitMeasure: serviceFeeTask.unitMeasure
+  }
 });
 
 const updateServiceFeeTask = ({ ...serviceFeeTask }) => ({
@@ -132,17 +134,17 @@ const updateServiceFeeTask = ({ ...serviceFeeTask }) => ({
     category: serviceFeeTask.category,
     description: serviceFeeTask.description,
     price: serviceFeeTask.price,
-    unitMeasure: serviceFeeTask.unitMeasure,
-  },
+    unitMeasure: serviceFeeTask.unitMeasure
+  }
 });
 
 const serviceFeesTasksLoaded = (serviceFeesTasks: IServiceFeeTask[]) => ({
   type: types.serviceFeesTasksLoaded,
-  payload: serviceFeesTasks,
+  payload: serviceFeesTasks
 });
 const deleteServiceFeeTask = (id: string) => ({
   type: types.deleteServiceFeeTask,
   payload: {
-    id,
-  },
+    id
+  }
 });

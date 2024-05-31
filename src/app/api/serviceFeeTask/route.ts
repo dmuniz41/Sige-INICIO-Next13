@@ -1,10 +1,11 @@
+import { NextRequest, NextResponse } from "next/server";
+
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
-import { NextRequest, NextResponse } from "next/server";
-import { verifyJWT } from "@/libs/jwt";
-import ServiceFeeTask, { IServiceFeeTask } from "@/models/serviceFeeTask";
 import { updateServiceFeeWhenTask } from "@/helpers/updateServiceFeeWhenTask";
+import { verifyJWT } from "@/libs/jwt";
 import ServiceFee from "@/models/serviceFees";
+import ServiceFeeTask, { IServiceFeeTask } from "@/models/serviceFeeTask";
 
 export async function POST(request: NextRequest) {
   const { ...serviceFeeTask }: IServiceFeeTask = await request.json();
@@ -15,26 +16,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
     await connectDB();
 
-    const BDServiceFeeTask = await ServiceFeeTask.findOne({description: serviceFeeTask.description});
+    const BDServiceFeeTask = await ServiceFeeTask.findOne({
+      description: serviceFeeTask.description
+    });
 
     // * La descripcion de las tareas tienen que ser unicas
     if (BDServiceFeeTask) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Ya existe una tarea con ese nombre",
+          message: "Ya existe una tarea con ese nombre"
         },
         {
-          status: 409,
+          status: 409
         }
       );
     }
@@ -56,13 +59,13 @@ export async function POST(request: NextRequest) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        newServiceFeeTask,
+        newServiceFeeTask
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
@@ -70,10 +73,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al crear tarea",
+          message: "Error al crear tarea"
         },
         {
-          status: 400,
+          status: 500
         }
       );
     }
@@ -87,10 +90,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
@@ -99,13 +102,13 @@ export async function GET(request: NextRequest) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        listOfTasks,
+        listOfTasks
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
@@ -113,10 +116,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al obtener las tareas para las tarifas de servicio",
+          message: "Error al obtener las tareas para las tarifas de servicio"
         },
         {
-          status: 400,
+          status: 500
         }
       );
     }
@@ -132,10 +135,10 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
@@ -145,10 +148,10 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          message: "La tarea no existe",
+          message: "La tarea no existe"
         },
         {
-          status: 409,
+          status: 409
         }
       );
     }
@@ -171,13 +174,13 @@ export async function PUT(request: NextRequest) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        updatedServiceFeeTask,
+        updatedServiceFeeTask
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
@@ -185,10 +188,10 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al actualizar la tarea",
+          message: "Error al actualizar la tarea"
         },
         {
-          status: 400,
+          status: 500
         }
       );
     }
@@ -204,34 +207,39 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
     await connectDB();
 
     if (!(await ServiceFeeTask.findById(params.get("id")))) {
-      return NextResponse.json({
-        ok: true,
-        message: "La tarea a borrar no existe"
-      });
+      return NextResponse.json(
+        {
+          ok: true,
+          message: "La tarea a borrar no existe"
+        },
+        {
+          status: 404
+        }
+      );
     }
 
-    const deletedServiceFeeTask = await ServiceFeeTask.findById(params.get("id"));
+    const deletedServiceFeeTask = await ServiceFeeTask.findByIdAndDelete(params.get("id"));
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        deletedServiceFeeTask,
+        deletedServiceFeeTask
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
@@ -239,10 +247,10 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Error al eliminar la tarea",
+          message: "Error al eliminar la tarea"
         },
         {
-          status: 400,
+          status: 500
         }
       );
     }
