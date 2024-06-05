@@ -343,7 +343,7 @@ export const CreateServiceFeeForm = () => {
         buttonText="Añadir Gastos de Personal Contratado"
         form={form}
       />
-      <article className="flex gap-5">
+      {/* <article className="flex gap-5">
         <div className="font-bold text-base items-center flex">
           <span>Coeficientes de Complejidad</span>
         </div>
@@ -373,9 +373,8 @@ export const CreateServiceFeeForm = () => {
             <InputNumber min={0} />
           </Form.Item>
         </div>
-      </article>
-      <section className="flex gap-4 mt-4">
-        {/* ONAT */}
+      </article> */}
+      {/* <section className="flex gap-4 mt-4">
         <Form.Item
           className="mb-3 "
           label={<span className="font-bold text-md">ONAT (%)</span>}
@@ -384,7 +383,6 @@ export const CreateServiceFeeForm = () => {
         >
           <InputNumber min={0} />
         </Form.Item>
-        {/* CommercialMargin */}
         <Form.Item
           className="mb-3 "
           label={<span className="font-bold text-md">Margen Comercial (%)</span>}
@@ -401,7 +399,7 @@ export const CreateServiceFeeForm = () => {
         >
           <InputNumber min={0} />
         </Form.Item>
-      </section>
+      </section> */}
       <Form.Item>
         <button
           type="submit"
@@ -414,31 +412,31 @@ export const CreateServiceFeeForm = () => {
                   startAddServiceFee({
                     administrativeExpenses: administrativeExpensesValues,
                     // PORCIENTO
-                    artisticTalent: values.artisticTalent,
+                    // artisticTalent: values.artisticTalent,
                     category: values.category,
                     // PORCIENTO
-                    commercialMargin: values.commercialMargin,
-                    complexity: [
-                      {
-                        name: "Alta",
-                        coefficient: values.highComplexity
-                      },
-                      {
-                        name: "Media",
-                        coefficient: values.mediumComplexity
-                      },
-                      {
-                        name: "Baja",
-                        coefficient: values.lowComplexity
-                      }
-                    ],
+                    // commercialMargin: values.commercialMargins,
+                    // complexity: [
+                    //   {
+                    //     name: "Alta",
+                    //     coefficient: values.highComplexity
+                    //   },
+                    //   {
+                    //     name: "Media",
+                    //     coefficient: values.mediumComplexity
+                    //   },
+                    //   {
+                    //     name: "Baja",
+                    //     coefficient: values.lowComplexity
+                    //   }
+                    // ],
                     currencyChange: values.currencyChange,
                     equipmentDepreciation: equipmentDepreciationValues,
                     equipmentMaintenance: equipmentMaintenanceValues,
                     hiredPersonalExpenses: hiredPersonalExpensesValues,
                     nomenclatorId: values.nomenclatorId,
                     // PORCIENTO
-                    ONAT: values.ONAT,
+                    // ONAT: values.ONAT,
                     rawMaterials: rawMaterialsValues,
                     taskList: taskListValues,
                     taskName: values.taskName,

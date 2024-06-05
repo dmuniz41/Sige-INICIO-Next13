@@ -45,15 +45,15 @@ export interface IServiceFee {
   hiredPersonalExpenses: IServiceFeeSubItem[];
   hiredPersonalExpensesSubtotal: number;
   //* COMPLEJIDAD
-  complexity: IServiceFeeComplexityItem[];
+  // complexity: IServiceFeeComplexityItem[];
   //* OTROS
   expensesTotalValue: number;
-  artisticTalent: number;
-  artisticTalentValue: number;
-  ONAT: number;
-  ONATValue: number;
-  commercialMargin: number;
-  commercialMarginValue: number;
+  // artisticTalent: number;
+  // artisticTalentValue: number;
+  // ONAT: number;
+  // ONATValue: number;
+  // commercialMargin: number;
+  // commercialMarginValue: number;
   salePrice: number;
   salePriceUSD: number;
 }
@@ -167,35 +167,35 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
   hiredPersonalExpensesSubtotal: {
     type: Number,
   },
-  complexity: [
-    {
-      name: String,
-      coefficient: Number,
-      value: Number,
-      USDValue: Number,
-    },
-  ],
+  // complexity: [
+  //   {
+  //     name: String,
+  //     coefficient: Number,
+  //     value: Number,
+  //     USDValue: Number,
+  //   },
+  // ],
   expensesTotalValue: {
     type: Number,
   },
-  artisticTalentValue: {
-    type: Number,
-  },
-  artisticTalent: {
-    type: Number,
-  },
-  ONAT: {
-    type: Number,
-  },
-  ONATValue: {
-    type: Number,
-  },
-  commercialMargin: {
-    type: Number,
-  },
-  commercialMarginValue: {
-    type: Number,
-  },
+  // artisticTalentValue: {
+  //   type: Number,
+  // },
+  // artisticTalent: {
+  //   type: Number,
+  // },
+  // ONAT: {
+  //   type: Number,
+  // },
+  // ONATValue: {
+  //   type: Number,
+  // },
+  // commercialMargin: {
+  //   type: Number,
+  // },
+  // commercialMarginValue: {
+  //   type: Number,
+  // },
   salePrice: {
     type: Number,
   },

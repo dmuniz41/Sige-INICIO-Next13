@@ -269,34 +269,34 @@ export const EditServiceFeeForm = () => {
         {
           name: "hiredPersonalExpenses",
           value: hiredPersonalExpensesValues
-        },
-        {
-          name: "ONAT",
-          value: selectedServiceFee?.ONAT
-        },
-        {
-          name: "commercialMargin",
-          value: selectedServiceFee?.commercialMargin
-        },
-        {
-          name: "artisticTalent",
-          value: selectedServiceFee?.artisticTalent
-        },
-        {
-          name: "highComplexity",
-          value: selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Alta")
-            ?.coefficient
-        },
-        {
-          name: "mediumComplexity",
-          value: selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Media")
-            ?.coefficient
-        },
-        {
-          name: "lowComplexity",
-          value: selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Baja")
-            ?.coefficient
         }
+        // {
+        //   name: "ONAT",
+        //   value: selectedServiceFee?.ONAT
+        // },
+        // {
+        //   name: "commercialMargin",
+        //   value: selectedServiceFee?.commercialMargin
+        // },
+        // {
+        //   name: "artisticTalent",
+        //   value: selectedServiceFee?.artisticTalent
+        // },
+        // {
+        //   name: "highComplexity",
+        //   value: selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Alta")
+        //     ?.coefficient
+        // },
+        // {
+        //   name: "mediumComplexity",
+        //   value: selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Media")
+        //     ?.coefficient
+        // },
+        // {
+        //   name: "lowComplexity",
+        //   value: selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Baja")
+        //     ?.coefficient
+        // }
       ]}
     >
       <section className=" flex-col mb-4">
@@ -454,7 +454,7 @@ export const EditServiceFeeForm = () => {
         buttonText="Añadir Gastos de Personal Contratado"
         form={form}
       />
-      <article className="flex gap-2">
+      {/* <article className="flex gap-2">
         <div className="font-bold text-base items-center flex">
           <span>Coeficientes de Complejidad</span>
         </div>
@@ -486,7 +486,6 @@ export const EditServiceFeeForm = () => {
         </div>
       </article>
       <section className="flex gap-4 mt-4">
-        {/* ONAT */}
         <Form.Item
           className="mb-3 "
           label={<span className="font-bold text-md">ONAT (%)</span>}
@@ -495,7 +494,6 @@ export const EditServiceFeeForm = () => {
         >
           <InputNumber min={0} />
         </Form.Item>
-        {/* commercialMargin */}
         <Form.Item
           className="mb-3 "
           label={<span className="font-bold text-md">Margen Comercial (%)</span>}
@@ -512,7 +510,7 @@ export const EditServiceFeeForm = () => {
         >
           <InputNumber min={0} />
         </Form.Item>
-      </section>
+      </section> */}
       <Form.Item>
         <button
           type="submit"
@@ -526,31 +524,31 @@ export const EditServiceFeeForm = () => {
                     _id: selectedServiceFee?._id,
                     administrativeExpenses: administrativeExpensesValues,
                     // PORCIENTO
-                    artisticTalent: values.artisticTalent,
+                    // artisticTalent: values.artisticTalent,
                     category: values.category,
                     // PORCIENTO
-                    commercialMargin: values.commercialMargin,
-                    complexity: [
-                      {
-                        name: "Alta",
-                        coefficient: values.highComplexity
-                      },
-                      {
-                        name: "Media",
-                        coefficient: values.mediumComplexity
-                      },
-                      {
-                        name: "Baja",
-                        coefficient: values.lowComplexity
-                      }
-                    ],
+                    // commercialMargin: values.commercialMargin,
+                    // complexity: [
+                    //   {
+                    //     name: "Alta",
+                    //     coefficient: values.highComplexity
+                    //   },
+                    //   {
+                    //     name: "Media",
+                    //     coefficient: values.mediumComplexity
+                    //   },
+                    //   {
+                    //     name: "Baja",
+                    //     coefficient: values.lowComplexity
+                    //   }
+                    // ],
                     currencyChange: values.currencyChange,
                     equipmentDepreciation: equipmentDepreciationValues,
                     equipmentMaintenance: equipmentMaintenanceValues,
                     hiredPersonalExpenses: hiredPersonalExpensesValues,
                     nomenclatorId: values.nomenclatorId,
                     // PORCIENTO
-                    ONAT: values.ONAT,
+                    // ONAT: values.ONAT,
                     payMethodCoef: values.payMethodCoef,
                     rawMaterials: rawMaterialsValues,
                     taskList: taskListValues,

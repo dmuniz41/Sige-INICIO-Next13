@@ -129,7 +129,7 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({
           onChange={(value) => {
             value.target.value === "Alta"
               ? currentTask?.complexity.find(
-                  (complexity) => complexity.name === "Alta" && setPrice(complexity.value)
+                  (complexity) => complexity.name === "Alta" && setPrice(complexity.value),
                 )
               : value.target.value === "Media"
                 ? currentTask?.complexity.find(
