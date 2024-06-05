@@ -1,7 +1,7 @@
 import { Model, Schema, model, models } from "mongoose";
 
+// * En el caso del material la descripcion es Categoria + Nombre que se debe generar previamente al crear el material en el almacen
 export interface IServiceFeeSubItem {
-  // * En el caso del material la descripcion es Categoria + Nombre que se debe generar previamente al crear el material en el almacen
   description: string;
   unitMeasure?: string;
   amount: number;
@@ -14,6 +14,7 @@ export interface IServiceFeeComplexityItem {
   value: number;
   USDValue: number
 }
+// TODO: HACER UNA INTERFAZ ESPECIFICA PARA LA LISTA DE TAREAS AÑADIENDO UNA PROPIEDAD PARA SABER LA DIFICULTAD CON LA QUE GUARDO DICHA TAREA  //
 export interface IServiceFee {
   _id: string;
   category: string;
@@ -26,7 +27,7 @@ export interface IServiceFee {
   //* MATERIAS PRIMAS
   rawMaterials: IServiceFeeSubItem[];
   rawMaterialsSubtotal: number;
-  //* ACTIVIDADES O OPERACIONES
+  //* ACTIVIDADES
   taskList: IServiceFeeSubItem[];
   taskListSubtotal: number;
   //* DEPRECIACION DE EQUIPOS

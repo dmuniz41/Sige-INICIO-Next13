@@ -88,6 +88,7 @@ export const CreateServiceFeeForm = () => {
   };
 
   const onAddTaskList = (values: any) => {
+    console.log("🚀 ~ onAddTaskList ~ values:", values)
     setTaskListValues([
       {
         description: values.description,
@@ -98,16 +99,16 @@ export const CreateServiceFeeForm = () => {
       },
       ...taskListValues
     ]);
-    form.setFieldValue("taskList", [
-      ...taskListValues,
-      {
-        description: values.description,
-        unitMeasure: values.unitMeasure,
-        amount: values.amount,
-        price: values.price,
-        value: values.value
-      }
-    ]);
+    // form.setFieldValue("taskList", [
+    //   ...taskListValues,
+    //   {
+    //     description: values.description,
+    //     unitMeasure: values.unitMeasure,
+    //     amount: values.amount,
+    //     price: values.price,
+    //     value: values.value
+    //   }
+    // ]);
     setAddTaskListModal(false);
   };
 
