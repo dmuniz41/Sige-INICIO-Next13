@@ -133,7 +133,7 @@ export const ServiceFeeView = () => {
           name="IMPORTE TOTAL DE GASTOS"
           value={selectedServiceFee?.expensesTotalValue}
         />
-        <ServiceFeeViewSeccion
+        {/* <ServiceFeeViewSeccion
           name="TALENTO ARTISTICO (UTILIDAD)"
           value={selectedServiceFee?.artisticTalentValue}
         />
@@ -148,7 +148,7 @@ export const ServiceFeeView = () => {
         <ServiceFeeViewSeccion
           name={`MARGEN COMERCIAL APLICADO (${selectedServiceFee?.commercialMargin}%)`}
           value={selectedServiceFee?.commercialMarginValue}
-        />
+        /> */}
 
         <article className="flex justify-end pl-4 pr-4 items-center h-[39px] flex-grow bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
           <div className="flex w-[150px] font-bold pl-2">MN</div>
@@ -175,7 +175,7 @@ export const ServiceFeeView = () => {
             })}
           </div>
         </article>
-        <SalePriceViewSeccion
+        {/* <SalePriceViewSeccion
           name="PRECIO DE VENTA COMPLEJIDAD ALTA "
           value={selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Alta")}
         />
@@ -186,7 +186,7 @@ export const ServiceFeeView = () => {
         <SalePriceViewSeccion
           name="PRECIO DE VENTA COMPLEJIDAD BAJA "
           value={selectedServiceFee?.complexity?.find((complexity) => complexity.name === "Baja")}
-        />
+        /> */}
       </section>
     </>
   );

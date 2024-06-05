@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, InputNumber, Modal, Select, SelectProps } from "antd";
+import { Form, InputNumber, Modal, Radio, Select, SelectProps } from "antd";
 import { useState } from "react";
 
 import { IServiceFeeSubItem } from "@/models/serviceFees";
@@ -21,6 +21,8 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({
   const [taskValue, setTaskValue] = useState(0);
   const [unitMeasure, setUnitMeasure] = useState("");
   const [price, setPrice] = useState(0);
+  const [currentTask, setCurrentTask] = useState<IServiceFeeTask>();
+
   const { serviceFeeTasks }: { serviceFeeTasks: IServiceFeeTask[] } = useAppSelector(
     (state: RootState) => state?.serviceFee
   );
@@ -92,8 +94,9 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({
                 (serviceFeeTask) => serviceFeeTask.description === selectedTask
               );
               setUnitMeasure(task?.unitMeasure!);
-              setPrice(task?.price!);
-              setTaskValue(task?.amount! * task?.price! * complexityCoef);
+              setCurrentTask(task);
+              // setPrice(task?.price!);
+              // setTaskValue(task?.amount! * task?.price! * complexityCoef);
             }}
             showSearch
             optionFilterProp="children"
@@ -107,7 +110,6 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({
             }
           />
         </Form.Item>
-
         <Form.Item
           name="amount"
           label="Cantidad"
@@ -121,6 +123,27 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({
             }}
           />
         </Form.Item>
+        <Radio.Group
+          className="flex mb-4"
+          buttonStyle="solid"
+          onChange={(value) => {
+            value.target.value === "Alta"
+              ? currentTask?.complexity.find(
+                  (complexity) => complexity.name === "Alta" && setPrice(complexity.value),
+                )
+              : value.target.value === "Media"
+                ? currentTask?.complexity.find(
+                    (complexity) => complexity.name === "Media" && setPrice(complexity.value)
+                  )
+                : currentTask?.complexity.find(
+                    (complexity) => complexity.name === "Baja" && setPrice(complexity.value)
+                  );
+          }}
+        >
+          <Radio.Button value="Alta">Alta</Radio.Button>
+          <Radio.Button value="Media">Media</Radio.Button>
+          <Radio.Button value="Baja">Baja</Radio.Button>
+        </Radio.Group>
         <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Unidad de Medida:</span>
           <span>{!unitMeasure ? "" : unitMeasure}</span>

@@ -83,21 +83,22 @@ export async function POST(request: NextRequest) {
     })) as INomenclator;
 
     // ? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
-    const artisticTalentValue = expensesTotalValue * (serviceFee?.artisticTalent / 100);
-    const comercialMarginValue =
-      (expensesTotalValue + artisticTalentValue) * (serviceFee?.commercialMargin / 100);
-    const ONATValue = expensesTotalValue * (serviceFee?.ONAT / 100);
-    const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
+    // const artisticTalentValue = expensesTotalValue * (serviceFee?.artisticTalent / 100);
+    // const comercialMarginValue =
+    //   (expensesTotalValue + artisticTalentValue) * (serviceFee?.commercialMargin / 100);
+    // const ONATValue = expensesTotalValue * (serviceFee?.ONAT / 100);
+    // const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
+    const salePrice = expensesTotalValue;
 
     // ? CALCULA EL VALOR DE LOS 3 NIVELES DE COMPLEJIDAD EN DEPENDENCIA DEL COEFICIENTE ASIGNADO //
-    const complexityValues = serviceFee?.complexity?.map((complexity) => {
-      return {
-        name: complexity?.name,
-        coefficient: complexity?.coefficient,
-        value: salePrice * complexity?.coefficient,
-        USDValue: (salePrice * complexity?.coefficient) / serviceFee?.currencyChange
-      };
-    });
+    // const complexityValues = serviceFee?.complexity?.map((complexity) => {
+    //   return {
+    //     name: complexity?.name,
+    //     coefficient: complexity?.coefficient,
+    //     value: salePrice * complexity?.coefficient,
+    //     USDValue: (salePrice * complexity?.coefficient) / serviceFee?.currencyChange
+    //   };
+    // });
 
     if (!BDNomenclator) {
       const newNomenclator = new Nomenclator({
@@ -118,12 +119,12 @@ export async function POST(request: NextRequest) {
       administrativeExpensesSubtotal,
       transportationExpensesSubtotal,
       hiredPersonalExpensesSubtotal,
-      complexity: complexityValues,
+      // complexity: complexityValues,
       expensesTotalValue,
-      ONAT: serviceFee.ONAT,
-      ONATValue: ONATValue,
-      commercialMarginValue: comercialMarginValue,
-      artisticTalentValue: artisticTalentValue,
+      // ONAT: serviceFee.ONAT,
+      // ONATValue: ONATValue,
+      // commercialMarginValue: comercialMarginValue,
+      // artisticTalentValue: artisticTalentValue,
       salePrice: salePrice,
       salePriceUSD: salePrice / serviceFee?.currencyChange
     });
@@ -235,20 +236,21 @@ export async function PUT(request: NextRequest) {
     });
 
     // ? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + EL VALOR DEL IMPUESTO DE LA ONAT)
-    const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
-    const artisticTalentValue = expensesTotalValue * (serviceFee?.artisticTalent / 100);
-    const ONATValue = artisticTalentValue * (serviceFee.ONAT / 100);
-    const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
+    // const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
+    // const artisticTalentValue = expensesTotalValue * (serviceFee?.artisticTalent / 100);
+    // const ONATValue = artisticTalentValue * (serviceFee.ONAT / 100);
+    // const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
+    const salePrice = expensesTotalValue;
 
     // ? CALCULA EL VALOR DE LOS 3 NIVELES DE COMPLEJIDAD //
-    const complexityValues = serviceFee?.complexity?.map((complexity) => {
-      return {
-        name: complexity.name,
-        coefficient: complexity.coefficient,
-        value: salePrice * complexity.coefficient,
-        USDValue: (salePrice * complexity.coefficient) / serviceFee.currencyChange
-      };
-    });
+    // const complexityValues = serviceFee?.complexity?.map((complexity) => {
+    //   return {
+    //     name: complexity.name,
+    //     coefficient: complexity.coefficient,
+    //     value: salePrice * complexity.coefficient,
+    //     USDValue: (salePrice * complexity.coefficient) / serviceFee.currencyChange
+    //   };
+    // });
 
     // ? SI SE MODIFICA EL VALOR DE UNA TARIFA SE MODIFICA TAMBIEN EL VALOR DEL NOMENCLADOR ASOCIADO //
     if (!BDNomenclator) {
@@ -283,12 +285,12 @@ export async function PUT(request: NextRequest) {
         administrativeExpensesSubtotal,
         transportationExpensesSubtotal,
         hiredPersonalExpensesSubtotal,
-        complexity: complexityValues,
+        // complexity: complexityValues,
         expensesTotalValue,
-        ONAT: serviceFee.ONAT,
-        ONATValue: ONATValue,
-        commercialMarginValue: comercialMarginValue,
-        artisticTalentValue: artisticTalentValue,
+        // ONAT: serviceFee.ONAT,
+        // ONATValue: ONATValue,
+        // commercialMarginValue: comercialMarginValue,
+        // artisticTalentValue: artisticTalentValue,
         salePrice: salePrice,
         salePriceUSD: salePrice / serviceFee?.currencyChange
       },

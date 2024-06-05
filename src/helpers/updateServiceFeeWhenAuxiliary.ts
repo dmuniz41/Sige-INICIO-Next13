@@ -180,21 +180,22 @@ export const updateServiceFeeWhenAuxiliary = async (
 
       //? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + EL VALOR DEL IMPUESTO DE LA ONAT) ?//
 
-      const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
-      const ONATValue = expensesTotalValue * (serviceFee.ONAT / 100);
-      const artisticTalentValue = expensesTotalValue * (serviceFee.artisticTalent / 100);
-      const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
+      // const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
+      // const ONATValue = expensesTotalValue * (serviceFee.ONAT / 100);
+      // const artisticTalentValue = expensesTotalValue * (serviceFee.artisticTalent / 100);
+      // const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
+      const salePrice = expensesTotalValue;
 
       //? CALCULA EL VALOR DE LOS 3 NIVELES DE COMPLEJIDAD EN DEPENDENCIA DEL COEFICIENTE ASIGNADO ?//
 
-      const complexityValues = serviceFee?.complexity?.map((complexity) => {
-        return {
-          name: complexity.name,
-          coefficient: complexity.coefficient,
-          value: salePrice * complexity.coefficient,
-          USDValue: (salePrice * complexity.coefficient) / serviceFee.currencyChange
-        };
-      });
+      // const complexityValues = serviceFee?.complexity?.map((complexity) => {
+      //   return {
+      //     name: complexity.name,
+      //     coefficient: complexity.coefficient,
+      //     value: salePrice * complexity.coefficient,
+      //     USDValue: (salePrice * complexity.coefficient) / serviceFee.currencyChange
+      //   };
+      // });
 
       //? SI SE MODIFICA EL VALOR DE UNA TARIFA SE MODIFICA TAMBIEN EL VALOR DEL NOMENCLADOR ASOCIADO ?//
       
@@ -241,15 +242,15 @@ export const updateServiceFeeWhenAuxiliary = async (
           transportationExpensesSubtotal,
           hiredPersonalExpenses: serviceFee.hiredPersonalExpenses,
           hiredPersonalExpensesSubtotal,
-          complexity: complexityValues,
+          // complexity: complexityValues,
           expensesTotalValue,
-          ONAT: serviceFee.ONAT,
-          ONATValue: ONATValue,
+          // ONAT: serviceFee.ONAT,
+          // ONATValue: ONATValue,
           currencyChange: serviceFee.currencyChange,
-          commercialMargin: serviceFee.commercialMargin,
-          commercialMarginValue: comercialMarginValue,
-          artisticTalent: serviceFee.artisticTalent,
-          artisticTalentValue: artisticTalentValue,
+          // commercialMargin: serviceFee.commercialMargin,
+          // commercialMarginValue: comercialMarginValue,
+          // artisticTalent: serviceFee.artisticTalent,
+          // artisticTalentValue: artisticTalentValue,
           salePrice: salePrice,
           salePriceUSD: salePrice / serviceFee?.currencyChange
         },
