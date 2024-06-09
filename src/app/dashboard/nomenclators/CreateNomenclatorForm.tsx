@@ -37,8 +37,8 @@ const category: SelectProps["options"] = [
     value: "Categoría de tarifas",
   },
   {
-    label: "Categoría de tarea",
-    value: "Categoría de tarea",
+    label: "Categoría de tareas",
+    value: "Categoría de tareas",
   },
   {
     label: "Moneda",
