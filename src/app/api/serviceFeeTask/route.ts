@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
       // price: serviceFeeTask.price,
       unitMeasure: serviceFeeTask.unitMeasure,
       complexity: serviceFeeTask.complexity,
+      currentComplexity: serviceFeeTask.currentComplexity,
       key: newKey
     });
 
@@ -165,6 +166,7 @@ export async function PUT(request: NextRequest) {
         description: serviceFeeTask.description,
         // price: serviceFeeTask.price,
         complexity: serviceFeeTask.complexity,
+        currentComplexity: serviceFeeTask.currentComplexity,
         unitMeasure: serviceFeeTask.unitMeasure
       },
       { new: true }
