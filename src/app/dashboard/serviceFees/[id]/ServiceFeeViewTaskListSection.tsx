@@ -2,17 +2,20 @@ import { ColumnsType } from "antd/es/table";
 import { Table } from "antd";
 import React from "react";
 
-import { IServiceFeeSubItem } from "@/models/serviceFees";
+import { IServiceFeeTask } from "@/models/serviceFeeTask";
 
-export const ServiceFeeViewTableSection = (props: any) => {
+export const ServiceFeeViewTaskListSection = (props: any) => {
   const { data, subtotal, name } = props;
 
-  const columns: ColumnsType<IServiceFeeSubItem> = [
+  const columns: ColumnsType<IServiceFeeTask> = [
     {
-      title: <span className="font-bold">Descripción</span>,
+      title: <span className="font-bold">Descripción (Complejidad)</span>,
       dataIndex: "description",
       key: "description",
       width: "55%",
+      render: (_, { ...record }) => (
+        <span>{`${record.description} (${record.currentComplexity?.name})`}</span>
+      )
     },
     {
       title: <span className="font-bold">Unidad de Medida</span>,
@@ -31,9 +34,12 @@ export const ServiceFeeViewTableSection = (props: any) => {
       dataIndex: "price",
       key: "price",
       width: "10%",
-      render: (value) => (
+      render: (_, { ...record }) => (
         <span>
-          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+          {record.currentComplexity?.value?.toLocaleString("DE", {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })}
         </span>
       )
     },
@@ -42,9 +48,12 @@ export const ServiceFeeViewTableSection = (props: any) => {
       dataIndex: "value",
       key: "value",
       width: "25%",
-      render: (value) => (
+      render: (_, { ...record }) => (
         <span>
-          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+          {(record.currentComplexity?.value! * record.amount).toLocaleString("DE", {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })}
         </span>
       )
     }

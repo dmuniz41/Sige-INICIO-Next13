@@ -9,6 +9,7 @@ export interface IServiceFeeTask {
   unitMeasure: string;
   key?: string;
   complexity: IServiceFeeTaskComplexity[];
+  currentComplexity?: IServiceFeeTaskComplexity;
 }
 
 export interface IServiceFeeTaskComplexity {
@@ -42,6 +43,11 @@ export const ServiceFeeTaskSchema = new Schema<IServiceFeeTask, Model<IServiceFe
       time: Number
     }
   ],
+  currentComplexity: {
+    name: String,
+    value: Number,
+    time: Number
+  },
   unitMeasure: {
     type: String
   }

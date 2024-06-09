@@ -11,6 +11,8 @@ import { EditSvg } from "@/app/global/EditSvg";
 import { IServiceFee, IServiceFeeSubItem } from "@/models/serviceFees";
 import { loadSelectedServiceFee } from "@/actions/serviceFee";
 import { ServiceFeeViewTableSection } from "./ServiceFeeViewSection";
+import { ServiceFeeViewTaskListSection } from "./ServiceFeeViewTaskListSection";
+import { IServiceFeeTask } from "@/models/serviceFeeTask";
 
 export const ServiceFeeView = () => {
   const dispatch = useAppDispatch();
@@ -29,7 +31,7 @@ export const ServiceFeeView = () => {
     () => selectedServiceFee.rawMaterials,
     [selectedServiceFee]
   );
-  let taskList: IServiceFeeSubItem[] = useMemo(
+  let taskList: IServiceFeeTask[] = useMemo(
     () => selectedServiceFee.taskList,
     [selectedServiceFee]
   );
@@ -97,7 +99,7 @@ export const ServiceFeeView = () => {
             data={rawMaterials}
             subtotal={selectedServiceFee?.rawMaterialsSubtotal}
           />
-          <ServiceFeeViewTableSection
+          <ServiceFeeViewTaskListSection
             name="Actividades a Ejecutar"
             data={taskList}
             subtotal={selectedServiceFee?.taskListSubtotal}

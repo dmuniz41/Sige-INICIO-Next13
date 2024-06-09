@@ -1,4 +1,5 @@
 import { Model, Schema, model, models } from "mongoose";
+import { IServiceFeeTask } from "./serviceFeeTask";
 
 // * En el caso del material la descripcion es Categoria + Nombre que se debe generar previamente al crear el material en el almacen
 export interface IServiceFeeSubItem {
@@ -12,7 +13,7 @@ export interface IServiceFeeComplexityItem {
   name: "Alta" | "Media" | "Baja";
   coefficient: number;
   value: number;
-  USDValue: number
+  USDValue: number;
 }
 // TODO: HACER UNA INTERFAZ ESPECIFICA PARA LA LISTA DE TAREAS AÑADIENDO UNA PROPIEDAD PARA SABER LA DIFICULTAD CON LA QUE GUARDO DICHA TAREA  //
 export interface IServiceFee {
@@ -28,7 +29,7 @@ export interface IServiceFee {
   rawMaterials: IServiceFeeSubItem[];
   rawMaterialsSubtotal: number;
   //* ACTIVIDADES
-  taskList: IServiceFeeSubItem[];
+  taskList: IServiceFeeTask[];
   taskListSubtotal: number;
   //* DEPRECIACION DE EQUIPOS
   equipmentDepreciation: IServiceFeeSubItem[];
@@ -61,28 +62,28 @@ export interface IServiceFee {
 
 const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
   category: {
-    type: String,
+    type: String
   },
   nomenclatorId: {
     unique: true,
-    type: String,
+    type: String
   },
   key: {
     type: String,
-    unique: true,
+    unique: true
   },
   workersAmount: {
-    type: Number,
+    type: Number
   },
   taskName: {
     type: String,
-    unique: true,
+    unique: true
   },
   currencyChange: {
-    type: Number,
+    type: Number
   },
   unitMeasure: {
-    type: String,
+    type: String
   },
   rawMaterials: [
     {
@@ -90,23 +91,32 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
       unitMeasure: String,
       amount: Number,
       price: Number,
-      value: Number,
-    },
+      value: Number
+    }
   ],
   rawMaterialsSubtotal: {
-    type: Number,
+    type: Number
   },
   taskList: [
     {
+      amount: Number,
+      category: String,
       description: String,
       unitMeasure: String,
-      amount: Number,
-      price: Number,
-      value: Number,
-    },
+      complexity: {
+        name: String,
+        value: Number,
+        time: Number
+      },
+      currentComplexity: {
+        name: String,
+        value: Number,
+        time: Number
+      }
+    }
   ],
   taskListSubtotal: {
-    type: Number,
+    type: Number
   },
   equipmentDepreciation: [
     {
@@ -114,11 +124,11 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
       unitMeasure: String,
       amount: Number,
       price: Number,
-      value: Number,
-    },
+      value: Number
+    }
   ],
   equipmentDepreciationSubtotal: {
-    type: Number,
+    type: Number
   },
   equipmentMaintenance: [
     {
@@ -126,11 +136,11 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
       unitMeasure: String,
       amount: Number,
       price: Number,
-      value: Number,
-    },
+      value: Number
+    }
   ],
   equipmentMaintenanceSubtotal: {
-    type: Number,
+    type: Number
   },
   administrativeExpenses: [
     {
@@ -138,11 +148,11 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
       unitMeasure: String,
       amount: Number,
       price: Number,
-      value: Number,
-    },
+      value: Number
+    }
   ],
   administrativeExpensesSubtotal: {
-    type: Number,
+    type: Number
   },
   transportationExpenses: [
     {
@@ -150,11 +160,11 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
       unitMeasure: String,
       amount: Number,
       price: Number,
-      value: Number,
-    },
+      value: Number
+    }
   ],
   transportationExpensesSubtotal: {
-    type: Number,
+    type: Number
   },
   hiredPersonalExpenses: [
     {
@@ -162,11 +172,11 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
       unitMeasure: String,
       amount: Number,
       price: Number,
-      value: Number,
-    },
+      value: Number
+    }
   ],
   hiredPersonalExpensesSubtotal: {
-    type: Number,
+    type: Number
   },
   // complexity: [
   //   {
@@ -177,7 +187,7 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
   //   },
   // ],
   expensesTotalValue: {
-    type: Number,
+    type: Number
   },
   // artisticTalentValue: {
   //   type: Number,
@@ -198,11 +208,11 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
   //   type: Number,
   // },
   salePrice: {
-    type: Number,
+    type: Number
   },
   salePriceUSD: {
-    type: Number,
-  },
+    type: Number
+  }
 });
 
 const ServiceFee = models.ServiceFee || model("ServiceFee", ServiceFeeSchema);
