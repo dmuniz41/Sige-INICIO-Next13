@@ -20,8 +20,8 @@ import { PDFSvg } from "@/app/global/PDFSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { setFinalOfferId } from "@/actions/project";
 import { useAppDispatch } from "@/hooks/hooks";
-import OfferPDFReport from "@/helpers/OfferPDFReport";
 import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
+import OfferPDFReport from "@/helpers/OfferPDFReport";
 
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),

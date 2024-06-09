@@ -21,6 +21,7 @@ import { useAppDispatch } from "@/hooks/hooks";
 import { useRouter } from "next/navigation";
 import TextArea from "antd/es/input/TextArea";
 import { materialNomenclatorsStartLoading } from "@/actions/nomenclators/material";
+import { ServiceFeeTaskListFormSection } from "../editServiceFee/EditTaskListTableSection";
 
 export const CreateServiceFeeForm = () => {
   const [form] = Form.useForm();
@@ -94,21 +95,12 @@ export const CreateServiceFeeForm = () => {
         description: values.description,
         unitMeasure: values.unitMeasure,
         amount: values.amount,
-        price: values.price,
-        value: values.value
+        price: values.currentComplexity?.value!,
+        value: values.currentComplexity?.value! * values.amount,
+        currentComplexity: values.currentComplexity
       },
       ...taskListValues
     ]);
-    // form.setFieldValue("taskList", [
-    //   ...taskListValues,
-    //   {
-    //     description: values.description,
-    //     unitMeasure: values.unitMeasure,
-    //     amount: values.amount,
-    //     price: values.price,
-    //     value: values.value
-    //   }
-    // ]);
     setAddTaskListModal(false);
   };
 
@@ -290,7 +282,7 @@ export const CreateServiceFeeForm = () => {
         buttonText="Añadir Materia Prima"
         form={form}
       />
-      <TableFormSection
+      <ServiceFeeTaskListFormSection
         sectionName="Actividades a Ejecutar"
         values={taskListValues}
         formName="taskList"

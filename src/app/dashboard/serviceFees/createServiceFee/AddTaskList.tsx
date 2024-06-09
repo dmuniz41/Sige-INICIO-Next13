@@ -5,11 +5,11 @@ import { useState } from "react";
 
 import { IServiceFeeSubItem } from "@/models/serviceFees";
 import { RootState, useAppSelector } from "@/store/store";
-import { IServiceFeeTask } from "@/models/serviceFeeTask";
+import { IServiceFeeTask, IServiceFeeTaskComplexity } from "@/models/serviceFeeTask";
 
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: IServiceFeeSubItem) => void;
+  onCreate: (values: any) => void;
   onCancel: () => void;
 }
 
@@ -22,6 +22,7 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({
   const [unitMeasure, setUnitMeasure] = useState("");
   const [price, setPrice] = useState(0);
   const [currentTask, setCurrentTask] = useState<IServiceFeeTask>();
+  const [currentComplexity, setCurrentComplexity] = useState<IServiceFeeTaskComplexity>();
 
   const { serviceFeeTasks }: { serviceFeeTasks: IServiceFeeTask[] } = useAppSelector(
     (state: RootState) => state?.serviceFee
@@ -63,7 +64,13 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({
               form
                 .validateFields()
                 .then((values: any) => {
-                  onCreate({ ...values, unitMeasure: unitMeasure, price: price, value: taskValue });
+                  onCreate({
+                    ...values,
+                    unitMeasure: unitMeasure,
+                    price: price,
+                    value: taskValue,
+                    currentComplexity: currentComplexity
+                  });
                   form.resetFields();
                   setTaskValue(0);
                   setPrice(0);
@@ -129,14 +136,20 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({
           onChange={(value) => {
             value.target.value === "Alta"
               ? currentTask?.complexity.find(
-                  (complexity) => complexity.name === "Alta" && setPrice(complexity.value),
+                  (complexity) =>
+                    complexity.name === "Alta" &&
+                    (setPrice(complexity.value), setCurrentComplexity(complexity))
                 )
               : value.target.value === "Media"
                 ? currentTask?.complexity.find(
-                    (complexity) => complexity.name === "Media" && setPrice(complexity.value)
+                    (complexity) =>
+                      complexity.name === "Media" &&
+                      (setPrice(complexity.value), setCurrentComplexity(complexity))
                   )
                 : currentTask?.complexity.find(
-                    (complexity) => complexity.name === "Baja" && setPrice(complexity.value)
+                    (complexity) =>
+                      complexity.name === "Baja" &&
+                      (setPrice(complexity.value), setCurrentComplexity(complexity))
                   );
           }}
         >

@@ -1,6 +1,5 @@
 "use client";
-import { Button, Form, Input, InputNumber, Select, SelectProps, Tooltip } from "antd";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { Form, Input, InputNumber, Select, SelectProps, Tooltip } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
 
 import { AddAdministrativeExpensesModal } from "../createServiceFee/AddAdministrativeExpenses";
@@ -10,24 +9,24 @@ import { AddHiredPersonalExpensesModal } from "../createServiceFee/AddHiredPerso
 import { AddRawMaterialModal } from "../createServiceFee/AddRawMaterial";
 import { AddTaskListModal } from "../createServiceFee/AddTaskList";
 import { AddTransportationExpensesModal } from "../createServiceFee/AddTransportationExpenses";
+import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { INomenclator } from "@/models/nomenclator";
-import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { IServiceFee, IServiceFeeSubItem } from "@/models/serviceFees";
+import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
+import { IServiceFeeTask } from "@/models/serviceFeeTask";
+import { materialNomenclatorsStartLoading } from "@/actions/nomenclators/material";
+import { nomenclatorsStartLoading } from "@/actions/nomenclator";
+import { PlusSvg } from "@/app/global/PlusSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { startLoadServiceFeesTasks } from "@/actions/serviceFeeTask";
 import { startUpdateServiceFee } from "@/actions/serviceFee";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useRouter } from "next/navigation";
-import TextArea from "antd/es/input/TextArea";
-import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
-import { EditSvg } from "@/app/global/EditSvg";
-import { DeleteSvg } from "@/app/global/DeleteSvg";
-import Table, { ColumnsType } from "antd/es/table";
-import { PlusSvg } from "@/app/global/PlusSvg";
-import { EditRawMaterialModal } from "./EditRawMaterial";
 import Swal from "sweetalert2";
-import { materialNomenclatorsStartLoading } from "@/actions/nomenclators/material";
+import Table, { ColumnsType } from "antd/es/table";
+import TextArea from "antd/es/input/TextArea";
+import { ServiceFeeTaskListFormSection } from "./EditTaskListTableSection";
 
 export const EditServiceFeeForm = () => {
   const [form] = Form.useForm();
@@ -125,14 +124,16 @@ export const EditServiceFeeForm = () => {
   //   setAddRawMaterialModal(false);
   // };
 
-  const onAddTaskList = (values: any) => {
+  const onAddTaskList = (values: IServiceFeeTask) => {
+    console.log("🚀 ~ onAddTaskList ~ values:", values)
     setTaskListValues([
       {
         description: values.description,
         unitMeasure: values.unitMeasure,
         amount: values.amount,
-        price: values.price,
-        value: values.value
+        price: values.currentComplexity?.value!,
+        value: values.currentComplexity?.value! * values.amount,
+        currentComplexity: values.currentComplexity
       },
       ...taskListValues
     ]);
@@ -142,8 +143,9 @@ export const EditServiceFeeForm = () => {
         description: values.description,
         unitMeasure: values.unitMeasure,
         amount: values.amount,
-        price: values.price,
-        value: values.value
+        price: values.currentComplexity?.value!,
+        value: values.currentComplexity?.value! * values.amount,
+        currentComplexity: values.currentComplexity
       }
     ]);
     setAddTaskListModal(false);
@@ -400,7 +402,7 @@ export const EditServiceFeeForm = () => {
         buttonText="Añadir Materia Prima"
         form={form}
       />
-      <TableFormSection
+      <ServiceFeeTaskListFormSection
         sectionName="Actividades a Ejecutar"
         values={taskListValues}
         formName="taskList"

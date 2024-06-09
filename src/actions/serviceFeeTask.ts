@@ -101,26 +101,12 @@ export const startDeleteServiceFeeTask = (id: string): any => {
 
 const addServiceFeeTask = ({ ...serviceFeeTask }) => ({
   type: types.addServiceFeeTask,
-  payload: {
-    amount: serviceFeeTask.amount,
-    category: serviceFeeTask.category,
-    description: serviceFeeTask.description,
-    price: serviceFeeTask.price,
-    unitMeasure: serviceFeeTask.unitMeasure
-  }
+  payload: { serviceFeeTask }
 });
 
 const updateServiceFeeTask = ({ ...serviceFeeTask }) => ({
   type: types.updateServiceFeeTask,
-  payload: {
-    _id: serviceFeeTask._id,
-    key: serviceFeeTask.key,
-    amount: serviceFeeTask.amount,
-    category: serviceFeeTask.category,
-    description: serviceFeeTask.description,
-    price: serviceFeeTask.price,
-    unitMeasure: serviceFeeTask.unitMeasure
-  }
+  payload: { serviceFeeTask }
 });
 
 const serviceFeesTasksLoaded = (serviceFeesTasks: IServiceFeeTask[]) => ({

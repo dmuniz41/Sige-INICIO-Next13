@@ -42,7 +42,8 @@ export async function POST(request: NextRequest) {
       0
     );
     const taskListSubtotal: number = serviceFee?.taskList?.reduce(
-      (total, currentValue) => total + currentValue.value,
+      (total, currentValue) =>
+        total + currentValue?.currentComplexity?.value! * currentValue.amount,
       0
     );
     const equipmentDepreciationSubtotal: number = serviceFee?.equipmentDepreciation?.reduce(
@@ -197,7 +198,8 @@ export async function PUT(request: NextRequest) {
       0
     );
     const taskListSubtotal: number = serviceFee.taskList.reduce(
-      (total, currentValue) => total + currentValue.value,
+      (total, currentValue) =>
+        total + currentValue?.currentComplexity?.value! * currentValue.amount,
       0
     );
     const equipmentDepreciationSubtotal: number = serviceFee.equipmentDepreciation.reduce(
