@@ -12,21 +12,27 @@ export const updateServiceFeeWhenTask = async (
   task: IServiceFeeTask,
   serviceFees: IServiceFee[]
 ) => {
+  console.log("🚀 ~ task:", task)
   //? BUSCA EN CADA LISTA DE TAREAS DE CADA TARIFA DE SERVICIO SI EXISTE LA TAREA QUE SE PASA POR PARÁMETRO. SI EXISTE, ACTUALIZA EL VALOR DE LA TARIFA DE SERVICIO CON EL NUEVO VALOR DE LA TAREA ?//
 
   serviceFees.forEach((serviceFee, index, serviceFees) => {
     const taskList = serviceFees[index]?.taskList;
-    // TODO: AÑADIR A EL MODELO DE TAREA LA COMPLEJIDAD ACTUAL //
     taskList.forEach((value, index, taskList) => {
       if (
         taskList[index].description.trim().toLowerCase() === task.description.trim().toLowerCase()
       ) {
+        const newCurrentComplexity = task.complexity.find((complexity) => {
+          return complexity.name === taskList[index].currentComplexity?.name;
+        });
         taskList[index] = {
+          ...taskList[index],
+          _id: task._id,
+          amount: task?.amount,
+          category: task?.category,
           description: task?.description,
           unitMeasure: task?.unitMeasure,
-          amount: task?.amount,
-          price: task?.price!,
-          value: task?.price! * taskList[index]?.amount
+          complexity: task?.complexity,
+          currentComplexity: newCurrentComplexity
         };
         return taskList[index];
       }
@@ -46,7 +52,7 @@ export const updateServiceFeeWhenTask = async (
         0
       );
       const taskListSubtotal: number = serviceFee.taskList.reduce(
-        (total, currentValue) => total + currentValue.value,
+        (total, currentValue) => total + currentValue.currentComplexity?.value!,
         0
       );
       const equipmentDepreciationSubtotal: number = serviceFee.equipmentDepreciation.reduce(
