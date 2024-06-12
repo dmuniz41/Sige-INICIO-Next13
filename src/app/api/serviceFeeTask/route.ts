@@ -126,7 +126,6 @@ export async function GET(request: NextRequest) {
     }
   }
 }
-// TODO: PROBAR ESTA FORMA DE ACTUALIZAR ELEMENTOS UTILIZANDO QUERY PARAMS //
 export async function PUT(request: NextRequest) {
   const params = request.nextUrl.searchParams;
   const { ...serviceFeeTask }: IServiceFeeTask = await request.json();

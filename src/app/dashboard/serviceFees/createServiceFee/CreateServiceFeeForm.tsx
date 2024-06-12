@@ -89,7 +89,6 @@ export const CreateServiceFeeForm = () => {
   };
 
   const onAddTaskList = (values: any) => {
-    console.log("🚀 ~ onAddTaskList ~ values:", values)
     setTaskListValues([
       {
         description: values.description,
