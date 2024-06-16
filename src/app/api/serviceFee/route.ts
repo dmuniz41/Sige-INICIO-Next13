@@ -46,6 +46,10 @@ export async function POST(request: NextRequest) {
         total + currentValue?.currentComplexity?.value! * currentValue.amount,
       0
     );
+    const estimatedTime: number = serviceFee?.taskList?.reduce(
+      (total, currentValue) => total + currentValue?.currentComplexity?.time! * currentValue.amount,
+      0
+    );
     const equipmentDepreciationSubtotal: number = serviceFee?.equipmentDepreciation?.reduce(
       (total, currentValue) => total + currentValue.value,
       0
@@ -127,7 +131,8 @@ export async function POST(request: NextRequest) {
       // commercialMarginValue: comercialMarginValue,
       // artisticTalentValue: artisticTalentValue,
       salePrice: salePrice,
-      salePriceUSD: salePrice / serviceFee?.currencyChange
+      salePriceUSD: salePrice / serviceFee?.currencyChange,
+      estimatedTime: estimatedTime
     });
 
     await newServiceFee.save();
@@ -200,6 +205,10 @@ export async function PUT(request: NextRequest) {
     const taskListSubtotal: number = serviceFee.taskList.reduce(
       (total, currentValue) =>
         total + currentValue?.currentComplexity?.value! * currentValue.amount,
+      0
+    );
+    const estimatedTime: number = serviceFee?.taskList?.reduce(
+      (total, currentValue) => total + currentValue?.currentComplexity?.time! * currentValue.amount,
       0
     );
     const equipmentDepreciationSubtotal: number = serviceFee.equipmentDepreciation.reduce(
@@ -294,7 +303,8 @@ export async function PUT(request: NextRequest) {
         // commercialMarginValue: comercialMarginValue,
         // artisticTalentValue: artisticTalentValue,
         salePrice: salePrice,
-        salePriceUSD: salePrice / serviceFee?.currencyChange
+        salePriceUSD: salePrice / serviceFee?.currencyChange,
+        estimatedTime: estimatedTime
       },
       { new: true }
     );

@@ -135,6 +135,7 @@ export const ServiceFeeView = () => {
           name="IMPORTE TOTAL DE GASTOS"
           value={selectedServiceFee?.expensesTotalValue}
         />
+        <EstimateTimeViewSeccion name="TIEMPO ESTIMADO" value={selectedServiceFee?.estimatedTime} />
         {/* <ServiceFeeViewSeccion
           name="TALENTO ARTISTICO (UTILIDAD)"
           value={selectedServiceFee?.artisticTalentValue}
@@ -203,6 +204,19 @@ export const ServiceFeeViewSeccion = (props: any) => {
       </div>
       <div className="flex w-[150px] pl-2">
         $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+      </div>
+    </article>
+  );
+};
+export const EstimateTimeViewSeccion = (props: any) => {
+  const { name, value } = props;
+  return (
+    <article className="flex items-center pr-4 h-[39px] bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
+      <div className="flex flex-1 justify-end pr-4 font-bold">
+        <h2>{name}: </h2>
+      </div>
+      <div className="flex w-[150px] pl-2">
+        {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })} h
       </div>
     </article>
   );
