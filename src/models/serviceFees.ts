@@ -15,7 +15,6 @@ export interface IServiceFeeComplexityItem {
   value: number;
   USDValue: number;
 }
-// TODO: HACER UNA INTERFAZ ESPECIFICA PARA LA LISTA DE TAREAS AÑADIENDO UNA PROPIEDAD PARA SABER LA DIFICULTAD CON LA QUE GUARDO DICHA TAREA  //
 export interface IServiceFee {
   _id: string;
   category: string;
@@ -58,6 +57,7 @@ export interface IServiceFee {
   // commercialMarginValue: number;
   salePrice: number;
   salePriceUSD: number;
+  estimatedTime: number;
 }
 
 const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
@@ -211,6 +211,9 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
     type: Number
   },
   salePriceUSD: {
+    type: Number
+  },
+  estimatedTime: {
     type: Number
   }
 });

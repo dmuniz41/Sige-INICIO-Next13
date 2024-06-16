@@ -27,7 +27,7 @@ export const updateServiceFeeWhenTask = async (
         taskList[index] = {
           ...taskList[index],
           _id: task._id,
-          amount: task?.amount,
+          amount: value?.amount,
           category: task?.category,
           description: task?.description,
           unitMeasure: task?.unitMeasure,
@@ -52,7 +52,12 @@ export const updateServiceFeeWhenTask = async (
         0
       );
       const taskListSubtotal: number = serviceFee.taskList.reduce(
-        (total, currentValue) => total + currentValue.currentComplexity?.value!,
+        (total, currentValue) => total + currentValue.currentComplexity?.value! * currentValue.amount,
+        0
+      );
+      const estimatedTime: number = serviceFee?.taskList?.reduce(
+        (total, currentValue) =>
+          total + currentValue?.currentComplexity?.time! * currentValue.amount,
         0
       );
       const equipmentDepreciationSubtotal: number = serviceFee.equipmentDepreciation.reduce(
@@ -164,7 +169,8 @@ export const updateServiceFeeWhenTask = async (
           // artisticTalent: serviceFee.artisticTalent,
           // artisticTalentValue: artisticTalentValue,
           salePrice: salePrice,
-          salePriceUSD: salePrice / serviceFee?.currencyChange
+          salePriceUSD: salePrice / serviceFee?.currencyChange,
+          estimatedTime: estimatedTime
         },
         { new: true }
       );

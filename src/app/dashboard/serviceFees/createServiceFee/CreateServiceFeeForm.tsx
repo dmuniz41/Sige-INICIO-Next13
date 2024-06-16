@@ -1,6 +1,6 @@
 "use client";
 import { Form, Input, InputNumber, Select, SelectProps } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { AddAdministrativeExpensesModal } from "./AddAdministrativeExpenses";
 import { AddEquipmentDepreciationModal } from "./AddEquipmentDepreciation";
@@ -22,6 +22,9 @@ import { useRouter } from "next/navigation";
 import TextArea from "antd/es/input/TextArea";
 import { materialNomenclatorsStartLoading } from "@/actions/nomenclators/material";
 import { ServiceFeeTaskListFormSection } from "../editServiceFee/EditTaskListTableSection";
+import { EstimateTimeViewSeccion, ServiceFeeViewSeccion } from "../[id]/ServiceFeeView";
+import { IServiceFeeSubItem } from "@/models/serviceFees";
+import { IServiceFeeTask } from "@/models/serviceFeeTask";
 
 export const CreateServiceFeeForm = () => {
   const [form] = Form.useForm();
@@ -46,6 +49,49 @@ export const CreateServiceFeeForm = () => {
   const [rawMaterialsValues, setRawMaterialsValues]: any = useState([]);
   const [taskListValues, setTaskListValues]: any = useState([]);
   const [transportationExpensesValues, setTransportationExpensesValues]: any = useState([]);
+
+    const totalValue = useMemo(
+      () =>
+        rawMaterialsValues
+          ?.map((value: IServiceFeeSubItem) => value.value)
+          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+        administrativeExpensesValues
+          ?.map((value: IServiceFeeSubItem) => value.value)
+          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+        equipmentDepreciationValues
+          ?.map((value: IServiceFeeSubItem) => value.value)
+          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+        equipmentMaintenanceValues
+          ?.map((value: IServiceFeeSubItem) => value.value)
+          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+        taskListValues
+          .map((value: IServiceFeeTask) => value.currentComplexity?.value! * value.amount)
+          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+        transportationExpensesValues
+          ?.map((value: IServiceFeeSubItem) => value.value)
+          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+        hiredPersonalExpensesValues
+          ?.map((value: IServiceFeeSubItem) => value.value)
+          .reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0),
+      [
+        administrativeExpensesValues,
+        equipmentDepreciationValues,
+        equipmentMaintenanceValues,
+        rawMaterialsValues,
+        taskListValues,
+        transportationExpensesValues,
+        hiredPersonalExpensesValues
+      ]
+    );
+
+    const estimatedTime = useMemo(
+      () =>
+        taskListValues
+          .map((value: IServiceFeeTask) => value.currentComplexity?.time! * value.amount)
+          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0),
+
+      [taskListValues]
+    );
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
@@ -182,7 +228,7 @@ export const CreateServiceFeeForm = () => {
         }
       ]}
     >
-      <section className=" flex-col mb-4">
+      <section className=" flex-col">
         <div className="flex flex-row gap-4">
           <Form.Item
             className="mb-3 w-[35%]"
@@ -335,6 +381,8 @@ export const CreateServiceFeeForm = () => {
         buttonText="Añadir Gastos de Personal Contratado"
         form={form}
       />
+      <ServiceFeeViewSeccion name="IMPORTE TOTAL DE GASTOS" value={totalValue} />
+      <EstimateTimeViewSeccion name="TIEMPO ESTIMADO" value={estimatedTime} />
       {/* <article className="flex gap-5">
         <div className="font-bold text-base items-center flex">
           <span>Coeficientes de Complejidad</span>

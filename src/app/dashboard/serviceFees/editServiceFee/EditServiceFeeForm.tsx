@@ -27,6 +27,7 @@ import Swal from "sweetalert2";
 import Table, { ColumnsType } from "antd/es/table";
 import TextArea from "antd/es/input/TextArea";
 import { ServiceFeeTaskListFormSection } from "./EditTaskListTableSection";
+import { EstimateTimeViewSeccion, ServiceFeeViewSeccion } from "../[id]/ServiceFeeView";
 
 export const EditServiceFeeForm = () => {
   const [form] = Form.useForm();
@@ -68,6 +69,48 @@ export const EditServiceFeeForm = () => {
   const [rawMaterialsValues, setRawMaterialsValues]: any = useState([]);
   const [taskListValues, setTaskListValues]: any = useState([]);
   const [transportationExpensesValues, setTransportationExpensesValues]: any = useState([]);
+  const totalValue = useMemo(
+    () =>
+      rawMaterialsValues
+        ?.map((value: IServiceFeeSubItem) => value.value)
+        ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+      administrativeExpensesValues
+        ?.map((value: IServiceFeeSubItem) => value.value)
+        ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+      equipmentDepreciationValues
+        ?.map((value: IServiceFeeSubItem) => value.value)
+        ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+      equipmentMaintenanceValues
+        ?.map((value: IServiceFeeSubItem) => value.value)
+        ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+      taskListValues
+        .map((value: IServiceFeeTask) => value.currentComplexity?.value! * value.amount)
+        ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+      transportationExpensesValues
+        ?.map((value: IServiceFeeSubItem) => value.value)
+        ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+      hiredPersonalExpensesValues
+        ?.map((value: IServiceFeeSubItem) => value.value)
+        .reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0),
+    [
+      administrativeExpensesValues,
+      equipmentDepreciationValues,
+      equipmentMaintenanceValues,
+      rawMaterialsValues,
+      taskListValues,
+      transportationExpensesValues,
+      hiredPersonalExpensesValues
+    ]
+  );
+
+  const estimatedTime = useMemo(
+    () =>
+      taskListValues
+        .map((value: IServiceFeeTask) => value.currentComplexity?.time! * value.amount)
+        ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0),
+
+    [taskListValues]
+  );
 
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
   const { selectedServiceFee }: { selectedServiceFee: IServiceFee } = useAppSelector(
@@ -125,7 +168,7 @@ export const EditServiceFeeForm = () => {
   // };
 
   const onAddTaskList = (values: IServiceFeeTask) => {
-    console.log("🚀 ~ onAddTaskList ~ values:", values)
+    console.log("🚀 ~ onAddTaskList ~ values:", values);
     setTaskListValues([
       {
         description: values.description,
@@ -301,7 +344,7 @@ export const EditServiceFeeForm = () => {
         // }
       ]}
     >
-      <section className=" flex-col mb-4">
+      <section className=" flex-col ">
         <div className="flex flex-row gap-4">
           <Form.Item
             className="mb-3 w-[35%]"
@@ -390,7 +433,6 @@ export const EditServiceFeeForm = () => {
           </article>
         </div>
       </section>
-
       <TableFormSection
         sectionName="Materias Primas"
         values={rawMaterialsValues}
@@ -439,7 +481,7 @@ export const EditServiceFeeForm = () => {
         form={form}
       />
       <TableFormSection
-        sectionName="Gastos de Transportación"
+        sectionName="Gastos Transportación"
         values={transportationExpensesValues}
         formName="transportationExpenses"
         valuesSetter={setTransportationExpensesValues}
@@ -448,7 +490,7 @@ export const EditServiceFeeForm = () => {
         form={form}
       />
       <TableFormSection
-        sectionName="Gastos de Personal Contratado"
+        sectionName="Gastos Personal Contratado"
         values={hiredPersonalExpensesValues}
         formName="hiredPersonalExpenses"
         valuesSetter={setHiredPersonalExpensesValues}
@@ -456,6 +498,7 @@ export const EditServiceFeeForm = () => {
         buttonText="Añadir Gastos de Personal Contratado"
         form={form}
       />
+
       {/* <article className="flex gap-2">
         <div className="font-bold text-base items-center flex">
           <span>Coeficientes de Complejidad</span>
@@ -514,6 +557,8 @@ export const EditServiceFeeForm = () => {
         </Form.Item>
       </section> */}
       <Form.Item>
+        <ServiceFeeViewSeccion name="IMPORTE TOTAL DE GASTOS" value={totalValue} />
+        <EstimateTimeViewSeccion name="TIEMPO ESTIMADO" value={estimatedTime} />
         <button
           type="submit"
           className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
@@ -571,7 +616,6 @@ export const EditServiceFeeForm = () => {
           Editar
         </button>
       </Form.Item>
-
       {/* MODALES PARA CREAR Y EDITAR MATERIAS PRIMAS */}
       <AddRawMaterialModal
         open={addRawMaterialModal}
@@ -705,7 +749,7 @@ export const TableFormSection = (props: any) => {
   ];
 
   return (
-    <section className=" flex w-full mb-8 rounded-md p-2 border border-border_light shadow-sm">
+    <section className=" flex w-full mb-4 rounded-md p-2 border border-border_light shadow-sm">
       <div className="flex w-[15%] h-full p-2 text-center items-center justify-center bg-[#fafafa] rounded-l-md">
         <span className="text-base font-bold">{sectionName?.toUpperCase()}</span>
       </div>
