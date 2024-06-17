@@ -1,6 +1,8 @@
 "use client";
 import { Form, Input, InputNumber, Select, SelectProps } from "antd";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
+import TextArea from "antd/es/input/TextArea";
 
 import { AddAdministrativeExpensesModal } from "./AddAdministrativeExpenses";
 import { AddEquipmentDepreciationModal } from "./AddEquipmentDepreciation";
@@ -9,22 +11,20 @@ import { AddHiredPersonalExpensesModal } from "./AddHiredPersonalExpenses";
 import { AddRawMaterialModal } from "./AddRawMaterial";
 import { AddTaskListModal } from "./AddTaskList";
 import { AddTransportationExpensesModal } from "./AddTransportationExpenses";
+import { EstimateTimeViewSeccion, ServiceFeeViewSeccion } from "../[id]/ServiceFeeView";
 import { INomenclator } from "@/models/nomenclator";
 import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
+import { IServiceFeeSubItem } from "@/models/serviceFees";
+import { IServiceFeeTask } from "@/models/serviceFeeTask";
+import { materialNomenclatorsStartLoading } from "@/actions/nomenclators/material";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { RootState, useAppSelector } from "@/store/store";
+import { TaskListFormSection } from "./TaskListFormSection";
 import { startAddServiceFee } from "@/actions/serviceFee";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { startLoadServiceFeesTasks } from "@/actions/serviceFeeTask";
 import { TableFormSection } from "../editServiceFee/EditServiceFeeForm";
 import { useAppDispatch } from "@/hooks/hooks";
-import { useRouter } from "next/navigation";
-import TextArea from "antd/es/input/TextArea";
-import { materialNomenclatorsStartLoading } from "@/actions/nomenclators/material";
-import { ServiceFeeTaskListFormSection } from "../editServiceFee/EditTaskListTableSection";
-import { EstimateTimeViewSeccion, ServiceFeeViewSeccion } from "../[id]/ServiceFeeView";
-import { IServiceFeeSubItem } from "@/models/serviceFees";
-import { IServiceFeeTask } from "@/models/serviceFeeTask";
 
 export const CreateServiceFeeForm = () => {
   const [form] = Form.useForm();
@@ -65,14 +65,14 @@ export const CreateServiceFeeForm = () => {
           ?.map((value: IServiceFeeSubItem) => value.value)
           ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
         taskListValues
-          .map((value: IServiceFeeTask) => value.currentComplexity?.value! * value.amount)
+          ?.map((value: IServiceFeeTask) => value.currentComplexity?.value! * value.amount)
           ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
         transportationExpensesValues
           ?.map((value: IServiceFeeSubItem) => value.value)
           ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
         hiredPersonalExpensesValues
           ?.map((value: IServiceFeeSubItem) => value.value)
-          .reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0),
+          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0),
       [
         administrativeExpensesValues,
         equipmentDepreciationValues,
@@ -327,7 +327,7 @@ export const CreateServiceFeeForm = () => {
         buttonText="Añadir Materia Prima"
         form={form}
       />
-      <ServiceFeeTaskListFormSection
+      <TaskListFormSection
         sectionName="Actividades a Ejecutar"
         values={taskListValues}
         formName="taskList"
@@ -520,6 +520,7 @@ export const CreateServiceFeeForm = () => {
         open={addAdministrativeExpensesModal}
         onCancel={() => setAddAdministrativeExpensesModal(false)}
         onCreate={onAddAdministrativeExpenses}
+        estimatedTime={estimatedTime}
       />
       <AddTransportationExpensesModal
         open={addTransportationExpensesModal}

@@ -1,6 +1,10 @@
 "use client";
 import { Form, Input, InputNumber, Select, SelectProps, Tooltip } from "antd";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
+import Swal from "sweetalert2";
+import Table, { ColumnsType } from "antd/es/table";
+import TextArea from "antd/es/input/TextArea";
 
 import { AddAdministrativeExpensesModal } from "../createServiceFee/AddAdministrativeExpenses";
 import { AddEquipmentDepreciationModal } from "../createServiceFee/AddEquipmentDepreciation";
@@ -10,6 +14,7 @@ import { AddRawMaterialModal } from "../createServiceFee/AddRawMaterial";
 import { AddTaskListModal } from "../createServiceFee/AddTaskList";
 import { AddTransportationExpensesModal } from "../createServiceFee/AddTransportationExpenses";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
+import { EstimateTimeViewSeccion, ServiceFeeViewSeccion } from "../[id]/ServiceFeeView";
 import { INomenclator } from "@/models/nomenclator";
 import { IServiceFee, IServiceFeeSubItem } from "@/models/serviceFees";
 import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
@@ -18,16 +23,13 @@ import { materialNomenclatorsStartLoading } from "@/actions/nomenclators/materia
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RootState, useAppSelector } from "@/store/store";
+import { TaskListFormSection } from "../createServiceFee/TaskListFormSection";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { startLoadServiceFeesTasks } from "@/actions/serviceFeeTask";
 import { startUpdateServiceFee } from "@/actions/serviceFee";
 import { useAppDispatch } from "@/hooks/hooks";
-import { useRouter } from "next/navigation";
-import Swal from "sweetalert2";
-import Table, { ColumnsType } from "antd/es/table";
-import TextArea from "antd/es/input/TextArea";
-import { ServiceFeeTaskListFormSection } from "./EditTaskListTableSection";
-import { EstimateTimeViewSeccion, ServiceFeeViewSeccion } from "../[id]/ServiceFeeView";
+import { AdministrativeExpensesFormSection } from "../createServiceFee/AdministrativeExpensesFormSection";
+
 
 export const EditServiceFeeForm = () => {
   const [form] = Form.useForm();
@@ -84,14 +86,14 @@ export const EditServiceFeeForm = () => {
         ?.map((value: IServiceFeeSubItem) => value.value)
         ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
       taskListValues
-        .map((value: IServiceFeeTask) => value.currentComplexity?.value! * value.amount)
+        ?.map((value: IServiceFeeTask) => value.currentComplexity?.value! * value.amount)
         ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
       transportationExpensesValues
         ?.map((value: IServiceFeeSubItem) => value.value)
         ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
       hiredPersonalExpensesValues
         ?.map((value: IServiceFeeSubItem) => value.value)
-        .reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0),
+        ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0),
     [
       administrativeExpensesValues,
       equipmentDepreciationValues,
@@ -444,7 +446,7 @@ export const EditServiceFeeForm = () => {
         buttonText="Añadir Materia Prima"
         form={form}
       />
-      <ServiceFeeTaskListFormSection
+      <TaskListFormSection
         sectionName="Actividades a Ejecutar"
         values={taskListValues}
         formName="taskList"
@@ -471,7 +473,8 @@ export const EditServiceFeeForm = () => {
         buttonText="Añadir Mantenimiento de Equipos"
         form={form}
       />
-      <TableFormSection
+      {/* TODO: ARREGLAR LA FORMA EN QUE SE CALCULAN Y SE VISUALIZAN LOS GASTOS ADMINISTRATIVOS: HACER QUE SE ACTUALIZEN EN TIEMPO REAL CUANDO CAMBIE EL TIEMPO ESTMADO DE LA TARIFA */}
+      <AdministrativeExpensesFormSection
         sectionName="Gastos Administrativos"
         values={administrativeExpensesValues}
         formName="administrativeExpenses"
@@ -479,6 +482,7 @@ export const EditServiceFeeForm = () => {
         addModalSetter={setAddAdministrativeExpensesModal}
         buttonText="Añadir Gasto Administrativo"
         form={form}
+        estimatedTime={estimatedTime}
       />
       <TableFormSection
         sectionName="Gastos Transportación"
@@ -647,6 +651,7 @@ export const EditServiceFeeForm = () => {
         open={addAdministrativeExpensesModal}
         onCancel={() => setAddAdministrativeExpensesModal(false)}
         onCreate={onAddAdministrativeExpenses}
+        estimatedTime={estimatedTime}
       />
       <AddTransportationExpensesModal
         open={addTransportationExpensesModal}
@@ -706,7 +711,7 @@ export const TableFormSection = (props: any) => {
       width: "10%",
       render: (value) => (
         <span>
-          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+          {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
         </span>
       )
     },
