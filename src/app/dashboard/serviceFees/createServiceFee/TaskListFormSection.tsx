@@ -1,12 +1,13 @@
-import { DeleteSvg } from "@/app/global/DeleteSvg";
-import { PlusSvg } from "@/app/global/PlusSvg";
-import { IServiceFeeTask } from "@/models/serviceFeeTask";
 import { Tooltip } from "antd";
-import Table, { ColumnsType } from "antd/es/table";
 import { useMemo } from "react";
 import Swal from "sweetalert2";
+import Table, { ColumnsType } from "antd/es/table";
 
-export const ServiceFeeTaskListFormSection = (props: any) => {
+import { DeleteSvg } from "@/app/global/DeleteSvg";
+import { IServiceFeeTask } from "@/models/serviceFeeTask";
+import { PlusSvg } from "@/app/global/PlusSvg";
+
+export const TaskListFormSection = (props: any) => {
   const { sectionName, values, valuesSetter, addModalSetter, buttonText } = props;
 
   const subtotal = useMemo(
@@ -58,7 +59,7 @@ export const ServiceFeeTaskListFormSection = (props: any) => {
       width: "10%",
       render: (value) => (
         <span>
-          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+          {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
         </span>
       )
     },

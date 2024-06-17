@@ -10,12 +10,14 @@ interface CollectionCreateFormProps {
   open: boolean;
   onCreate: (values: IServiceFeeSubItem) => void;
   onCancel: () => void;
+  estimatedTime: number;
 }
 
 export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps> = ({
   open,
   onCreate,
-  onCancel
+  onCancel,
+  estimatedTime
 }) => {
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
     (state: RootState) => state?.serviceFee
@@ -69,7 +71,7 @@ export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps>
                 .then((values) => {
                   onCreate({
                     description: values.description,
-                    amount: values.amount,
+                    amount: estimatedTime,
                     unitMeasure: "$/h",
                     price: currentAdministrativeExpense.value,
                     value: currentPrice
@@ -107,9 +109,11 @@ export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps>
               setCurrentAdministrativeExpense(selectedAdministrativeExpense!);
               form.setFieldsValue({
                 unitMeasure: "$/h",
-                price: form.getFieldValue("amount") * selectedAdministrativeExpense?.value!
+                // price: form.getFieldValue("amount") * selectedAdministrativeExpense?.value!
+                price: estimatedTime * selectedAdministrativeExpense?.value!
               });
-              setCurrentPrice(form.getFieldValue("amount") * selectedAdministrativeExpense?.value!);
+              // setCurrentPrice(form.getFieldValue("amount") * selectedAdministrativeExpense?.value!);
+              setCurrentPrice(estimatedTime * selectedAdministrativeExpense?.value!);
             }}
             showSearch
             optionFilterProp="children"
@@ -123,7 +127,7 @@ export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps>
             }
           />
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           name="amount"
           label="Cantidad"
           className="w-[10rem]"
@@ -135,14 +139,18 @@ export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps>
               setCurrentPrice(value! * currentAdministrativeExpense.value);
             }}
           />
-        </Form.Item>
+        </Form.Item> */}
         <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Unidad de Medida:</span>
           <span>$/h</span>
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Precio/UM:</span>
+          <span className="font-bold">Precio/h:</span>
           <span>${currentAdministrativeExpense?.value?.toFixed(2)}</span>
+        </div>
+        <div className=" flex gap-2 pl-2 mb-4">
+          <span className="font-bold">Total de horas:</span>
+          <span>${estimatedTime?.toFixed(2)}</span>
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Importe:</span>
