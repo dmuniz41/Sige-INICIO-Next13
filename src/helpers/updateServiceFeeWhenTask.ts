@@ -6,6 +6,8 @@ import { IServiceFeeTask } from "@/models/serviceFeeTask";
 import Nomenclator from "@/models/nomenclator";
 import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 
+// TODO: REFACTORIZAR EL PARA QUE SE EJECUTE TODO EN UN SOLO BUCLE
+
 //? CUANDO SE MODIFICA EL VALOR DE UNA TAREA SE ACTUALIZA EL VALOR DE TODAS LAS FICHAS DE COSTO DONDE ESTE ESA TAREA ?//
 
 export const updateServiceFeeWhenTask = async (
@@ -17,6 +19,8 @@ export const updateServiceFeeWhenTask = async (
 
   serviceFees.forEach((serviceFee, index, serviceFees) => {
     const taskList = serviceFees[index]?.taskList;
+    const administrativeExpenses = serviceFees[index]?.administrativeExpenses;
+    //? ITERA SOBRE LA LISTA DE TAREAS PARA ACTUALIZARLAS ?//
     taskList.forEach((value, index, taskList) => {
       if (
         taskList[index].description.trim().toLowerCase() === task.description.trim().toLowerCase()
@@ -37,6 +41,24 @@ export const updateServiceFeeWhenTask = async (
         return taskList[index];
       }
     });
+    const estimatedTime: number = serviceFee?.taskList?.reduce(
+      (total, currentValue) => total + currentValue?.currentComplexity?.time! * currentValue.amount,
+      0
+    );
+    //? SI EL TIEMPO TOTAL CAMBIA ACTUALIZA LOS GASTOS DE ADMINISTRATIVOS ?//
+    if (estimatedTime != serviceFee.estimatedTime) {
+      administrativeExpenses.forEach((value, index, adminExpenses) => {
+        adminExpenses[index] = {
+          ...adminExpenses[index],
+          description: value?.description,
+          unitMeasure: value?.unitMeasure,
+          amount: estimatedTime,
+          price: value?.price,
+          value: estimatedTime * value.price
+        };
+        return adminExpenses[index];
+      });
+    }
   });
 
   //? RECALCULA EL NUEVO VALOR DE LA TARIFA DE SERVICIO CON LA TAREA ACTUALIZADA Y LA ACTUALIZA EN LA BASE DE DATOS ?//

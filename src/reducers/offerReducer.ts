@@ -18,7 +18,8 @@ const initialState: {
     projectName: "",
     projectId: "",
     representationPercentage: 1,
-    representativeName: ""
+    representativeName: "",
+    version: ""
   },
   selectedItem: {
     key: "",
