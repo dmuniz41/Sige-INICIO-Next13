@@ -109,7 +109,7 @@ export const setFinalOfferId = (project: IProject, offer: IOffer) => {
               payMethod: offer?.representativeName
             })
           );
-          dispatch(offersStartLoading(project._id))
+          dispatch(offersStartLoading(project._id));
         })
         .catch((error: AxiosError) => {
           const { message }: any = error?.response?.data;
@@ -211,8 +211,8 @@ export const projectLoaded = (projects: IProject[]) => ({
 });
 
 export const clearOffer = (itemsList: any) => ({
-    type: types.clearOffer,
-    payload: itemsList 
+  type: types.clearOffer,
+  payload: itemsList
 });
 
 const deleteProject = (id: string) => ({

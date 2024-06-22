@@ -1,32 +1,32 @@
 import { types } from "../types/types";
 
 const initialState = {
-  warehouses: [],
+  warehouses: []
 };
 
-export const warehouseReducer = (state = initialState, action:any) => {
+export const warehouseReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case types.addWarehouse:
       return {
-        ...state,
+        ...state
       };
     case types.deleteWarehouse:
       return {
-        ...state,
+        ...state
       };
     case types.updateWarehouse:
       return {
-        ...state,
+        ...state
       };
     case types.warehousesLoaded:
       return {
         ...state,
-        warehouses: [...action.payload],
+        warehouses: [...action.payload]
       };
     case types.selectedWarehouse:
       return {
         ...state,
-        selectedWarehouse: action.payload,
+        selectedWarehouse: action.payload
       };
 
     default:

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { Tooltip } from "antd";
 import { useMemo } from "react";
 import Table, { ColumnsType } from "antd/es/table";

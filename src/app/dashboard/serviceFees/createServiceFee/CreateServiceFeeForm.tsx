@@ -50,48 +50,48 @@ export const CreateServiceFeeForm = () => {
   const [taskListValues, setTaskListValues]: any = useState([]);
   const [transportationExpensesValues, setTransportationExpensesValues]: any = useState([]);
 
-    const totalValue = useMemo(
-      () =>
-        rawMaterialsValues
-          ?.map((value: IServiceFeeSubItem) => value.value)
-          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
-        administrativeExpensesValues
-          ?.map((value: IServiceFeeSubItem) => value.value)
-          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
-        equipmentDepreciationValues
-          ?.map((value: IServiceFeeSubItem) => value.value)
-          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
-        equipmentMaintenanceValues
-          ?.map((value: IServiceFeeSubItem) => value.value)
-          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
-        taskListValues
-          ?.map((value: IServiceFeeTask) => value.currentComplexity?.value! * value.amount)
-          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
-        transportationExpensesValues
-          ?.map((value: IServiceFeeSubItem) => value.value)
-          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
-        hiredPersonalExpensesValues
-          ?.map((value: IServiceFeeSubItem) => value.value)
-          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0),
-      [
-        administrativeExpensesValues,
-        equipmentDepreciationValues,
-        equipmentMaintenanceValues,
-        rawMaterialsValues,
-        taskListValues,
-        transportationExpensesValues,
-        hiredPersonalExpensesValues
-      ]
-    );
+  const totalValue = useMemo(
+    () =>
+      rawMaterialsValues
+        ?.map((value: IServiceFeeSubItem) => value.value)
+        ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+      administrativeExpensesValues
+        ?.map((value: IServiceFeeSubItem) => value.value)
+        ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+      equipmentDepreciationValues
+        ?.map((value: IServiceFeeSubItem) => value.value)
+        ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+      equipmentMaintenanceValues
+        ?.map((value: IServiceFeeSubItem) => value.value)
+        ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+      taskListValues
+        ?.map((value: IServiceFeeTask) => value.currentComplexity?.value! * value.amount)
+        ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+      transportationExpensesValues
+        ?.map((value: IServiceFeeSubItem) => value.value)
+        ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) +
+      hiredPersonalExpensesValues
+        ?.map((value: IServiceFeeSubItem) => value.value)
+        ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0),
+    [
+      administrativeExpensesValues,
+      equipmentDepreciationValues,
+      equipmentMaintenanceValues,
+      rawMaterialsValues,
+      taskListValues,
+      transportationExpensesValues,
+      hiredPersonalExpensesValues
+    ]
+  );
 
-    const estimatedTime = useMemo(
-      () =>
-        taskListValues
-          .map((value: IServiceFeeTask) => value.currentComplexity?.time! * value.amount)
-          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0),
+  const estimatedTime = useMemo(
+    () =>
+      taskListValues
+        .map((value: IServiceFeeTask) => value.currentComplexity?.time! * value.amount)
+        ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0),
 
-      [taskListValues]
-    );
+    [taskListValues]
+  );
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());

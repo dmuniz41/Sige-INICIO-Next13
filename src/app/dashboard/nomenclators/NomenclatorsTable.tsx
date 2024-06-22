@@ -229,7 +229,7 @@ const NomenclatorsTable: React.FC = () => {
       ],
       onFilter: (value: any, record: any) => record.category.startsWith(value),
       filterSearch: true,
-      width: "50%",
+      width: "50%"
     },
     {
       title: <span className="font-bold">Código</span>,

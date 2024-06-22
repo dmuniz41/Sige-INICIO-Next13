@@ -17,12 +17,12 @@ const onFinishFailed = (errorInfo: any) => {
 const payMethod: SelectProps["options"] = [
   {
     label: `Efectivo`,
-    value: `CASH`,
+    value: `CASH`
   },
   {
     label: `Contrato`,
-    value: `CONTRACT`,
-  },
+    value: `CONTRACT`
+  }
 ];
 
 export const CreateCostSheetForm = () => {
@@ -36,21 +36,22 @@ export const CreateCostSheetForm = () => {
   const { TextArea } = Input;
 
   nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Categoría de ficha de costo") costSheetCategory.push(nomenclator.code);
+    if (nomenclator.category === "Categoría de ficha de costo")
+      costSheetCategory.push(nomenclator.code);
     if (nomenclator.category === "Precio/UM en ficha de costo") valuePerUM.push(nomenclator.code);
   });
 
   const categoriesOptions: SelectProps["options"] = costSheetCategory.map((costSheetCategory) => {
     return {
       label: `${costSheetCategory}`,
-      value: `${costSheetCategory}`,
+      value: `${costSheetCategory}`
     };
   });
 
   const valuePerUMOptions: SelectProps["options"] = valuePerUM.map((valuePerUM) => {
     return {
       label: `${valuePerUM}`,
-      value: `${valuePerUM}`,
+      value: `${valuePerUM}`
     };
   });
 
@@ -70,31 +71,57 @@ export const CreateCostSheetForm = () => {
         {
           name: "USDValue",
           value: currencyChange
-        },
+        }
       ]}
     >
       <section className=" flex-col">
         <div className="flex gap-2 pr-[13rem]">
-          <Form.Item className="mb-3 flex-1" label={<span className="font-bold text-md">Tarea a ejecutar</span>} name="taskName" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            className="mb-3 flex-1"
+            label={<span className="font-bold text-md">Tarea a ejecutar</span>}
+            name="taskName"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <Input />
           </Form.Item>
         </div>
         <div className="flex flex-row gap-4">
-          <Form.Item className="mb-3 w-[35%]" name="description" label={<span className="font-bold text-md">Descripción</span>} rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            className="mb-3 w-[35%]"
+            name="description"
+            label={<span className="font-bold text-md">Descripción</span>}
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <TextArea rows={3} />
           </Form.Item>
           <div className="flex flex-col">
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Nomenclador</span>} name="nomenclatorId" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3"
+              label={<span className="font-bold text-md">Nomenclador</span>}
+              name="nomenclatorId"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <Input />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Categoría</span>} name="category" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3"
+              label={<span className="font-bold text-md">Categoría</span>}
+              name="category"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <Select
                 allowClear
                 options={categoriesOptions}
                 showSearch
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-                filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                filterOption={(input: any, option: any) =>
+                  (option?.label ?? "").toLowerCase().includes(input)
+                }
+                filterSort={(optionA: any, optionB: any) =>
+                  (optionA?.label ?? "")
+                    .toLowerCase()
+                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                }
               />
             </Form.Item>
           </div>
@@ -102,22 +129,43 @@ export const CreateCostSheetForm = () => {
             <Select allowClear style={{ width: "10rem" }} options={payMethod} />
           </Form.Item> */}
           <div className="flex flex-col">
-            <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cantidad de empleados</span>} name="workersAmount" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3 "
+              label={<span className="font-bold text-md">Cantidad de empleados</span>}
+              name="workersAmount"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <InputNumber min={0} className="w-[5rem]" />
             </Form.Item>
-            <Form.Item className="mb-3" label={<span className="font-bold text-md">Precio/UM</span>} name="valuePerUnitMeasure" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3"
+              label={<span className="font-bold text-md">Precio/UM</span>}
+              name="valuePerUnitMeasure"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <Select
                 allowClear
                 options={valuePerUMOptions}
                 showSearch
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-                filterSort={(optionA: any, optionB: any) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+                filterOption={(input: any, option: any) =>
+                  (option?.label ?? "").toLowerCase().includes(input)
+                }
+                filterSort={(optionA: any, optionB: any) =>
+                  (optionA?.label ?? "")
+                    .toLowerCase()
+                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                }
               />
             </Form.Item>
           </div>
           <div className="flex flex-col">
-            <Form.Item className="mb-3 " label={<span className="font-bold text-md">Cambio $ </span>} name="USDValue" rules={[{ required: true, message: "Campo requerido" }]}>
+            <Form.Item
+              className="mb-3 "
+              label={<span className="font-bold text-md">Cambio $ </span>}
+              name="USDValue"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
               <InputNumber min={0} disabled className="w-[5rem]" />
             </Form.Item>
           </div>
@@ -125,8 +173,16 @@ export const CreateCostSheetForm = () => {
       </section>
 
       <section className="flex flex-col w-full">
-        <CSFormSection label="Gasto Material" tooltip="Considera los gastos de recursos materiales comprados y producidos" name="rawMaterials" />
-        <CSFormSection label="Salarios directos" tooltip="(Actividades a ejecutar)" name="directSalaries" />
+        <CSFormSection
+          label="Gasto Material"
+          tooltip="Considera los gastos de recursos materiales comprados y producidos"
+          name="rawMaterials"
+        />
+        <CSFormSection
+          label="Salarios directos"
+          tooltip="(Actividades a ejecutar)"
+          name="directSalaries"
+        />
         <CSFormSection
           label="Otros gastos directos"
           tooltip="Se incluye pagos por mantenimientos y reparaciones recibidas, depreciación de los activos fijos tangibles y amortización de activos fijos intangibles.(Gasto en Uso de Equipos)"
@@ -137,8 +193,16 @@ export const CreateCostSheetForm = () => {
           tooltip="Comprende los importes de los gastos que se incurren en las actividades asociadas a la producción, no identificables con un producto o servicio determinado.Ej: gasto de las actividades de mantenimiento, reparaciones, explotación de equipos, dirección de la producción, control de calidad, depreciación de activos fijos tangibles de producción y servicios auxiliares a estas, incluidos salarios, etc."
           name="productionRelatedExpenses"
         />
-        <CSFormSection label="Gastos generales y de administración" tooltip="Incluidos salarios(Gastos administrativos)" name="administrativeExpenses" />
-        <CSFormSection label="Gastos de distribución y ventas" tooltip="Incluye salarios(Gastos de Transporte)" name="transportationExpenses" />
+        <CSFormSection
+          label="Gastos generales y de administración"
+          tooltip="Incluidos salarios(Gastos administrativos)"
+          name="administrativeExpenses"
+        />
+        <CSFormSection
+          label="Gastos de distribución y ventas"
+          tooltip="Incluye salarios(Gastos de Transporte)"
+          name="transportationExpenses"
+        />
         <CSFormSection
           label="Gastos financieros"
           tooltip="Comprende los gastos en que se incurre, por las operaciones financieras relacionadas con la producción o servicios para la que se elabora la ficha, reconociendo solamente los conceptos de intereses, comisiones bancarias y primas del seguro."
@@ -162,21 +226,38 @@ export const CreateCostSheetForm = () => {
           >
             <InputNumber min={0} className="w-[5rem] " />
           </Form.Item>
-          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Talento artístico</span>} name="artisticTalent" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            className="mb-3 "
+            label={<span className="font-bold text-md">Talento artístico</span>}
+            name="artisticTalent"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <InputNumber min={0} className="w-[5rem] " />
           </Form.Item>
         </div>
         <div className="flex flex-col gap-1 justify-start">
-          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Elaborado por</span>} name="createdBy" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            className="mb-3 "
+            label={<span className="font-bold text-md">Elaborado por</span>}
+            name="createdBy"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <Input className="w-[15rem]" />
           </Form.Item>
-          <Form.Item className="mb-3 " label={<span className="font-bold text-md">Aprobado por</span>} name="approvedBy" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Form.Item
+            className="mb-3 "
+            label={<span className="font-bold text-md">Aprobado por</span>}
+            name="approvedBy"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
             <Input className="w-[15rem]" />
           </Form.Item>
         </div>
         <Form.Item
           className="mb-3 "
-          label={<span className="font-bold text-md">Materias primas aportadas por el cliente</span>}
+          label={
+            <span className="font-bold text-md">Materias primas aportadas por el cliente</span>
+          }
           name="rawMaterialsByClient"
           rules={[{ required: true, message: "Campo requerido" }]}
         >

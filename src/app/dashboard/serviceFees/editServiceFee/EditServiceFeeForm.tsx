@@ -30,7 +30,6 @@ import { startUpdateServiceFee } from "@/actions/serviceFee";
 import { useAppDispatch } from "@/hooks/hooks";
 import { AdministrativeExpensesFormSection } from "../createServiceFee/AdministrativeExpensesFormSection";
 
-
 export const EditServiceFeeForm = () => {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();

@@ -15,8 +15,13 @@ import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { useAppDispatch } from "@/hooks/hooks";
-import { IRepresentativeNomenclator } from '@/models/nomenclators/representative';
-import { representativeNomenclatorsStartLoading, startAddRepresentativeNomenclator, startDeleteRepresentativeNomenclator, startUpdateRepresentativeNomenclator } from '@/actions/nomenclators/representative';
+import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
+import {
+  representativeNomenclatorsStartLoading,
+  startAddRepresentativeNomenclator,
+  startDeleteRepresentativeNomenclator,
+  startUpdateRepresentativeNomenclator
+} from "@/actions/nomenclators/representative";
 import { CreateRepresentativeNomenclatorForm } from "./CreateRepresentativeNomenclatorForm";
 import { EditRepresentativeNomenclatorForm } from "./EditRepresentativeNomenclatorForm";
 
@@ -41,10 +46,15 @@ const RepresentativeNomenclatorsTable: React.FC = () => {
     dispatch(representativeNomenclatorsStartLoading());
   }, [dispatch]);
 
-  const { representativeNomenclators }: { representativeNomenclators: IRepresentativeNomenclator[] } = useAppSelector(
+  const {
+    representativeNomenclators
+  }: { representativeNomenclators: IRepresentativeNomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
-  let data: IRepresentativeNomenclator[] = useMemo(() => representativeNomenclators, [representativeNomenclators]);
+  let data: IRepresentativeNomenclator[] = useMemo(
+    () => representativeNomenclators,
+    [representativeNomenclators]
+  );
 
   const handleSearch = (
     selectedKeys: string[],
@@ -203,7 +213,7 @@ const RepresentativeNomenclatorsTable: React.FC = () => {
       title: <span className="font-bold">Teléfono</span>,
       dataIndex: "phoneNumber",
       key: "phoneNumber",
-      width: "10%",
+      width: "10%"
     },
     {
       title: <span className="font-bold">Dirección</span>,

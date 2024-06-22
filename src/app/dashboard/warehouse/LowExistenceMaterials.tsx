@@ -22,14 +22,14 @@ const fields = [
     title: " Categoría",
     custom: true,
     component: (item: any) => `${item.category}`,
-    width: "50",
+    width: "50"
   },
   {
     title: " Nombre",
     custom: true,
     component: (item: any) => `${item.materialName}`,
-    width: "50",
-  },
+    width: "50"
+  }
 ];
 
 interface DataType {
@@ -65,7 +65,11 @@ const LowExistenceMaterials: React.FC = () => {
   const { lowExistenceMaterials } = useAppSelector((state: RootState) => state?.material);
   const data: DataType[] = useMemo(() => lowExistenceMaterials, [lowExistenceMaterials]);
 
-  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -98,7 +102,11 @@ const LowExistenceMaterials: React.FC = () => {
           >
             Search
           </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
           <Button
@@ -124,7 +132,9 @@ const LowExistenceMaterials: React.FC = () => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
+    ),
     onFilter: (value, record) =>
       record[dataIndex]
         .toString()
@@ -137,10 +147,15 @@ const LowExistenceMaterials: React.FC = () => {
     },
     render: (text) =>
       searchedColumn === dataIndex ? (
-        <Highlighter highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }} searchWords={[searchText]} autoEscape textToHighlight={text ? text.toString() : ""} />
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
       ) : (
         text
-      ),
+      )
   });
 
   const columns: ColumnsType<DataType> = [
@@ -149,14 +164,14 @@ const LowExistenceMaterials: React.FC = () => {
       dataIndex: "category",
       key: "category",
       width: "15%",
-      ...getColumnSearchProps("category"),
+      ...getColumnSearchProps("category")
     },
     {
       title: "Nombre",
       dataIndex: "materialName",
       key: "materialName",
       width: "15%",
-      ...getColumnSearchProps("materialName"),
+      ...getColumnSearchProps("materialName")
     },
     {
       title: "En almacén",
@@ -164,17 +179,17 @@ const LowExistenceMaterials: React.FC = () => {
       key: "unitsTotal",
       width: "10%",
       sorter: {
-        compare: (a, b) => a.unitsTotal - b.unitsTotal,
+        compare: (a, b) => a.unitsTotal - b.unitsTotal
       },
-      ...getColumnSearchProps("unitsTotal"),
+      ...getColumnSearchProps("unitsTotal")
     },
     {
       title: "Existencias Mínimas",
       dataIndex: "minimumExistence",
       key: "minimumExistence",
       width: "10%",
-      ...getColumnSearchProps("minimumExistence"),
-    },
+      ...getColumnSearchProps("minimumExistence")
+    }
   ];
 
   return (
@@ -182,7 +197,16 @@ const LowExistenceMaterials: React.FC = () => {
       <div className="flex h-14 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-2 justify-between pr-4">
         <span className="items-center flex flex-initial gap-2 font-bold text-xl">
           Materiales con pocas existencias
-          <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="#ff0000" fill="none" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            strokeWidth="2"
+            stroke="#ff0000"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
             <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path>
             <path d="M12 8v4"></path>
@@ -210,7 +234,13 @@ const LowExistenceMaterials: React.FC = () => {
           </PDFDownloadLink>
         </Tooltip> */}
       </div>
-      <Table size="middle" columns={columns} dataSource={data} pagination={{ position: ["bottomCenter"], pageSize: 10 }} className="shadow-md" />
+      <Table
+        size="middle"
+        columns={columns}
+        dataSource={data}
+        pagination={{ position: ["bottomCenter"], pageSize: 10 }}
+        className="shadow-md"
+      />
     </>
   );
 };

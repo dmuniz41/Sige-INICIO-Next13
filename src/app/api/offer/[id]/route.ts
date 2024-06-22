@@ -14,10 +14,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
@@ -26,13 +26,13 @@ export async function GET(request: NextRequest) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        BDOffer,
+        BDOffer
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
@@ -40,10 +40,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: error.message
         },
         {
-          status: 400,
+          status: 400
         }
       );
     }

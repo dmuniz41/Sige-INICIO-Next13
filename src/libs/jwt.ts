@@ -5,16 +5,19 @@ interface SigInOptions {
 }
 
 const DEFAULT_SIGN_OPTIONS = {
-  expiresIn: "8h",
+  expiresIn: "8h"
 };
 
-export function signJwtAccessToken(payload: JwtPayload, options: SigInOptions = DEFAULT_SIGN_OPTIONS) {
+export function signJwtAccessToken(
+  payload: JwtPayload,
+  options: SigInOptions = DEFAULT_SIGN_OPTIONS
+) {
   try {
     const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY;
     const token = jwt.sign(payload, secretKey!, options);
     return token;
   } catch (error) {
-  console.log("🚀 ~ file: jwt.ts:18 ~ signJwtAccessToken ~ error:", error)
+    console.log("🚀 ~ file: jwt.ts:18 ~ signJwtAccessToken ~ error:", error);
   }
 }
 

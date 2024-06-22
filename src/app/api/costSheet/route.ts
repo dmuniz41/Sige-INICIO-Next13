@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     transportationExpenses = [],
     USDValue = 250,
     valuePerUnitMeasure = "",
-    workersAmount = 0,
+    workersAmount = 0
   }: ICostSheet = await request.json();
 
   const accessToken = request.headers.get("accessToken");
@@ -37,10 +37,10 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
@@ -51,10 +51,10 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Ya existe una ficha de costo con ese nombre",
+          message: "Ya existe una ficha de costo con ese nombre"
         },
         {
-          status: 409,
+          status: 409
         }
       );
     }
@@ -71,7 +71,8 @@ export async function POST(request: Request) {
       otherDirectExpenses.value = otherDirectExpenses.amount * otherDirectExpenses.price;
     });
     productionRelatedExpenses.map((productionRelatedExpenses) => {
-      productionRelatedExpenses.value = productionRelatedExpenses.amount * productionRelatedExpenses.price;
+      productionRelatedExpenses.value =
+        productionRelatedExpenses.amount * productionRelatedExpenses.price;
     });
     administrativeExpenses.map((administrativeExpenses) => {
       administrativeExpenses.value = administrativeExpenses.amount * administrativeExpenses.price;
@@ -88,23 +89,56 @@ export async function POST(request: Request) {
 
     //* Calcula el valor de cada subtotal en cada seccion de la ficha de costo
 
-    const administrativeExpensesSubtotal: number = administrativeExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const directSalariesSubtotal: number = directSalaries.reduce((total, currentValue) => total + currentValue.value, 0);
-    const financialExpensesSubtotal: number = financialExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const otherDirectExpensesSubtotal: number = otherDirectExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const productionRelatedExpensesSubtotal: number = productionRelatedExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const rawMaterialsSubtotal: number = rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
-    const taxExpensesSubtotal: number = taxExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const transportationExpensesSubtotal: number = transportationExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+    const administrativeExpensesSubtotal: number = administrativeExpenses.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const directSalariesSubtotal: number = directSalaries.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const financialExpensesSubtotal: number = financialExpenses.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const otherDirectExpensesSubtotal: number = otherDirectExpenses.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const productionRelatedExpensesSubtotal: number = productionRelatedExpenses.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const rawMaterialsSubtotal: number = rawMaterials.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const taxExpensesSubtotal: number = taxExpenses.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const transportationExpensesSubtotal: number = transportationExpenses.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
 
-    const costsTotalValue: number = rawMaterialsSubtotal + directSalariesSubtotal + otherDirectExpensesSubtotal + productionRelatedExpensesSubtotal;
-    const expensesTotalValue: number = administrativeExpensesSubtotal + transportationExpensesSubtotal + financialExpensesSubtotal + taxExpensesSubtotal;
+    const costsTotalValue: number =
+      rawMaterialsSubtotal +
+      directSalariesSubtotal +
+      otherDirectExpensesSubtotal +
+      productionRelatedExpensesSubtotal;
+    const expensesTotalValue: number =
+      administrativeExpensesSubtotal +
+      transportationExpensesSubtotal +
+      financialExpensesSubtotal +
+      taxExpensesSubtotal;
     const expensesAndCostsTotalValue: number = costsTotalValue + expensesTotalValue;
 
     const artisticTalentValue: number = expensesAndCostsTotalValue * (artisticTalent / 100);
     const representationCostValue: number = expensesAndCostsTotalValue * (representationCost / 100);
 
-    const creatorPrice: number = expensesAndCostsTotalValue + artisticTalentValue + representationCostValue;
+    const creatorPrice: number =
+      expensesAndCostsTotalValue + artisticTalentValue + representationCostValue;
 
     const salePriceMN: number = creatorPrice + rawMaterialsByClient;
     const salePriceMLC: number = salePriceMN / USDValue;
@@ -114,7 +148,7 @@ export async function POST(request: Request) {
     const newNomenclator = new Nomenclator({
       key: newKey,
       code: nomenclatorId,
-      category: "Ficha de costo",
+      category: "Ficha de costo"
     });
 
     await newNomenclator.save();
@@ -157,7 +191,7 @@ export async function POST(request: Request) {
       transportationExpensesSubtotal,
       USDValue,
       valuePerUnitMeasure,
-      workersAmount,
+      workersAmount
     });
 
     await newCostSheet.save();
@@ -165,13 +199,13 @@ export async function POST(request: Request) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        newCostSheet,
+        newCostSheet
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
@@ -179,10 +213,10 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: error.message
         },
         {
-          status: 400,
+          status: 400
         }
       );
     }
@@ -196,10 +230,10 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
@@ -208,13 +242,13 @@ export async function GET(request: Request) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        listOfCostSheets,
+        listOfCostSheets
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
@@ -222,10 +256,10 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: error.message
         },
         {
-          status: 400,
+          status: 400
         }
       );
     }
@@ -254,7 +288,7 @@ export async function PUT(request: Request) {
     transportationExpenses = [],
     USDValue = 0,
     valuePerUnitMeasure = "",
-    workersAmount = 1,
+    workersAmount = 1
   }: ICostSheet = await request.json();
   const accessToken = request.headers.get("accessToken");
 
@@ -263,10 +297,10 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
@@ -276,7 +310,7 @@ export async function PUT(request: Request) {
     if (!costSheetToUpdate) {
       return NextResponse.json({
         ok: false,
-        message: "La ficha de costo a actualizar no existe",
+        message: "La ficha de costo a actualizar no existe"
       });
     }
 
@@ -292,7 +326,8 @@ export async function PUT(request: Request) {
       otherDirectExpenses.value = otherDirectExpenses.amount * otherDirectExpenses.price;
     });
     productionRelatedExpenses.map((productionRelatedExpenses) => {
-      productionRelatedExpenses.value = productionRelatedExpenses.amount * productionRelatedExpenses.price;
+      productionRelatedExpenses.value =
+        productionRelatedExpenses.amount * productionRelatedExpenses.price;
     });
     administrativeExpenses.map((administrativeExpenses) => {
       administrativeExpenses.value = administrativeExpenses.amount * administrativeExpenses.price;
@@ -309,23 +344,56 @@ export async function PUT(request: Request) {
 
     //* Calcula el valor de cada subtotal en cada seccion de la ficha de costo
 
-    const administrativeExpensesSubtotal: number = administrativeExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const directSalariesSubtotal: number = directSalaries.reduce((total, currentValue) => total + currentValue.value, 0);
-    const financialExpensesSubtotal: number = financialExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const otherDirectExpensesSubtotal: number = otherDirectExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const productionRelatedExpensesSubtotal: number = productionRelatedExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const rawMaterialsSubtotal: number = rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
-    const taxExpensesSubtotal: number = taxExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
-    const transportationExpensesSubtotal: number = transportationExpenses.reduce((total, currentValue) => total + currentValue.value, 0);
+    const administrativeExpensesSubtotal: number = administrativeExpenses.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const directSalariesSubtotal: number = directSalaries.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const financialExpensesSubtotal: number = financialExpenses.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const otherDirectExpensesSubtotal: number = otherDirectExpenses.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const productionRelatedExpensesSubtotal: number = productionRelatedExpenses.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const rawMaterialsSubtotal: number = rawMaterials.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const taxExpensesSubtotal: number = taxExpenses.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
+    const transportationExpensesSubtotal: number = transportationExpenses.reduce(
+      (total, currentValue) => total + currentValue.value,
+      0
+    );
 
-    const costsTotalValue: number = rawMaterialsSubtotal + directSalariesSubtotal + otherDirectExpensesSubtotal + productionRelatedExpensesSubtotal;
-    const expensesTotalValue: number = administrativeExpensesSubtotal + transportationExpensesSubtotal + financialExpensesSubtotal + taxExpensesSubtotal;
+    const costsTotalValue: number =
+      rawMaterialsSubtotal +
+      directSalariesSubtotal +
+      otherDirectExpensesSubtotal +
+      productionRelatedExpensesSubtotal;
+    const expensesTotalValue: number =
+      administrativeExpensesSubtotal +
+      transportationExpensesSubtotal +
+      financialExpensesSubtotal +
+      taxExpensesSubtotal;
     const expensesAndCostsTotalValue: number = costsTotalValue + expensesTotalValue;
 
     const artisticTalentValue: number = expensesAndCostsTotalValue * (artisticTalent / 100);
     const representationCostValue: number = expensesAndCostsTotalValue * (representationCost / 100);
 
-    const creatorPrice: number = expensesAndCostsTotalValue + artisticTalentValue + representationCostValue;
+    const creatorPrice: number =
+      expensesAndCostsTotalValue + artisticTalentValue + representationCostValue;
 
     const salePriceMN: number = creatorPrice + rawMaterialsByClient;
     const salePriceMLC: number = salePriceMN / USDValue;
@@ -368,7 +436,7 @@ export async function PUT(request: Request) {
         transportationExpensesSubtotal,
         USDValue,
         valuePerUnitMeasure,
-        workersAmount,
+        workersAmount
       },
       { new: true }
     );
@@ -376,13 +444,13 @@ export async function PUT(request: Request) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        updatedCostSheet,
+        updatedCostSheet
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
@@ -390,10 +458,10 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: error.message
         },
         {
-          status: 400,
+          status: 400
         }
       );
     }
@@ -408,10 +476,10 @@ export async function PATCH(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente",
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
         },
         {
-          status: 401,
+          status: 401
         }
       );
     }
@@ -421,7 +489,7 @@ export async function PATCH(request: Request) {
     if (!costSheetToDelete) {
       return NextResponse.json({
         ok: true,
-        message: "La ficha de costo a borrar no existe",
+        message: "La ficha de costo a borrar no existe"
       });
     }
 
@@ -432,13 +500,13 @@ export async function PATCH(request: Request) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        deletedCostSheet,
+        deletedCostSheet
       }),
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
   } catch (error) {
@@ -446,10 +514,10 @@ export async function PATCH(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: error.message,
+          message: error.message
         },
         {
-          status: 400,
+          status: 400
         }
       );
     }

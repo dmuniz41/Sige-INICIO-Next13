@@ -84,8 +84,8 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
           name="description"
           label={<span className="font-bold text-md">Descripción</span>}
           rules={[
-            { required: true, message: "Campo requerido" },
-            // TODO: REVISAR ESTE VALIDADOR 
+            { required: true, message: "Campo requerido" }
+            // TODO: REVISAR ESTE VALIDADOR
             // {
             //   message: "Ya existe un item con esa descripción",
             //   validator: (_, value: string) => {

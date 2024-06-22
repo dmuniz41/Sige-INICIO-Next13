@@ -27,6 +27,7 @@ export const ServiceFeeView = () => {
   const { selectedServiceFee }: { selectedServiceFee: IServiceFee } = useAppSelector(
     (state: RootState) => state?.serviceFee
   );
+  console.log("🚀 ~ ServiceFeeView ~ selectedServiceFee:", selectedServiceFee);
   let rawMaterials: IServiceFeeSubItem[] = useMemo(
     () => selectedServiceFee.rawMaterials,
     [selectedServiceFee]
@@ -44,6 +45,7 @@ export const ServiceFeeView = () => {
     [selectedServiceFee]
   );
   let administrativeExpenses: IServiceFeeSubItem[] = selectedServiceFee.administrativeExpenses;
+  console.log("🚀 ~ ServiceFeeView ~ administrativeExpenses:", administrativeExpenses);
   let transportationExpenses: IServiceFeeSubItem[] = selectedServiceFee.transportationExpenses;
   let hiredPersonalExpenses: IServiceFeeSubItem[] = selectedServiceFee.hiredPersonalExpenses;
 

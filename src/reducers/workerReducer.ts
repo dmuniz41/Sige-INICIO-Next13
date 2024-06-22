@@ -1,32 +1,32 @@
 import { types } from "../types/types";
 
 const initialState = {
-  workers: [],
+  workers: []
 };
 
-export const workerReducer = (state = initialState, action:any) => {
+export const workerReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case types.addWorker:
       return {
-        ...state,
+        ...state
       };
     case types.deleteWorker:
       return {
-        ...state,
+        ...state
       };
     case types.updateWorker:
       return {
-        ...state,
+        ...state
       };
     case types.workersLoaded:
       return {
         ...state,
-        workers: [...action.payload],
+        workers: [...action.payload]
       };
     case types.selectedWorker:
       return {
         ...state,
-        selectedWorker: action.payload,
+        selectedWorker: action.payload
       };
 
     default:

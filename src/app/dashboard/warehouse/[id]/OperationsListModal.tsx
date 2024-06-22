@@ -29,7 +29,11 @@ interface CollectionCreateFormProps {
   defaultValues?: Values;
 }
 
-export const OperationsList: React.FC<CollectionCreateFormProps> = ({ open, onCancel, defaultValues }) => {
+export const OperationsList: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCancel,
+  defaultValues
+}) => {
   const data = defaultValues?.operations;
   return (
     <Modal
@@ -65,7 +69,11 @@ const OperationsTable: React.FC<Props> = (props) => {
 
   const data: DataType[] = useMemo(() => operations, [operations]);
 
-  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -93,7 +101,11 @@ const OperationsTable: React.FC<Props> = (props) => {
           >
             Search
           </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
           <Button
@@ -119,7 +131,9 @@ const OperationsTable: React.FC<Props> = (props) => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
+    ),
     onFilter: (value, record) =>
       record[dataIndex]
         .toString()
@@ -140,7 +154,7 @@ const OperationsTable: React.FC<Props> = (props) => {
         />
       ) : (
         text
-      ),
+      )
   });
 
   const handleReset = (clearFilters: () => void) => {
@@ -159,7 +173,7 @@ const OperationsTable: React.FC<Props> = (props) => {
         <Tag className="font-bold" color={tipo === "Añadir" ? "#34b042" : "#ff0000"} key={tipo}>
           {tipo.toUpperCase()}
         </Tag>
-      ),
+      )
     },
     {
       title: "Fecha",
@@ -167,21 +181,26 @@ const OperationsTable: React.FC<Props> = (props) => {
       key: "date",
       width: "80%",
       ...getColumnSearchProps("date"),
-      defaultSortOrder: 'descend',
-      sorter: (a, b) => new Date(a.date) - new Date(b.date),
+      defaultSortOrder: "descend",
+      sorter: (a, b) => new Date(a.date) - new Date(b.date)
     },
     {
       title: "Cantidad",
       dataIndex: "amount",
       key: "amount",
       width: "10%",
-      ...getColumnSearchProps("amount"),
-    },
+      ...getColumnSearchProps("amount")
+    }
   ];
 
   return (
     <>
-      <Table size="small" columns={columns} dataSource={data} pagination={{ position: ["bottomCenter"], pageSize: 14 }} />
+      <Table
+        size="small"
+        columns={columns}
+        dataSource={data}
+        pagination={{ position: ["bottomCenter"], pageSize: 14 }}
+      />
     </>
   );
 };

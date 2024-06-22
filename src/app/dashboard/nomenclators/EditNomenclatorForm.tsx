@@ -13,23 +13,28 @@ interface CollectionCreateFormProps {
 const category: SelectProps["options"] = [
   {
     label: "Area de usuario",
-    value: "Area de usuario",
+    value: "Area de usuario"
   },
   {
     label: "Cargo de trabajador",
-    value: "Cargo de trabajador",
+    value: "Cargo de trabajador"
   },
   {
     label: "Categoría de material",
-    value: "Categoría de material",
+    value: "Categoría de material"
   },
   {
     label: "Unidad de medida",
-    value: "Unidad de medida",
-  },
+    value: "Unidad de medida"
+  }
 ];
 
-export const EditNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
+export const EditNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel,
+  defaultValues
+}) => {
   const [form] = Form.useForm();
   return (
     <Modal
@@ -73,7 +78,7 @@ export const EditNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open,
           >
             Editar
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form
@@ -84,18 +89,26 @@ export const EditNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open,
         fields={[
           {
             name: "category",
-            value: defaultValues?.category,
+            value: defaultValues?.category
           },
           {
             name: "code",
-            value: defaultValues?.code,
-          },
+            value: defaultValues?.code
+          }
         ]}
       >
-        <Form.Item name="category" label="Categoría" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="category"
+          label="Categoría"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select disabled allowClear style={{ width: "100%" }} options={category} />
         </Form.Item>
-        <Form.Item name="code" label="Código" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="code"
+          label="Código"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Input />
         </Form.Item>
       </Form>

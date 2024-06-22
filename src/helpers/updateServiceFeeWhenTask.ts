@@ -12,7 +12,7 @@ export const updateServiceFeeWhenTask = async (
   task: IServiceFeeTask,
   serviceFees: IServiceFee[]
 ) => {
-  console.log("🚀 ~ task:", task)
+  console.log("🚀 ~ task:", task);
   //? BUSCA EN CADA LISTA DE TAREAS DE CADA TARIFA DE SERVICIO SI EXISTE LA TAREA QUE SE PASA POR PARÁMETRO. SI EXISTE, ACTUALIZA EL VALOR DE LA TARIFA DE SERVICIO CON EL NUEVO VALOR DE LA TAREA ?//
 
   serviceFees.forEach((serviceFee, index, serviceFees) => {
@@ -52,7 +52,8 @@ export const updateServiceFeeWhenTask = async (
         0
       );
       const taskListSubtotal: number = serviceFee.taskList.reduce(
-        (total, currentValue) => total + currentValue.currentComplexity?.value! * currentValue.amount,
+        (total, currentValue) =>
+          total + currentValue.currentComplexity?.value! * currentValue.amount,
         0
       );
       const estimatedTime: number = serviceFee?.taskList?.reduce(

@@ -41,7 +41,7 @@
   .table-check-action-btn {
     @apply flex justify-center items-center p-2 rounded-md bg-success-500 text-white-100 cursor-pointer hover:bg-success-700 ease-in-out duration-300;
   }
-  .add-item-form-btn{
-    @apply gap-2 flex select-none rounded-lg bg-white-500 py-2 px-4 justify-center text-center items-center align-middle text-sm uppercase border border-dashed border-white-900 text-white-900 transition-all hover:text-blue-400 hover:border-blue-400 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none
+  .add-item-form-btn {
+    @apply gap-2 flex select-none rounded-lg bg-white-500 py-2 px-4 justify-center text-center items-center align-middle text-sm uppercase border border-dashed border-white-900 text-white-900 transition-all hover:text-blue-400 hover:border-blue-400 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
   }
 }

@@ -10,18 +10,22 @@ export const startAddWarehouse = (name: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/warehouse`, { name }, { headers: { accessToken: token } })
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/warehouse`,
+        { name },
+        { headers: { accessToken: token } }
+      )
       .then(() => {
         dispatch(addWarehouse(name));
         dispatch(warehousesStartLoading());
         Toast.fire({
           icon: "success",
-          title: "Almacén Creado",
+          title: "Almacén Creado"
         });
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ return ~ message:", message)
+        console.log("🚀 ~ return ~ message:", message);
         Swal.fire("Error", "Error al crear almacén", "error");
       });
   };
@@ -32,18 +36,22 @@ export const startUpdateWarehouse = (_id: string, name?: string, totalValue?: nu
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(`${process.env.NEXT_PUBLIC_API_URL}/warehouse`, { _id, name, totalValue }, { headers: { accessToken: token } })
+      .put(
+        `${process.env.NEXT_PUBLIC_API_URL}/warehouse`,
+        { _id, name, totalValue },
+        { headers: { accessToken: token } }
+      )
       .then(() => {
         dispatch(updateWarehouse(name!, totalValue!));
         dispatch(warehousesStartLoading());
         Toast.fire({
           icon: "success",
-          title: "Almacén Actualizado",
+          title: "Almacén Actualizado"
         });
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ return ~ message:", message)
+        console.log("🚀 ~ return ~ message:", message);
         Swal.fire("Error", "Error al actualizar el almacén", "error");
       });
   };
@@ -54,18 +62,20 @@ export const startDeleteWarehouse = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .delete(`${process.env.NEXT_PUBLIC_API_URL}/warehouse?id=${id}`, { headers: { accessToken: token } })
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/warehouse?id=${id}`, {
+        headers: { accessToken: token }
+      })
       .then(() => {
         dispatch(deleteWarehouse(id));
         dispatch(warehousesStartLoading());
         Toast.fire({
           icon: "success",
-          title: "Almacén Eliminado",
+          title: "Almacén Eliminado"
         });
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ return ~ message:", message)
+        console.log("🚀 ~ return ~ message:", message);
         Swal.fire("Error", "Error al eliminar el almacén ", "error");
       });
   };
@@ -83,7 +93,7 @@ export const warehousesStartLoading = () => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ return ~ message:", message)
+        console.log("🚀 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar los almacenes", "error");
       });
   };
@@ -107,46 +117,46 @@ export const lowExistenceMaterialsStartLoading = () => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ return ~ message:", message)
+        console.log("🚀 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar los almacenes con bajas existencias", "error");
       });
   };
 };
 export const warehousesLoaded = (warehouses: any) => ({
   type: types.warehousesLoaded,
-  payload: warehouses,
+  payload: warehouses
 });
 
 export const lowExistenceMaterialsLoaded = (lowExistenceMaterials: any) => ({
   type: types.lowExistencesMaterials,
-  payload: lowExistenceMaterials,
+  payload: lowExistenceMaterials
 });
 
 export const selectedWarehouse = (id: string) => ({
   type: types.selectedWarehouse,
   payload: {
-    id,
-  },
+    id
+  }
 });
 
 const addWarehouse = (name: string) => ({
   type: types.addWarehouse,
   payload: {
-    name,
-  },
+    name
+  }
 });
 
 const updateWarehouse = (name: string, totalValue: number) => ({
   type: types.updateWarehouse,
   payload: {
     name,
-    totalValue,
-  },
+    totalValue
+  }
 });
 
 const deleteWarehouse = (id: string) => ({
   type: types.deleteWorker,
   payload: {
-    id,
-  },
+    id
+  }
 });

@@ -24,7 +24,7 @@ export const startAddWorker = ({ ...worker }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ return ~ message:", message)
+        console.log("🚀 ~ return ~ message:", message);
         Swal.fire("Error", "Error al crear trabajador", "error");
       });
   };
@@ -50,7 +50,7 @@ export const startUpdateWorker = ({ ...worker }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ return ~ message:", message)
+        console.log("🚀 ~ return ~ message:", message);
         Swal.fire("Error", "Error al actualizar el trabajador ", "error");
       });
   };
@@ -74,7 +74,7 @@ export const startDeleteWorker = (id: string): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ return ~ message:", message)
+        console.log("🚀 ~ return ~ message:", message);
         Swal.fire("Error", "Error al eliminar el trabajador", "error");
       });
   };
@@ -92,7 +92,7 @@ export const workersStartLoading = () => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ return ~ message:", message)
+        console.log("🚀 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar el trabajador ", "error");
       });
   };

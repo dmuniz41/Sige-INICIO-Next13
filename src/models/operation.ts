@@ -9,7 +9,7 @@ export interface IOperation {
 const OperationSchema = new Schema<IOperation, Model<IOperation>>({
   date: { type: String },
   tipo: { type: String },
-  amount: { type: Number },
+  amount: { type: Number }
 });
 
 const Operation = models.Operation || model("Operation", OperationSchema);

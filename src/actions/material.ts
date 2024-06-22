@@ -64,10 +64,9 @@ export const startDeleteMaterial = (code: string, warehouse: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/material?code=${code}&warehouse=${warehouse}`,
-        { headers: { accessToken: token } }
-      )
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/material?code=${code}&warehouse=${warehouse}`, {
+        headers: { accessToken: token }
+      })
       .then(() => {
         dispatch(deleteMaterial(code));
         dispatch(materialsStartLoading(warehouse));

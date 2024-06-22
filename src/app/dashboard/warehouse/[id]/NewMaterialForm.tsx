@@ -26,7 +26,8 @@ export const NewMaterialForm: React.FC<CollectionCreateFormProps> = ({
   onCancel
 }) => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-  const { materialsNomenclators }: {materialsNomenclators: IMaterialNomenclator[]} = useAppSelector((state: RootState) => state?.nomenclator);
+  const { materialsNomenclators }: { materialsNomenclators: IMaterialNomenclator[] } =
+    useAppSelector((state: RootState) => state?.nomenclator);
   const unitMeasures: string[] | undefined = [];
   const providers: string[] | undefined = [];
 

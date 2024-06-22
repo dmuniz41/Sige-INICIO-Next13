@@ -15,10 +15,13 @@ import { ICostSheetSubitem } from "../../../../models/costSheet";
 import { PDFSvg } from "@/app/global/PDFSvg";
 import { EditSvg } from "@/app/global/EditSvg";
 
-const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
-  ssr: false,
-  loading: () => <p>Loading...</p>,
-});
+const PDFDownloadLink = dynamic(
+  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+  {
+    ssr: false,
+    loading: () => <p>Loading...</p>
+  }
+);
 
 export const CostSheetView = () => {
   const url = usePathname().split("/");
@@ -30,47 +33,73 @@ export const CostSheetView = () => {
     dispatch(loadSelectedCostSheet(selectedCostSheetId));
   }, [dispatch, selectedCostSheetId]);
 
-  const { selectedCostSheet }: { selectedCostSheet: ICostSheet } = useAppSelector((state: RootState) => state?.costSheet);
-  let rawMaterials: ICostSheetSubitem[] = useMemo(() => selectedCostSheet.rawMaterials, [selectedCostSheet]);
-  let directSalaries: ICostSheetSubitem[] = useMemo(() => selectedCostSheet.directSalaries, [selectedCostSheet]);
-  let otherDirectExpenses: ICostSheetSubitem[] = useMemo(() => selectedCostSheet.otherDirectExpenses, [selectedCostSheet]);
-  let productionRelatedExpenses: ICostSheetSubitem[] = useMemo(() => selectedCostSheet.productionRelatedExpenses, [selectedCostSheet]);
-  let administrativeExpenses: ICostSheetSubitem[] = useMemo(() => selectedCostSheet.administrativeExpenses, [selectedCostSheet]);
-  let transportationExpenses: ICostSheetSubitem[] = useMemo(() => selectedCostSheet.transportationExpenses, [selectedCostSheet]);
-  let financialExpenses: ICostSheetSubitem[] = useMemo(() => selectedCostSheet.financialExpenses, [selectedCostSheet]);
-  let taxExpenses: ICostSheetSubitem[] = useMemo(() => selectedCostSheet.taxExpenses, [selectedCostSheet]);
+  const { selectedCostSheet }: { selectedCostSheet: ICostSheet } = useAppSelector(
+    (state: RootState) => state?.costSheet
+  );
+  let rawMaterials: ICostSheetSubitem[] = useMemo(
+    () => selectedCostSheet.rawMaterials,
+    [selectedCostSheet]
+  );
+  let directSalaries: ICostSheetSubitem[] = useMemo(
+    () => selectedCostSheet.directSalaries,
+    [selectedCostSheet]
+  );
+  let otherDirectExpenses: ICostSheetSubitem[] = useMemo(
+    () => selectedCostSheet.otherDirectExpenses,
+    [selectedCostSheet]
+  );
+  let productionRelatedExpenses: ICostSheetSubitem[] = useMemo(
+    () => selectedCostSheet.productionRelatedExpenses,
+    [selectedCostSheet]
+  );
+  let administrativeExpenses: ICostSheetSubitem[] = useMemo(
+    () => selectedCostSheet.administrativeExpenses,
+    [selectedCostSheet]
+  );
+  let transportationExpenses: ICostSheetSubitem[] = useMemo(
+    () => selectedCostSheet.transportationExpenses,
+    [selectedCostSheet]
+  );
+  let financialExpenses: ICostSheetSubitem[] = useMemo(
+    () => selectedCostSheet.financialExpenses,
+    [selectedCostSheet]
+  );
+  let taxExpenses: ICostSheetSubitem[] = useMemo(
+    () => selectedCostSheet.taxExpenses,
+    [selectedCostSheet]
+  );
 
   const fields: any = [
     {
       title: "Descripción",
       custom: true,
       component: (item: any) => `${item.description}`,
-      width: "40",
+      width: "40"
     },
     {
       title: "U/M",
       custom: true,
       component: (item: any) => `${item.unitMeasure}`,
-      width: "20",
+      width: "20"
     },
     {
       title: "Cant",
       custom: true,
       component: (item: any) => `${item.amount}`,
-      width: "10",
+      width: "10"
     },
     {
       title: "Precio CUP",
       custom: true,
       component: (item: any) => `$ ${item.price.toFixed(2)}`,
-      width: "15",
+      width: "15"
     },
     {
       title: "Importe CUP",
       custom: true,
       component: (item: any) => `$ ${item.value.toFixed(2)}`,
-      width: "15",
-    },
+      width: "15"
+    }
   ];
   const PDFReportData: ICostSheet = selectedCostSheet;
 
@@ -84,10 +113,7 @@ export const CostSheetView = () => {
         <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
           <div className="flex gap-2">
             <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
-              <button
-                className="toolbar-primary-icon-btn"
-                onClick={handleEdit}
-              >
+              <button className="toolbar-primary-icon-btn" onClick={handleEdit}>
                 <EditSvg />
                 Editar
               </button>
@@ -117,7 +143,8 @@ export const CostSheetView = () => {
               Creador: <span className="font-normal">INICIO</span>
             </label>
             <label className="font-bold">
-              Cantidad de trabajadores: <span className="font-normal">{selectedCostSheet.workersAmount}</span>
+              Cantidad de trabajadores:{" "}
+              <span className="font-normal">{selectedCostSheet.workersAmount}</span>
             </label>
           </div>
           <div className="flex flex-1 flex-col pl-10">
@@ -130,7 +157,8 @@ export const CostSheetView = () => {
           </div>
           <div className="flex flex-1 flex-col pl-10">
             <label className="font-bold">
-              Precio/UM: <span className="font-normal">{selectedCostSheet.valuePerUnitMeasure}</span>
+              Precio/UM:{" "}
+              <span className="font-normal">{selectedCostSheet.valuePerUnitMeasure}</span>
             </label>
             <label className="font-bold">
               Cliente: <span className="font-normal">Cliente</span>
@@ -138,28 +166,64 @@ export const CostSheetView = () => {
           </div>
         </section>
         <section className="flex flex-col w-full ">
-          <CSViewTable subtotal={selectedCostSheet.rawMaterialsSubtotal} label="Gasto Material" data={rawMaterials} />
-          <CSViewTable subtotal={selectedCostSheet.directSalariesSubtotal} label="Salarios Directos" data={directSalaries} />
-          <CSViewTable subtotal={selectedCostSheet.otherDirectExpensesSubtotal} label="Otros Gastos Directos" data={otherDirectExpenses} />
-          <CSViewTable subtotal={selectedCostSheet.productionRelatedExpensesSubtotal} label="Gastos Asociados a la Producción" data={productionRelatedExpenses} />
+          <CSViewTable
+            subtotal={selectedCostSheet.rawMaterialsSubtotal}
+            label="Gasto Material"
+            data={rawMaterials}
+          />
+          <CSViewTable
+            subtotal={selectedCostSheet.directSalariesSubtotal}
+            label="Salarios Directos"
+            data={directSalaries}
+          />
+          <CSViewTable
+            subtotal={selectedCostSheet.otherDirectExpensesSubtotal}
+            label="Otros Gastos Directos"
+            data={otherDirectExpenses}
+          />
+          <CSViewTable
+            subtotal={selectedCostSheet.productionRelatedExpensesSubtotal}
+            label="Gastos Asociados a la Producción"
+            data={productionRelatedExpenses}
+          />
           <div className="flex w-full h-10 items-center border-solid border-[1px] mt-1 ">
             <div className="flex flex-1 justify-end pr-4">
               <label className="font-bold">Importe Total de Costos:</label>
             </div>
             <div className="flex border-l-[1px] border-solid w-[8.7%] h-full items-center justify-center bg-background_light">
-              <span className="font-bold">${(selectedCostSheet.costsTotalValue * 1).toFixed(2)}</span>
+              <span className="font-bold">
+                ${(selectedCostSheet.costsTotalValue * 1).toFixed(2)}
+              </span>
             </div>
           </div>
-          <CSViewTable subtotal={selectedCostSheet.administrativeExpensesSubtotal} label="Gastos Generales y de Administración" data={administrativeExpenses} />
-          <CSViewTable subtotal={selectedCostSheet.transportationExpensesSubtotal} label="Gastos de Distribución y Ventas" data={transportationExpenses} />
-          <CSViewTable subtotal={selectedCostSheet.financialExpensesSubtotal} label="Gastos Financieros" data={financialExpenses} />
-          <CSViewTable subtotal={selectedCostSheet.taxExpensesSubtotal} label="Gastos Tributarios" data={taxExpenses} />
+          <CSViewTable
+            subtotal={selectedCostSheet.administrativeExpensesSubtotal}
+            label="Gastos Generales y de Administración"
+            data={administrativeExpenses}
+          />
+          <CSViewTable
+            subtotal={selectedCostSheet.transportationExpensesSubtotal}
+            label="Gastos de Distribución y Ventas"
+            data={transportationExpenses}
+          />
+          <CSViewTable
+            subtotal={selectedCostSheet.financialExpensesSubtotal}
+            label="Gastos Financieros"
+            data={financialExpenses}
+          />
+          <CSViewTable
+            subtotal={selectedCostSheet.taxExpensesSubtotal}
+            label="Gastos Tributarios"
+            data={taxExpenses}
+          />
           <div className="flex w-full h-10 items-center border-solid border-[1px] mt-1 ">
             <div className="flex flex-1 justify-end pr-4">
               <label className="font-bold">Importe Total de Gastos:</label>
             </div>
             <div className="flex border-l-[1px] border-solid w-[8.7%] h-full items-center justify-center bg-background_light">
-              <span className="font-bold">${(selectedCostSheet.expensesTotalValue * 1).toFixed(2)}</span>
+              <span className="font-bold">
+                ${(selectedCostSheet.expensesTotalValue * 1).toFixed(2)}
+              </span>
             </div>
           </div>
           <div className="flex w-full h-10 items-center border-solid border-[1px] mt-1 ">
@@ -167,31 +231,49 @@ export const CostSheetView = () => {
               <label className="font-bold">Importe Total de Costos y Gastos:</label>
             </div>
             <div className="flex border-l-[1px] border-solid w-[8.7%] h-full items-center justify-center bg-background_light">
-              <span className="font-bold">${(selectedCostSheet.expensesAndCostsTotalValue * 1).toFixed(2)}</span>
+              <span className="font-bold">
+                ${(selectedCostSheet.expensesAndCostsTotalValue * 1).toFixed(2)}
+              </span>
             </div>
           </div>
         </section>
         <section className="w-full flex flex-row gap-5 p-2">
           <div className="flex flex-col w-[40%]">
             <label className="font-bold">
-              Talento Artístico ({selectedCostSheet.artisticTalent}%): <span className="font-normal">${(selectedCostSheet.artisticTalentValue * 1).toFixed(2)}</span>
+              Talento Artístico ({selectedCostSheet.artisticTalent}%):{" "}
+              <span className="font-normal">
+                ${(selectedCostSheet.artisticTalentValue * 1).toFixed(2)}
+              </span>
             </label>
             <label className="font-bold">
-              Utilidad ({selectedCostSheet.representationCost}%): <span className="font-normal">${(selectedCostSheet.representationCostValue * 1).toFixed(2)}</span>
+              Utilidad ({selectedCostSheet.representationCost}%):{" "}
+              <span className="font-normal">
+                ${(selectedCostSheet.representationCostValue * 1).toFixed(2)}
+              </span>
             </label>
             <label className="font-bold">
-              Precio del Creador: <span className="font-normal">${(selectedCostSheet.creatorPrice * 1).toFixed(2)}</span>
+              Precio del Creador:{" "}
+              <span className="font-normal">
+                ${(selectedCostSheet.creatorPrice * 1).toFixed(2)}
+              </span>
             </label>
           </div>
           <div className="flex flex-col w-[40%]">
             <label className="font-bold">
-              Materias Primas y Materiales Aportados por el Cliente: <span className="font-normal">${(selectedCostSheet.rawMaterialsByClient * 1).toFixed(2)}</span>
+              Materias Primas y Materiales Aportados por el Cliente:{" "}
+              <span className="font-normal">
+                ${(selectedCostSheet.rawMaterialsByClient * 1).toFixed(2)}
+              </span>
             </label>
             <label className="font-bold">
-              Precio de Venta (MN): <span className="font-normal">${(selectedCostSheet.salePrice * 1).toFixed(2)}</span>
+              Precio de Venta (MN):{" "}
+              <span className="font-normal">${(selectedCostSheet.salePrice * 1).toFixed(2)}</span>
             </label>
             <label className="font-bold">
-              Precio de Venta (MLC): <span className="font-normal">${(selectedCostSheet.salePriceMLC * 1).toFixed(2)}</span>
+              Precio de Venta (MLC):{" "}
+              <span className="font-normal">
+                ${(selectedCostSheet.salePriceMLC * 1).toFixed(2)}
+              </span>
             </label>
           </div>
         </section>

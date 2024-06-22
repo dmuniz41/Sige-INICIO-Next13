@@ -1,7 +1,6 @@
 import React from "react";
 import ServiceFeeTaskTable from "./ServiceFeesTaskTable";
 
-
 export default function page() {
   return (
     <section className="flex w-full h-[90%] pt-[3rem] pl-[250px] pr-[1rem] overflow-hidden">
@@ -11,4 +10,3 @@ export default function page() {
     </section>
   );
 }
-

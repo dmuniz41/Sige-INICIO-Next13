@@ -37,7 +37,9 @@ const OfferTable = (props: { projectId: string }) => {
       width: "60%",
       render: (_, record) => (
         <div className="flex gap-4">
-          <span>{record.projectName} ({record.version})</span>
+          <span>
+            {record.projectName} ({record.version})
+          </span>
           {record.isFinalOffer ? (
             <div className=" text-success-500">
               <CircleCheckSvg />

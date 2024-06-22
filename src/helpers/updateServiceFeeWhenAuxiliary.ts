@@ -114,9 +114,9 @@ export const updateServiceFeeWhenAuxiliary = async (
       }
     });
 
-    hiredPersonalExpenses.forEach((hiredPersonalExpense, index, hiredPersonalExpenses)=>{
-      if(hiredPersonalExpense.description === "Gasto de salarios indirectos"){
-        const price = auxiliary.indirectSalariesCoefficient
+    hiredPersonalExpenses.forEach((hiredPersonalExpense, index, hiredPersonalExpenses) => {
+      if (hiredPersonalExpense.description === "Gasto de salarios indirectos") {
+        const price = auxiliary.indirectSalariesCoefficient;
         hiredPersonalExpenses[index] = {
           description: hiredPersonalExpense.description,
           unitMeasure: hiredPersonalExpense.unitMeasure,
@@ -125,10 +125,10 @@ export const updateServiceFeeWhenAuxiliary = async (
           value: price * hiredPersonalExpense.amount
         };
         return hiredPersonalExpenses[index];
-      };
-    })
+      }
+    });
   });
-  
+
   serviceFees.map(async (serviceFee) => {
     try {
       await connectDB();
@@ -140,7 +140,13 @@ export const updateServiceFeeWhenAuxiliary = async (
         0
       );
       const taskListSubtotal: number = serviceFee.taskList.reduce(
-        (total, currentValue) => total + currentValue.value,
+        (total, currentValue) =>
+          total + currentValue.currentComplexity?.value! * currentValue.amount,
+        0
+      );
+      const estimatedTime: number = serviceFee?.taskList?.reduce(
+        (total, currentValue) =>
+          total + currentValue?.currentComplexity?.time! * currentValue.amount,
         0
       );
       const equipmentDepreciationSubtotal: number = serviceFee.equipmentDepreciation.reduce(
@@ -198,7 +204,7 @@ export const updateServiceFeeWhenAuxiliary = async (
       // });
 
       //? SI SE MODIFICA EL VALOR DE UNA TARIFA SE MODIFICA TAMBIEN EL VALOR DEL NOMENCLADOR ASOCIADO ?//
-      
+
       if (!BDNomenclator) {
         const newKey = generateRandomString(26);
         const newNomenclator = new Nomenclator({
@@ -252,7 +258,8 @@ export const updateServiceFeeWhenAuxiliary = async (
           // artisticTalent: serviceFee.artisticTalent,
           // artisticTalentValue: artisticTalentValue,
           salePrice: salePrice,
-          salePriceUSD: salePrice / serviceFee?.currencyChange
+          salePriceUSD: salePrice / serviceFee?.currencyChange,
+          estimatedTime: estimatedTime
         },
         { new: true }
       );

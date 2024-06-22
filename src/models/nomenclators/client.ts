@@ -8,7 +8,7 @@ export interface IClientNomenclator {
   key: string;
   name: string;
   phoneNumber?: number;
-  contactPerson?: string
+  contactPerson?: string;
 }
 
 const ClientNomenclatorSchema = new Schema<IClientNomenclator, Model<IClientNomenclator>>({
@@ -45,5 +45,6 @@ const ClientNomenclatorSchema = new Schema<IClientNomenclator, Model<IClientNome
   }
 });
 
-const ClientNomenclator = models.ClientNomenclator || model("ClientNomenclator", ClientNomenclatorSchema);
+const ClientNomenclator =
+  models.ClientNomenclator || model("ClientNomenclator", ClientNomenclatorSchema);
 export default ClientNomenclator;

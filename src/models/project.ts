@@ -7,7 +7,7 @@ export interface IProject {
   currency: string;
   deliveryDate: string;
   expenses: number;
-  finalOfferId: string
+  finalOfferId: string;
   initDate: string;
   itemsList: IOfferItem[];
   key: string;
@@ -65,7 +65,7 @@ const ProjectSchema = new Schema<IProject, Model<IProject>>({
     type: [
       {
         idNumber: Number,
-        key:String,
+        key: String,
         description: String,
         activities: [
           {

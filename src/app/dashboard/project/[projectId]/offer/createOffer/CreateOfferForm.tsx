@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import Swal from "sweetalert2";
 
-import { changeProjectStatus,  } from "@/actions/project";
+import { changeProjectStatus } from "@/actions/project";
 import { IOffer, IOfferItem } from "@/models/offer";
 import { IProject } from "@/models/project";
 import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
@@ -82,7 +82,7 @@ export const CreateOfferForm = (props: { projectId: string }) => {
       return itemList[index];
     });
   }
-  
+
   const handleEdit = (item: IOfferItem) => {
     dispatch(selectedItem(item));
     router.push(`/dashboard/project/${projectId}/offer/createOffer/editItem`);
@@ -231,7 +231,7 @@ export const CreateOfferForm = (props: { projectId: string }) => {
                     value: selectedOffer?.itemsList
                       ?.map((item) => item.value)
                       .reduce((total, current) => total + current, 0),
-                    version:"v1"
+                    version: "v1"
                   })
                 );
                 router.push(`/dashboard/project/${projectId}/offer`);
