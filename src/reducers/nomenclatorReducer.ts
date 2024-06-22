@@ -2,86 +2,86 @@ import { types } from "../types/types";
 
 const initialState = {
   nomenclators: [],
-  clientNomenclators:[],
-  representativeNomenclators:[],
-  materialsNomenclators:[],
+  clientNomenclators: [],
+  representativeNomenclators: [],
+  materialsNomenclators: []
 };
 
-export const nomenclatorReducer = (state = initialState, action:any) => {
+export const nomenclatorReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case types.addNomenclator:
       return {
-        ...state,
+        ...state
       };
     case types.deleteNomenclator:
       return {
-        ...state,
+        ...state
       };
     case types.updateNomenclator:
       return {
-        ...state,
+        ...state
       };
     case types.nomenclatorsLoaded:
       return {
         ...state,
-        nomenclators: [...action.payload],
+        nomenclators: [...action.payload]
       };
 
     // * NOMENCLADORES DE CLIENTES
     case types.addClientNomenclator:
       return {
-        ...state,
+        ...state
       };
     case types.deleteClientNomenclator:
       return {
-        ...state,
+        ...state
       };
     case types.updateClientNomenclator:
       return {
-        ...state,
+        ...state
       };
     case types.clientNomenclatorsLoaded:
       return {
         ...state,
-        clientNomenclators: [...action.payload],
+        clientNomenclators: [...action.payload]
       };
 
     // * NOMENCLADORES DE REPRESENTANTES
     case types.addRepresentativeNomenclator:
       return {
-        ...state,
+        ...state
       };
     case types.deleteRepresentativeNomenclator:
       return {
-        ...state,
+        ...state
       };
     case types.updateRepresentativeNomenclator:
       return {
-        ...state,
+        ...state
       };
     case types.representativeNomenclatorsLoaded:
       return {
         ...state,
-        representativeNomenclators: [...action.payload],
+        representativeNomenclators: [...action.payload]
       };
 
     // * NOMENCLADORES DE MATERIALES
     case types.addMaterialNomenclator:
       return {
-        ...state,
+        ...state
       };
     case types.deleteMaterialNomenclator:
       return {
-        ...state,
+        ...state
       };
     case types.updateMaterialNomenclator:
       return {
-        ...state,
+        ...state
       };
     case types.materialNomenclatorsLoaded:
       return {
         ...state,
-        materialsNomenclators: [...action.payload],
+        materialsNomenclators: [...action.payload]
       };
 
     default:

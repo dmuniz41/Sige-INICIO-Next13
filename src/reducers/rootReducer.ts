@@ -18,5 +18,5 @@ export const rootReducer = combineReducers({
   costSheet: costSheetReducer,
   serviceFee: serviceFeeReducer,
   project: projectReducer,
-  offer: offerReducer,
+  offer: offerReducer
 });

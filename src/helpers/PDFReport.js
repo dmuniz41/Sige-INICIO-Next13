@@ -8,7 +8,6 @@ Font.register({ family: "Montserrat-Bold", src: fontBold });
 const BORDER_COLOR = "#000";
 const BORDER_STYLE = "solid";
 
-
 const styles = StyleSheet.create({
   body: {
     paddingTop: 25,
@@ -99,7 +98,6 @@ const CustomTablePDF = (props) => {
         (item, idx) =>
           item && (
             <View key={idx} style={styles.tableRow}>
-              
               {fields.map((_item, _idx) => {
                 let val = item[_item.value] || "";
                 let value_alt = (_item.value_alt && item[_item.value_alt]) || "";

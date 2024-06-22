@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 
 export default withAuth(
   function middleware(request: NextRequestWithAuth) {
-
     // //* Allow only users with administrator role to access the users page  */
     // if (request.nextUrl.pathname.startsWith("/dashboard/users") && !request.nextauth.token?.user?.role?.includes("ADMIN")) {
     //   return NextResponse.rewrite(new URL("/unauthorized", request.url));
@@ -61,11 +60,11 @@ export default withAuth(
   },
   {
     callbacks: {
-      authorized: ({ token }) => !!token,
-    },
+      authorized: ({ token }) => !!token
+    }
   }
 );
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/dashboard/:path*"]
 };

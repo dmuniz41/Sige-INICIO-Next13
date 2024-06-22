@@ -3,7 +3,7 @@ import { types } from "@/types/types";
 import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
 
-// * ACTUALIZA LOS AUXILIARES DE LAS TARIFAS DE SERVICIO // 
+// * ACTUALIZA LOS AUXILIARES DE LAS TARIFAS DE SERVICIO //
 export const startUpdateServiceFeeAuxiliary = ({ ...serviceFeeAuxiliary }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {

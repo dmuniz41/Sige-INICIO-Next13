@@ -8,7 +8,6 @@ export interface ICostSheetSubitem {
   value: number;
 }
 export interface ICostSheet {
-
   _id: string;
   administrativeExpenses: ICostSheetSubitem[];
   administrativeExpensesSubtotal: number;
@@ -47,51 +46,51 @@ export interface ICostSheet {
   transportationExpenses: ICostSheetSubitem[];
   transportationExpensesSubtotal: number;
   USDValue: number;
-  valuePerUnitMeasure: string
+  valuePerUnitMeasure: string;
   workersAmount: number;
 }
 
 const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
   key: {
     type: String,
-    unique: true,
+    unique: true
   },
   payMethod: {
     type: String,
-    required: [true, "La forma de cobro es requerida"],
+    required: [true, "La forma de cobro es requerida"]
   },
   taskName: {
     type: String,
     unique: true,
-    required: [true, "El nombre de la tarea a ejecutar es requerida"],
+    required: [true, "El nombre de la tarea a ejecutar es requerida"]
   },
   description: {
     type: String,
     unique: true,
-    required: [true, "La descripcion de la tarea a ejecutar es requerida"],
+    required: [true, "La descripcion de la tarea a ejecutar es requerida"]
   },
   createdBy: {
-    type: String,
+    type: String
   },
   category: {
-    type: String,
+    type: String
   },
   approvedBy: {
-    type: String,
+    type: String
   },
   valuePerUnitMeasure: {
-    type: String,
+    type: String
   },
   nomenclatorId: {
     unique: true,
     type: String,
-    required: [true, 'Debe asignarle un nomenclador a la tarea'],
+    required: [true, "Debe asignarle un nomenclador a la tarea"]
   },
   workersAmount: {
-    type: Number,
+    type: Number
   },
   USDValue: {
-    type: Number,
+    type: Number
   },
   rawMaterials: [
     {
@@ -99,11 +98,11 @@ const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
       unitMeasure: String,
       amount: Number,
       price: Number,
-      value: Number,
-    },
+      value: Number
+    }
   ],
   rawMaterialsSubtotal: {
-    type: Number,
+    type: Number
   },
   directSalaries: [
     {
@@ -111,11 +110,11 @@ const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
       unitMeasure: String,
       amount: Number,
       price: Number,
-      value: Number,
-    },
+      value: Number
+    }
   ],
   directSalariesSubtotal: {
-    type: Number,
+    type: Number
   },
   otherDirectExpenses: [
     {
@@ -123,11 +122,11 @@ const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
       unitMeasure: String,
       amount: Number,
       price: Number,
-      value: Number,
-    },
+      value: Number
+    }
   ],
   otherDirectExpensesSubtotal: {
-    type: Number,
+    type: Number
   },
   productionRelatedExpenses: [
     {
@@ -135,11 +134,11 @@ const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
       unitMeasure: String,
       amount: Number,
       price: Number,
-      value: Number,
-    },
+      value: Number
+    }
   ],
   productionRelatedExpensesSubtotal: {
-    type: Number,
+    type: Number
   },
   administrativeExpenses: [
     {
@@ -147,11 +146,11 @@ const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
       unitMeasure: String,
       amount: Number,
       price: Number,
-      value: Number,
-    },
+      value: Number
+    }
   ],
   administrativeExpensesSubtotal: {
-    type: Number,
+    type: Number
   },
   transportationExpenses: [
     {
@@ -159,11 +158,11 @@ const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
       unitMeasure: String,
       amount: Number,
       price: Number,
-      value: Number,
-    },
+      value: Number
+    }
   ],
   transportationExpensesSubtotal: {
-    type: Number,
+    type: Number
   },
   financialExpenses: [
     {
@@ -171,11 +170,11 @@ const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
       unitMeasure: String,
       amount: Number,
       price: Number,
-      value: Number,
-    },
+      value: Number
+    }
   ],
   financialExpensesSubtotal: {
-    type: Number,
+    type: Number
   },
   taxExpenses: [
     {
@@ -183,48 +182,48 @@ const CostSheetSchema = new Schema<ICostSheet, Model<ICostSheet>>({
       unitMeasure: String,
       amount: Number,
       price: Number,
-      value: Number,
-    },
+      value: Number
+    }
   ],
   taxExpensesSubtotal: {
-    type: Number,
+    type: Number
   },
   expensesTotalValue: {
-    type: Number,
+    type: Number
   },
   costsTotalValue: {
-    type: Number,
+    type: Number
   },
   expensesAndCostsTotalValue: {
-    type: Number,
+    type: Number
   },
   artisticTalent: {
-    type: Number,
+    type: Number
   },
   artisticTalentValue: {
-    type: Number,
+    type: Number
   },
   representationCost: {
-    type: Number,
+    type: Number
   },
   representationCostValue: {
-    type: Number,
+    type: Number
   },
   creatorPrice: {
-    type: Number,
+    type: Number
   },
   rawMaterialsByClient: {
-    type: Number,
+    type: Number
   },
   salePriceMLC: {
-    type: Number,
+    type: Number
   },
   salePriceMN: {
-    type: Number,
+    type: Number
   },
   salePrice: {
-    type: Number,
-  },
+    type: Number
+  }
 });
 
 const CostSheet = models.CostSheet || model("CostSheet", CostSheetSchema);

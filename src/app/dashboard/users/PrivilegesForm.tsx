@@ -20,7 +20,7 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({
 }) => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
   const userArea: string[] | undefined = [];
-  
+
   nomenclators.map((nomenclator: INomenclator) => {
     if (nomenclator.category === "Area de usuario") {
       userArea.push(nomenclator.code);

@@ -158,7 +158,11 @@ const MaterialsTable: React.FC = () => {
     data = [];
   }
 
-  const { nomenclators, materialsNomenclators }:{nomenclators: INomenclator[], materialsNomenclators: IMaterialNomenclator[]} = useAppSelector((state: RootState) => state?.nomenclator);
+  const {
+    nomenclators,
+    materialsNomenclators
+  }: { nomenclators: INomenclator[]; materialsNomenclators: IMaterialNomenclator[] } =
+    useAppSelector((state: RootState) => state?.nomenclator);
 
   const categoryFilter: any[] = [];
   materialsNomenclators.map((materialNomenclator) => {

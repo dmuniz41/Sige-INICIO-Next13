@@ -22,7 +22,12 @@ interface CollectionCreateFormProps {
   defaultValues?: Values;
 }
 
-export const EditMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
+export const EditMaterialForm: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel,
+  defaultValues
+}) => {
   const [form] = Form.useForm();
   return (
     <Modal
@@ -66,7 +71,7 @@ export const EditMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, on
           >
             Editar
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form
@@ -77,20 +82,20 @@ export const EditMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, on
         fields={[
           {
             name: "minimumExistence",
-            value: defaultValues?.minimumExistence,
+            value: defaultValues?.minimumExistence
           },
           {
             name: "code",
-            value: defaultValues?.code,
+            value: defaultValues?.code
           },
           {
             name: "materialName",
-            value: defaultValues?.materialName,
+            value: defaultValues?.materialName
           },
           {
             name: "description",
-            value: defaultValues?.description,
-          },
+            value: defaultValues?.description
+          }
         ]}
       >
         <Form.Item name="code" label="Código">
@@ -103,7 +108,7 @@ export const EditMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, on
           <Input className="w-full" />
         </Form.Item>
         <Form.Item className="w-full" name="minimumExistence" label="Existencias mínimas">
-          <InputNumber min={0}/>
+          <InputNumber min={0} />
         </Form.Item>
       </Form>
     </Modal>

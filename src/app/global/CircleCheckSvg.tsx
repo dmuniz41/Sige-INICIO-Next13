@@ -18,4 +18,3 @@ export const CircleCheckSvg = ({ width = 24, height = 24 }) => {
     </svg>
   );
 };
-

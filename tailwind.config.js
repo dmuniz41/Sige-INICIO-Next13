@@ -1,10 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
-  content: ["./src/pages/**/*.{js,ts,jsx,tsx,mdx}", "./src/components/**/*.{js,ts,jsx,tsx,mdx}", "./src/app/**/*.{js,ts,jsx,tsx,mdx}"],
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}"
+  ],
   theme: {
     fontFamily: {
-      segoe: ["Segoe UI"],
+      segoe: ["Segoe UI"]
     },
     colors: {
       primary: {
@@ -16,7 +20,7 @@ module.exports = {
         600: "#cc5200",
         700: "#993d00",
         800: "#662900",
-        900: "#331400",
+        900: "#331400"
       },
       blue: {
         100: "#d0e4ff",
@@ -27,7 +31,7 @@ module.exports = {
         600: "#125fcc",
         700: "#0d4799",
         800: "#093066",
-        900: "#041833",
+        900: "#041833"
       },
       white: {
         100: "#ffffff",
@@ -38,7 +42,7 @@ module.exports = {
         600: "#cccccc",
         700: "#999999",
         800: "#666666",
-        900: "#333333",
+        900: "#333333"
       },
       secondary: {
         100: "#d6d7df",
@@ -49,7 +53,7 @@ module.exports = {
         600: "#2a2e4b",
         700: "#1f2238",
         800: "#151726",
-        900: "#0a0b13",
+        900: "#0a0b13"
       },
       success: {
         100: "#d6efd9",
@@ -60,7 +64,7 @@ module.exports = {
         600: "#2a8d35",
         700: "#1f6a28",
         800: "#15461a",
-        900: "#0a230d",
+        900: "#0a230d"
       },
       info: "#3abaf4",
       warning: "#ffa426",
@@ -73,7 +77,7 @@ module.exports = {
         600: "#cc0000",
         700: "#990000",
         800: "#660000",
-        900: "#330000",
+        900: "#330000"
       },
       light: "#e3eaef",
       dark: "#191d21",
@@ -82,13 +86,13 @@ module.exports = {
       icon_color: " rgba(0, 0, 0, 0.54)",
       icon_disabled: "rgb(221, 216, 216)",
       box_shadow: "rgb(226, 223, 223)",
-      border_input: "rgb(129, 127, 127)",
-    },
+      border_input: "rgb(129, 127, 127)"
+    }
   },
   plugins: [require("tailwindcss-animated")],
   variants: {
     extend: {
-      opacity: ['disabled'],
-    },
-  },
+      opacity: ["disabled"]
+    }
+  }
 };

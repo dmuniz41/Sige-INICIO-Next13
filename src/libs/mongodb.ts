@@ -8,14 +8,14 @@ if (!MONGODB_URL) {
 
 export const connectDB = async () => {
   const { connection } = await mongoose.connect(MONGODB_URL);
-  
+
   try {
     if (connection.readyState === 1) {
       console.log("DB Connected");
       return Promise.resolve(true);
     }
   } catch (error) {
-    console.log("🚀 ~ connectDB ~ error:", error)
+    console.log("🚀 ~ connectDB ~ error:", error);
     return Promise.reject(false);
   }
 };

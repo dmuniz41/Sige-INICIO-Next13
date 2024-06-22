@@ -233,7 +233,7 @@ export async function DELETE(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ DELETE ~ error:", error)
+      console.log("🚀 ~ DELETE ~ error:", error);
       return NextResponse.json(
         {
           ok: false,

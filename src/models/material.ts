@@ -9,69 +9,69 @@ export interface IMaterial {
   enterDate: string;
   key: string;
   materialName: string;
-  materialTotalValue?: number,
+  materialTotalValue?: number;
   minimumExistence: number;
   operations?: Types.DocumentArray<IOperation>;
-  provider: string,
+  provider: string;
   unitMeasure?: string;
   unitsTotal: number;
-  warehouse: string
+  warehouse: string;
 }
 
 const MaterialSchema = new Schema<IMaterial, Model<IMaterial>>({
   code: {
     type: Number,
-    unique: true,
+    unique: true
   },
   key: {
-    type: String,
+    type: String
   },
   materialName: {
     type: String,
-    required: [true, "El nombre del material es requerido"],
+    required: [true, "El nombre del material es requerido"]
   },
   description: {
-    type: String,
+    type: String
   },
   category: {
     type: String,
-    required: [true, "La categoría del material es requerida"],
+    required: [true, "La categoría del material es requerida"]
   },
   enterDate: {
-    type: String,
+    type: String
   },
   unitMeasure: {
-    type: String,
+    type: String
   },
   costPerUnit: {
     type: Number,
-    required: [true, "El costo del material es requerido"],
+    required: [true, "El costo del material es requerido"]
   },
   unitsTotal: {
     type: Number,
-    required: [true, "El total de unidades del material es requerido"],
+    required: [true, "El total de unidades del material es requerido"]
   },
   minimumExistence: {
     type: Number,
-    required: [true, "La existencia mínima es requerida"],
+    required: [true, "La existencia mínima es requerida"]
   },
   materialTotalValue: {
-    type: Number,
+    type: Number
   },
   provider: {
     type: String
   },
   warehouse: {
     type: String,
-    required: [true, "El almacén al que pertenece es requerido"],
+    required: [true, "El almacén al que pertenece es requerido"]
   },
   operations: [
     {
       date: String,
       tipo: String,
-      amount: Number,
-    },
-  ],
+      amount: Number
+    }
+  ]
 });
 
 const Material = models.Material || model("Material", MaterialSchema);

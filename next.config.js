@@ -9,13 +9,13 @@ module.exports = {
     // Dangerously allow production builds to successfully complete even if
     // your project has type errors.
     // !! WARN !!
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: true
   },
   webpack: (config) => {
     config.module.rules.push({
       test: /\.ttf$/i,
-      type: "asset/resource",
+      type: "asset/resource"
     });
     return config;
-  },
+  }
 };

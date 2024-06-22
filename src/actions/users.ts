@@ -23,7 +23,7 @@ export const startAddUser = ({ ...user }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ return ~  message:",  message)
+        console.log("🚀 ~ return ~  message:", message);
         Swal.fire("Error", "Error al crear el usuario", "error");
       });
   };
@@ -49,7 +49,7 @@ export const startUpdateUser = ({ ...user }): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ return ~ message:", message)
+        console.log("🚀 ~ return ~ message:", message);
         Swal.fire("Error", "Error al actualizar el usuario", "error");
       });
   };
@@ -73,7 +73,7 @@ export const startDeleteUser = (id: string): any => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ return ~ message:", message)
+        console.log("🚀 ~ return ~ message:", message);
         Swal.fire("Error", "Error al eliminar el usuario", "error");
       });
   };
@@ -92,7 +92,7 @@ export const usersStartLoading = () => {
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
-        console.log("🚀 ~ return ~ message:", message)
+        console.log("🚀 ~ return ~ message:", message);
         Swal.fire("Error", "Error al cargar los usuarios", "error");
       });
   };

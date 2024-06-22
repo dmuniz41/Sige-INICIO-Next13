@@ -3,7 +3,7 @@ import { Providers } from "../providers/providers";
 
 export const metadata = {
   title: "Sige INICIO",
-  description: "Sistema de gestión del grupo",
+  description: "Sistema de gestión del grupo"
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -19,7 +19,11 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel
+}) => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
   const workerRole: string[] | undefined = [];
   nomenclators.map((nomenclator: INomenclator) => {
@@ -30,7 +34,7 @@ export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, on
   const options: SelectProps["options"] = workerRole.map((role) => {
     return {
       label: `${role}`,
-      value: `${role}`,
+      value: `${role}`
     };
   });
 
@@ -77,11 +81,15 @@ export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, on
           >
             Crear
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form form={form} layout="vertical" name="createWorkerForm" size="middle">
-        <Form.Item name="name" label="Nombre y Apellidos" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="name"
+          label="Nombre y Apellidos"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Input />
         </Form.Item>
         <Form.Item
@@ -93,10 +101,18 @@ export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, on
         >
           <InputNumber min={0} className="w-full" />
         </Form.Item>
-        <Form.Item name="role" label="Cargos" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="role"
+          label="Cargos"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={options} />
         </Form.Item>
-        <Form.Item name="address" label="Dirección" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="address"
+          label="Dirección"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Input />
         </Form.Item>
         <Form.Item
@@ -113,7 +129,10 @@ export const CreateWorkerForm: React.FC<CollectionCreateFormProps> = ({ open, on
           name="bankAccount"
           label="Cuenta Bancaria"
           rules={[{ required: true, message: "${bankAccount} debe tener 16 números" }]}
-          tooltip={{ title: "La cuenta bancaria debe tener 16 números", icon: <InfoCircleOutlined /> }}
+          tooltip={{
+            title: "La cuenta bancaria debe tener 16 números",
+            icon: <InfoCircleOutlined />
+          }}
         >
           <InputNumber min={0} className="w-full" />
         </Form.Item>

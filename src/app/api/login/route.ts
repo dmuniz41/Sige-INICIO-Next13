@@ -20,20 +20,15 @@ export async function POST(request: Request) {
       const DBUserJSON = DBUser.toJSON();
       const result = {
         ...DBUserJSON,
-        accessToken,
+        accessToken
       };
 
-      return new NextResponse(
-        JSON.stringify(
-          result,
-        ),
-        {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json",
-          },
+      return new NextResponse(JSON.stringify(result), {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
         }
-      );
+      });
     }
   } catch (error) {
     console.log(error);

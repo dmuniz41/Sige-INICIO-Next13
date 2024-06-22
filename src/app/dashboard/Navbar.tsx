@@ -16,7 +16,7 @@ export const Navbar = () => {
   let mainPath = pathname.split("/");
   let warehouseId = mainPath[3];
   let secondaryPath = mainPath[2];
-  const router = useRouter()
+  const router = useRouter();
   let currentWarehouseName = "";
   const { data: sessionData } = useSession();
   const username = sessionData?.user?.user;

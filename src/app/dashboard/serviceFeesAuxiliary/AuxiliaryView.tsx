@@ -6,7 +6,10 @@ import { EditAuxiliary } from "./EditAuxiliary";
 import { EditSvg } from "@/app/global/EditSvg";
 import { IServiceFeeAuxiliary } from "../../../models/serviceFeeAuxiliary";
 import { RootState, useAppSelector } from "@/store/store";
-import { startLoadServiceFeeAuxiliary, startUpdateServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
+import {
+  startLoadServiceFeeAuxiliary,
+  startUpdateServiceFeeAuxiliary
+} from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import { AuxiliarySection } from "./AuxiliarySection";
 import { serviceFeeStartLoading } from "@/actions/serviceFee";
@@ -20,10 +23,12 @@ export const AuxiliaryView = () => {
 
   useEffect(() => {
     dispatch(startLoadServiceFeeAuxiliary());
-    dispatch(serviceFeeStartLoading())
+    dispatch(serviceFeeStartLoading());
   }, [dispatch]);
 
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
+    (state: RootState) => state?.serviceFee
+  );
 
   const handleEdit = () => {
     setEditing(true);

@@ -1,5 +1,5 @@
-import {NextResponse} from 'next/server'
+import { NextResponse } from "next/server";
 
 export function POST() {
-  return NextResponse.json({message: 'usuario logeado'})
+  return NextResponse.json({ message: "usuario logeado" });
 }

@@ -5,15 +5,15 @@ const initialState = {
   lowExistenceMaterials: []
 };
 
-export const materialReducer = (state = initialState, action:any) => {
+export const materialReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case types.addMaterial:
       return {
-        ...state,
+        ...state
       };
     case types.deleteMaterial:
       return {
-        ...state,
+        ...state
       };
     // case types.editMinimumExistences:
     //   return {
@@ -22,12 +22,12 @@ export const materialReducer = (state = initialState, action:any) => {
     case types.materialsLoaded:
       return {
         ...state,
-        materials: [...action.payload],
+        materials: [...action.payload]
       };
     case types.lowExistencesMaterials:
       return {
         ...state,
-        lowExistenceMaterials: [...action.payload],
+        lowExistenceMaterials: [...action.payload]
       };
 
     default:

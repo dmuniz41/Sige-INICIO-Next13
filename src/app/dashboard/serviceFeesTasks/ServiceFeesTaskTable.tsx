@@ -113,7 +113,7 @@ const ServiceFeeTaskTable: React.FC = () => {
   };
 
   const onCreate = (values: any): void => {
-    console.log("🚀 ~ onCreate ~ values:", values)
+    console.log("🚀 ~ onCreate ~ values:", values);
     dispatch(
       startAddServiceFeeTask({
         description: values.description,

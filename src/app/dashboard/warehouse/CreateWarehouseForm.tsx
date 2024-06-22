@@ -9,7 +9,11 @@ interface CollectionCreateFormProps {
   onCreate: (values: Values) => void;
   onCancel: () => void;
 }
-export const CreateWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+export const CreateWarehouseForm: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel
+}) => {
   const [form] = Form.useForm();
   return (
     <Modal
@@ -29,11 +33,7 @@ export const CreateWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open,
       cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button
-            key="2"
-            className="modal-btn-danger"
-            onClick={onCancel}
-          >
+          <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
           <button
@@ -53,11 +53,15 @@ export const CreateWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open,
           >
             Crear
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form form={form} layout="vertical" name="createUserForm" size="middle">
-        <Form.Item name="name" label="Nombre de Almacén" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="name"
+          label="Nombre de Almacén"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Input />
         </Form.Item>
       </Form>

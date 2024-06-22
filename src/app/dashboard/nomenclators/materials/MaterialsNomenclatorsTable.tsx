@@ -196,7 +196,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
         >
           <div className="flex w-fit gap-2 items-center">
             <span className="font-bold">Gastable</span>
-            <InfoCircleSvg width={20} height={20}/>
+            <InfoCircleSvg width={20} height={20} />
           </div>
         </Tooltip>
       ),
@@ -289,7 +289,10 @@ const MaterialsNomenclatorsTable: React.FC = () => {
       />
       <EditMaterialNomenclatorForm
         open={editModal}
-        onCancel={() => {setEditModal(false); form.resetFields()}}
+        onCancel={() => {
+          setEditModal(false);
+          form.resetFields();
+        }}
         onCreate={onEdit}
         defaultValues={selectedNomenclator!}
       />

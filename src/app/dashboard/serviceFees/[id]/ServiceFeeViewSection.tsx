@@ -12,7 +12,7 @@ export const ServiceFeeViewTableSection = (props: any) => {
       title: <span className="font-bold">Descripción</span>,
       dataIndex: "description",
       key: "description",
-      width: "55%",
+      width: "55%"
     },
     {
       title: <span className="font-bold">Unidad de Medida</span>,

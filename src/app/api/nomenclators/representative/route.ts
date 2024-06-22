@@ -3,7 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
-import RepresentativeNomenclator, { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
+import RepresentativeNomenclator, {
+  IRepresentativeNomenclator
+} from "@/models/nomenclators/representative";
 
 export async function POST(request: Request) {
   const { ...representativeNomenclator }: IRepresentativeNomenclator = await request.json();
@@ -26,7 +28,8 @@ export async function POST(request: Request) {
     });
 
     // ? LOS NUMEROS DE LOS REPRESENTANTES SE CREAN DE FORMA CONSECUTIVA, DE NO EXISTIR REPRESENTANTES EL PRIMER NUMERO SERÁ 1 //
-    const representatives = (await RepresentativeNomenclator.find()) as IRepresentativeNomenclator[];
+    const representatives =
+      (await RepresentativeNomenclator.find()) as IRepresentativeNomenclator[];
     let newId = 0;
     if (representatives.length == 0) {
       newId = 1;
@@ -51,7 +54,7 @@ export async function POST(request: Request) {
     const newRepresentativeNomenclator = new RepresentativeNomenclator({
       ...representativeNomenclator,
       idNumber: newId,
-      key: newKey,
+      key: newKey
     });
 
     await newRepresentativeNomenclator.save();
@@ -71,7 +74,7 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ POST ~ error:", error)
+      console.log("🚀 ~ POST ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
@@ -100,8 +103,10 @@ export async function GET(request: Request) {
       );
     }
     await connectDB();
-    const listOfRepresentativeNomenclators = (await RepresentativeNomenclator.find()).reverse() as IRepresentativeNomenclator[];
-    
+    const listOfRepresentativeNomenclators = (
+      await RepresentativeNomenclator.find()
+    ).reverse() as IRepresentativeNomenclator[];
+
     return new NextResponse(
       JSON.stringify({
         ok: true,
@@ -118,7 +123,7 @@ export async function GET(request: Request) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ GET ~ error:", error)
+      console.log("🚀 ~ GET ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
@@ -149,7 +154,9 @@ export async function PUT(request: Request) {
       );
     }
     await connectDB();
-    const nomenclatorToUpdate = await RepresentativeNomenclator.findById(representativeNomenclator._id);
+    const nomenclatorToUpdate = await RepresentativeNomenclator.findById(
+      representativeNomenclator._id
+    );
 
     if (!nomenclatorToUpdate) {
       return NextResponse.json(
@@ -186,7 +193,7 @@ export async function PUT(request: Request) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ PUT ~ error:", error)
+      console.log("🚀 ~ PUT ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
@@ -247,7 +254,7 @@ export async function DELETE(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ DELETE ~ error:", error)
+      console.log("🚀 ~ DELETE ~ error:", error);
       return NextResponse.json(
         {
           ok: false,

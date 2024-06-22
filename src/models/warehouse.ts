@@ -9,16 +9,16 @@ export interface IWarehouse {
 
 const WarehouseSchema = new Schema<IWarehouse, Model<IWarehouse>>({
   key: {
-    type: String,
+    type: String
   },
   name: {
     type: String,
     required: [true, "El nombre del almacén es requerido"],
-    unique: true,
+    unique: true
   },
   totalValue: {
-    type: Number,
-  },
+    type: Number
+  }
 });
 
 const Warehouse = models.Warehouse || model("Warehouse", WarehouseSchema);

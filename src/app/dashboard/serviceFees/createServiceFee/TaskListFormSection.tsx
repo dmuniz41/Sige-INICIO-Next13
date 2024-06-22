@@ -41,9 +41,7 @@ export const TaskListFormSection = (props: any) => {
       key: "description",
       width: "50%",
       render: (_, { ...record }) => (
-        <span>
-          {`${record.description} (${record.currentComplexity?.name})`}
-        </span>
+        <span>{`${record.description} (${record.currentComplexity?.name})`}</span>
       )
     },
     {

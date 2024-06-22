@@ -18,17 +18,24 @@ import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { ICostSheet } from "@/models/costSheet";
-import { costSheetsStartLoading, loadSelectedCostSheet, startDeleteCostSheet } from "@/actions/costSheet";
+import {
+  costSheetsStartLoading,
+  loadSelectedCostSheet,
+  startDeleteCostSheet
+} from "@/actions/costSheet";
 import { useRouter } from "next/navigation";
 import { SeeSvg } from "@/app/global/SeeSvg";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { INomenclator } from "@/models/nomenclator";
 import { PDFSvg } from "@/app/global/PDFSvg";
 
-const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
-  ssr: false,
-  loading: () => <p>Loading...</p>,
-});
+const PDFDownloadLink = dynamic(
+  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+  {
+    ssr: false,
+    loading: () => <p>Loading...</p>
+  }
+);
 
 type DataIndex = keyof ICostSheet;
 
@@ -55,32 +62,32 @@ const CostSheetsTable: React.FC = () => {
       title: " Nomenclador",
       custom: true,
       component: (item: any) => `${item.nomenclatorId}`,
-      width: "10",
+      width: "10"
     },
     {
       title: " Nombre de la tarea",
       custom: true,
       component: (item: any) => `${item.taskName}`,
-      width: "50",
+      width: "50"
     },
     {
       title: " Categoría",
       custom: true,
       component: (item: any) => `${item.category}`,
-      width: "20",
+      width: "20"
     },
     {
       title: " Precio",
       custom: true,
       component: (item: any) => `$ ${item.salePrice}`,
-      width: "10",
+      width: "10"
     },
     {
       title: " Precio/UM",
       custom: true,
       component: (item: any) => `${item.valuePerUnitMeasure}`,
-      width: "10",
-    },
+      width: "10"
+    }
   ];
 
   useEffect(() => {
@@ -105,30 +112,32 @@ const CostSheetsTable: React.FC = () => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
 
   nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Categoría de ficha de costo") costSheetCategory.push(nomenclator.code);
+    if (nomenclator.category === "Categoría de ficha de costo")
+      costSheetCategory.push(nomenclator.code);
     if (nomenclator.category === "Ficha de costo") costSheetNomenclator.push(nomenclator.code);
-    if (nomenclator.category === "Precio/UM en ficha de costo") costSheetValuePerUnitMeasure.push(nomenclator.code);
+    if (nomenclator.category === "Precio/UM en ficha de costo")
+      costSheetValuePerUnitMeasure.push(nomenclator.code);
   });
 
   const costSheetCategoryFilter: any[] = [];
   costSheetCategory.map((category: string) => {
     costSheetCategoryFilter.push({
       text: `${category}`,
-      value: `${category}`,
+      value: `${category}`
     });
   });
   const costSheetNomenclatorFilter: any[] = [];
   costSheetNomenclator.map((nomenclator: string) => {
     costSheetNomenclatorFilter.push({
       text: `${nomenclator}`,
-      value: `${nomenclator}`,
+      value: `${nomenclator}`
     });
   });
   const costSheetValuePerUnitMeasureFilter: any[] = [];
   costSheetValuePerUnitMeasure.map((valuePerUnitMeasure: string) => {
     costSheetValuePerUnitMeasureFilter.push({
       text: `${valuePerUnitMeasure}`,
-      value: `${valuePerUnitMeasure}`,
+      value: `${valuePerUnitMeasure}`
     });
   });
 
@@ -139,12 +148,16 @@ const CostSheetsTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione una ficha de costo para ver",
+        title: "Seleccione una ficha de costo para ver"
       });
     }
   };
 
-  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -160,7 +173,7 @@ const CostSheetsTable: React.FC = () => {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         cancelButtonText: "Cancelar",
-        confirmButtonText: "Eliminar",
+        confirmButtonText: "Eliminar"
       }).then((result) => {
         if (result.isConfirmed) {
           dispatch(startDeleteCostSheet(selectedRow?._id));
@@ -169,7 +182,7 @@ const CostSheetsTable: React.FC = () => {
     } else {
       Toast.fire({
         icon: "error",
-        title: "Seleccione una ficha de costo a eliminar",
+        title: "Seleccione una ficha de costo a eliminar"
       });
     }
   };
@@ -187,7 +200,7 @@ const CostSheetsTable: React.FC = () => {
     onChange: async (selectedRowKeys: React.Key[], selectedRows: ICostSheet[]) => {
       setSelectedRow(selectedRows[0]);
       dispatch(loadSelectedCostSheet(selectedRows[0]._id));
-    },
+    }
   };
 
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<ICostSheet> => ({
@@ -212,7 +225,11 @@ const CostSheetsTable: React.FC = () => {
           >
             Search
           </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
           <Button
@@ -238,7 +255,9 @@ const CostSheetsTable: React.FC = () => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
+    ),
     onFilter: (value, record) =>
       record[dataIndex]
         .toString()
@@ -251,10 +270,15 @@ const CostSheetsTable: React.FC = () => {
     },
     render: (text) =>
       searchedColumn === dataIndex ? (
-        <Highlighter highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }} searchWords={[searchText]} autoEscape textToHighlight={text ? text.toString() : ""} />
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
       ) : (
         text
-      ),
+      )
   });
 
   const columns: ColumnsType<ICostSheet> = [
@@ -264,7 +288,7 @@ const CostSheetsTable: React.FC = () => {
       key: "taskName",
       width: "50%",
       sorter: (a: any, b: any) => a.taskName.localeCompare(b.taskName),
-      ...getColumnSearchProps("taskName"),
+      ...getColumnSearchProps("taskName")
     },
     {
       title: "Nomenclador",
@@ -274,7 +298,7 @@ const CostSheetsTable: React.FC = () => {
       filters: costSheetNomenclatorFilter,
       onFilter: (value: any, record: any) => record.nomenclatorId.startsWith(value),
       filterSearch: true,
-      sorter: (a: any, b: any) => a.nomenclatorId.localeCompare(b.nomenclatorId),
+      sorter: (a: any, b: any) => a.nomenclatorId.localeCompare(b.nomenclatorId)
     },
     {
       title: "Categoría",
@@ -284,7 +308,7 @@ const CostSheetsTable: React.FC = () => {
       filters: costSheetCategoryFilter,
       onFilter: (value: any, record: any) => record.category.startsWith(value),
       filterSearch: true,
-      sorter: (a: any, b: any) => a.category.localeCompare(b.category),
+      sorter: (a: any, b: any) => a.category.localeCompare(b.category)
     },
     {
       title: "Precio",
@@ -293,8 +317,8 @@ const CostSheetsTable: React.FC = () => {
       width: "20%",
       render: (text) => <span>$ {parseFloat(text).toFixed(2)}</span>,
       sorter: {
-        compare: (a, b) => a.salePrice - b.salePrice,
-      },
+        compare: (a, b) => a.salePrice - b.salePrice
+      }
     },
     {
       title: "Precio/UM",
@@ -303,19 +327,27 @@ const CostSheetsTable: React.FC = () => {
       width: "20%",
       filters: costSheetValuePerUnitMeasureFilter,
       onFilter: (value: any, record: any) => record.valuePerUnitMeasure.startsWith(value),
-      filterSearch: true,
-    },
+      filterSearch: true
+    }
   ];
 
   return (
     <>
       <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <div className="flex gap-2">
-          <button disabled={!canCreate} onClick={() => router.push("/dashboard/costSheets/createCostSheet")} className={`${canCreate ? "toolbar-primary-icon-btn" : "bg-success-200"}`}>
+          <button
+            disabled={!canCreate}
+            onClick={() => router.push("/dashboard/costSheets/createCostSheet")}
+            className={`${canCreate ? "toolbar-primary-icon-btn" : "bg-success-200"}`}
+          >
             <PlusSvg />
             Nuevo
           </button>
-          <button disabled={!canList} onClick={handleView} className={`${canList ? "toolbar-secondary-icon-btn" : "bg-secondary-200"}`}>
+          <button
+            disabled={!canList}
+            onClick={handleView}
+            className={`${canList ? "toolbar-secondary-icon-btn" : "bg-secondary-200"}`}
+          >
             <SeeSvg />
             Ver
           </button>
@@ -332,7 +364,9 @@ const CostSheetsTable: React.FC = () => {
             <button
               disabled={!canDelete}
               className={`${
-                canDelete ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canDelete
+                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                  : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleDelete}
             >
@@ -343,7 +377,9 @@ const CostSheetsTable: React.FC = () => {
             <button
               disabled={!canList}
               className={`${
-                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canList
+                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                  : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={() => dispatch(costSheetsStartLoading())}
             >
@@ -361,7 +397,7 @@ const CostSheetsTable: React.FC = () => {
         pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
         rowSelection={{
           type: "radio",
-          ...rowSelection,
+          ...rowSelection
         }}
         className="shadow-md"
       />

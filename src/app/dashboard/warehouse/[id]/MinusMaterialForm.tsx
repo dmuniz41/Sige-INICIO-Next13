@@ -23,7 +23,12 @@ interface CollectionCreateFormProps {
   defaultValues?: Values;
 }
 
-export const MinusMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
+export const MinusMaterialForm: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel,
+  defaultValues
+}) => {
   const [form] = Form.useForm();
   return (
     <Modal
@@ -43,11 +48,7 @@ export const MinusMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, o
       cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button
-            key="2"
-            className="modal-btn-danger"
-            onClick={onCancel}
-          >
+          <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
           <button
@@ -67,7 +68,7 @@ export const MinusMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, o
           >
             Sustraer
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form
@@ -78,32 +79,32 @@ export const MinusMaterialForm: React.FC<CollectionCreateFormProps> = ({ open, o
         fields={[
           {
             name: "category",
-            value: defaultValues?.category,
+            value: defaultValues?.category
           },
           {
             name: "materialName",
-            value: defaultValues?.materialName,
+            value: defaultValues?.materialName
           },
           {
             name: "description",
-            value: defaultValues?.description,
+            value: defaultValues?.description
           },
           {
             name: "costPerUnit",
-            value: defaultValues?.costPerUnit,
+            value: defaultValues?.costPerUnit
           },
           {
             name: "unitMeasure",
-            value: defaultValues?.unitMeasure,
+            value: defaultValues?.unitMeasure
           },
           {
             name: "minimumExistence",
-            value: defaultValues?.minimumExistence,
+            value: defaultValues?.minimumExistence
           },
           {
             name: "provider",
-            value: defaultValues?.provider,
-          },
+            value: defaultValues?.provider
+          }
         ]}
       >
         <Form.Item name="category" label="Categoría">

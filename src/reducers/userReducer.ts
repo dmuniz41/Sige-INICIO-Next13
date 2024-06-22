@@ -1,27 +1,27 @@
 import { types } from "../types/types";
 
 const initialState = {
-  users: [],
+  users: []
 };
 
-export const userReducer = (state = initialState, action:any) => {
+export const userReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case types.addUser:
       return {
-        ...state,
+        ...state
       };
     case types.deleteUser:
       return {
-        ...state,
+        ...state
       };
     case types.updateUser:
       return {
-        ...state,
+        ...state
       };
     case types.usersLoaded:
       return {
         ...state,
-        users: [...action.payload],
+        users: [...action.payload]
       };
 
     default:

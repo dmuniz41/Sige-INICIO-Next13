@@ -14,38 +14,42 @@ interface CollectionCreateFormProps {
 const category: SelectProps["options"] = [
   {
     label: "Area de usuario",
-    value: "Area de usuario",
+    value: "Area de usuario"
   },
   {
     label: "Cargo de trabajador",
-    value: "Cargo de trabajador",
+    value: "Cargo de trabajador"
   },
   {
     label: "Categoría de material",
-    value: "Categoría de material",
+    value: "Categoría de material"
   },
   {
     label: "Unidad de medida",
-    value: "Unidad de medida",
+    value: "Unidad de medida"
   },
   {
     label: "Proveedor",
-    value: "Proveedor",
+    value: "Proveedor"
   },
   {
     label: "Categoría de tarifas",
-    value: "Categoría de tarifas",
+    value: "Categoría de tarifas"
   },
   {
     label: "Categoría de tareas",
-    value: "Categoría de tareas",
+    value: "Categoría de tareas"
   },
   {
     label: "Moneda",
-    value: "Moneda",
-  },
+    value: "Moneda"
+  }
 ];
-export const CreateNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+export const CreateNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
+  open,
+  onCreate,
+  onCancel
+}) => {
   const [form] = Form.useForm();
   return (
     <Modal
@@ -65,11 +69,7 @@ export const CreateNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ ope
       cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button
-            key="2"
-            className="modal-btn-danger "
-            onClick={onCancel}
-          >
+          <button key="2" className="modal-btn-danger " onClick={onCancel}>
             Cancelar
           </button>
           <button
@@ -89,14 +89,22 @@ export const CreateNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ ope
           >
             Crear
           </button>
-        </div>,
+        </div>
       ]}
     >
       <Form form={form} layout="vertical" name="createNomenclatorForm" size="middle">
-        <Form.Item name="category" label="Categoría" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="category"
+          label="Categoría"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Select allowClear style={{ width: "100%" }} options={category} />
         </Form.Item>
-        <Form.Item name="code" label="Código" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="code"
+          label="Código"
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Input />
         </Form.Item>
       </Form>

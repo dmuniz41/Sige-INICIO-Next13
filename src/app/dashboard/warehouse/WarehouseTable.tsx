@@ -13,7 +13,7 @@ import {
   startAddWarehouse,
   startDeleteWarehouse,
   startUpdateWarehouse,
-  warehousesStartLoading,
+  warehousesStartLoading
 } from "@/actions/warehouse";
 import { CreateWarehouseForm } from "./CreateWarehouseForm";
 import { DeleteSvg } from "../../global/DeleteSvg";

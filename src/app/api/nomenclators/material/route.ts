@@ -7,7 +7,7 @@ import MaterialNomenclator, { IMaterialNomenclator } from "@/models/nomenclators
 
 export async function POST(request: Request) {
   const { ...materialNomenclator }: IMaterialNomenclator = await request.json();
-  console.log("🚀 ~ POST ~ materialNomenclator:", materialNomenclator)
+  console.log("🚀 ~ POST ~ materialNomenclator:", materialNomenclator);
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {

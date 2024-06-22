@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ POST ~ error:", error)
+      console.log("🚀 ~ POST ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
@@ -116,7 +116,7 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ GET ~ error:", error)
+      console.log("🚀 ~ GET ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
@@ -177,7 +177,7 @@ export async function PUT(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ PUT ~ error:", error)
+      console.log("🚀 ~ PUT ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
@@ -238,7 +238,7 @@ export async function DELETE(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ DELETE ~ error:", error)
+      console.log("🚀 ~ DELETE ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
