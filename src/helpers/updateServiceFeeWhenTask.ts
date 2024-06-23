@@ -18,20 +18,10 @@ export const updateServiceFeeWhenTask = async (task: IServiceFeeTask, serviceFee
     const administrativeExpenses = serviceFees[index]?.administrativeExpenses;
     //? ITERA SOBRE LA LISTA DE TAREAS PARA ACTUALIZARLAS ?//
     taskList.forEach((value, index, taskList) => {
-      console.log("🚀 ~ ID SF task:", taskList[index].description)
-      console.log("🚀 ~ ID SF task:", taskList[index].key)
-      console.log("🚀 ~ ID task:", task.description)
-      console.log("🚀 ~ ID task:", task.key)
-      if (taskList[index].key === task.key) {  
-        console.log("TAREA EXISTE");
-        
+      if (taskList[index].key === task.key) {
         const newCurrentComplexity = task.complexity.find((complexity) => {
           return complexity.name === taskList[index].currentComplexity?.name;
         });
-      // if (taskList[index].description.trim().toLowerCase() === task.description.trim().toLowerCase()) {
-      //   const newCurrentComplexity = task.complexity.find((complexity) => {
-      //     return complexity.name === taskList[index].currentComplexity?.name;
-      //   });
         taskList[index] = {
           ...taskList[index],
           key: task.key,
