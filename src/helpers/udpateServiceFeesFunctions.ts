@@ -7,10 +7,7 @@ import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 
 // ? CUANDO SE MODIFICA EL VALOR DE UN NOMENCLADOR ASOCIADO A UN MATERIAL DEL ALMACEN(CATEGORIA + NOMBRE) SE ACTUALIZAN TODAS LAS FICHAS DE COSTO QUE UTILIZAN ESE MATERIAL Y SE VUELVEN A CALCULAR SUS PRECIOS ?//
 
-export const updateServiceFeesMaterials = async (
-  materialNomenclator: INomenclator,
-  serviceFees: IServiceFee[]
-) => {
+export const updateServiceFeesMaterials = async (materialNomenclator: INomenclator, serviceFees: IServiceFee[]) => {
   console.log("🚀 ~ materialNomenclator:", materialNomenclator);
   //? BUSCA EN CADA LISTA DE MATERIAS PRIMAS DE CADA TARIFA DE SERVICIO SI EXISTE EL MATERIAL QUE SE PASA POR PARÁMETRO. SI EXISTE, ACTUALIZA EL VALOR DE LA TARIFA DE SERVICIO CON EL NUEVO VALOR DEL MATERIAL ?//
 
@@ -20,10 +17,7 @@ export const updateServiceFeesMaterials = async (
   serviceFees.forEach((serviceFee, index, serviceFees) => {
     let rawMaterials = serviceFees[index].rawMaterials;
     rawMaterials.forEach((rawMaterial, index, rawMaterials) => {
-      if (
-        rawMaterial.description.trim().toLowerCase() ===
-        materialNomenclator.code.trim().toLowerCase()
-      ) {
+      if (rawMaterial.description.trim().toLowerCase() === materialNomenclator.code.trim().toLowerCase()) {
         rawMaterials[index] = {
           description: rawMaterial.description,
           unitMeasure: rawMaterial.unitMeasure,
@@ -37,23 +31,24 @@ export const updateServiceFeesMaterials = async (
   });
   serviceFees.map((serviceFee) =>
     serviceFee.rawMaterials.map((rawMaterial) => {
-      if (
-        rawMaterial.description.trim().toLowerCase() ===
-        materialNomenclator.code.trim().toLowerCase()
-      )
+      if (rawMaterial.description.trim().toLowerCase() === materialNomenclator.code.trim().toLowerCase())
         serviceFeesToUpdate.push(serviceFee);
     })
   );
 
-  serviceFeesToUpdate.map(async (serviceFee) => {
+  serviceFees.map(async (serviceFee) => {
     try {
       await connectDB();
-      const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce(
-        (total, currentValue) => total + currentValue.value,
+
+      //? CALCULA EL VALOR DE CADA SUBTOTAL EN CADA SECCION DE LA FICHA DE COSTO ?//
+
+      const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
+      const taskListSubtotal: number = serviceFee.taskList.reduce(
+        (total, currentValue) => total + currentValue.currentComplexity?.value! * currentValue.amount,
         0
       );
-      const taskListSubtotal: number = serviceFee.taskList.reduce(
-        (total, currentValue) => total + currentValue.currentComplexity?.value!,
+      const estimatedTime: number = serviceFee?.taskList?.reduce(
+        (total, currentValue) => total + currentValue?.currentComplexity?.time! * currentValue.amount,
         0
       );
       const equipmentDepreciationSubtotal: number = serviceFee.equipmentDepreciation.reduce(
@@ -103,10 +98,10 @@ export const updateServiceFeesMaterials = async (
 
       // const complexityValues = serviceFee?.complexity?.map((complexity) => {
       //   return {
-      //     name: complexity?.name,
-      //     coefficient: complexity?.coefficient,
-      //     value: salePrice * complexity?.coefficient,
-      //     USDValue: (salePrice * complexity?.coefficient) / serviceFee?.currencyChange
+      //     name: complexity.name,
+      //     coefficient: complexity.coefficient,
+      //     value: salePrice * complexity.coefficient,
+      //     USDValue: (salePrice * complexity.coefficient) / serviceFee.currencyChange
       //   };
       // });
 
@@ -165,7 +160,8 @@ export const updateServiceFeesMaterials = async (
           // artisticTalent: serviceFee.artisticTalent,
           // artisticTalentValue: artisticTalentValue,
           salePrice: salePrice,
-          salePriceUSD: salePrice / serviceFee?.currencyChange
+          salePriceUSD: salePrice / serviceFee?.currencyChange,
+          estimatedTime: estimatedTime
         },
         { new: true }
       );
@@ -183,7 +179,7 @@ export const updateServiceFeesMaterials = async (
         }
       );
     } catch (error) {
-      console.log("🚀 ~ PUT ~ error:", error);
+      console.log("🚀 ~ POST ~ error:", error);
       if (error instanceof Error) {
         return NextResponse.json(
           {

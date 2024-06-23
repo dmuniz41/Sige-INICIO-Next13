@@ -7,7 +7,7 @@ import Nomenclator, { INomenclator } from "@/models/nomenclator";
 import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 
 export async function POST(request: NextRequest) {
-  const { ...serviceFee }: IServiceFee = await request.json();
+  const { ...serviceFee }: IServiceFee = await request.json();  
 
   const accessToken = request.headers.get("accessToken");
   try {
