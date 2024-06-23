@@ -12,10 +12,8 @@ export const ServiceFeeViewTaskListSection = (props: any) => {
       title: <span className="font-bold">Descripción (Complejidad)</span>,
       dataIndex: "description",
       key: "description",
-      width: "55%",
-      render: (_, { ...record }) => (
-        <span>{`${record.description} (${record.currentComplexity?.name})`}</span>
-      )
+      width: "45%",
+      render: (_, { ...record }) => <span>{`${record.description} (${record.currentComplexity?.name})`}</span>
     },
     {
       title: <span className="font-bold">Unidad de Medida</span>,
@@ -27,7 +25,22 @@ export const ServiceFeeViewTaskListSection = (props: any) => {
       title: <span className="font-bold">Cantidad</span>,
       dataIndex: "amount",
       key: "amount",
-      width: "10%"
+      width: "10%",
+      render: (value) => <span>$ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
+    },
+    {
+      title: <span className="font-bold">Duración (h)</span>,
+      dataIndex: "amount",
+      key: "amount",
+      width: "10%",
+      render: (_, { ...record }) => (
+        <span>
+          {record.currentComplexity?.time?.toLocaleString("DE", {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })}
+        </span>
+      )
     },
     {
       title: <span className="font-bold">Precio</span>,
@@ -36,6 +49,7 @@ export const ServiceFeeViewTaskListSection = (props: any) => {
       width: "10%",
       render: (_, { ...record }) => (
         <span>
+          ${" "}
           {record.currentComplexity?.value?.toLocaleString("DE", {
             maximumFractionDigits: 2,
             minimumFractionDigits: 2
@@ -47,9 +61,10 @@ export const ServiceFeeViewTaskListSection = (props: any) => {
       title: <span className="font-bold">Importe</span>,
       dataIndex: "value",
       key: "value",
-      width: "25%",
+      width: "30%",
       render: (_, { ...record }) => (
         <span>
+          ${" "}
           {(record.currentComplexity?.value! * record.amount).toLocaleString("DE", {
             maximumFractionDigits: 2,
             minimumFractionDigits: 2

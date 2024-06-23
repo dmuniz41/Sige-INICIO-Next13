@@ -6,21 +6,19 @@ import { IServiceFeeTask } from "@/models/serviceFeeTask";
 import Nomenclator from "@/models/nomenclator";
 import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 
+// TODO: REFACTORIZAR EL PARA QUE SE EJECUTE TODO EN UN SOLO BUCLE
+
 //? CUANDO SE MODIFICA EL VALOR DE UNA TAREA SE ACTUALIZA EL VALOR DE TODAS LAS FICHAS DE COSTO DONDE ESTE ESA TAREA ?//
 
-export const updateServiceFeeWhenTask = async (
-  task: IServiceFeeTask,
-  serviceFees: IServiceFee[]
-) => {
-  console.log("🚀 ~ task:", task);
+export const updateServiceFeeWhenTask = async (task: IServiceFeeTask, serviceFees: IServiceFee[]) => {
   //? BUSCA EN CADA LISTA DE TAREAS DE CADA TARIFA DE SERVICIO SI EXISTE LA TAREA QUE SE PASA POR PARÁMETRO. SI EXISTE, ACTUALIZA EL VALOR DE LA TARIFA DE SERVICIO CON EL NUEVO VALOR DE LA TAREA ?//
 
   serviceFees.forEach((serviceFee, index, serviceFees) => {
     const taskList = serviceFees[index]?.taskList;
+    const administrativeExpenses = serviceFees[index]?.administrativeExpenses;
+    //? ITERA SOBRE LA LISTA DE TAREAS PARA ACTUALIZARLAS ?//
     taskList.forEach((value, index, taskList) => {
-      if (
-        taskList[index].description.trim().toLowerCase() === task.description.trim().toLowerCase()
-      ) {
+      if (taskList[index].description.trim().toLowerCase() === task.description.trim().toLowerCase()) {
         const newCurrentComplexity = task.complexity.find((complexity) => {
           return complexity.name === taskList[index].currentComplexity?.name;
         });
@@ -37,6 +35,24 @@ export const updateServiceFeeWhenTask = async (
         return taskList[index];
       }
     });
+    const estimatedTime: number = serviceFee?.taskList?.reduce(
+      (total, currentValue) => total + currentValue?.currentComplexity?.time! * currentValue.amount,
+      0
+    );
+    //? SI EL TIEMPO TOTAL CAMBIA ACTUALIZA LOS GASTOS DE ADMINISTRATIVOS ?//
+    if (estimatedTime != serviceFee.estimatedTime) {
+      administrativeExpenses.forEach((value, index, adminExpenses) => {
+        adminExpenses[index] = {
+          ...adminExpenses[index],
+          description: value?.description,
+          unitMeasure: value?.unitMeasure,
+          amount: estimatedTime,
+          price: value?.price,
+          value: estimatedTime * value.price
+        };
+        return adminExpenses[index];
+      });
+    }
   });
 
   //? RECALCULA EL NUEVO VALOR DE LA TARIFA DE SERVICIO CON LA TAREA ACTUALIZADA Y LA ACTUALIZA EN LA BASE DE DATOS ?//
@@ -47,18 +63,13 @@ export const updateServiceFeeWhenTask = async (
 
       //? CALCULA EL VALOR DE CADA SUBTOTAL EN CADA SECCION DE LA FICHA DE COSTO ?//
 
-      const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce(
-        (total, currentValue) => total + currentValue.value,
-        0
-      );
+      const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
       const taskListSubtotal: number = serviceFee.taskList.reduce(
-        (total, currentValue) =>
-          total + currentValue.currentComplexity?.value! * currentValue.amount,
+        (total, currentValue) => total + currentValue.currentComplexity?.value! * currentValue.amount,
         0
       );
       const estimatedTime: number = serviceFee?.taskList?.reduce(
-        (total, currentValue) =>
-          total + currentValue?.currentComplexity?.time! * currentValue.amount,
+        (total, currentValue) => total + currentValue?.currentComplexity?.time! * currentValue.amount,
         0
       );
       const equipmentDepreciationSubtotal: number = serviceFee.equipmentDepreciation.reduce(
