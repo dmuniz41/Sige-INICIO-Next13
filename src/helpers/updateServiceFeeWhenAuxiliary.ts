@@ -8,24 +8,15 @@ import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 
 //? CUANDO SE MODIFICA CUALQUIER VALOR DE LA HOJA DE AUXILIARES SE ACTUALIZAN TODAS LAS TARIFAS DE SERVICIO Y SE VUELVEN A CALCULAR SUS PRECIOS. SI UNO DE LOS COEFICIENTES ES ELIMINADO SE ELIMINA DE TODAS LAS TARIFAS DE SERVICIO Y SE RECALCULA EL VALOR DE ESTAS ?//
 
-export const updateServiceFeeWhenAuxiliary = async (
-  auxiliary: IServiceFeeAuxiliary,
-  serviceFees: IServiceFee[]
-) => {
+export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxiliary, serviceFees: IServiceFee[]) => {
   //? ALMACENA LOS NOMBRES DE LOS COEFICIENTES SEPARADOS POR SECCIONES ?//
 
   const administrativeExpensesNames = auxiliary.administrativeExpensesCoefficients.map(
-    (administrativeExpense) => administrativeExpense.name
-  );
-  const equipmentDepreciationNames = auxiliary.equipmentDepreciationCoefficients.map(
-    (equipmentDepreciation) => equipmentDepreciation.name
-  );
-  const equipmentMaintenanceNames = auxiliary.equipmentMaintenanceCoefficients.map(
-    (equipmentMaintenance) => equipmentMaintenance.name
-  );
+    (administrativeExpense) => administrativeExpense.name);
+  const equipmentDepreciationNames = auxiliary.equipmentDepreciationCoefficients.map((equipmentDepreciation) => equipmentDepreciation.name);
+  const equipmentMaintenanceNames = auxiliary.equipmentMaintenanceCoefficients.map((equipmentMaintenance) => equipmentMaintenance.name);
   const transportacionExpensesNames = auxiliary.transportationExpensesCoefficients.map(
-    (transportationExpense) => transportationExpense.name
-  );
+    (transportationExpense) => transportationExpense.name);
 
   //? BUSCA EN CADA SECCION EL/LOS COEFICIENTES QUE SE HAYAN MODIFICADO Y LOS ACTUALIZA ?//
 
@@ -35,21 +26,24 @@ export const updateServiceFeeWhenAuxiliary = async (
     const equipmentMaintenance = serviceFees[index].equipmentMaintenance;
     const transportationExpenses = serviceFees[index].transportationExpenses;
     const hiredPersonalExpenses = serviceFees[index].hiredPersonalExpenses;
+    const estimatedTime: number = serviceFee?.taskList?.reduce(
+      (total, currentValue) => total + currentValue?.currentComplexity?.time! * currentValue.amount,
+      0
+    );
 
     serviceFee.currencyChange = auxiliary.currencyChange;
 
     administrativeExpenses.forEach((administrativeExpense, index, administrativeExpenses) => {
       if (administrativeExpensesNames.includes(administrativeExpense.description)) {
         const price = auxiliary.administrativeExpensesCoefficients.find(
-          (ae) =>
-            ae.name.trim().toLowerCase() === administrativeExpense.description.trim().toLowerCase()
+          (ae) => ae.name.trim().toLowerCase() === administrativeExpense.description.trim().toLowerCase()
         );
         administrativeExpenses[index] = {
           description: administrativeExpense.description,
           unitMeasure: administrativeExpense.unitMeasure,
-          amount: administrativeExpense.amount,
+          amount: estimatedTime,
           price: price?.value!,
-          value: price?.value! * administrativeExpense.amount
+          value: price?.value! * estimatedTime
         };
         return administrativeExpenses[index];
       } else {
@@ -60,8 +54,7 @@ export const updateServiceFeeWhenAuxiliary = async (
     equipmentDepreciation.forEach((equipmentDepreciation, index, equipmentDepreciations) => {
       if (equipmentDepreciationNames.includes(equipmentDepreciation.description)) {
         const price = auxiliary.equipmentDepreciationCoefficients.find(
-          (ed) =>
-            ed.name.trim().toLowerCase() === equipmentDepreciation.description.trim().toLowerCase()
+          (ed) => ed.name.trim().toLowerCase() === equipmentDepreciation.description.trim().toLowerCase()
         );
         equipmentDepreciations[index] = {
           description: equipmentDepreciation.description,
@@ -79,8 +72,7 @@ export const updateServiceFeeWhenAuxiliary = async (
     equipmentMaintenance.forEach((equipmentMaintenance, index, equipmentMaintenances) => {
       if (equipmentMaintenanceNames.includes(equipmentMaintenance.description)) {
         const price = auxiliary.equipmentMaintenanceCoefficients.find(
-          (em) =>
-            em.name.trim().toLowerCase() === equipmentMaintenance.description.trim().toLowerCase()
+          (em) => em.name.trim().toLowerCase() === equipmentMaintenance.description.trim().toLowerCase()
         );
         equipmentMaintenances[index] = {
           description: equipmentMaintenance.description,
@@ -98,8 +90,7 @@ export const updateServiceFeeWhenAuxiliary = async (
     transportationExpenses.forEach((transportationExpense, index, transportationExpenses) => {
       if (transportacionExpensesNames.includes(transportationExpense.description)) {
         const price = auxiliary.transportationExpensesCoefficients.find(
-          (te) =>
-            te.name.trim().toLowerCase() === transportationExpense.description.trim().toLowerCase()
+          (te) => te.name.trim().toLowerCase() === transportationExpense.description.trim().toLowerCase()
         );
         transportationExpenses[index] = {
           description: transportationExpense.description,
@@ -135,18 +126,13 @@ export const updateServiceFeeWhenAuxiliary = async (
 
       //? CALCULA EL VALOR DE CADA SUBTOTAL EN CADA SECCION DE LA FICHA DE COSTO ?//
 
-      const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce(
-        (total, currentValue) => total + currentValue.value,
-        0
-      );
+      const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
       const taskListSubtotal: number = serviceFee.taskList.reduce(
-        (total, currentValue) =>
-          total + currentValue.currentComplexity?.value! * currentValue.amount,
+        (total, currentValue) => total + currentValue.currentComplexity?.value! * currentValue.amount,
         0
       );
       const estimatedTime: number = serviceFee?.taskList?.reduce(
-        (total, currentValue) =>
-          total + currentValue?.currentComplexity?.time! * currentValue.amount,
+        (total, currentValue) => total + currentValue?.currentComplexity?.time! * currentValue.amount,
         0
       );
       const equipmentDepreciationSubtotal: number = serviceFee.equipmentDepreciation.reduce(

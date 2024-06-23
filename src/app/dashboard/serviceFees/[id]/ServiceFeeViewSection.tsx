@@ -24,29 +24,22 @@ export const ServiceFeeViewTableSection = (props: any) => {
       title: <span className="font-bold">Cantidad</span>,
       dataIndex: "amount",
       key: "amount",
-      width: "10%"
+      width: "10%",
+      render: (value) => <span>$ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     },
     {
       title: <span className="font-bold">Precio</span>,
       dataIndex: "price",
       key: "price",
       width: "10%",
-      render: (value) => (
-        <span>
-          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
-        </span>
-      )
+      render: (value) => <span>$ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     },
     {
       title: <span className="font-bold">Importe</span>,
       dataIndex: "value",
       key: "value",
       width: "25%",
-      render: (value) => (
-        <span>
-          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
-        </span>
-      )
+      render: (value) => <span>$ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     }
   ];
 

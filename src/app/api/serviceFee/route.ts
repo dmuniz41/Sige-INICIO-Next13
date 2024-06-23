@@ -220,7 +220,7 @@ export async function PUT(request: NextRequest) {
       0
     );
     const administrativeExpensesSubtotal: number = serviceFee.administrativeExpenses.reduce(
-      (total, currentValue) => total + currentValue.value * estimatedTime,
+      (total, currentValue) => total + currentValue.value,
       0
     );
     const transportationExpensesSubtotal: number = serviceFee.transportationExpenses.reduce(

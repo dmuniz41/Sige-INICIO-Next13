@@ -10,11 +10,7 @@ import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 
 //? CUANDO SE MODIFICA EL VALOR DE UNA TAREA SE ACTUALIZA EL VALOR DE TODAS LAS FICHAS DE COSTO DONDE ESTE ESA TAREA ?//
 
-export const updateServiceFeeWhenTask = async (
-  task: IServiceFeeTask,
-  serviceFees: IServiceFee[]
-) => {
-  console.log("🚀 ~ task:", task);
+export const updateServiceFeeWhenTask = async (task: IServiceFeeTask, serviceFees: IServiceFee[]) => {
   //? BUSCA EN CADA LISTA DE TAREAS DE CADA TARIFA DE SERVICIO SI EXISTE LA TAREA QUE SE PASA POR PARÁMETRO. SI EXISTE, ACTUALIZA EL VALOR DE LA TARIFA DE SERVICIO CON EL NUEVO VALOR DE LA TAREA ?//
 
   serviceFees.forEach((serviceFee, index, serviceFees) => {
@@ -22,9 +18,7 @@ export const updateServiceFeeWhenTask = async (
     const administrativeExpenses = serviceFees[index]?.administrativeExpenses;
     //? ITERA SOBRE LA LISTA DE TAREAS PARA ACTUALIZARLAS ?//
     taskList.forEach((value, index, taskList) => {
-      if (
-        taskList[index].description.trim().toLowerCase() === task.description.trim().toLowerCase()
-      ) {
+      if (taskList[index].description.trim().toLowerCase() === task.description.trim().toLowerCase()) {
         const newCurrentComplexity = task.complexity.find((complexity) => {
           return complexity.name === taskList[index].currentComplexity?.name;
         });
@@ -69,18 +63,13 @@ export const updateServiceFeeWhenTask = async (
 
       //? CALCULA EL VALOR DE CADA SUBTOTAL EN CADA SECCION DE LA FICHA DE COSTO ?//
 
-      const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce(
-        (total, currentValue) => total + currentValue.value,
-        0
-      );
+      const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
       const taskListSubtotal: number = serviceFee.taskList.reduce(
-        (total, currentValue) =>
-          total + currentValue.currentComplexity?.value! * currentValue.amount,
+        (total, currentValue) => total + currentValue.currentComplexity?.value! * currentValue.amount,
         0
       );
       const estimatedTime: number = serviceFee?.taskList?.reduce(
-        (total, currentValue) =>
-          total + currentValue?.currentComplexity?.time! * currentValue.amount,
+        (total, currentValue) => total + currentValue?.currentComplexity?.time! * currentValue.amount,
         0
       );
       const equipmentDepreciationSubtotal: number = serviceFee.equipmentDepreciation.reduce(
