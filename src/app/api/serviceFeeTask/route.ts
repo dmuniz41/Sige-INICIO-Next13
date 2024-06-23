@@ -160,6 +160,7 @@ export async function PUT(request: NextRequest) {
     const updatedServiceFeeTask = await ServiceFeeTask.findByIdAndUpdate(
       { _id: params.get("id") },
       {
+        key: serviceFeeTask.key,
         amount: serviceFeeTask.amount,
         category: serviceFeeTask.category,
         description: serviceFeeTask.description,

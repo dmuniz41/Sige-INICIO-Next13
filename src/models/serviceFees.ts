@@ -99,6 +99,7 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
   },
   taskList: [
     {
+      key: String,
       amount: Number,
       category: String,
       description: String,

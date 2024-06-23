@@ -66,6 +66,7 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({
                 .then((values: any) => {
                   onCreate({
                     ...values,
+                    key: currentTask?.key,
                     unitMeasure: unitMeasure,
                     price: price,
                     value: taskValue,
