@@ -101,9 +101,7 @@ export const CreateServiceFeeForm = () => {
   }, [dispatch]);
 
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
-    (state: RootState) => state?.serviceFee
-  );
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
 
   nomenclators.map((nomenclator: INomenclator) => {
     if (nomenclator.category === "Categoría de tarifas") serviceFeeCategory.push(nomenclator.code);
@@ -135,16 +133,16 @@ export const CreateServiceFeeForm = () => {
   };
 
   const onAddTaskList = (values: any) => {
-    console.log("🚀 ~ onAddTaskList ~ values:", values)
     setTaskListValues([
       {
-        key: values.key,
-        description: values.description,
-        unitMeasure: values.unitMeasure,
         amount: values.amount,
+        category: values.category,
+        currentComplexity: values.currentComplexity,
+        description: values.description,
+        key: values.key,
         price: values.currentComplexity?.value!,
-        value: values.currentComplexity?.value! * values.amount,
-        currentComplexity: values.currentComplexity
+        unitMeasure: values.unitMeasure,
+        value: values.currentComplexity?.value! * values.amount
       },
       ...taskListValues
     ]);
@@ -260,18 +258,12 @@ export const CreateServiceFeeForm = () => {
                 options={categoriesOptions}
                 showSearch
                 onSelect={(value) => {
-                  value === "Trabajo Pladur"
-                    ? form.setFieldValue("commercialMargin", 12)
-                    : form.setFieldValue("commercialMargin", 15);
+                  value === "Trabajo Pladur" ? form.setFieldValue("commercialMargin", 12) : form.setFieldValue("commercialMargin", 15);
                 }}
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) =>
-                  (option?.label ?? "").toLowerCase().includes(input)
-                }
+                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                  (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
                 }
               />
             </Form.Item>
@@ -296,13 +288,9 @@ export const CreateServiceFeeForm = () => {
                 options={unitMeasureOptions}
                 showSearch
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) =>
-                  (option?.label ?? "").toLowerCase().includes(input)
-                }
+                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                  (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
                 }
               />
             </Form.Item>
@@ -498,20 +486,14 @@ export const CreateServiceFeeForm = () => {
           Crear
         </button>
       </Form.Item>
-      <AddRawMaterialModal
-        open={addRawMaterialModal}
-        onCancel={() => setAddRawMaterialModal(false)}
-        onCreate={onAddRawMaterial}
-      />
-      <AddTaskListModal
-        open={addTaskListModal}
-        onCancel={() => setAddTaskListModal(false)}
-        onCreate={onAddTaskList}
-      />
+      <AddRawMaterialModal open={addRawMaterialModal} onCancel={() => setAddRawMaterialModal(false)} onCreate={onAddRawMaterial} />
+      <AddTaskListModal open={addTaskListModal} onCancel={() => setAddTaskListModal(false)} onCreate={onAddTaskList} />
       <AddEquipmentDepreciationModal
         open={addEquipmentDepreciationModal}
         onCancel={() => setAddEquipmentDepreciationModal(false)}
         onCreate={onAddEquipmentDepreciation}
+        estimatedTime={estimatedTime}
+        taskList={taskListValues}
       />
       <AddEquipmentMaintenanceModal
         open={addEquipmentMaintenanceModal}
