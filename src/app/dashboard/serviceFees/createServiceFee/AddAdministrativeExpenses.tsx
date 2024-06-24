@@ -13,15 +13,8 @@ interface CollectionCreateFormProps {
   estimatedTime: number;
 }
 
-export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel,
-  estimatedTime
-}) => {
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
-    (state: RootState) => state?.serviceFee
-  );
+export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, estimatedTime }) => {
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
   const [currentPrice, setCurrentPrice] = useState(0);
   const [currentAdministrativeExpense, setCurrentAdministrativeExpense] = useState<{
     name: string;
@@ -31,13 +24,14 @@ export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps>
     value: 0
   });
 
-  const listOfAdministrativeExpenses: SelectProps["options"] =
-    serviceFeeAuxiliary?.administrativeExpensesCoefficients?.map((administrativeExpense) => {
+  const listOfAdministrativeExpenses: SelectProps["options"] = serviceFeeAuxiliary?.administrativeExpensesCoefficients?.map(
+    (administrativeExpense) => {
       return {
         label: `${administrativeExpense.name}`,
         value: `${administrativeExpense.name}`
       };
-    });
+    }
+  );
 
   const [form] = Form.useForm();
   return (
@@ -91,21 +85,16 @@ export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps>
       ]}
     >
       <Form form={form} layout="horizontal" name="addAdministrativeExpense" size="middle">
-        <Form.Item
-          name="description"
-          label="Descripción"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select
             autoFocus
             allowClear
             style={{ width: "100%" }}
             options={listOfAdministrativeExpenses}
             onSelect={(value: any) => {
-              const selectedAdministrativeExpense =
-                serviceFeeAuxiliary?.administrativeExpensesCoefficients?.find(
-                  (administrativeExpense) => administrativeExpense.name === value
-                );
+              const selectedAdministrativeExpense = serviceFeeAuxiliary?.administrativeExpensesCoefficients?.find(
+                (administrativeExpense) => administrativeExpense.name === value
+              );
               setCurrentAdministrativeExpense(selectedAdministrativeExpense!);
               form.setFieldsValue({
                 unitMeasure: "$/h",
@@ -117,13 +106,9 @@ export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps>
             }}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) =>
-              (option?.label ?? "").toLowerCase().includes(input)
-            }
+            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
             filterSort={(optionA: any, optionB: any) =>
-              (optionA?.label ?? "")
-                .toLowerCase()
-                .localeCompare((optionB?.label ?? "").toLowerCase())
+              (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
             }
           />
         </Form.Item>
@@ -150,7 +135,7 @@ export const AddAdministrativeExpensesModal: React.FC<CollectionCreateFormProps>
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Total de horas:</span>
-          <span>${estimatedTime?.toFixed(2)}</span>
+          <span>{estimatedTime?.toFixed(2)} h</span>
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Importe:</span>
