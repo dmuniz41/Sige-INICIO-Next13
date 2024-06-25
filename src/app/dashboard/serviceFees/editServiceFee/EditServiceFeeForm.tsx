@@ -114,12 +114,8 @@ export const EditServiceFeeForm = () => {
   );
 
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-  const { selectedServiceFee }: { selectedServiceFee: IServiceFee } = useAppSelector(
-    (state: RootState) => state?.serviceFee
-  );
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
-    (state: RootState) => state?.serviceFee
-  );
+  const { selectedServiceFee }: { selectedServiceFee: IServiceFee } = useAppSelector((state: RootState) => state?.serviceFee);
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
 
   useEffect(() => {
     dispatch(nomenclatorsStartLoading());
@@ -375,18 +371,12 @@ export const EditServiceFeeForm = () => {
                 options={categoriesOptions}
                 showSearch
                 onSelect={(value) => {
-                  value === "Trabajo Pladur"
-                    ? form.setFieldValue("commercialMargin", 20)
-                    : form.setFieldValue("commercialMargin", 50);
+                  value === "Trabajo Pladur" ? form.setFieldValue("commercialMargin", 20) : form.setFieldValue("commercialMargin", 50);
                 }}
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) =>
-                  (option?.label ?? "").toLowerCase().includes(input)
-                }
+                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                  (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
                 }
               />
             </Form.Item>
@@ -411,13 +401,9 @@ export const EditServiceFeeForm = () => {
                 options={unitMeasureOptions}
                 showSearch
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) =>
-                  (option?.label ?? "").toLowerCase().includes(input)
-                }
+                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                  (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
                 }
               />
             </Form.Item>
@@ -620,31 +606,25 @@ export const EditServiceFeeForm = () => {
         </button>
       </Form.Item>
       {/* MODALES PARA CREAR Y EDITAR MATERIAS PRIMAS */}
-      <AddRawMaterialModal
-        open={addRawMaterialModal}
-        onCancel={() => setAddRawMaterialModal(false)}
-        onCreate={onAddRawMaterial}
-      />
+      <AddRawMaterialModal open={addRawMaterialModal} onCancel={() => setAddRawMaterialModal(false)} onCreate={onAddRawMaterial} />
       {/* <EditRawMaterialModal
         open={editRawMaterialModal}
         onCancel={() => setEditRawMaterialModal(false)}
         onCreate={onEditRawMaterial}
         defaultValues={valueToEdit}
       /> */}
-      <AddTaskListModal
-        open={addTaskListModal}
-        onCancel={() => setAddTaskListModal(false)}
-        onCreate={onAddTaskList}
-      />
+      <AddTaskListModal open={addTaskListModal} onCancel={() => setAddTaskListModal(false)} onCreate={onAddTaskList} />
       <AddEquipmentDepreciationModal
         open={addEquipmentDepreciationModal}
         onCancel={() => setAddEquipmentDepreciationModal(false)}
         onCreate={onAddEquipmentDepreciation}
+        taskList={taskListValues}
       />
       <AddEquipmentMaintenanceModal
         open={addEquipmentMaintenanceModal}
         onCancel={() => setAddEquipmentMaintenanceModal(false)}
         onCreate={onAddEquipmentMaintenance}
+        taskList={taskListValues}
       />
       <AddAdministrativeExpensesModal
         open={addAdministrativeExpensesModal}
@@ -683,9 +663,7 @@ export const TableFormSection = (props: any) => {
       confirmButtonText: "Eliminar"
     }).then((result) => {
       if (result.isConfirmed) {
-        valuesSetter(
-          values.filter((value: IServiceFeeSubItem) => value.description !== record.description)
-        );
+        valuesSetter(values.filter((value: IServiceFeeSubItem) => value.description !== record.description));
       }
     });
   };
@@ -708,33 +686,21 @@ export const TableFormSection = (props: any) => {
       dataIndex: "amount",
       key: "amount",
       width: "10%",
-      render: (value) => (
-        <span>
-          {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
-        </span>
-      )
+      render: (value) => <span>{value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     },
     {
       title: <span className="font-bold">Precio/UM</span>,
       dataIndex: "price",
       key: "price",
       width: "15%",
-      render: (value) => (
-        <span>
-          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
-        </span>
-      )
+      render: (value) => <span>$ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     },
     {
       title: <span className="font-bold">Importe</span>,
       dataIndex: "value",
       key: "value",
       width: "15%",
-      render: (value) => (
-        <span>
-          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
-        </span>
-      )
+      render: (value) => <span>$ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     },
     {
       title: <span className="font-bold">Acciones</span>,

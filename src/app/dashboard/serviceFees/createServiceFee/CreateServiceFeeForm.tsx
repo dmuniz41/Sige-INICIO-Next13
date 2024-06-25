@@ -142,7 +142,8 @@ export const CreateServiceFeeForm = () => {
         key: values.key,
         price: values.currentComplexity?.value!,
         unitMeasure: values.unitMeasure,
-        value: values.currentComplexity?.value! * values.amount
+        value: values.currentComplexity?.value! * values.amount,
+        duration: values.duration
       },
       ...taskListValues
     ]);
@@ -313,6 +314,7 @@ export const CreateServiceFeeForm = () => {
         values={rawMaterialsValues}
         formName="rawMaterials"
         valuesSetter={setRawMaterialsValues}
+        setTaskListValues
         addModalSetter={setAddRawMaterialModal}
         buttonText="Añadir Materia Prima"
         form={form}
@@ -492,13 +494,13 @@ export const CreateServiceFeeForm = () => {
         open={addEquipmentDepreciationModal}
         onCancel={() => setAddEquipmentDepreciationModal(false)}
         onCreate={onAddEquipmentDepreciation}
-        estimatedTime={estimatedTime}
         taskList={taskListValues}
       />
       <AddEquipmentMaintenanceModal
         open={addEquipmentMaintenanceModal}
         onCancel={() => setAddEquipmentMaintenanceModal(false)}
         onCreate={onAddEquipmentMaintenance}
+        taskList={taskListValues}
       />
       <AddAdministrativeExpensesModal
         open={addAdministrativeExpensesModal}
