@@ -1,7 +1,7 @@
 "use client";
 
 import { Form, InputNumber, Modal, Select, SelectProps } from "antd";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { IServiceFeeSubItem } from "@/models/serviceFees";
 import { RootState, useAppSelector } from "@/store/store";
@@ -12,7 +12,6 @@ interface CollectionCreateFormProps {
   open: boolean;
   onCreate: (values: IServiceFeeSubItem) => void;
   onCancel: () => void;
-  estimatedTime: number;
   taskList: IServiceFeeTask[];
 }
 
@@ -20,12 +19,12 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
   open,
   onCreate,
   onCancel,
-  estimatedTime,
   taskList
 }) => {
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
-  const [currentPrice, setCurrentPrice] = useState(0);
-  // const [plotterTasks, setPlotterTasks] = useState<IServiceFeeTask[]>([]);
+  const [currentTotalTime, setCurrentTotalTime] = useState(0);
+  const [selectedEquipmentDepreciation, setSelectedEquipmentDepreciation] = useState<any>({});
+  const price = useMemo(() => currentTotalTime * selectedEquipmentDepreciation?.value!, [currentTotalTime, selectedEquipmentDepreciation]);
 
   // ? CALCULA EL TIEMPO DE CADA CATEGORIA DE TAREA QUE IMPLIQUE EL USO DE EQUIPOS, SI LA TAREA NO HACE MATCH RETORNA 0? //
   // * ROUTER * //
@@ -49,14 +48,14 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
     }
   });
   const totalPlotterTime = plotterTasks
-  ?.map((task) => {
-    if (!task) {
-      return 0;
-    } else {
-      return task?.currentComplexity?.time;
-    }
-  })
-  ?.reduce((accumulator: number, currentValue) => accumulator + currentValue!, 0);
+    ?.map((task) => {
+      if (!task) {
+        return 0;
+      } else {
+        return task?.currentComplexity?.time;
+      }
+    })
+    ?.reduce((accumulator: number, currentValue) => accumulator + currentValue!, 0);
 
   // * DOBLADORA * //
   const bendingMachineTasks = taskList?.map((task) => {
@@ -65,14 +64,14 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
     }
   });
   const totalBendingMachineTime = bendingMachineTasks
-  ?.map((task) => {
-    if (!task) {
-      return 0;
-    } else {
-      return task?.currentComplexity?.time;
-    }
-  })
-  ?.reduce((accumulator: number, currentValue) => accumulator + currentValue!, 0);
+    ?.map((task) => {
+      if (!task) {
+        return 0;
+      } else {
+        return task?.currentComplexity?.time;
+      }
+    })
+    ?.reduce((accumulator: number, currentValue) => accumulator + currentValue!, 0);
 
   const [currentEquipmentDepreciation, setCurrentEquipmentDepreciation] = useState<{
     name: string;
@@ -116,21 +115,20 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
           </button>
           <button
             key="1"
-            className="modal-btn-primary "
+            className="modal-btn-primary"
             onClick={() => {
               form
                 .validateFields()
                 .then((values) => {
                   onCreate({
                     description: values.description,
-                    amount: values.amount,
+                    amount: currentTotalTime,
                     unitMeasure: "$/h",
-                    price: currentEquipmentDepreciation.value,
-                    value: currentPrice
+                    price: selectedEquipmentDepreciation.value,
+                    value: price
                   });
                   form.resetFields();
                   setCurrentEquipmentDepreciation({ name: "", value: 0 });
-                  setCurrentPrice(0);
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -149,15 +147,34 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
             options={listOfEquipmentDepreciation}
             style={{ width: "100%" }}
             onSelect={(value: any) => {
-              const selectedEquipmentDepreciation = serviceFeeAuxiliary?.equipmentDepreciationCoefficients?.find(
-                (equipmentDepreciation) => equipmentDepreciation.name === value
-              );
-              setCurrentEquipmentDepreciation(selectedEquipmentDepreciation!);
-              form.setFieldsValue({
-                unitMeasure: "$/m2",
-                price: form.getFieldValue("amount") * selectedEquipmentDepreciation?.value!
-              });
-              setCurrentPrice(form.getFieldValue("amount") * selectedEquipmentDepreciation?.value!);
+              switch (value) {
+                case "Plotter":
+                  setCurrentTotalTime(totalPlotterTime);
+                  setSelectedEquipmentDepreciation(
+                    serviceFeeAuxiliary?.equipmentDepreciationCoefficients?.find(
+                      (equipmentDepreciation) => equipmentDepreciation.name === "Plotter"
+                    )!
+                  );
+                  break;
+                case "Router":
+                  setCurrentTotalTime(totalRouterTime);
+                  setSelectedEquipmentDepreciation(
+                    serviceFeeAuxiliary?.equipmentDepreciationCoefficients?.find(
+                      (equipmentDepreciation) => equipmentDepreciation.name === "Router"
+                    )!
+                  );
+                  break;
+                case "Dobladora":
+                  setCurrentTotalTime(totalBendingMachineTime);
+                  setSelectedEquipmentDepreciation(
+                    serviceFeeAuxiliary?.equipmentDepreciationCoefficients?.find(
+                      (equipmentDepreciation) => equipmentDepreciation.name === "Dobladora"
+                    )!
+                  );
+                  break;
+                default:
+                  break;
+              }
             }}
             showSearch
             optionFilterProp="children"
@@ -167,29 +184,17 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
             }
           />
         </Form.Item>
-        {/* <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber
-            min={0}
-            onChange={(value: number | null) => {
-              setCurrentPrice(value! * currentEquipmentDepreciation?.value);
-            }}
-          />
-        </Form.Item> */}
-        <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Unidad de Medida:</span>
-          <span>$/m2</span>
-        </div>
         <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Total de horas:</span>
-          <span>{estimatedTime?.toFixed(2)} h</span>
+          <span>{currentTotalTime?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })} h</span>
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Precio/UM:</span>
-          <span>${currentEquipmentDepreciation?.value?.toFixed(2)}</span>
+          <span>${selectedEquipmentDepreciation?.value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Importe:</span>
-          <span>${!currentPrice ? 0 : currentPrice?.toFixed(2)}</span>
+          <span>${!price ? 0 : price?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
         </div>
       </Form>
     </Modal>

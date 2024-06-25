@@ -103,14 +103,6 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
             }
           />
         </Form.Item>
-        <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
-          <InputNumber
-            min={0}
-            onChange={(value: number | null) => {
-              setTaskValue(value! * price);
-            }}
-          />
-        </Form.Item>
         <Radio.Group
           className="flex mb-4"
           buttonStyle="solid"
@@ -132,6 +124,14 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
           <Radio.Button value="Media">Media</Radio.Button>
           <Radio.Button value="Baja">Baja</Radio.Button>
         </Radio.Group>
+        <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
+          <InputNumber
+            min={0}
+            onChange={(value: number | null) => {
+              setTaskValue(value! * price);
+            }}
+          />
+        </Form.Item>
         <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Unidad de Medida:</span>
           <span>{!unitMeasure ? "" : unitMeasure}</span>

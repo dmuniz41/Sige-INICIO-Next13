@@ -313,6 +313,7 @@ export const CreateServiceFeeForm = () => {
         values={rawMaterialsValues}
         formName="rawMaterials"
         valuesSetter={setRawMaterialsValues}
+        setTaskListValues
         addModalSetter={setAddRawMaterialModal}
         buttonText="Añadir Materia Prima"
         form={form}
@@ -492,7 +493,6 @@ export const CreateServiceFeeForm = () => {
         open={addEquipmentDepreciationModal}
         onCancel={() => setAddEquipmentDepreciationModal(false)}
         onCreate={onAddEquipmentDepreciation}
-        estimatedTime={estimatedTime}
         taskList={taskListValues}
       />
       <AddEquipmentMaintenanceModal
