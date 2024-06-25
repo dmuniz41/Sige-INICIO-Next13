@@ -499,6 +499,7 @@ export const CreateServiceFeeForm = () => {
         open={addEquipmentMaintenanceModal}
         onCancel={() => setAddEquipmentMaintenanceModal(false)}
         onCreate={onAddEquipmentMaintenance}
+        taskList={taskListValues}
       />
       <AddAdministrativeExpensesModal
         open={addAdministrativeExpensesModal}

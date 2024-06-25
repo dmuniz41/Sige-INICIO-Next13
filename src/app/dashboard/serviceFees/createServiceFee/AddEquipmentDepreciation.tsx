@@ -73,13 +73,7 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
     })
     ?.reduce((accumulator: number, currentValue) => accumulator + currentValue!, 0);
 
-  const [currentEquipmentDepreciation, setCurrentEquipmentDepreciation] = useState<{
-    name: string;
-    value: number;
-  }>({
-    name: "",
-    value: 0
-  });
+
 
   const listOfEquipmentDepreciation: SelectProps["options"] = serviceFeeAuxiliary?.equipmentDepreciationCoefficients?.map(
     (equipmentDepreciation) => {
@@ -128,7 +122,6 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
                     value: price
                   });
                   form.resetFields();
-                  setCurrentEquipmentDepreciation({ name: "", value: 0 });
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
