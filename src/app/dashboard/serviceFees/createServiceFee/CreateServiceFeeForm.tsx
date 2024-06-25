@@ -142,7 +142,8 @@ export const CreateServiceFeeForm = () => {
         key: values.key,
         price: values.currentComplexity?.value!,
         unitMeasure: values.unitMeasure,
-        value: values.currentComplexity?.value! * values.amount
+        value: values.currentComplexity?.value! * values.amount,
+        duration: values.duration
       },
       ...taskListValues
     ]);

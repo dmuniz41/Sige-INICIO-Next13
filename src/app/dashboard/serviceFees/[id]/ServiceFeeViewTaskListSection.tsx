@@ -35,7 +35,7 @@ export const ServiceFeeViewTaskListSection = (props: any) => {
       width: "10%",
       render: (_, { ...record }) => (
         <span>
-          {record.currentComplexity?.time?.toLocaleString("DE", {
+          {(record.currentComplexity?.time! * record.amount)?.toLocaleString("DE", {
             maximumFractionDigits: 2,
             minimumFractionDigits: 2
           })}

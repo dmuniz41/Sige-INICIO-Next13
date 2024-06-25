@@ -36,7 +36,7 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
       if (!task) {
         return 0;
       } else {
-        return task?.currentComplexity?.time;
+        return task?.currentComplexity?.time! * task?.amount;
       }
     })
     ?.reduce((accumulator: number, currentValue) => accumulator + currentValue!, 0);
@@ -52,7 +52,7 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
       if (!task) {
         return 0;
       } else {
-        return task?.currentComplexity?.time;
+        return task?.currentComplexity?.time! * task?.amount;
       }
     })
     ?.reduce((accumulator: number, currentValue) => accumulator + currentValue!, 0);
@@ -68,7 +68,7 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
       if (!task) {
         return 0;
       } else {
-        return task?.currentComplexity?.time;
+        return task?.currentComplexity?.time! * task?.amount;
       }
     })
     ?.reduce((accumulator: number, currentValue) => accumulator + currentValue!, 0);

@@ -65,7 +65,8 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
                     unitMeasure: unitMeasure,
                     price: price,
                     value: taskValue,
-                    currentComplexity: currentComplexity
+                    currentComplexity: currentComplexity,
+                    duration: form.getFieldValue("amount") * currentComplexity?.time!
                   });
                   form.resetFields();
                   setTaskValue(0);
