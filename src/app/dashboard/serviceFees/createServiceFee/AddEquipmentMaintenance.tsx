@@ -1,5 +1,5 @@
 "use client";
-import { Form, InputNumber, Modal, Select, SelectProps } from "antd";
+import { Form, Modal, Select, SelectProps } from "antd";
 import { useMemo, useState } from "react";
 
 import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
@@ -14,6 +14,7 @@ interface CollectionCreateFormProps {
   taskList: IServiceFeeTask[];
 }
 
+// TODO: HACER QUE CUANDO SE AGREGE UN EQUIPO DE MANTENIMIENTO SE RESETEEN LOS VALORES DE
 export const AddEquipmentMaintenanceModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, taskList }) => {
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
   const [currentTotalTime, setCurrentTotalTime] = useState(0);
@@ -23,7 +24,7 @@ export const AddEquipmentMaintenanceModal: React.FC<CollectionCreateFormProps> =
   // ? CALCULA EL TIEMPO DE CADA CATEGORIA DE TAREA QUE IMPLIQUE EL USO DE EQUIPOS, SI LA TAREA NO HACE MATCH RETORNA 0? //
   // * ROUTER * //
   const routerTasks = taskList?.map((task) => {
-    if (task.category === "Routeado") return task;
+    if (task.description.includes("Routeado")) return task;
   });
   const totalRouterTime = routerTasks
     ?.map((task) => {
@@ -37,7 +38,7 @@ export const AddEquipmentMaintenanceModal: React.FC<CollectionCreateFormProps> =
 
   // * PLOTTER * //
   const plotterTasks = taskList?.map((task) => {
-    if (task.category === "Rotulado" || task.category === "Impresión") {
+    if (task.description.includes("Rotulado") || task.description.includes("Impresión")) {
       return task;
     }
   });
@@ -53,7 +54,7 @@ export const AddEquipmentMaintenanceModal: React.FC<CollectionCreateFormProps> =
 
   // * DOBLADORA * //
   const bendingMachineTasks = taskList?.map((task) => {
-    if (task.category === "Doblado") {
+    if (task.description.includes("Doblado")) {
       return task;
     }
   });
@@ -114,6 +115,8 @@ export const AddEquipmentMaintenanceModal: React.FC<CollectionCreateFormProps> =
                     value: price
                   });
                   form.resetFields();
+                  setsSelectedEquipmentMaintenance({});
+                  setCurrentTotalTime(0);
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
