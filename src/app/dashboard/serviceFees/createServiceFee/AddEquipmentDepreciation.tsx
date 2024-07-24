@@ -15,12 +15,7 @@ interface CollectionCreateFormProps {
   taskList: IServiceFeeTask[];
 }
 
-export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel,
-  taskList
-}) => {
+export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, taskList }) => {
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
   const [currentTotalTime, setCurrentTotalTime] = useState(0);
   const [selectedEquipmentDepreciation, setSelectedEquipmentDepreciation] = useState<any>({});
@@ -29,7 +24,7 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
   // ? CALCULA EL TIEMPO DE CADA CATEGORIA DE TAREA QUE IMPLIQUE EL USO DE EQUIPOS, SI LA TAREA NO HACE MATCH RETORNA 0? //
   // * ROUTER * //
   const routerTasks = taskList?.map((task) => {
-    if (task.category === "Routeado") return task;
+    if (task.description.includes("Routeado")) return task;
   });
   const totalRouterTime = routerTasks
     ?.map((task) => {
@@ -43,7 +38,7 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
 
   // * PLOTTER * //
   const plotterTasks = taskList?.map((task) => {
-    if (task.category === "Rotulado" || task.category === "Impresión") {
+    if (task.description.includes("Rotulado") || task.description.includes("Impresión")) {
       return task;
     }
   });
@@ -59,7 +54,7 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
 
   // * DOBLADORA * //
   const bendingMachineTasks = taskList?.map((task) => {
-    if (task.category === "Doblado") {
+    if (task.description.includes("Doblado")) {
       return task;
     }
   });
@@ -72,8 +67,6 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
       }
     })
     ?.reduce((accumulator: number, currentValue) => accumulator + currentValue!, 0);
-
-
 
   const listOfEquipmentDepreciation: SelectProps["options"] = serviceFeeAuxiliary?.equipmentDepreciationCoefficients?.map(
     (equipmentDepreciation) => {
@@ -122,6 +115,8 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
                     value: price
                   });
                   form.resetFields();
+                  setSelectedEquipmentDepreciation({});
+                  setCurrentTotalTime(0);
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
