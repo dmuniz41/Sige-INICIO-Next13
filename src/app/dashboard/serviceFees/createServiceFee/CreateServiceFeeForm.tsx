@@ -47,19 +47,7 @@ export const CreateServiceFeeForm = () => {
   const [equipmentMaintenanceValues, setEquipmentMaintenanceValues]: any = useState([]);
   const [hiredPersonalExpensesValues, setHiredPersonalExpensesValues]: any = useState([]);
   const [rawMaterialsValues, setRawMaterialsValues]: any = useState([]);
-  const [taskListValues, setTaskListValues]: any = useState([
-    {
-      _id: "",
-      amount: 0,
-      category: "",
-      description: "",
-      // price,number;
-      unitMeasure: "",
-      key: "",
-      complexity: [],
-      currentComplexity: "",
-    }
-  ]);
+  const [taskListValues, setTaskListValues]: any = useState([]);
   const [transportationExpensesValues, setTransportationExpensesValues]: any = useState([]);
 
   const totalValue = useMemo(
