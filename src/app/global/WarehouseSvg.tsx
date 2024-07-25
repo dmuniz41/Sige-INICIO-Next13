@@ -1,4 +1,4 @@
-export const EditSvg = ({ width = 24, height = 24 }) => {
+export const WarehouseSvg = ({ width = 24, height = 24 }) => {
   return (
     <svg
       width={`${width}`}
@@ -11,9 +11,9 @@ export const EditSvg = ({ width = 24, height = 24 }) => {
       strokeLinejoin="round"
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-      <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
-      <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
-      <path d="M16 5l3 3"></path>
+      <path d="M3 21v-13l9 -4l9 4v13"></path>
+      <path d="M13 13h4v8h-10v-6h6"></path>
+      <path d="M13 21v-9a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v3"></path>
     </svg>
   );
 };

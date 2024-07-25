@@ -1,5 +1,3 @@
-import React from "react";
-
 export const NoDataSvg = ({ width = 24, height = 24 }) => {
   return (
     <svg width={`${width}`} height={`${height}`} viewBox="0 0 184 152">
