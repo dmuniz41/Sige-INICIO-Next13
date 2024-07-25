@@ -9,19 +9,14 @@ interface CollectionCreateFormProps {
   open: boolean;
   onCreate: (values: IServiceFeeSubItem) => void;
   onCancel: () => void;
+  activitiesTotalValue: number;
 }
 
-export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel
-}) => {
+export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, activitiesTotalValue }) => {
   const [indirectSalariesValue, setIndirectSalariesValue] = useState(0);
   const [subcontractExpensesValue, setSubcontractExpensesValue] = useState(0);
 
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
-    (state: RootState) => state?.serviceFee
-  );
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
 
   const [form] = Form.useForm();
   return (
@@ -53,7 +48,13 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate({ ...values, indirectSalariesValue, subcontractExpensesValue });
+                  onCreate({
+                    ...values,
+                    indirectSalariesValue: activitiesTotalValue * serviceFeeAuxiliary?.indirectSalariesCoefficient,
+                    indirectSalariesAmount: activitiesTotalValue,
+                    indirectSalariesPrice: serviceFeeAuxiliary?.indirectSalariesCoefficient,
+                    subcontractExpensesValue
+                  });
                   form.resetFields();
                   setIndirectSalariesValue(0);
                   setSubcontractExpensesValue(0);
@@ -75,17 +76,21 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
         size="middle"
         fields={[
           {
-            name: "indirectSalariesDescription",
-            value: "Salarios Indirectos"
+            name: "indirectSalariesAmount",
+            value: activitiesTotalValue
           },
+          // {
+          //   name: "indirectSalariesDescription",
+          //   value: "Salarios Indirectos"
+          // },
           {
             name: "subcontractExpenseDescription",
             value: "Subcontratación"
-          },
-          {
-            name: "indirectSalariesPrice",
-            value: serviceFeeAuxiliary?.indirectSalariesCoefficient
           }
+          // {
+          //   name: "indirectSalariesPrice",
+          //   value: serviceFeeAuxiliary?.indirectSalariesCoefficient
+          // }
         ]}
       >
         {/* Salarios Indirectos */}
@@ -93,39 +98,32 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
           <div className="flex pr-2 w-[13%]">
             <span className="font-bold">Salarios Indirectos:</span>
           </div>
-          <Form.Item
-            name="indirectSalariesAmount"
-            label="Cantidad"
-            rules={[{ required: true, message: "Campo requerido" }]}
-          >
+          {/* <Form.Item name="indirectSalariesAmount" label="Cantidad" rules={[{ required: true, message: "Campo requerido" }]}>
             <InputNumber
               min={0}
               onChange={() => {
                 let values = form.getFieldsValue();
-                setIndirectSalariesValue(
-                  values.indirectSalariesAmount * values.indirectSalariesPrice
-                );
+                setIndirectSalariesValue(values.indirectSalariesAmount * values.indirectSalariesPrice);
               }}
             />
           </Form.Item>
-          <Form.Item
-            name="indirectSalariesPrice"
-            label="Precio/UM"
-            rules={[{ required: true, message: "Campo requerido" }]}
-          >
+          <Form.Item name="indirectSalariesPrice" label="Precio/UM" rules={[{ required: true, message: "Campo requerido" }]}>
             <InputNumber
               min={0}
               onChange={() => {
                 let values = form.getFieldsValue();
-                setIndirectSalariesValue(
-                  values.indirectSalariesAmount * values.indirectSalariesPrice
-                );
+                setIndirectSalariesValue(values.indirectSalariesAmount * values.indirectSalariesPrice);
               }}
             />
-          </Form.Item>
+          </Form.Item> */}
           <div className=" flex flex-col w-[4rem]">
-            {/* <span className="font-bold h-[22px] mb-2">Importe</span> */}
-            <span>$ {!indirectSalariesValue ? 0 : indirectSalariesValue?.toFixed(2)}</span>
+            <span>$ {activitiesTotalValue.toFixed(2)}</span>
+          </div>
+          <div className=" flex flex-col w-[4rem]">
+            <span>$ {serviceFeeAuxiliary?.indirectSalariesCoefficient.toFixed(2)}</span>
+          </div>
+          <div className=" flex flex-col w-[4rem]">
+            <span>$ {(activitiesTotalValue * serviceFeeAuxiliary?.indirectSalariesCoefficient).toFixed(2)}</span>
           </div>
         </section>
         {/* Subcontratación */}
@@ -133,11 +131,7 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
           <div className="flex pr-2 w-[13%]">
             <span className="font-bold">Subcontratación:</span>
           </div>
-          <Form.Item
-            className="flex mt-5"
-            name="subcontractAmount"
-            rules={[{ required: true, message: "Campo requerido" }]}
-          >
+          <Form.Item className="flex mt-5" name="subcontractAmount">
             <InputNumber
               min={0}
               onChange={() => {
@@ -146,11 +140,7 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
               }}
             />
           </Form.Item>
-          <Form.Item
-            name="subcontractPrice"
-            className="flex mt-5"
-            rules={[{ required: true, message: "Campo requerido" }]}
-          >
+          <Form.Item name="subcontractPrice" className="flex mt-5">
             <InputNumber
               min={0}
               onChange={() => {

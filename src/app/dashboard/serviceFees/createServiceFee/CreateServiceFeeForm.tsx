@@ -177,34 +177,34 @@ export const CreateServiceFeeForm = () => {
   const onAddHiredPersonalExpenses = (values: any) => {
     setHiredPersonalExpensesValues([
       {
-        description: "Gasto de salarios indirectos",
-        price: values.indirectSalariesPrice,
+        description: "Salarios indirectos",
+        price: values.indirectSalariesPrice ?? 0,
         unitMeasure: " ",
-        amount: values.indirectSalariesAmount,
-        value: values.indirectSalariesValue
+        amount: values.indirectSalariesAmount ?? 0,
+        value: values.indirectSalariesValue ?? 0
       },
       {
         description: "Subcontratación",
-        price: values.subcontractPrice,
+        price: values.subcontractPrice ?? 0,
         unitMeasure: " ",
-        amount: values.subcontractAmount,
-        value: values.subcontractExpensesValue
+        amount: values.subcontractAmount ?? 0,
+        value: values.subcontractExpensesValue ?? 0
       }
     ]);
     form.setFieldValue("hiredPersonalExpenses", [
       {
-        description: "Gasto de salarios indirectos",
-        price: values.indirectSalariesPrice,
+        description: "Salarios indirectos",
+        price: values.indirectSalariesPrice ?? 0,
         unitMeasure: " ",
-        amount: values.indirectSalariesAmount,
-        value: values.indirectSalariesValue
+        amount: values.indirectSalariesAmount ?? 0,
+        value: values.indirectSalariesValue ?? 0
       },
       {
         description: "Subcontratación",
-        price: values.subcontractPrice,
+        price: values.subcontractPrice ?? 0,
         unitMeasure: " ",
-        amount: values.subcontractAmount,
-        value: values.subcontractExpensesValue
+        amount: values.subcontractAmount ?? 0,
+        value: values.subcontractExpensesValue ?? 0
       }
     ]);
     setAddHiredPersonalExpensesModal(false);
@@ -514,6 +514,9 @@ export const CreateServiceFeeForm = () => {
         onCreate={onAddTransportationExpenses}
       />
       <AddHiredPersonalExpensesModal
+        activitiesTotalValue={taskListValues
+          ?.map((value: IServiceFeeTask) => value.currentComplexity?.value! * value.amount)
+          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0)}
         open={addHiredPersonalExpensesModal}
         onCancel={() => setAddHiredPersonalExpensesModal(false)}
         onCreate={onAddHiredPersonalExpenses}
