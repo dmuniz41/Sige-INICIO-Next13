@@ -68,6 +68,22 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
     })
     ?.reduce((accumulator: number, currentValue) => accumulator + currentValue!, 0);
 
+  // * HERRAMIENTAS MANUALES * //
+  const manualTools = taskList?.map((task) => {
+    if (task.description.includes("Montaje") || task.description.includes("Armado")) {
+      return task;
+    }
+  });
+  const totalManualToolsTime = manualTools
+    ?.map((task) => {
+      if (!task) {
+        return 0;
+      } else {
+        return task?.currentComplexity?.time! * task?.amount;
+      }
+    })
+    ?.reduce((accumulator: number, currentValue) => accumulator + currentValue!, 0);
+
   const listOfEquipmentDepreciation: SelectProps["options"] = serviceFeeAuxiliary?.equipmentDepreciationCoefficients?.map(
     (equipmentDepreciation) => {
       return {
@@ -157,6 +173,14 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
                   setSelectedEquipmentDepreciation(
                     serviceFeeAuxiliary?.equipmentDepreciationCoefficients?.find(
                       (equipmentDepreciation) => equipmentDepreciation.name === "Dobladora"
+                    )!
+                  );
+                  break;
+                case "Herramientas Manuales":
+                  setCurrentTotalTime(totalManualToolsTime);
+                  setSelectedEquipmentDepreciation(
+                    serviceFeeAuxiliary?.equipmentDepreciationCoefficients?.find(
+                      (equipmentDepreciation) => equipmentDepreciation.name === "Herramientas Manuales"
                     )!
                   );
                   break;

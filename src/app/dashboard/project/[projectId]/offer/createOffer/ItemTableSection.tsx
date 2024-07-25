@@ -9,29 +9,16 @@ import { IActivity } from "@/models/offer";
 import { PlusSvg } from "@/app/global/PlusSvg";
 
 export const ItemTableSection = (props: any) => {
-  const {
-    sectionName,
-    values,
-    valuesSetter,
-    addModalSetter,
-    editModalSetter,
-    valueToEditSetter,
-    buttonText,
-    dispatch,
-    actionToDispatch
-  } = props;
+  const { sectionName, values, valuesSetter, addModalSetter, editModalSetter, valueToEditSetter, buttonText, dispatch, actionToDispatch } =
+    props;
 
   const subtotal = useMemo(() => values?.map((value: IActivity) => value.value), [values]);
 
   const handleDelete = (record: IActivity) => {
-    valuesSetter(
-      values.filter((value: IActivity) => JSON.stringify(value) !== JSON.stringify(record))
-    );
+    valuesSetter(values.filter((value: IActivity) => JSON.stringify(value) !== JSON.stringify(record)));
   };
   const handleEdit = (record: IActivity) => {
-    const selectedActivity = values.find(
-      (value: IActivity) => value.description === record.description
-    );
+    const selectedActivity = values.find((value: IActivity) => value.description === record.description);
     dispatch(actionToDispatch(selectedActivity));
     valueToEditSetter(record);
     editModalSetter(true);
@@ -44,9 +31,7 @@ export const ItemTableSection = (props: any) => {
       key: "description",
       width: "50%",
       render: (_, { ...record }) => (
-        <span className="flex gap-1">
-          {`${record.description}${record.listOfMeasures.map((e) => e.description)}(Complejidad ${record.complexity})`}
-        </span>
+        <span className="flex gap-1">{`${record.description}${record.listOfMeasures.map((e) => e.description)}`}</span>
       )
     },
     {
@@ -54,11 +39,7 @@ export const ItemTableSection = (props: any) => {
       dataIndex: "amount",
       key: "amount",
       width: "15%",
-      render: (value) => (
-        <span>
-          {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
-        </span>
-      )
+      render: (value) => <span>{value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     },
     {
       title: <span className="font-bold">Unidad de Medida</span>,
@@ -71,22 +52,14 @@ export const ItemTableSection = (props: any) => {
       dataIndex: "price",
       key: "price",
       width: "15%",
-      render: (value) => (
-        <span>
-          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
-        </span>
-      )
+      render: (value) => <span>$ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     },
     {
       title: <span className="font-bold">Importe</span>,
       dataIndex: "value",
       key: "value",
       width: "15%",
-      render: (value) => (
-        <span>
-          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
-        </span>
-      )
+      render: (value) => <span>$ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     },
     {
       title: <span className="font-bold">Acciones</span>,

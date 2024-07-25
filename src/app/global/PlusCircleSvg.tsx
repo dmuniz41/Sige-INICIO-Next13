@@ -1,5 +1,3 @@
-import React from "react";
-
 export const PlusCircleSvg = ({ width = 24, height = 24 }) => {
   return (
     <svg

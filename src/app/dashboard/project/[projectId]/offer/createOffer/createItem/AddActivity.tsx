@@ -1,15 +1,15 @@
 "use client";
-
+import { ColumnsType } from "antd/es/table";
 import { Form, InputNumber, Modal, Radio, Select, SelectProps, Table, Tooltip } from "antd";
+import { useEffect, useMemo, useState } from "react";
+
+import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { IActivity } from "@/models/offer";
 import { IServiceFee } from "@/models/serviceFees";
+import { PlusCircleSvg } from "@/app/global/PlusCircleSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { serviceFeeStartLoading } from "@/actions/serviceFee";
 import { useAppDispatch } from "@/hooks/hooks";
-import { useEffect, useMemo, useState } from "react";
-import { ColumnsType } from "antd/es/table";
-import { PlusCircleSvg } from "@/app/global/PlusCircleSvg";
-import { DeleteSvg } from "@/app/global/DeleteSvg";
 
 interface CollectionCreateFormProps {
   open: boolean;
@@ -17,11 +17,8 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel
-}) => {
+export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
+  const dispatch = useAppDispatch();
   const [currentPrice, setCurrentPrice] = useState<number>(0);
   const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>("");
   const [selectedServiceFee, setSelectedServiceFee] = useState<IServiceFee>();
@@ -37,23 +34,16 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
   const [size, setSize] = useState<number>(0);
   const activityValue = useMemo(
     () =>
-      activitiesTableValues.reduce(
-        (total, currentValue) =>
-          total + currentValue.amount * currentValue.width * currentValue.height,
-        0
-      ) * currentPrice,
+      activitiesTableValues.reduce((total, currentValue) => total + currentValue.amount * currentValue.width * currentValue.height, 0) *
+      currentPrice,
     [currentPrice, activitiesTableValues]
   );
-
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(serviceFeeStartLoading());
   }, [dispatch]);
 
-  const { serviceFees }: { serviceFees: IServiceFee[] } = useAppSelector(
-    (state: RootState) => state?.serviceFee
-  );
+  const { serviceFees }: { serviceFees: IServiceFee[] } = useAppSelector((state: RootState) => state?.serviceFee);
 
   const listOfActivities: SelectProps["options"] = serviceFees.map((serviceFee) => {
     return {
@@ -104,9 +94,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
             <button
               className="table-delete-action-btn"
               onClick={() => {
-                setActivitiesTableValues(
-                  activitiesTableValues.filter((av) => av.description !== record.description)
-                );
+                setActivitiesTableValues(activitiesTableValues.filter((av) => av.description !== record.description));
               }}
             >
               <DeleteSvg width={17} height={17} />
@@ -147,8 +135,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                 .validateFields()
                 .then((values) => {
                   onCreate(
-                    currentUnitMeasure.includes("Unidad (U)") ||
-                      currentUnitMeasure.includes("Metro (m)")
+                    currentUnitMeasure.includes("Unidad (U)") || currentUnitMeasure.includes("Metro (m)")
                       ? {
                           amount: values.amount,
                           description: values.description.value,
@@ -159,30 +146,26 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                           value: size * currentPrice,
                           width: 0,
 
-                          listOfMeasures: activitiesTableValues,
-                          complexity: form.getFieldValue("complexity")
+                          listOfMeasures: activitiesTableValues
+                          // complexity: form.getFieldValue("complexity")
                         }
                       : {
                           amount: activitiesTableValues.reduce(
-                            (total, currentValue) =>
-                              total +
-                              currentValue.amount * currentValue.width * currentValue.height,
+                            (total, currentValue) => total + currentValue.amount * currentValue.width * currentValue.height,
                             0
                           ),
                           description: values.description.value,
                           height: values.height,
                           price: Number(currentPrice.toFixed(2)),
                           size: activitiesTableValues.reduce(
-                            (total, currentValue) =>
-                              total +
-                              currentValue.amount * currentValue.width * currentValue.height,
+                            (total, currentValue) => total + currentValue.amount * currentValue.width * currentValue.height,
                             0
                           ),
                           unitMeasure: currentUnitMeasure,
                           value: Number(activityValue.toFixed(2)),
                           width: values.width,
-                          listOfMeasures: activitiesTableValues,
-                          complexity: form.getFieldValue("complexity")
+                          listOfMeasures: activitiesTableValues
+                          // complexity: form.getFieldValue("complexity")
                         }
                   );
                   form.resetFields();
@@ -202,11 +185,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
       ]}
     >
       <Form form={form} layout="horizontal" name="addActivity" size="middle">
-        <Form.Item
-          name="description"
-          label="Descripción"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select
             autoFocus
             allowClear
@@ -214,17 +193,16 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
             style={{ width: "100%" }}
             options={listOfActivities}
             onSelect={(value) => {
-              const currentServiceFee = serviceFees.find(
-                (serviceFee) => serviceFee.taskName === value.label
-              );
+              const currentServiceFee = serviceFees.find((serviceFee) => serviceFee.taskName === value.label);
               setSelectedServiceFee(currentServiceFee!);
               setCurrentUnitMeasure(currentServiceFee?.unitMeasure!);
-              setCurrentPrice(0);
+              setCurrentPrice(currentServiceFee?.salePrice!);
               setActivitiesTableValues([]);
               setSize(0);
 
               form.setFieldsValue({
                 unitMeasure: selectedServiceFee?.unitMeasure,
+                //TODO: REVISAR ESTE VALOR
                 price: form.getFieldValue("description")?.value,
                 height: 0,
                 width: 0,
@@ -236,13 +214,9 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
             }}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) =>
-              (option?.label ?? "").toLowerCase().includes(input)
-            }
+            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
             filterSort={(optionA: any, optionB: any) =>
-              (optionA?.label ?? "")
-                .toLowerCase()
-                .localeCompare((optionB?.label ?? "").toLowerCase())
+              (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
             }
           />
         </Form.Item>
@@ -294,8 +268,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
               </div>
               <div
                 className={
-                  currentUnitMeasure.includes("Unidad (U)") ||
-                  currentUnitMeasure.includes("Metro (m)")
+                  currentUnitMeasure.includes("Unidad (U)") || currentUnitMeasure.includes("Metro (m)")
                     ? "hidden"
                     : `flex items-center text-success-500`
                 }
@@ -335,7 +308,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
               </div>
             </article>
             <article className="w-fit grid">
-              <Form.Item
+              {/* <Form.Item
                 name="complexity"
                 label="Complejidad"
                 rules={[{ required: true, message: "Seleccione un nivel de complejidad" }]}
@@ -363,17 +336,11 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                   <Radio.Button value="Media">Media</Radio.Button>
                   <Radio.Button value="Baja">Baja</Radio.Button>
                 </Radio.Group>
-              </Form.Item>
-              <Form.Item
-                name="size"
-                label="Tamano"
-                className="w-[12rem] hidden"
-                rules={[{ required: true, message: "" }]}
-              >
+              </Form.Item> */}
+              <Form.Item name="size" label="Tamano" className="w-[12rem] hidden" rules={[{ required: true, message: "" }]}>
                 <InputNumber min={0} precision={2} disabled className="w-full" />
               </Form.Item>
-              {currentUnitMeasure?.includes("Unidad (U)") ||
-              currentUnitMeasure?.includes("Metro (m)") ? (
+              {currentUnitMeasure?.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)") ? (
                 <div
                   className={`flex gap-2 pl-2 mb-4 ${currentUnitMeasure.includes("Unidad (U)") || (currentUnitMeasure?.includes("Metro (m)") && "hidden")}`}
                 >
@@ -392,11 +359,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                   <span className="font-bold">Tamaño:</span>
                   <span>
                     {activitiesTableValues
-                      .reduce(
-                        (total, currentValue) =>
-                          total + currentValue.amount * currentValue.width * currentValue.height,
-                        0
-                      )
+                      .reduce((total, currentValue) => total + currentValue.amount * currentValue.width * currentValue.height, 0)
                       .toLocaleString("DE", {
                         maximumFractionDigits: 2,
                         minimumFractionDigits: 2
@@ -419,8 +382,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
                 <span className="font-bold">Importe:</span>
                 <span>
                   $
-                  {currentUnitMeasure.includes("Unidad (U)") ||
-                  currentUnitMeasure?.includes("Metro (m)") ? (
+                  {currentUnitMeasure.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)") ? (
                     <span>
                       {(size * currentPrice).toLocaleString("DE", {
                         maximumFractionDigits: 2,
@@ -440,11 +402,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({
             </article>
           </article>
           <article
-            className={
-              currentUnitMeasure.includes("Unidad (U)") || currentUnitMeasure.includes("Metro (m)")
-                ? "hidden"
-                : `flex w-full`
-            }
+            className={currentUnitMeasure.includes("Unidad (U)") || currentUnitMeasure.includes("Metro (m)") ? "hidden" : `flex w-full`}
           >
             <Table
               size="small"

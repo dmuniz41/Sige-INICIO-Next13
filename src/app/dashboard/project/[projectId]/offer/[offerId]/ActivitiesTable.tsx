@@ -13,7 +13,7 @@ export const ActivitiesTable = (props: any) => {
       width: "50%",
       render: (_, { ...record }) => (
         <span className="flex gap-1">
-          {`${record.description}${record.listOfMeasures.map((e) => e.description)}(Complejidad ${record.complexity})`}
+          {`${record.description}${record.listOfMeasures.map((e) => e.description)}`}
         </span>
       )
     },

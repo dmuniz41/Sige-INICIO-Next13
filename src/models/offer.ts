@@ -5,7 +5,7 @@ export interface IActivity {
   description: string;
   price: number;
   unitMeasure: string;
-  complexity: "Alta" | "Media" | "Baja";
+  // complexity: "Alta" | "Media" | "Baja";
   value: number;
   size?: number;
   width?: number;
@@ -53,7 +53,7 @@ const OfferSchema = new Schema<IOffer, Model<IOffer>>({
         activities: [
           {
             amount: Number,
-            complexity: String,
+            // complexity: String,
             description: String,
             unitMeasure: String,
             price: Number,

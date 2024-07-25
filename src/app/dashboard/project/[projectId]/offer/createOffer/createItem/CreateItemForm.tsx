@@ -2,6 +2,7 @@
 import { Form } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import TextArea from "antd/es/input/TextArea";
 
 import { AddActivityModal } from "./AddActivity";
 import { IActivity, IOffer } from "@/models/offer";
@@ -9,7 +10,6 @@ import { ItemTableSection } from "../ItemTableSection";
 import { RootState, useAppSelector } from "@/store/store";
 import { setCurrentItem } from "@/actions/offer";
 import { useAppDispatch } from "@/hooks/hooks";
-import TextArea from "antd/es/input/TextArea";
 
 export const CreateItemForm = (props: { projectId: string }) => {
   const [form] = Form.useForm();
@@ -100,9 +100,7 @@ export const CreateItemForm = (props: { projectId: string }) => {
                   setCurrentItem({
                     ...values,
                     activities: activitiesValues,
-                    value: activitiesValues
-                      .map((activity) => activity.value)
-                      .reduce((total, current) => total + current, 0)
+                    value: activitiesValues.map((activity) => activity.value).reduce((total, current) => total + current, 0)
                   })
                 );
                 form.resetFields();
@@ -117,11 +115,7 @@ export const CreateItemForm = (props: { projectId: string }) => {
         </button>
       </Form.Item>
 
-      <AddActivityModal
-        open={addActivitiesModal}
-        onCancel={() => setAddActivitiesModal(false)}
-        onCreate={onAddActivity}
-      />
+      <AddActivityModal open={addActivitiesModal} onCancel={() => setAddActivitiesModal(false)} onCreate={onAddActivity} />
     </Form>
   );
 };
