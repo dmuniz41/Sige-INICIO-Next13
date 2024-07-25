@@ -117,13 +117,13 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
             />
           </Form.Item> */}
           <div className=" flex flex-col w-[4rem]">
-            <span>$ {activitiesTotalValue.toFixed(2)}</span>
+            <span>$ {activitiesTotalValue?.toFixed(2)}</span>
           </div>
           <div className=" flex flex-col w-[4rem]">
-            <span>$ {serviceFeeAuxiliary?.indirectSalariesCoefficient.toFixed(2)}</span>
+            <span>$ {serviceFeeAuxiliary?.indirectSalariesCoefficient?.toFixed(2)}</span>
           </div>
           <div className=" flex flex-col w-[4rem]">
-            <span>$ {(activitiesTotalValue * serviceFeeAuxiliary?.indirectSalariesCoefficient).toFixed(2)}</span>
+            <span>$ {(activitiesTotalValue * serviceFeeAuxiliary?.indirectSalariesCoefficient)?.toFixed(2)}</span>
           </div>
         </section>
         {/* Subcontratación */}
@@ -136,7 +136,7 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
               min={0}
               onChange={() => {
                 let values = form.getFieldsValue();
-                setSubcontractExpensesValue(values.subcontractAmount * values.subcontractPrice);
+                setSubcontractExpensesValue(values?.subcontractAmount * values?.subcontractPrice);
               }}
             />
           </Form.Item>

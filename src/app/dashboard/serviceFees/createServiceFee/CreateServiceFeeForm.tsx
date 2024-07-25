@@ -47,7 +47,19 @@ export const CreateServiceFeeForm = () => {
   const [equipmentMaintenanceValues, setEquipmentMaintenanceValues]: any = useState([]);
   const [hiredPersonalExpensesValues, setHiredPersonalExpensesValues]: any = useState([]);
   const [rawMaterialsValues, setRawMaterialsValues]: any = useState([]);
-  const [taskListValues, setTaskListValues]: any = useState([]);
+  const [taskListValues, setTaskListValues]: any = useState([
+    {
+      _id: "",
+      amount: 0,
+      category: "",
+      description: "",
+      // price,number;
+      unitMeasure: "",
+      key: "",
+      complexity: [],
+      currentComplexity: "",
+    }
+  ]);
   const [transportationExpensesValues, setTransportationExpensesValues]: any = useState([]);
 
   const totalValue = useMemo(
@@ -87,7 +99,7 @@ export const CreateServiceFeeForm = () => {
   const estimatedTime = useMemo(
     () =>
       taskListValues
-        .map((value: IServiceFeeTask) => value.currentComplexity?.time! * value.amount)
+        ?.map((value: IServiceFeeTask) => value.currentComplexity?.time! * value.amount)
         ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0),
 
     [taskListValues]
@@ -514,9 +526,11 @@ export const CreateServiceFeeForm = () => {
         onCreate={onAddTransportationExpenses}
       />
       <AddHiredPersonalExpensesModal
-        activitiesTotalValue={taskListValues
-          ?.map((value: IServiceFeeTask) => value.currentComplexity?.value! * value.amount)
-          ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0)}
+        activitiesTotalValue={
+          taskListValues
+            ?.map((value: IServiceFeeTask) => value.currentComplexity?.value! * value.amount)
+            ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) ?? 0
+        }
         open={addHiredPersonalExpensesModal}
         onCancel={() => setAddHiredPersonalExpensesModal(false)}
         onCreate={onAddHiredPersonalExpenses}

@@ -107,7 +107,7 @@ export const EditServiceFeeForm = () => {
   const estimatedTime = useMemo(
     () =>
       taskListValues
-        .map((value: IServiceFeeTask) => value.currentComplexity?.time! * value.amount)
+        ?.map((value: IServiceFeeTask) => value.currentComplexity?.time! * value.amount)
         ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0),
 
     [taskListValues]
@@ -638,6 +638,11 @@ export const EditServiceFeeForm = () => {
         onCreate={onAddTransportationExpenses}
       />
       <AddHiredPersonalExpensesModal
+        activitiesTotalValue={
+          taskListValues
+            ?.map((value: IServiceFeeTask) => value.currentComplexity?.value! * value.amount)
+            ?.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0) ?? 0
+        }
         open={addHiredPersonalExpensesModal}
         onCancel={() => setAddHiredPersonalExpensesModal(false)}
         onCreate={onAddHiredPersonalExpenses}
