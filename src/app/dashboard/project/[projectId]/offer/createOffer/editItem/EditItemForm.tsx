@@ -36,6 +36,7 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
     form.setFieldValue("activities", [values, ...activitiesValues]);
     setAddActivitiesModal(false);
   };
+  
   const onEditActivity = (values: IActivity) => {
     const newActivityList: IActivity[] = [];
     activitiesValues.map((value: IActivity) => {
@@ -48,7 +49,7 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
           listOfMeasures: values.listOfMeasures ?? [],
           unitMeasure: values.unitMeasure,
           value: values.value,
-          complexity: values.complexity
+          // complexity: values.complexity
         });
       } else {
         newActivityList.push(value);

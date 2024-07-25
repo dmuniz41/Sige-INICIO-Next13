@@ -31,7 +31,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
   const [currentPrice, setCurrentPrice] = useState<number>(defaultValues?.price);
   const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>(defaultValues?.unitMeasure);
   const [currentDescription, setCurrentDescription] = useState<string>(defaultValues?.description);
-  const [selectedServiceFee, setSelectedServiceFee] = useState<IServiceFee>();
+  // const [selectedServiceFee, setSelectedServiceFee] = useState<IServiceFee>();
   const [size, setSize] = useState<number>(0);
   const [activitiesTableValues, setActivitiesTableValues] = useState<
     {
@@ -58,15 +58,15 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
     form.setFieldValue("amountOfUnits", 0);
     form.setFieldValue("amount", 0);
     form.setFieldValue("size", 0);
-    form.setFieldValue("complexity", defaultValues?.complexity);
+    // form.setFieldValue("complexity", defaultValues?.complexity);
     form.setFieldValue("description", defaultValues?.description);
     setCurrentUnitMeasure(defaultValues?.unitMeasure);
     setActivitiesTableValues(defaultValues?.listOfMeasures);
     setCurrentDescription(defaultValues?.description);
     setCurrentPrice(defaultValues?.price);
-    setSelectedServiceFee(
-      serviceFees?.find((sf) => sf?.taskName === form.getFieldValue("description"))!
-    );
+    // setSelectedServiceFee(
+    //   serviceFees?.find((sf) => sf?.taskName === form.getFieldValue("description"))!
+    // );
   }, [dispatch, defaultValues, form, currentDescription, serviceFees]);
 
   const columns: ColumnsType<{
@@ -168,7 +168,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
                           value: size * currentPrice,
                           width: 0,
                           listOfMeasures: activitiesTableValues,
-                          complexity: form.getFieldValue("complexity")
+                          // complexity: form.getFieldValue("complexity")
                         }
                       : {
                           amount: activitiesTableValues?.reduce(
@@ -190,7 +190,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
                           value: Number(activityValue.toFixed(2)),
                           width: values.width,
                           listOfMeasures: activitiesTableValues,
-                          complexity: form.getFieldValue("complexity")
+                          // complexity: form.getFieldValue("complexity")
                         }
                   );
                   form.resetFields();
@@ -214,7 +214,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
         layout="horizontal"
         name="addActivity"
         size="middle"
-        initialValues={{ complexity: defaultValues?.complexity }}
+        // initialValues={{ complexity: defaultValues?.complexity }}
       >
         <div className=" flex gap-2 pl-2 mb-4">
           <span className="font-bold">Descripción:</span>
@@ -317,7 +317,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
               </div>
             </article>
             <article className="w-fit grid">
-              <Form.Item
+              {/* <Form.Item
                 name="complexity"
                 label="Complejidad"
                 rules={[{ required: true, message: "Seleccione un nivel de complejidad" }]}
@@ -350,7 +350,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
                   <Radio.Button value="Media">Media</Radio.Button>
                   <Radio.Button value="Baja">Baja</Radio.Button>
                 </Radio.Group>
-              </Form.Item>
+              </Form.Item> */}
               <Form.Item
                 name="size"
                 label="Tamano"
