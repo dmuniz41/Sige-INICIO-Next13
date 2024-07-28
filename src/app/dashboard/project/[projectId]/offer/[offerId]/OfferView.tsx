@@ -148,7 +148,7 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
           <span>{selectedOffer?.representativeName}</span>
         </div>
         {selectedOffer?.itemsList?.map((item, index) => (
-          <div key={item.description}>
+          <div key={index}>
             <Item number={index + 1} item={item} />
           </div>
         ))}
