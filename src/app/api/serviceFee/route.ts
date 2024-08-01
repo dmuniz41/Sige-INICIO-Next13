@@ -10,7 +10,6 @@ import { IRepresentativeNomenclator } from "../../../models/nomenclators/represe
 
 export async function POST(request: NextRequest) {
   const { ...serviceFee }: IServiceFee = await request.json();
-  console.log("🚀 ~ POST ~ serviceFee:", serviceFee);
 
   // TODO: MOVER ESTOS VALORES A LA HOJA DE AUXILIARES
   const artisticTalentCoefficient = 0.5;
@@ -18,7 +17,6 @@ export async function POST(request: NextRequest) {
   const ONATCoefficient = 0.2;
 
   const representativeNomenclators = await RepresentativeNomenclator.find();
-  console.log("🚀 ~ POST ~ representativeNomenclators:", representativeNomenclators);
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -100,10 +98,19 @@ export async function POST(request: NextRequest) {
     const ONATValue = expensesTotalValue * ONATCoefficient;
     // const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
     const pricePerRepresentative = representativeNomenclators.map((representative: IRepresentativeNomenclator) => {
-      return {
-        representativeName: representative.name,
-        price: expensesTotalValue + expensesTotalValue * (representative.percentage / 100) + ONATValue + artisticTalentValue
-      };
+      if (representative.name === "EFECTIVO") {
+        return {
+          representativeName: "EFECTIVO",
+          price: expensesTotalValue + artisticTalentValue,
+          priceUSD: (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
+        };
+      } else {
+        return {
+          representativeName: representative.name,
+          price: expensesTotalValue + expensesTotalValue * (representative.percentage / 100) + ONATValue + artisticTalentValue,
+          priceUSD: 0
+        };
+      }
     });
     const salePrice = expensesTotalValue;
 
@@ -144,7 +151,8 @@ export async function POST(request: NextRequest) {
       // artisticTalentValue: artisticTalentValue,
       salePrice: salePrice,
       salePriceUSD: salePrice / serviceFee?.currencyChange,
-      estimatedTime: estimatedTime
+      estimatedTime: estimatedTime,
+      pricePerRepresentative
     });
 
     await newServiceFee.save();
@@ -180,6 +188,13 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   const { ...serviceFee }: IServiceFee = await request.json();
+
+  // TODO: MOVER ESTOS VALORES A LA HOJA DE AUXILIARES
+  const artisticTalentCoefficient = 0.5;
+  const comercialMarginCoefficient = 0.3;
+  const ONATCoefficient = 0.2;
+
+  const representativeNomenclators = await RepresentativeNomenclator.find();
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -254,11 +269,26 @@ export async function PUT(request: NextRequest) {
       code: serviceFee.nomenclatorId
     });
 
-    // ? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + EL VALOR DEL IMPUESTO DE LA ONAT)
-    // const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
-    // const artisticTalentValue = expensesTotalValue * (serviceFee?.artisticTalent / 100);
-    // const ONATValue = artisticTalentValue * (serviceFee.ONAT / 100);
+    // ? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
+    const artisticTalentValue = expensesTotalValue * artisticTalentCoefficient;
+    // const comercialMarginValue = (expensesTotalValue + artisticTalentValue) * comercialMarginCoefficient;
+    const ONATValue = expensesTotalValue * ONATCoefficient;
     // const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
+    const pricePerRepresentative = representativeNomenclators.map((representative: IRepresentativeNomenclator) => {
+      if (representative.name === "EFECTIVO") {
+        return {
+          representativeName: "EFECTIVO",
+          price: expensesTotalValue + artisticTalentValue,
+          priceUSD:  (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
+        };
+      } else {
+        return {
+          representativeName: representative.name,
+          price: expensesTotalValue + expensesTotalValue * (representative.percentage / 100) + ONATValue + artisticTalentValue,
+          priceUSD: 0
+        };
+      }
+    });
     const salePrice = expensesTotalValue;
 
     // ? CALCULA EL VALOR DE LOS 3 NIVELES DE COMPLEJIDAD //
@@ -312,7 +342,8 @@ export async function PUT(request: NextRequest) {
         // artisticTalentValue: artisticTalentValue,
         salePrice: salePrice,
         salePriceUSD: salePrice / serviceFee?.currencyChange,
-        estimatedTime: estimatedTime
+        estimatedTime: estimatedTime,
+        pricePerRepresentative
       },
       { new: true }
     );

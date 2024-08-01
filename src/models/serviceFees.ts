@@ -50,6 +50,7 @@ export interface IServiceFee {
     {
       representativeName: string;
       price: number;
+      priceUSD: number;
     }
   ];
   //* OTROS
@@ -187,7 +188,8 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
   pricePerRepresentative: [
     {
       representativeName: String,
-      price: Number
+      price: Number,
+      priceUSD: Number
     }
   ],
   expensesTotalValue: {
