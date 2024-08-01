@@ -4,19 +4,27 @@ import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "./randomStrings";
 import { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 import Nomenclator from "@/models/nomenclator";
+import RepresentativeNomenclator, { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 
 //? CUANDO SE MODIFICA CUALQUIER VALOR DE LA HOJA DE AUXILIARES SE ACTUALIZAN TODAS LAS TARIFAS DE SERVICIO Y SE VUELVEN A CALCULAR SUS PRECIOS. SI UNO DE LOS COEFICIENTES ES ELIMINADO SE ELIMINA DE TODAS LAS TARIFAS DE SERVICIO Y SE RECALCULA EL VALOR DE ESTAS ?//
 
 export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxiliary, serviceFees: IServiceFee[]) => {
+    const artisticTalentCoefficient = 0.5;
+    const comercialMarginCoefficient = 0.3;
+    const ONATCoefficient = 0.2;
+
+    const representativeNomenclators = await RepresentativeNomenclator.find();
   //? ALMACENA LOS NOMBRES DE LOS COEFICIENTES SEPARADOS POR SECCIONES ?//
 
   const administrativeExpensesNames = auxiliary.administrativeExpensesCoefficients.map(
-    (administrativeExpense) => administrativeExpense.name);
+    (administrativeExpense) => administrativeExpense.name
+  );
   const equipmentDepreciationNames = auxiliary.equipmentDepreciationCoefficients.map((equipmentDepreciation) => equipmentDepreciation.name);
   const equipmentMaintenanceNames = auxiliary.equipmentMaintenanceCoefficients.map((equipmentMaintenance) => equipmentMaintenance.name);
   const transportacionExpensesNames = auxiliary.transportationExpensesCoefficients.map(
-    (transportationExpense) => transportationExpense.name);
+    (transportationExpense) => transportationExpense.name
+  );
 
   //? BUSCA EN CADA SECCION EL/LOS COEFICIENTES QUE SE HAYAN MODIFICADO Y LOS ACTUALIZA ?//
 
@@ -170,12 +178,26 @@ export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxili
         code: serviceFee.nomenclatorId
       });
 
-      //? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + EL VALOR DEL IMPUESTO DE LA ONAT) ?//
-
-      // const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
-      // const ONATValue = expensesTotalValue * (serviceFee.ONAT / 100);
-      // const artisticTalentValue = expensesTotalValue * (serviceFee.artisticTalent / 100);
+      // ? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
+      const artisticTalentValue = expensesTotalValue * artisticTalentCoefficient;
+      // const comercialMarginValue = (expensesTotalValue + artisticTalentValue) * comercialMarginCoefficient;
+      const ONATValue = expensesTotalValue * ONATCoefficient;
       // const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
+      const pricePerRepresentative = representativeNomenclators.map((representative: IRepresentativeNomenclator) => {
+        if (representative.name === "EFECTIVO") {
+          return {
+            representativeName: "EFECTIVO",
+            price: expensesTotalValue + artisticTalentValue,
+            priceUSD: (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
+          };
+        } else {
+          return {
+            representativeName: representative.name,
+            price: expensesTotalValue + expensesTotalValue * (representative.percentage / 100) + ONATValue + artisticTalentValue,
+            priceUSD: 0
+          };
+        }
+      });
       const salePrice = expensesTotalValue;
 
       //? CALCULA EL VALOR DE LOS 3 NIVELES DE COMPLEJIDAD EN DEPENDENCIA DEL COEFICIENTE ASIGNADO ?//
@@ -245,7 +267,8 @@ export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxili
           // artisticTalentValue: artisticTalentValue,
           salePrice: salePrice,
           salePriceUSD: salePrice / serviceFee?.currencyChange,
-          estimatedTime: estimatedTime
+          estimatedTime: estimatedTime,
+          pricePerRepresentative
         },
         { new: true }
       );

@@ -45,8 +45,14 @@ export interface IServiceFee {
   //* GASTO DE PERSONAL CONTRATADO
   hiredPersonalExpenses: IServiceFeeSubItem[];
   hiredPersonalExpensesSubtotal: number;
-  //* COMPLEJIDAD
-  // complexity: IServiceFeeComplexityItem[];
+  //* PRECIOS POR REPRESENTANTE
+  pricePerRepresentative: [
+    {
+      representativeName: string;
+      price: number;
+      priceUSD: number;
+    }
+  ];
   //* OTROS
   expensesTotalValue: number;
   // artisticTalent: number;
@@ -179,14 +185,13 @@ const ServiceFeeSchema = new Schema<IServiceFee, Model<IServiceFee>>({
   hiredPersonalExpensesSubtotal: {
     type: Number
   },
-  // complexity: [
-  //   {
-  //     name: String,
-  //     coefficient: Number,
-  //     value: Number,
-  //     USDValue: Number,
-  //   },
-  // ],
+  pricePerRepresentative: [
+    {
+      representativeName: String,
+      price: Number,
+      priceUSD: Number
+    }
+  ],
   expensesTotalValue: {
     type: Number
   },

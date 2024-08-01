@@ -7,15 +7,10 @@ import { types } from "@/types/types";
 
 // * CREA UNA NUEVA TARIFA DE SERVICIO //
 export const startAddServiceFee = ({ ...serviceFee }): any => {
-  console.log("🚀 ~ startAddServiceFee ~ serviceFee:", serviceFee);
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_URL}/serviceFee`,
-        { ...serviceFee },
-        { headers: { accessToken: token } }
-      )
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/serviceFee`, { ...serviceFee }, { headers: { accessToken: token } })
       .then((serviceFee) => {
         dispatch(addServiceFee(serviceFee));
         dispatch(nomenclatorsStartLoading());
@@ -35,15 +30,10 @@ export const startAddServiceFee = ({ ...serviceFee }): any => {
 
 // * ACTUALIZA UNA TARIFA DE SERVICIO POR SU ID //
 export const startUpdateServiceFee = ({ ...serviceFee }): any => {
-  console.log("🚀 ~ startUpdateServiceFee ~ serviceFee:", serviceFee);
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(
-        `${process.env.NEXT_PUBLIC_API_URL}/serviceFee`,
-        { ...serviceFee },
-        { headers: { accessToken: token } }
-      )
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/serviceFee`, { ...serviceFee }, { headers: { accessToken: token } })
       .then((serviceFee) => {
         dispatch(updateServiceFee(serviceFee));
         dispatch(serviceFeeStartLoading());

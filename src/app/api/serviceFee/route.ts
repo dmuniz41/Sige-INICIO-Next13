@@ -5,9 +5,18 @@ import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
 import Nomenclator, { INomenclator } from "@/models/nomenclator";
 import ServiceFee, { IServiceFee } from "@/models/serviceFees";
+import RepresentativeNomenclator from "@/models/nomenclators/representative";
+import { IRepresentativeNomenclator } from "../../../models/nomenclators/representative";
 
 export async function POST(request: NextRequest) {
-  const { ...serviceFee }: IServiceFee = await request.json();  
+  const { ...serviceFee }: IServiceFee = await request.json();
+
+  // TODO: MOVER ESTOS VALORES A LA HOJA DE AUXILIARES
+  const artisticTalentCoefficient = 0.5;
+  const comercialMarginCoefficient = 0.3;
+  const ONATCoefficient = 0.2;
+
+  const representativeNomenclators = await RepresentativeNomenclator.find();
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -37,13 +46,9 @@ export async function POST(request: NextRequest) {
       );
     }
     // ? CALCULA EL VALOR DE CADA SUBTOTAL EN CADA SECCION DE LA FICHA DE COSTO //
-    const rawMaterialsSubtotal: number = serviceFee?.rawMaterials?.reduce(
-      (total, currentValue) => total + currentValue.value,
-      0
-    );
+    const rawMaterialsSubtotal: number = serviceFee?.rawMaterials?.reduce((total, currentValue) => total + currentValue.value, 0);
     const taskListSubtotal: number = serviceFee?.taskList?.reduce(
-      (total, currentValue) =>
-        total + currentValue?.currentComplexity?.value! * currentValue.amount,
+      (total, currentValue) => total + currentValue?.currentComplexity?.value! * currentValue.amount,
       0
     );
     const estimatedTime: number = serviceFee?.taskList?.reduce(
@@ -88,11 +93,25 @@ export async function POST(request: NextRequest) {
     })) as INomenclator;
 
     // ? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
-    // const artisticTalentValue = expensesTotalValue * (serviceFee?.artisticTalent / 100);
-    // const comercialMarginValue =
-    //   (expensesTotalValue + artisticTalentValue) * (serviceFee?.commercialMargin / 100);
-    // const ONATValue = expensesTotalValue * (serviceFee?.ONAT / 100);
+    const artisticTalentValue = expensesTotalValue * artisticTalentCoefficient;
+    // const comercialMarginValue = (expensesTotalValue + artisticTalentValue) * comercialMarginCoefficient;
+    const ONATValue = expensesTotalValue * ONATCoefficient;
     // const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
+    const pricePerRepresentative = representativeNomenclators.map((representative: IRepresentativeNomenclator) => {
+      if (representative.name === "EFECTIVO") {
+        return {
+          representativeName: "EFECTIVO",
+          price: expensesTotalValue + artisticTalentValue,
+          priceUSD: (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
+        };
+      } else {
+        return {
+          representativeName: representative.name,
+          price: expensesTotalValue + expensesTotalValue * (representative.percentage / 100) + ONATValue + artisticTalentValue,
+          priceUSD: 0
+        };
+      }
+    });
     const salePrice = expensesTotalValue;
 
     // ? CALCULA EL VALOR DE LOS 3 NIVELES DE COMPLEJIDAD EN DEPENDENCIA DEL COEFICIENTE ASIGNADO //
@@ -132,7 +151,8 @@ export async function POST(request: NextRequest) {
       // artisticTalentValue: artisticTalentValue,
       salePrice: salePrice,
       salePriceUSD: salePrice / serviceFee?.currencyChange,
-      estimatedTime: estimatedTime
+      estimatedTime: estimatedTime,
+      pricePerRepresentative
     });
 
     await newServiceFee.save();
@@ -169,6 +189,13 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   const { ...serviceFee }: IServiceFee = await request.json();
 
+  // TODO: MOVER ESTOS VALORES A LA HOJA DE AUXILIARES
+  const artisticTalentCoefficient = 0.5;
+  const comercialMarginCoefficient = 0.3;
+  const ONATCoefficient = 0.2;
+
+  const representativeNomenclators = await RepresentativeNomenclator.find();
+
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -198,13 +225,9 @@ export async function PUT(request: NextRequest) {
     }
 
     // ? CALCULA EL VALOR DE CADA SUBTOTAL EN CADA SECCION DE LA FICHA DE COSTO //
-    const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce(
-      (total, currentValue) => total + currentValue.value,
-      0
-    );
+    const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
     const taskListSubtotal: number = serviceFee.taskList.reduce(
-      (total, currentValue) =>
-        total + currentValue?.currentComplexity?.value! * currentValue.amount,
+      (total, currentValue) => total + currentValue?.currentComplexity?.value! * currentValue.amount,
       0
     );
     const estimatedTime: number = serviceFee?.taskList?.reduce(
@@ -246,11 +269,26 @@ export async function PUT(request: NextRequest) {
       code: serviceFee.nomenclatorId
     });
 
-    // ? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + EL VALOR DEL IMPUESTO DE LA ONAT)
-    // const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
-    // const artisticTalentValue = expensesTotalValue * (serviceFee?.artisticTalent / 100);
-    // const ONATValue = artisticTalentValue * (serviceFee.ONAT / 100);
+    // ? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
+    const artisticTalentValue = expensesTotalValue * artisticTalentCoefficient;
+    // const comercialMarginValue = (expensesTotalValue + artisticTalentValue) * comercialMarginCoefficient;
+    const ONATValue = expensesTotalValue * ONATCoefficient;
     // const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
+    const pricePerRepresentative = representativeNomenclators.map((representative: IRepresentativeNomenclator) => {
+      if (representative.name === "EFECTIVO") {
+        return {
+          representativeName: "EFECTIVO",
+          price: expensesTotalValue + artisticTalentValue,
+          priceUSD:  (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
+        };
+      } else {
+        return {
+          representativeName: representative.name,
+          price: expensesTotalValue + expensesTotalValue * (representative.percentage / 100) + ONATValue + artisticTalentValue,
+          priceUSD: 0
+        };
+      }
+    });
     const salePrice = expensesTotalValue;
 
     // ? CALCULA EL VALOR DE LOS 3 NIVELES DE COMPLEJIDAD //
@@ -304,7 +342,8 @@ export async function PUT(request: NextRequest) {
         // artisticTalentValue: artisticTalentValue,
         salePrice: salePrice,
         salePriceUSD: salePrice / serviceFee?.currencyChange,
-        estimatedTime: estimatedTime
+        estimatedTime: estimatedTime,
+        pricePerRepresentative
       },
       { new: true }
     );

@@ -1,7 +1,7 @@
 "use client";
-
-import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import React, { useEffect, useMemo, useState } from "react";
+import Swal from "sweetalert2";
 
 import { deleteItem, editItem, selectedItem, startAddOffer } from "@/actions/offer";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
@@ -16,7 +16,6 @@ import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import { Item } from "../Item";
-import Swal from "sweetalert2";
 
 export const EditOfferForm = (props: { projectId: string; offerId: string }) => {
   const [form] = Form.useForm();
@@ -43,26 +42,20 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
     isItemUpdated: boolean;
   } = useAppSelector((state: RootState) => state?.offer);
 
-  const { selectedProject }: { selectedProject: IProject } = useAppSelector(
-    (state: RootState) => state?.project
-  );
+  const { selectedProject }: { selectedProject: IProject } = useAppSelector((state: RootState) => state?.project);
 
   const [representativeName, setRepresentativeName] = useState(selectedOffer?.representativeName);
 
-  const {
-    representativeNomenclators
-  }: { representativeNomenclators: IRepresentativeNomenclator[] } = useAppSelector(
+  const { representativeNomenclators }: { representativeNomenclators: IRepresentativeNomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
 
-  const representativeOptions: SelectProps["options"] = representativeNomenclators?.map(
-    (representative) => {
-      return {
-        label: `${representative.name}`,
-        value: `${representative.name}`
-      };
-    }
-  );
+  const representativeOptions: SelectProps["options"] = representativeNomenclators?.map((representative) => {
+    return {
+      label: `${representative.name}`,
+      value: `${representative.name}`
+    };
+  });
 
   const totalValue = useMemo(
     () =>
@@ -146,21 +139,15 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
                 options={representativeOptions}
                 onSelect={(value) => {
                   setRepresentativePercentage(
-                    representativeNomenclators.find(
-                      (representative) => representative.name === value
-                    )?.percentage ?? 1
+                    representativeNomenclators.find((representative) => representative.name === value)?.percentage ?? 1
                   );
                   setRepresentativeName(form.getFieldValue("representativeName"));
                 }}
                 showSearch
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) =>
-                  (option?.label ?? "").toLowerCase().includes(input)
-                }
+                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                  (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
                 }
               />
             </Form.Item>
@@ -174,10 +161,7 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
                     </button>
                   </Tooltip>
                   <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-                    <button
-                      onClick={() => handleDeleteItem(item)}
-                      className="table-delete-action-btn"
-                    >
+                    <button onClick={() => handleDeleteItem(item)} className="table-delete-action-btn">
                       <DeleteSvg width={20} height={20} />
                     </button>
                   </Tooltip>
@@ -218,9 +202,7 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
                       )?.percentage,
                       projectName: `${selectedProject?.projectName}`,
                       version: `v${offers.length + 1}`,
-                      value: selectedOffer?.itemsList
-                        ?.map((item) => item.value)
-                        .reduce((total, current) => total + current, 0)
+                      value: selectedOffer?.itemsList?.map((item) => item.value).reduce((total, current) => total + current, 0)
                     })
                   );
                   router.push(`/dashboard/project/${projectId}/offer`);
