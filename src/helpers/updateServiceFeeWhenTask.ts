@@ -4,6 +4,7 @@ import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "./randomStrings";
 import { IServiceFeeTask } from "@/models/serviceFeeTask";
 import Nomenclator from "@/models/nomenclator";
+import RepresentativeNomenclator, { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 
 // TODO: REFACTORIZAR EL PARA QUE SE EJECUTE TODO EN UN SOLO BUCLE
@@ -11,11 +12,18 @@ import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 //? CUANDO SE MODIFICA EL VALOR DE UNA TAREA SE ACTUALIZA EL VALOR DE TODAS LAS FICHAS DE COSTO DONDE ESTE ESA TAREA ?//
 
 export const updateServiceFeeWhenTask = async (task: IServiceFeeTask, serviceFees: IServiceFee[]) => {
-  //? BUSCA EN CADA LISTA DE TAREAS DE CADA TARIFA DE SERVICIO SI EXISTE LA TAREA QUE SE PASA POR PARÁMETRO. SI EXISTE, ACTUALIZA EL VALOR DE LA TARIFA DE SERVICIO CON EL NUEVO VALOR DE LA TAREA ?//
+  const artisticTalentCoefficient = 0.5;
+  const comercialMarginCoefficient = 0.3;
+  const ONATCoefficient = 0.2;
 
-  serviceFees.forEach((serviceFee, index, serviceFees) => {
+  const representativeNomenclators = await RepresentativeNomenclator.find();
+
+  //? BUSCA EN CADA LISTA DE TAREAS DE CADA TARIFA DE SERVICIO SI EXISTE LA TAREA QUE SE PASA POR PARÁMETRO. SI EXISTE, ACTUALIZA EL VALOR DE LA TARIFA DE SERVICIO CON EL NUEVO VALOR DE LA TAREA ?//
+  serviceFees.forEach(async (serviceFee, index, serviceFees) => {
+
     const taskList = serviceFees[index]?.taskList;
     const administrativeExpenses = serviceFees[index]?.administrativeExpenses;
+
     //? ITERA SOBRE LA LISTA DE TAREAS PARA ACTUALIZARLAS ?//
     taskList.forEach((value, index, taskList) => {
       if (taskList[index].key === task.key) {
@@ -40,6 +48,7 @@ export const updateServiceFeeWhenTask = async (task: IServiceFeeTask, serviceFee
       (total, currentValue) => total + currentValue?.currentComplexity?.time! * currentValue.amount,
       0
     );
+
     //? SI EL TIEMPO TOTAL CAMBIA ACTUALIZA LOS GASTOS DE ADMINISTRATIVOS ?//
     if (estimatedTime != serviceFee.estimatedTime) {
       administrativeExpenses.forEach((value, index, adminExpenses) => {
@@ -57,13 +66,11 @@ export const updateServiceFeeWhenTask = async (task: IServiceFeeTask, serviceFee
   });
 
   //? RECALCULA EL NUEVO VALOR DE LA TARIFA DE SERVICIO CON LA TAREA ACTUALIZADA Y LA ACTUALIZA EN LA BASE DE DATOS ?//
-
   serviceFees.map(async (serviceFee) => {
     try {
       await connectDB();
 
       //? CALCULA EL VALOR DE CADA SUBTOTAL EN CADA SECCION DE LA FICHA DE COSTO ?//
-
       const rawMaterialsSubtotal: number = serviceFee.rawMaterials.reduce((total, currentValue) => total + currentValue.value, 0);
       const taskListSubtotal: number = serviceFee.taskList.reduce(
         (total, currentValue) => total + currentValue.currentComplexity?.value! * currentValue.amount,
@@ -108,12 +115,26 @@ export const updateServiceFeeWhenTask = async (task: IServiceFeeTask, serviceFee
         code: serviceFee.nomenclatorId
       });
 
-      //? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + EL VALOR DEL IMPUESTO DE LA ONAT) ?//
-
-      // const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
-      // const ONATValue = expensesTotalValue * (serviceFee.ONAT / 100);
-      // const artisticTalentValue = expensesTotalValue * (serviceFee.artisticTalent / 100);
+      // ? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
+      const artisticTalentValue = expensesTotalValue * artisticTalentCoefficient;
+      // const comercialMarginValue = (expensesTotalValue + artisticTalentValue) * comercialMarginCoefficient;
+      const ONATValue = expensesTotalValue * ONATCoefficient;
       // const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
+      const pricePerRepresentative = representativeNomenclators.map((representative: IRepresentativeNomenclator) => {
+        if (representative.name === "EFECTIVO") {
+          return {
+            representativeName: "EFECTIVO",
+            price: expensesTotalValue + artisticTalentValue,
+            priceUSD: (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
+          };
+        } else {
+          return {
+            representativeName: representative.name,
+            price: expensesTotalValue + expensesTotalValue * (representative.percentage / 100) + ONATValue + artisticTalentValue,
+            priceUSD: 0
+          };
+        }
+      });
       const salePrice = expensesTotalValue;
 
       //? CALCULA EL VALOR DE LOS 3 NIVELES DE COMPLEJIDAD EN DEPENDENCIA DEL COEFICIENTE ASIGNADO ?//
@@ -128,7 +149,6 @@ export const updateServiceFeeWhenTask = async (task: IServiceFeeTask, serviceFee
       // });
 
       //? SI SE MODIFICA EL VALOR DE UNA TARIFA SE MODIFICA TAMBIEN EL VALOR DEL NOMENCLADOR ASOCIADO ?//
-
       if (!BDNomenclator) {
         const newKey = generateRandomString(26);
         const newNomenclator = new Nomenclator({
@@ -183,7 +203,8 @@ export const updateServiceFeeWhenTask = async (task: IServiceFeeTask, serviceFee
           // artisticTalentValue: artisticTalentValue,
           salePrice: salePrice,
           salePriceUSD: salePrice / serviceFee?.currencyChange,
-          estimatedTime: estimatedTime
+          estimatedTime: estimatedTime,
+          pricePerRepresentative
         },
         { new: true }
       );

@@ -3,12 +3,18 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "./randomStrings";
 import Nomenclator, { INomenclator } from "@/models/nomenclator";
+import RepresentativeNomenclator, { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 
 // ? CUANDO SE MODIFICA EL VALOR DE UN NOMENCLADOR ASOCIADO A UN MATERIAL DEL ALMACEN(CATEGORIA + NOMBRE) SE ACTUALIZAN TODAS LAS FICHAS DE COSTO QUE UTILIZAN ESE MATERIAL Y SE VUELVEN A CALCULAR SUS PRECIOS ?//
 
 export const updateServiceFeesMaterials = async (materialNomenclator: INomenclator, serviceFees: IServiceFee[]) => {
-  console.log("🚀 ~ materialNomenclator:", materialNomenclator);
+  const artisticTalentCoefficient = 0.5;
+  const comercialMarginCoefficient = 0.3;
+  const ONATCoefficient = 0.2;
+
+  const representativeNomenclators = await RepresentativeNomenclator.find();
+
   //? BUSCA EN CADA LISTA DE MATERIAS PRIMAS DE CADA TARIFA DE SERVICIO SI EXISTE EL MATERIAL QUE SE PASA POR PARÁMETRO. SI EXISTE, ACTUALIZA EL VALOR DE LA TARIFA DE SERVICIO CON EL NUEVO VALOR DEL MATERIAL ?//
 
   // TODO: HACER QUE SI SE ACTUALIZA EL PRECIO DE UN MATERIAL GASTABLE EN EL ALMACEN SE LE APLIQUE EL COEFICIENTE DE MERMA AL NUEVO PRECIO //
@@ -86,12 +92,26 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
         code: serviceFee.nomenclatorId
       });
 
-      //? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + EL VALOR DEL IMPUESTO DE LA ONAT) ?//
-
-      // const comercialMarginValue = expensesTotalValue * (serviceFee?.commercialMargin / 100);
-      // const ONATValue = expensesTotalValue * (serviceFee.ONAT / 100);
-      // const artisticTalentValue = expensesTotalValue * (serviceFee.artisticTalent / 100);
+      // ? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
+      const artisticTalentValue = expensesTotalValue * artisticTalentCoefficient;
+      // const comercialMarginValue = (expensesTotalValue + artisticTalentValue) * comercialMarginCoefficient;
+      const ONATValue = expensesTotalValue * ONATCoefficient;
       // const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
+      const pricePerRepresentative = representativeNomenclators.map((representative: IRepresentativeNomenclator) => {
+        if (representative.name === "EFECTIVO") {
+          return {
+            representativeName: "EFECTIVO",
+            price: expensesTotalValue + artisticTalentValue,
+            priceUSD: (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
+          };
+        } else {
+          return {
+            representativeName: representative.name,
+            price: expensesTotalValue + expensesTotalValue * (representative.percentage / 100) + ONATValue + artisticTalentValue,
+            priceUSD: 0
+          };
+        }
+      });
       const salePrice = expensesTotalValue;
 
       //? CALCULA EL VALOR DE LOS 3 NIVELES DE COMPLEJIDAD EN DEPENDENCIA DEL COEFICIENTE ASIGNADO ?//

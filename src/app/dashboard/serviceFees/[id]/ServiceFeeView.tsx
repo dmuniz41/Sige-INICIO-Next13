@@ -13,7 +13,6 @@ import { loadSelectedServiceFee } from "@/actions/serviceFee";
 import { ServiceFeeViewTableSection } from "./ServiceFeeViewSection";
 import { ServiceFeeViewTaskListSection } from "./ServiceFeeViewTaskListSection";
 import { IServiceFeeTask } from "@/models/serviceFeeTask";
-import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 
 export const ServiceFeeView = () => {
   const dispatch = useAppDispatch();
