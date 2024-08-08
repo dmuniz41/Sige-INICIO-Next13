@@ -1,6 +1,7 @@
-import { IOfferItem } from "@/models/offer";
 import React from "react";
+
 import { ActivitiesTable } from "./ActivitiesTable";
+import { IOfferItem } from "@/models/offer";
 
 export const Item = (props: any) => {
   const { number, item }: { number: number; item: IOfferItem } = props;

@@ -21,7 +21,8 @@ import { DeleteSvg } from "@/app/global/DeleteSvg";
 
 export const CreateOfferForm = (props: { projectId: string }) => {
   const [form] = Form.useForm();
-  const [representativePercentage, setRepresentativePercentage] = useState(0);
+  // const [representativePercentage, setRepresentativePercentage] = useState(0);
+  const [representative, setRepresentative] = useState("");
   const { projectId } = props;
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -31,43 +32,42 @@ export const CreateOfferForm = (props: { projectId: string }) => {
     dispatch(representativeNomenclatorsStartLoading());
   }, [dispatch]);
 
-  const { selectedProject }: { selectedProject: IProject } = useAppSelector(
-    (state: RootState) => state?.project
-  );
+  const { selectedProject }: { selectedProject: IProject } = useAppSelector((state: RootState) => state?.project);
 
   const {
     selectedOffer,
     itemUpdated,
     isItemUpdated
-  }: { selectedOffer: IOffer; offers: IOffer[]; itemUpdated: IOfferItem; isItemUpdated: boolean } =
-    useAppSelector((state: RootState) => state?.offer);
-
-  const totalValue = useMemo(
-    () =>
-      (
-        selectedOffer?.itemsList?.reduce((totalValue, item) => item.value + totalValue, 0) *
-        (representativePercentage / 100 + 1)
-      ).toLocaleString("DE", {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2
-      }),
-    [selectedOffer, representativePercentage]
+  }: { selectedOffer: IOffer; offers: IOffer[]; itemUpdated: IOfferItem; isItemUpdated: boolean } = useAppSelector(
+    (state: RootState) => state?.offer
   );
 
-  const {
-    representativeNomenclators
-  }: { representativeNomenclators: IRepresentativeNomenclator[] } = useAppSelector(
+  // const totalValue = useMemo(
+  //   () =>
+  //     (
+  //       selectedOffer?.itemsList?.reduce((totalValue, item) => item.value + totalValue, 0) *
+  //       (representativePercentage / 100 + 1)
+  //     ).toLocaleString("DE", {
+  //       maximumFractionDigits: 2,
+  //       minimumFractionDigits: 2
+  //     }),
+  //   [selectedOffer, representativePercentage]
+  // );
+
+  const totalValue = useMemo(() => {
+    return selectedOffer?.itemsList?.reduce((totalValue, item) => item.value + totalValue, 0);
+  }, [selectedOffer]);
+
+  const { representativeNomenclators }: { representativeNomenclators: IRepresentativeNomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
 
-  const representativeOptions: SelectProps["options"] = representativeNomenclators?.map(
-    (representative) => {
-      return {
-        label: `${representative?.name}`,
-        value: `${representative?.name}`
-      };
-    }
-  );
+  const representativeOptions: SelectProps["options"] = representativeNomenclators?.map((representative) => {
+    return {
+      label: `${representative?.name}`,
+      value: `${representative?.name}`
+    };
+  });
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
@@ -123,7 +123,7 @@ export const CreateOfferForm = (props: { projectId: string }) => {
           Nombre: <span className="font-normal">{selectedProject.projectName}</span>
         </h1>
       </div>
-      <Form.Item
+      {/* <Form.Item
         className="mb-3 w-[30%]"
         label={<span className="font-bold text-md">Representación</span>}
         name="representative"
@@ -134,20 +134,19 @@ export const CreateOfferForm = (props: { projectId: string }) => {
           options={representativeOptions}
           showSearch
           onSelect={(value) => {
-            setRepresentativePercentage(
-              representativeNomenclators.find((representative) => representative.name === value)
-                ?.percentage ?? 1
-            );
+            setRepresentative(value);
+            // setRepresentativePercentage(
+            //   representativeNomenclators.find((representative) => representative.name === value)
+            //     ?.percentage ?? 1
+            // );
           }}
           optionFilterProp="children"
-          filterOption={(input: any, option: any) =>
-            (option?.label ?? "").toLowerCase().includes(input)
-          }
+          filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
           filterSort={(optionA: any, optionB: any) =>
             (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
           }
         />
-      </Form.Item>
+      </Form.Item> */}
       <section className=" flex w-full gap-2 mb-4 ">
         {selectedOffer?.itemsList?.length == 0 ? (
           <article className="flex flex-col w-full justify-center items-center border border-border_light py-4 rounded-md">
@@ -180,10 +179,7 @@ export const CreateOfferForm = (props: { projectId: string }) => {
                       </button>
                     </Tooltip>
                     <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-                      <button
-                        onClick={() => handleDeleteItem(item)}
-                        className="table-delete-action-btn"
-                      >
+                      <button onClick={() => handleDeleteItem(item)} className="table-delete-action-btn">
                         <DeleteSvg width={20} height={20} />
                       </button>
                     </Tooltip>
@@ -224,13 +220,11 @@ export const CreateOfferForm = (props: { projectId: string }) => {
                     itemsList: selectedOffer?.itemsList,
                     projectName: selectedProject?.projectName,
                     projectId: selectedProject?._id,
-                    representativeName: values?.representative,
-                    representationPercentage: representativeNomenclators.find(
-                      (representative) => representative.name === values.representative
-                    )?.percentage,
-                    value: selectedOffer?.itemsList
-                      ?.map((item) => item.value)
-                      .reduce((total, current) => total + current, 0),
+                    representativeName: selectedProject?.payMethod,
+                    // representationPercentage: representativeNomenclators.find(
+                    //   (representative) => representative.name === values.representative
+                    // )?.percentage,
+                    value: selectedOffer?.itemsList?.map((item) => item.value).reduce((total, current) => total + current, 0),
                     version: "v1"
                   })
                 );
