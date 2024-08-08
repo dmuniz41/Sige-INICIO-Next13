@@ -10,6 +10,7 @@ import { PlusCircleSvg } from "@/app/global/PlusCircleSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { serviceFeeStartLoading } from "@/actions/serviceFee";
 import { useAppDispatch } from "@/hooks/hooks";
+import { IProject } from "@/models/project";
 
 interface CollectionCreateFormProps {
   open: boolean;
@@ -44,6 +45,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
   }, [dispatch]);
 
   const { serviceFees }: { serviceFees: IServiceFee[] } = useAppSelector((state: RootState) => state?.serviceFee);
+  const { selectedProject }: { selectedProject: IProject } = useAppSelector((state: RootState) => state?.project);
 
   const listOfActivities: SelectProps["options"] = serviceFees.map((serviceFee) => {
     return {
@@ -88,6 +90,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
     {
       title: <span className="font-bold">Acciones</span>,
       width: "10%",
+      key: "Actions",
       render: (_, { ...record }) => (
         <div className="flex gap-1 justify-center">
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
@@ -104,6 +107,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
       )
     }
   ];
+
   const [form] = Form.useForm();
   return (
     <Modal
@@ -146,8 +150,8 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
                           value: size * currentPrice,
                           width: 0,
 
-                          listOfMeasures: activitiesTableValues
-                          // complexity: form.getFieldValue("complexity")
+                          listOfMeasures: activitiesTableValues,
+                          pricePerRepresentative: selectedServiceFee?.pricePerRepresentative!
                         }
                       : {
                           amount: activitiesTableValues.reduce(
@@ -164,8 +168,8 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
                           unitMeasure: currentUnitMeasure,
                           value: Number(activityValue.toFixed(2)),
                           width: values.width,
-                          listOfMeasures: activitiesTableValues
-                          // complexity: form.getFieldValue("complexity")
+                          listOfMeasures: activitiesTableValues,
+                          pricePerRepresentative: selectedServiceFee?.pricePerRepresentative!
                         }
                   );
                   form.resetFields();
@@ -193,17 +197,22 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
             style={{ width: "100%" }}
             options={listOfActivities}
             onSelect={(value) => {
-              const currentServiceFee = serviceFees.find((serviceFee) => serviceFee.taskName === value.label);
+              const currentServiceFee = serviceFees?.find((serviceFee) => serviceFee?.taskName === value.label);
+              console.log("🚀 ~ currentServiceFee:", currentServiceFee)
+              const representativePrice = currentServiceFee?.pricePerRepresentative?.find(
+                (rep) => rep?.representativeName === selectedProject?.payMethod
+              );
+              console.log("🚀 ~ selectedProject:", selectedProject)
+              console.log(representativePrice);
+              
               setSelectedServiceFee(currentServiceFee!);
               setCurrentUnitMeasure(currentServiceFee?.unitMeasure!);
-              setCurrentPrice(currentServiceFee?.salePrice!);
+              setCurrentPrice(representativePrice?.price!);
               setActivitiesTableValues([]);
               setSize(0);
 
               form.setFieldsValue({
                 unitMeasure: selectedServiceFee?.unitMeasure,
-                //TODO: REVISAR ESTE VALOR
-                price: form.getFieldValue("description")?.value,
                 height: 0,
                 width: 0,
                 amount: 0,

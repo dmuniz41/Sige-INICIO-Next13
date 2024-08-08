@@ -112,14 +112,14 @@ export async function POST(request: NextRequest) {
     }
 
     let newKey = generateRandomString(26);
-    const finalValue = offer.value! * (offer?.representationPercentage / 100 + 1);
+    // const finalValue = offer.value! * (offer?.representationPercentage / 100 + 1);
 
     const newOffer = new Offer({
       ...offer,
       materialsList: uniqueMaterials,
       key: newKey,
       isFinalOffer: offer.isFinalOffer ?? false,
-      value: finalValue,
+      value: offer.value,
       version: offer.version ?? ""
     });
 

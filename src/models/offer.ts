@@ -6,6 +6,13 @@ export interface IActivity {
   price: number;
   unitMeasure: string;
   // complexity: "Alta" | "Media" | "Baja";
+  pricePerRepresentative: [
+    {
+      representativeName: string;
+      price: number;
+      priceUSD: number;
+    }
+  ];
   value: number;
   size?: number;
   width?: number;
@@ -34,7 +41,7 @@ export interface IOffer {
   projectName: string;
   value?: number;
   isFinalOffer?: boolean;
-  representationPercentage: number;
+  // representationPercentage: number;
   representativeName: string;
   version: string;
 }
@@ -54,6 +61,13 @@ const OfferSchema = new Schema<IOffer, Model<IOffer>>({
           {
             amount: Number,
             // complexity: String,
+            pricePerRepresentative: [
+              {
+                representativeName: String,
+                price: Number,
+                priceUSD: Number
+              }
+            ],
             description: String,
             unitMeasure: String,
             price: Number,
@@ -107,10 +121,10 @@ const OfferSchema = new Schema<IOffer, Model<IOffer>>({
     type: Boolean,
     required: false
   },
-  representationPercentage: {
-    type: Number,
-    required: true
-  },
+  // representationPercentage: {
+  //   type: Number,
+  //   required: true
+  // },
   version: {
     type: String,
     required: false
