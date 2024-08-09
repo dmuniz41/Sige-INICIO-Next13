@@ -84,7 +84,7 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
         <Form.Item
           className="mb-3 w-[35%]"
           name="description"
-          label={<span className="font-bold text-md">Descripción</span>}
+          label={<span className="font-semibold text-md">Descripción</span>}
           rules={[
             { required: true, message: "Campo requerido" }
             // TODO: REVISAR ESTE VALIDADOR
@@ -126,7 +126,7 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
       <Form.Item>
         <button
           type="submit"
-          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
+          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-semibold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
           onClick={() => {
             form
               .validateFields()

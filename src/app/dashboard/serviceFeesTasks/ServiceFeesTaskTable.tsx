@@ -234,7 +234,7 @@ const ServiceFeeTaskTable: React.FC = () => {
 
   const columns: ColumnsType<IServiceFeeTask> = [
     {
-      title: <span className="font-bold">Descripción</span>,
+      title: <span className="font-semibold">Descripción</span>,
       dataIndex: "description",
       key: "description",
       width: "50%",
@@ -242,7 +242,7 @@ const ServiceFeeTaskTable: React.FC = () => {
       ...getColumnSearchProps("description")
     },
     {
-      title: <span className="font-bold">Categoría</span>,
+      title: <span className="font-semibold">Categoría</span>,
       dataIndex: "category",
       key: "category",
       width: "13%",
@@ -251,7 +251,7 @@ const ServiceFeeTaskTable: React.FC = () => {
       filterSearch: true
     },
     {
-      title: <span className="font-bold">Cantidad</span>,
+      title: <span className="font-semibold">Cantidad</span>,
       dataIndex: "amount",
       key: "amount",
       width: "8%",
@@ -266,7 +266,7 @@ const ServiceFeeTaskTable: React.FC = () => {
       )
     },
     {
-      title: <span className="font-bold">Unidad de Medida</span>,
+      title: <span className="font-semibold">Unidad de Medida</span>,
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "15%",
@@ -275,7 +275,7 @@ const ServiceFeeTaskTable: React.FC = () => {
       filterSearch: true
     },
     // {
-    //   title: <span className="font-bold">Precio</span>,
+    //   title: <span className="font-semibold">Precio</span>,
     //   dataIndex: "price",
     //   key: "price",
     //   width: "10%",
@@ -293,7 +293,7 @@ const ServiceFeeTaskTable: React.FC = () => {
     //   }
     // },
     {
-      title: <span className="font-bold">Acciones</span>,
+      title: <span className="font-semibold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, record) => (

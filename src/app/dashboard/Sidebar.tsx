@@ -118,14 +118,14 @@ const items: MenuProps["items"] = [
         ),
         key: "warehouse1"
       },
-      {
-        label: (
-          <Link prefetch href="/dashboard/ticketsWarehouse">
-            Almacén de Vales
-          </Link>
-        ),
-        key: "ticketsWarehouse"
-      }
+      // {
+      //   label: (
+      //     <Link prefetch href="/dashboard/ticketsWarehouse">
+      //       Almacén de Vales
+      //     </Link>
+      //   ),
+      //   key: "ticketsWarehouse"
+      // }
     ],
     icon: (
       <svg
@@ -157,22 +157,22 @@ const items: MenuProps["items"] = [
         ),
         key: "projects"
       },
-      {
-        label: (
-          <Link prefetch href="/dashboard/projectExpenses">
-            Gastos de proyectos
-          </Link>
-        ),
-        key: "projectExpenses"
-      },
-      {
-        label: (
-          <Link prefetch href="/dashboard/costSheets">
-            Fichas de costo
-          </Link>
-        ),
-        key: "costSheets"
-      }
+      // {
+      //   label: (
+      //     <Link prefetch href="/dashboard/projectExpenses">
+      //       Gastos de proyectos
+      //     </Link>
+      //   ),
+      //   key: "projectExpenses"
+      // },
+      // {
+      //   label: (
+      //     <Link prefetch href="/dashboard/costSheets">
+      //       Fichas de costo
+      //     </Link>
+      //   ),
+      //   key: "costSheets"
+      // }
     ],
     icon: (
       <svg

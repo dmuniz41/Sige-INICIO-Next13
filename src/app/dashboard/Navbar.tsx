@@ -95,7 +95,7 @@ export const Navbar = () => {
         </a>
         <div className="flex items-center justify-end bg-primary-500 w-full h-full p-[1rem] bg-transparent">
           <ul className="list-none flex items-center text-white-100 ">
-            <li className="flex items-center gap-[0.5rem] font-bold text-white-100 text-base mr-3">
+            <li className="flex items-center gap-[0.5rem] font-semibold text-white-100 text-base mr-3">
               <UserOutlined className="text-2xl mb-2" />
               <span className="text-xl">{`${username}`}</span>
             </li>
@@ -157,9 +157,9 @@ export const Navbar = () => {
         </section>
         <section className="items-center p-4 flex relative  rounded-md w-full bg-white-100 shadow-md">
           {secondaryPath ? (
-            <span className="font-bold text-2xl font-segoe ">{`${secondaryPath}`}</span>
+            <span className="font-semibold text-2xl font-segoe ">{`${secondaryPath}`}</span>
           ) : (
-            <span className="font-bold text-2xl font-segoe ">{`${mainPath[1]}`}</span>
+            <span className="font-semibold text-2xl font-segoe ">{`${mainPath[1]}`}</span>
           )}
         </section>
       </article>

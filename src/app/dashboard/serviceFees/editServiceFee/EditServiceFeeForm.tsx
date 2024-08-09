@@ -346,7 +346,7 @@ export const EditServiceFeeForm = () => {
           <Form.Item
             className="mb-3 w-[35%]"
             name="taskName"
-            label={<span className="font-bold text-md">Descripción</span>}
+            label={<span className="font-semibold text-md">Descripción</span>}
             rules={[{ required: true, message: "Campo requerido" }]}
           >
             <TextArea rows={3} />
@@ -354,7 +354,7 @@ export const EditServiceFeeForm = () => {
           <article className="flex flex-col flex-1">
             <Form.Item
               className="mb-3"
-              label={<span className="font-bold text-md">Nomenclador</span>}
+              label={<span className="font-semibold text-md">Nomenclador</span>}
               name="nomenclatorId"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -362,7 +362,7 @@ export const EditServiceFeeForm = () => {
             </Form.Item>
             <Form.Item
               className="mb-3"
-              label={<span className="font-bold text-md">Categoría</span>}
+              label={<span className="font-semibold text-md">Categoría</span>}
               name="category"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -384,7 +384,7 @@ export const EditServiceFeeForm = () => {
           <article className="flex flex-col flex-1">
             <Form.Item
               className="mb-3 "
-              label={<span className="font-bold text-md">Cantidad de empleados</span>}
+              label={<span className="font-semibold text-md">Cantidad de empleados</span>}
               name="workersAmount"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -392,7 +392,7 @@ export const EditServiceFeeForm = () => {
             </Form.Item>
             <Form.Item
               className="mb-3"
-              label={<span className="font-bold text-md">Unidad de Medida</span>}
+              label={<span className="font-semibold text-md">Unidad de Medida</span>}
               name="unitMeasure"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -411,7 +411,7 @@ export const EditServiceFeeForm = () => {
           <article className="flex flex-col w-[150px]">
             <Form.Item
               className="mb-3 "
-              label={<span className="font-bold text-md">Cambio (USD)</span>}
+              label={<span className="font-semibold text-md">Cambio (USD)</span>}
               name="currencyChange"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -489,13 +489,13 @@ export const EditServiceFeeForm = () => {
       />
 
       {/* <article className="flex gap-2">
-        <div className="font-bold text-base items-center flex">
+        <div className="font-semibold text-base items-center flex">
           <span>Coeficientes de Complejidad</span>
         </div>
         <div className="flex gap-2 pt-3 items-center">
           <Form.Item
             className="mb-3"
-            label={<span className="font-bold text-md">Alta</span>}
+            label={<span className="font-semibold text-md">Alta</span>}
             name="highComplexity"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
@@ -503,7 +503,7 @@ export const EditServiceFeeForm = () => {
           </Form.Item>
           <Form.Item
             className="mb-3 "
-            label={<span className="font-bold text-md">Media</span>}
+            label={<span className="font-semibold text-md">Media</span>}
             name="mediumComplexity"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
@@ -511,7 +511,7 @@ export const EditServiceFeeForm = () => {
           </Form.Item>
           <Form.Item
             className="mb-3 "
-            label={<span className="font-bold text-md">Baja</span>}
+            label={<span className="font-semibold text-md">Baja</span>}
             name="lowComplexity"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
@@ -522,7 +522,7 @@ export const EditServiceFeeForm = () => {
       <section className="flex gap-4 mt-4">
         <Form.Item
           className="mb-3 "
-          label={<span className="font-bold text-md">ONAT (%)</span>}
+          label={<span className="font-semibold text-md">ONAT (%)</span>}
           name="ONAT"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
@@ -530,7 +530,7 @@ export const EditServiceFeeForm = () => {
         </Form.Item>
         <Form.Item
           className="mb-3 "
-          label={<span className="font-bold text-md">Margen Comercial (%)</span>}
+          label={<span className="font-semibold text-md">Margen Comercial (%)</span>}
           name="commercialMargin"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
@@ -538,7 +538,7 @@ export const EditServiceFeeForm = () => {
         </Form.Item>
         <Form.Item
           className="mb-3 "
-          label={<span className="font-bold text-md">Talento Artístico</span>}
+          label={<span className="font-semibold text-md">Talento Artístico</span>}
           name="artisticTalent"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
@@ -550,7 +550,7 @@ export const EditServiceFeeForm = () => {
         <EstimateTimeViewSeccion name="TIEMPO ESTIMADO" value={estimatedTime} />
         <button
           type="submit"
-          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
+          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-semibold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
           onClick={() => {
             form
               .validateFields()
@@ -675,40 +675,40 @@ export const TableFormSection = (props: any) => {
 
   const columns: ColumnsType<IServiceFeeSubItem> = [
     {
-      title: <span className="font-bold">Descripción</span>,
+      title: <span className="font-semibold">Descripción</span>,
       dataIndex: "description",
       key: "description",
       width: "50%"
     },
     {
-      title: <span className="font-bold">Unidad de Medida</span>,
+      title: <span className="font-semibold">Unidad de Medida</span>,
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "15%"
     },
     {
-      title: <span className="font-bold">Cantidad</span>,
+      title: <span className="font-semibold">Cantidad</span>,
       dataIndex: "amount",
       key: "amount",
       width: "10%",
       render: (value) => <span>{value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     },
     {
-      title: <span className="font-bold">Precio/UM</span>,
+      title: <span className="font-semibold">Precio/UM</span>,
       dataIndex: "price",
       key: "price",
       width: "15%",
       render: (value) => <span>$ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     },
     {
-      title: <span className="font-bold">Importe</span>,
+      title: <span className="font-semibold">Importe</span>,
       dataIndex: "value",
       key: "value",
       width: "15%",
       render: (value) => <span>$ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     },
     {
-      title: <span className="font-bold">Acciones</span>,
+      title: <span className="font-semibold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, { ...record }) => (
@@ -726,7 +726,7 @@ export const TableFormSection = (props: any) => {
   return (
     <section className=" flex w-full mb-4 rounded-md p-2 border border-border_light shadow-sm">
       <div className="flex w-[15%] h-full p-2 text-center items-center justify-center bg-[#fafafa] rounded-l-md">
-        <span className="text-base font-bold">{sectionName?.toUpperCase()}</span>
+        <span className="text-base font-semibold">{sectionName?.toUpperCase()}</span>
       </div>
       <div className="grid pl-2 w-full gap-2">
         <Table
@@ -739,10 +739,10 @@ export const TableFormSection = (props: any) => {
           bordered
           footer={() => (
             <footer className="flex w-full">
-              <div className="font-bold flex w-[86.2%]">
+              <div className="font-semibold flex w-[86.2%]">
                 <span>Subtotal: </span>
               </div>
-              <div className="flex justify-start font-bold">
+              <div className="flex justify-start font-semibold">
                 <span>
                   ${" "}
                   {subtotal

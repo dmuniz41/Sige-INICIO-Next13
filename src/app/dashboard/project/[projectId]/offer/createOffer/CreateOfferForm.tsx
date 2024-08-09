@@ -118,14 +118,14 @@ export const CreateOfferForm = (props: { projectId: string }) => {
       requiredMark={"optional"}
       size="middle"
     >
-      <div className="font-bold mb-2">
+      <div className="font-semibold mb-2">
         <h1>
           Nombre: <span className="font-normal">{selectedProject.projectName}</span>
         </h1>
       </div>
       <Form.Item
         className="mb-3 w-[30%]"
-        label={<span className="font-bold text-md">Representación</span>}
+        label={<span className="font-semibold text-md">Representación</span>}
         name="representative"
         rules={[{ required: true, message: "Campo requerido" }]}
       >
@@ -155,7 +155,7 @@ export const CreateOfferForm = (props: { projectId: string }) => {
               <div className="grid place-content-center">
                 <NoDataSvg width={100} height={100} />
               </div>
-              <span className="font-bold mb-4">No hay items disponibles</span>
+              <span className="font-semibold mb-4">No hay items disponibles</span>
               <button
                 className="toolbar-secondary-icon-btn"
                 onClick={() => {
@@ -201,7 +201,7 @@ export const CreateOfferForm = (props: { projectId: string }) => {
               Añadir Item
             </button>
             <article className="flex items-center justify-end h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-lg">
-              <div className="flex font-bold">
+              <div className="flex font-semibold">
                 <h2>VALOR TOTAL : </h2>
               </div>
               <div className="flex px-4">$ {totalValue}</div>
@@ -212,7 +212,7 @@ export const CreateOfferForm = (props: { projectId: string }) => {
       <Form.Item>
         <button
           type="submit"
-          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
+          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-semibold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
           onClick={() => {
             form
               .validateFields()

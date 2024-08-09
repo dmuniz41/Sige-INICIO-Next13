@@ -162,7 +162,7 @@ export const EditCostSheetForm = () => {
         <div className="flex gap-2 pr-[13rem]">
           <Form.Item
             className="mb-3 flex-1"
-            label={<span className="font-bold text-md">Tarea a ejecutar</span>}
+            label={<span className="font-semibold text-md">Tarea a ejecutar</span>}
             name="taskName"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
@@ -173,7 +173,7 @@ export const EditCostSheetForm = () => {
           <Form.Item
             className="mb-3 w-[35%]"
             name="description"
-            label={<span className="font-bold text-md">Descripción</span>}
+            label={<span className="font-semibold text-md">Descripción</span>}
             rules={[{ required: true, message: "Campo requerido" }]}
           >
             <TextArea rows={3} />
@@ -181,7 +181,7 @@ export const EditCostSheetForm = () => {
           <div className="flex flex-col">
             <Form.Item
               className="mb-3"
-              label={<span className="font-bold text-md">Nomenclador</span>}
+              label={<span className="font-semibold text-md">Nomenclador</span>}
               name="nomenclatorId"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -189,7 +189,7 @@ export const EditCostSheetForm = () => {
             </Form.Item>
             <Form.Item
               className="mb-3"
-              label={<span className="font-bold text-md">Categoría</span>}
+              label={<span className="font-semibold text-md">Categoría</span>}
               name="category"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -209,13 +209,13 @@ export const EditCostSheetForm = () => {
               />
             </Form.Item>
           </div>
-          {/* <Form.Item className="mb-3 " name="payMethod" label={<span className="font-bold text-md">Método de pago</span>} rules={[{ required: true, message: "Campo requerido" }]}>
+          {/* <Form.Item className="mb-3 " name="payMethod" label={<span className="font-semibold text-md">Método de pago</span>} rules={[{ required: true, message: "Campo requerido" }]}>
             <Select allowClear style={{ width: "10rem" }} options={payMethod} />
           </Form.Item> */}
           <div className="flex flex-col">
             <Form.Item
               className="mb-3 "
-              label={<span className="font-bold text-md">Cantidad de empleados</span>}
+              label={<span className="font-semibold text-md">Cantidad de empleados</span>}
               name="workersAmount"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -223,7 +223,7 @@ export const EditCostSheetForm = () => {
             </Form.Item>
             <Form.Item
               className="mb-3"
-              label={<span className="font-bold text-md">Precio/UM</span>}
+              label={<span className="font-semibold text-md">Precio/UM</span>}
               name="valuePerUnitMeasure"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -246,7 +246,7 @@ export const EditCostSheetForm = () => {
           <div className="flex flex-col">
             <Form.Item
               className="mb-3 "
-              label={<span className="font-bold text-md">Cambio $ </span>}
+              label={<span className="font-semibold text-md">Cambio $ </span>}
               name="USDValue"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -303,7 +303,7 @@ export const EditCostSheetForm = () => {
           <Form.Item
             className="mb-3 "
             tooltip="Para la actividad de producción de bienes, la tasa máxima de utilidad aprobada no puede exceder el 25%"
-            label={<span className="font-bold text-md">Utilidad</span>}
+            label={<span className="font-semibold text-md">Utilidad</span>}
             name="representationCost"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
@@ -311,7 +311,7 @@ export const EditCostSheetForm = () => {
           </Form.Item>
           <Form.Item
             className="mb-3 "
-            label={<span className="font-bold text-md">Talento artístico</span>}
+            label={<span className="font-semibold text-md">Talento artístico</span>}
             name="artisticTalent"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
@@ -321,7 +321,7 @@ export const EditCostSheetForm = () => {
         <div className="flex flex-col gap-1 justify-start">
           <Form.Item
             className="mb-3 "
-            label={<span className="font-bold text-md">Elaborado por</span>}
+            label={<span className="font-semibold text-md">Elaborado por</span>}
             name="createdBy"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
@@ -329,7 +329,7 @@ export const EditCostSheetForm = () => {
           </Form.Item>
           <Form.Item
             className="mb-3 "
-            label={<span className="font-bold text-md">Aprobado por</span>}
+            label={<span className="font-semibold text-md">Aprobado por</span>}
             name="approvedBy"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
@@ -339,7 +339,7 @@ export const EditCostSheetForm = () => {
         <Form.Item
           className="mb-3 "
           label={
-            <span className="font-bold text-md">Materias primas aportadas por el cliente</span>
+            <span className="font-semibold text-md">Materias primas aportadas por el cliente</span>
           }
           name="rawMaterialsByClient"
           rules={[{ required: true, message: "Campo requerido" }]}
@@ -351,7 +351,7 @@ export const EditCostSheetForm = () => {
       <Form.Item>
         <button
           type="submit"
-          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
+          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-semibold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
           onClick={() => {
             form
               .validateFields()

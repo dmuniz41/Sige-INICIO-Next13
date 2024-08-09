@@ -83,7 +83,7 @@ export const AddEquipmentMaintenanceModal: React.FC<CollectionCreateFormProps> =
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-bold text-lg">Nuevo Mantenimiento de Equipo</span>
+          <span className="font-semibold text-lg">Nuevo Mantenimiento de Equipo</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -173,15 +173,15 @@ export const AddEquipmentMaintenanceModal: React.FC<CollectionCreateFormProps> =
           />
         </Form.Item>
         <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Total de horas:</span>
+          <span className="font-semibold">Total de horas:</span>
           <span>{currentTotalTime?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })} h</span>
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Precio/UM:</span>
+          <span className="font-semibold">Precio/UM:</span>
           <span>${selectedEquipmentMaintenance?.value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Importe:</span>
+          <span className="font-semibold">Importe:</span>
           <span>${!price ? 0 : price?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
         </div>
       </Form>

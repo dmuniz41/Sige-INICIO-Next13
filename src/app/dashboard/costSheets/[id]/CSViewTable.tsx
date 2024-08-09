@@ -51,7 +51,7 @@ export const CSViewTable = (props: any) => {
             >
               <div className="flex justify-between w-full">
                 <strong className="flex-1">Subtotal:</strong>
-                <span className="w-[10%] justify-center flex font-bold">
+                <span className="w-[10%] justify-center flex font-semibold">
                   ${(subtotal * 1).toFixed(2)}
                 </span>
               </div>

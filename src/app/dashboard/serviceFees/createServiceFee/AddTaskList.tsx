@@ -34,7 +34,7 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-bold text-lg">Nueva Actividad</span>
+          <span className="font-semibold text-lg">Nueva Actividad</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -134,15 +134,15 @@ export const AddTaskListModal: React.FC<CollectionCreateFormProps> = ({ open, on
           />
         </Form.Item>
         <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Unidad de Medida:</span>
+          <span className="font-semibold">Unidad de Medida:</span>
           <span>{!unitMeasure ? "" : unitMeasure}</span>
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Precio:</span>
+          <span className="font-semibold">Precio:</span>
           <span>${!price ? 0 : price?.toFixed(2)}</span>
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Importe:</span>
+          <span className="font-semibold">Importe:</span>
           <span>${!taskValue ? 0 : taskValue?.toFixed(2)}</span>
         </div>
       </Form>

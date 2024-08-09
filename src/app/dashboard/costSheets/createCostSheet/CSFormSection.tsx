@@ -23,7 +23,7 @@ export const CSFormSection = (props: any) => {
   return (
     <section className=" flex flex-col w-full mb-0">
       <div className="flex gap-1 ">
-        <label className="text-md font-bold mb-3" htmlFor={`${name}`}>
+        <label className="text-md font-semibold mb-3" htmlFor={`${name}`}>
           {label}
         </label>
         <Tooltip className="flex pt-[2px] text-white-700" title={tooltip}>

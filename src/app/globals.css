@@ -12,19 +12,19 @@
 
 @layer components {
   .modal-btn-primary {
-    @apply mt-4 select-none rounded-lg bg-success-500 py-2 px-6 text-center align-middle text-xs font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+    @apply mt-4 select-none rounded-lg bg-success-500 py-2 px-6 text-center align-middle text-xs font-semibold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
   }
   .modal-btn-danger {
-    @apply mt-4 select-none rounded-lg bg-danger-500 py-2 px-4 text-center align-middle text-xs font-bold uppercase text-white-100 shadow-md shadow-danger-500/20 transition-all hover:shadow-lg hover:shadow-danger-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+    @apply mt-4 select-none rounded-lg bg-danger-500 py-2 px-4 text-center align-middle text-xs font-semibold uppercase text-white-100 shadow-md shadow-danger-500/20 transition-all hover:shadow-lg hover:shadow-danger-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
   }
   .toolbar-primary-icon-btn {
-    @apply gap-2 flex select-none rounded-lg bg-success-500 py-2.5 px-4 justify-center text-center items-center align-middle text-base font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+    @apply gap-2 flex select-none rounded-lg bg-success-500 py-2.5 px-4 justify-center text-center items-center align-middle text-base font-semibold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
   }
   .toolbar-secondary-icon-btn {
-    @apply gap-2 flex select-none rounded-lg bg-secondary-500 px-4 py-2.5 justify-center text-center items-center align-middle text-base font-bold uppercase text-white-100 shadow-md shadow-secondary-500/20 transition-all hover:shadow-lg hover:shadow-secondary-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+    @apply gap-2 flex select-none rounded-lg bg-secondary-500 px-4 py-2.5 justify-center text-center items-center align-middle text-base font-semibold uppercase text-white-100 shadow-md shadow-secondary-500/20 transition-all hover:shadow-lg hover:shadow-secondary-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
   }
   .toolbar-danger-icon-btn {
-    @apply gap-2 flex select-none rounded-lg bg-danger-500 py-2.5 px-4 justify-center text-center items-center align-middle text-base font-bold uppercase text-white-100 shadow-md shadow-danger-500/20 transition-all hover:shadow-lg hover:shadow-danger-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+    @apply gap-2 flex select-none rounded-lg bg-danger-500 py-2.5 px-4 justify-center text-center items-center align-middle text-base font-semibold uppercase text-white-100 shadow-md shadow-danger-500/20 transition-all hover:shadow-lg hover:shadow-danger-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
   }
   .toolbar-auxiliary-icon {
     @apply cursor-pointer hover:bg-white-600 ease-in-out duration-300 flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full;

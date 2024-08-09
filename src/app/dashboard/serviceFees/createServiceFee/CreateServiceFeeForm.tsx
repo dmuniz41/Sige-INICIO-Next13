@@ -234,7 +234,7 @@ export const CreateServiceFeeForm = () => {
           <Form.Item
             className="mb-3 w-[35%]"
             name="taskName"
-            label={<span className="font-bold text-md">Descripción</span>}
+            label={<span className="font-semibold text-md">Descripción</span>}
             rules={[{ required: true, message: "Campo requerido" }]}
           >
             <TextArea rows={3} />
@@ -242,7 +242,7 @@ export const CreateServiceFeeForm = () => {
           <article className="flex flex-col flex-1">
             <Form.Item
               className="mb-3"
-              label={<span className="font-bold text-md">Nomenclador</span>}
+              label={<span className="font-semibold text-md">Nomenclador</span>}
               name="nomenclatorId"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -250,7 +250,7 @@ export const CreateServiceFeeForm = () => {
             </Form.Item>
             <Form.Item
               className="mb-3"
-              label={<span className="font-bold text-md">Categoría</span>}
+              label={<span className="font-semibold text-md">Categoría</span>}
               name="category"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -272,7 +272,7 @@ export const CreateServiceFeeForm = () => {
           <article className="flex flex-col flex-1">
             <Form.Item
               className="mb-3 "
-              label={<span className="font-bold text-md">Cantidad de empleados</span>}
+              label={<span className="font-semibold text-md">Cantidad de empleados</span>}
               name="workersAmount"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -280,7 +280,7 @@ export const CreateServiceFeeForm = () => {
             </Form.Item>
             <Form.Item
               className="mb-3"
-              label={<span className="font-bold text-md">Unidad de Medida</span>}
+              label={<span className="font-semibold text-md">Unidad de Medida</span>}
               name="unitMeasure"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -299,7 +299,7 @@ export const CreateServiceFeeForm = () => {
           <article className="flex flex-col w-[150px]">
             <Form.Item
               className="mb-3 "
-              label={<span className="font-bold text-md">Cambio (USD)</span>}
+              label={<span className="font-semibold text-md">Cambio (USD)</span>}
               name="currencyChange"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -376,13 +376,13 @@ export const CreateServiceFeeForm = () => {
       <ServiceFeeViewSeccion name="IMPORTE TOTAL DE GASTOS" value={totalValue} />
       <EstimateTimeViewSeccion name="TIEMPO ESTIMADO" value={estimatedTime} />
       {/* <article className="flex gap-5">
-        <div className="font-bold text-base items-center flex">
+        <div className="font-semibold text-base items-center flex">
           <span>Coeficientes de Complejidad</span>
         </div>
         <div className="flex gap-2 pt-3 items-center">
           <Form.Item
             className="mb-3"
-            label={<span className="font-bold text-md">Alta</span>}
+            label={<span className="font-semibold text-md">Alta</span>}
             name="highComplexity"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
@@ -390,7 +390,7 @@ export const CreateServiceFeeForm = () => {
           </Form.Item>
           <Form.Item
             className="mb-3 "
-            label={<span className="font-bold text-md">Media</span>}
+            label={<span className="font-semibold text-md">Media</span>}
             name="mediumComplexity"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
@@ -398,7 +398,7 @@ export const CreateServiceFeeForm = () => {
           </Form.Item>
           <Form.Item
             className="mb-3 "
-            label={<span className="font-bold text-md">Baja</span>}
+            label={<span className="font-semibold text-md">Baja</span>}
             name="lowComplexity"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
@@ -409,7 +409,7 @@ export const CreateServiceFeeForm = () => {
       {/* <section className="flex gap-4 mt-4">
         <Form.Item
           className="mb-3 "
-          label={<span className="font-bold text-md">ONAT (%)</span>}
+          label={<span className="font-semibold text-md">ONAT (%)</span>}
           name="ONAT"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
@@ -417,7 +417,7 @@ export const CreateServiceFeeForm = () => {
         </Form.Item>
         <Form.Item
           className="mb-3 "
-          label={<span className="font-bold text-md">Margen Comercial (%)</span>}
+          label={<span className="font-semibold text-md">Margen Comercial (%)</span>}
           name="commercialMargin"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
@@ -425,7 +425,7 @@ export const CreateServiceFeeForm = () => {
         </Form.Item>
         <Form.Item
           className="mb-3 "
-          label={<span className="font-bold text-md">Talento Artístico</span>}
+          label={<span className="font-semibold text-md">Talento Artístico</span>}
           name="artisticTalent"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
@@ -435,7 +435,7 @@ export const CreateServiceFeeForm = () => {
       <Form.Item>
         <button
           type="submit"
-          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
+          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-semibold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
           onClick={() => {
             form
               .validateFields()

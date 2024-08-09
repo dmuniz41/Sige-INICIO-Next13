@@ -40,7 +40,7 @@ export const OperationsList: React.FC<CollectionCreateFormProps> = ({
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-bold text-lg">Operaciones</span>
+          <span className="font-semibold text-lg">Operaciones</span>
         </div>
       }
       centered
@@ -67,6 +67,7 @@ const OperationsTable: React.FC<Props> = (props) => {
   const searchInput = useRef<InputRef>(null);
   const operations = props.operations;
 
+  // TODO: REVISAR
   const data: DataType[] = useMemo(() => operations, [operations]);
 
   const handleSearch = (
@@ -170,11 +171,12 @@ const OperationsTable: React.FC<Props> = (props) => {
       width: "10%",
       ...getColumnSearchProps("tipo"),
       render: (tipo: string) => (
-        <Tag className="font-bold" color={tipo === "Añadir" ? "#34b042" : "#ff0000"} key={tipo}>
+        <Tag className="font-semibold" color={tipo === "Añadir" ? "#34b042" : "#ff0000"} key={tipo}>
           {tipo.toUpperCase()}
         </Tag>
       )
     },
+    // TODO: REVISAR
     {
       title: "Fecha",
       dataIndex: "date",

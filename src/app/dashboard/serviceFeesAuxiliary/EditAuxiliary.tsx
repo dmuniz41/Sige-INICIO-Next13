@@ -77,7 +77,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
         <div className="flex gap-2 pr-[13rem]">
           <Form.Item
             className="mb-3 flex-1"
-            label={<span className="font-bold text-md">Cambio USD</span>}
+            label={<span className="font-semibold text-md">Cambio USD</span>}
             name="currencyChange"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
@@ -87,7 +87,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
         <div className="flex gap-2 pr-[13rem]">
           <Form.Item
             className="mb-3 flex-1"
-            label={<span className="font-bold text-md">Coeficiente de Cálculo</span>}
+            label={<span className="font-semibold text-md">Coeficiente de Cálculo</span>}
             name="calculationCoefficient"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
@@ -97,7 +97,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
         <div className="flex gap-2 pr-[13rem]">
           <Form.Item
             className="mb-3 flex-1"
-            label={<span className="font-bold text-md">Coef. de Cambio Informal</span>}
+            label={<span className="font-semibold text-md">Coef. de Cambio Informal</span>}
             name="officialCurrencyChangeCoefficient"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
@@ -107,7 +107,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
         <div className="flex gap-2 pr-[13rem]">
           <Form.Item
             className="mb-3 flex-1"
-            label={<span className="font-bold text-md">Cambio Informal</span>}
+            label={<span className="font-semibold text-md">Cambio Informal</span>}
             name="informalCurrencyChange"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
@@ -117,7 +117,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
         <div className="flex gap-2 pr-[13rem]">
           <Form.Item
             className="mb-3 flex-1"
-            label={<span className="font-bold text-md">Coeficiente de Merma</span>}
+            label={<span className="font-semibold text-md">Coeficiente de Merma</span>}
             name="mermaCoefficient"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
@@ -127,7 +127,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
         <div className="flex gap-2 pr-[13rem]">
           <Form.Item
             className="mb-3 flex-1"
-            label={<span className="font-bold text-md">Coeficiente de Salarios Indirectos</span>}
+            label={<span className="font-semibold text-md">Coeficiente de Salarios Indirectos</span>}
             name="indirectSalariesCoefficient"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
@@ -135,7 +135,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
           </Form.Item>
         </div>
         {/* Listado de Coeficientes de Gastos Administrativos */}
-        <label className="font-bold text-md">Coeficientes de Gastos Administrativos: </label>
+        <label className="font-semibold text-md">Coeficientes de Gastos Administrativos: </label>
         <Form.List name="administrativeExpenses">
           {(fields, { add, remove }) => (
             <div className="flex flex-col w-full mt-5">
@@ -176,7 +176,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
           )}
         </Form.List>
         {/* Listado de Coeficientes de Depreciacion de Equipos */}
-        <label className="font-bold text-md">Coeficientes de Depreciación de Equipos: </label>
+        <label className="font-semibold text-md">Coeficientes de Depreciación de Equipos: </label>
         <Form.List name="equipmentDepreciation">
           {(fields, { add, remove }) => (
             <div className="flex flex-col w-full mt-5">
@@ -217,7 +217,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
           )}
         </Form.List>
         {/* Listado de Coeficientes de Mantenimiento de Equipos */}
-        <label className="font-bold text-md">Coeficientes de Mantenimiento de Equipos: </label>
+        <label className="font-semibold text-md">Coeficientes de Mantenimiento de Equipos: </label>
         <Form.List name="equipmentMaintenance">
           {(fields, { add, remove }) => (
             <div className="flex flex-col w-full mt-5">
@@ -258,7 +258,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
           )}
         </Form.List>
         {/* Listado de Coeficientes de Gastos de Transportacion */}
-        <label className="font-bold text-md">Coeficientes de Gastos de Transportacion: </label>
+        <label className="font-semibold text-md">Coeficientes de Gastos de Transportacion: </label>
         <Form.List name="transportationExpenses">
           {(fields, { add, remove }) => (
             <div className="flex flex-col w-full mt-5">
@@ -302,7 +302,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
       <Form.Item>
         <button
           type="submit"
-          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
+          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-semibold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
           onClick={() => {
             form
               .validateFields()

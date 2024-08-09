@@ -59,7 +59,7 @@ export const EditRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-bold text-lg">Editar Materia Prima</span>
+          <span className="font-semibold text-lg">Editar Materia Prima</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -170,15 +170,15 @@ export const EditRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
           />
         </Form.Item>
         <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Unidad de Medida:</span>
+          <span className="font-semibold">Unidad de Medida:</span>
           <span>{currentUnitMeasure}</span>
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Precio:</span>
+          <span className="font-semibold">Precio:</span>
           <span>${currentPrice?.toFixed(2)}</span>
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Importe:</span>
+          <span className="font-semibold">Importe:</span>
           <span>${rawMaterialValue?.toFixed(2)}</span>
         </div>
       </Form>

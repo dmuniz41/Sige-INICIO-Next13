@@ -22,7 +22,7 @@ export const AddItemModal: React.FC<CollectionCreateFormProps> = ({
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-bold text-lg">Nuevo Item</span>
+          <span className="font-semibold text-lg">Nuevo Item</span>
         </div>
       }
       style={{ textAlign: "left" }}

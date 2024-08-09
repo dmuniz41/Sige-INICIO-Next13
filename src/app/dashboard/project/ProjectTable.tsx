@@ -327,7 +327,7 @@ const ProjectTable: React.FC = () => {
 
   const columns: ColumnsType<IProject> = [
     {
-      title: <span className="font-bold">Nombre del Proyecto</span>,
+      title: <span className="font-semibold">Nombre del Proyecto</span>,
       dataIndex: "projectName",
       key: "projectName",
       width: "30%",
@@ -335,7 +335,7 @@ const ProjectTable: React.FC = () => {
       ...getColumnSearchProps("projectName")
     },
     {
-      title: <span className="font-bold">Cliente</span>,
+      title: <span className="font-semibold">Cliente</span>,
       dataIndex: "clientName",
       key: "clientName",
       width: "10%",
@@ -344,7 +344,7 @@ const ProjectTable: React.FC = () => {
       filterSearch: true
     },
     {
-      title: <span className="font-bold">Cobrado por</span>,
+      title: <span className="font-semibold">Cobrado por</span>,
       dataIndex: "payMethod",
       key: "payMethod",
       width: "8%",
@@ -353,7 +353,7 @@ const ProjectTable: React.FC = () => {
       filterSearch: true
     },
     {
-      title: <span className="font-bold">Moneda</span>,
+      title: <span className="font-semibold">Moneda</span>,
       dataIndex: "currency",
       key: "currency",
       width: "5%",
@@ -362,7 +362,7 @@ const ProjectTable: React.FC = () => {
       filterSearch: true
     },
     {
-      title: <span className="font-bold">Estado</span>,
+      title: <span className="font-semibold">Estado</span>,
       dataIndex: "status",
       key: "status",
       width: "5%",
@@ -372,32 +372,32 @@ const ProjectTable: React.FC = () => {
       render: (_, { status }) => (
         <>
           {status === "Cerrado" && (
-            <Tag className="font-bold" color="#34b042" key={status}>
+            <Tag className="font-semibold" color="#34b042" key={status}>
               {status.toUpperCase()}
             </Tag>
           )}
           {status === "Cobrado" && (
-            <Tag className="font-bold" color="#34b042" key={status}>
+            <Tag className="font-semibold" color="#34b042" key={status}>
               {status.toUpperCase()}
             </Tag>
           )}
           {status === "Terminado" && (
-            <Tag className="font-bold" color="#34395e" key={status}>
+            <Tag className="font-semibold" color="#34395e" key={status}>
               {status.toUpperCase()}
             </Tag>
           )}
           {status === "Contratado" && (
-            <Tag className="font-bold" color="#ff6600" key={status}>
+            <Tag className="font-semibold" color="#ff6600" key={status}>
               {status.toUpperCase()}
             </Tag>
           )}
           {status === "Calculado" && (
-            <Tag className="font-bold" color="#ff6600" key={status}>
+            <Tag className="font-semibold" color="#ff6600" key={status}>
               {status.toUpperCase()}
             </Tag>
           )}
           {status === "Pendiente de Oferta" && (
-            <Tag className="font-bold" color="#ffa426" key={status}>
+            <Tag className="font-semibold" color="#ffa426" key={status}>
               {status.toUpperCase()}
             </Tag>
           )}
@@ -405,7 +405,7 @@ const ProjectTable: React.FC = () => {
       )
     },
     {
-      title: <span className="font-bold">Precio</span>,
+      title: <span className="font-semibold">Precio</span>,
       dataIndex: "totalValue",
       key: "totalValue",
       width: "10%",
@@ -419,7 +419,7 @@ const ProjectTable: React.FC = () => {
       }
     },
     {
-      title: <span className="font-bold">Gastos</span>,
+      title: <span className="font-semibold">Gastos</span>,
       dataIndex: "expenses",
       key: "expenses",
       width: "10%",
@@ -433,7 +433,7 @@ const ProjectTable: React.FC = () => {
       }
     },
     {
-      title: <span className="font-bold">Ganancia</span>,
+      title: <span className="font-semibold">Ganancia</span>,
       dataIndex: "profits",
       key: "profits",
       width: "10%",
@@ -447,7 +447,7 @@ const ProjectTable: React.FC = () => {
       }
     },
     {
-      title: <span className="font-bold">Fecha</span>,
+      title: <span className="font-semibold">Fecha</span>,
       dataIndex: "initDate",
       key: "initDate",
       width: "5%",
@@ -455,7 +455,7 @@ const ProjectTable: React.FC = () => {
       ...getColumnSearchProps("initDate")
     },
     {
-      title: <span className="font-bold">Acciones</span>,
+      title: <span className="font-semibold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, { ...record }) => (

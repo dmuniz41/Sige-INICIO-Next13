@@ -7,7 +7,7 @@ export const ActivitiesTable = (props: any) => {
 
   const columns: ColumnsType<IActivity> = [
     {
-      title: <span className="font-bold">Descripción</span>,
+      title: <span className="font-semibold">Descripción</span>,
       dataIndex: "description",
       key: "description",
       width: "50%",
@@ -18,14 +18,14 @@ export const ActivitiesTable = (props: any) => {
       )
     },
     {
-      title: <span className="font-bold">U/M</span>,
+      title: <span className="font-semibold">U/M</span>,
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "10%",
       render: (text) => <span>{text.replace("$/", "")}</span>
     },
     {
-      title: <span className="font-bold">Cantidad</span>,
+      title: <span className="font-semibold">Cantidad</span>,
       dataIndex: "amount",
       key: "amount",
       width: "5%",
@@ -36,7 +36,7 @@ export const ActivitiesTable = (props: any) => {
       )
     },
     {
-      title: <span className="font-bold">Precio CUP</span>,
+      title: <span className="font-semibold">Precio CUP</span>,
       dataIndex: "price",
       key: "price",
       width: "5%",
@@ -47,7 +47,7 @@ export const ActivitiesTable = (props: any) => {
       )
     },
     {
-      title: <span className="font-bold">Importe CUP</span>,
+      title: <span className="font-semibold">Importe CUP</span>,
       dataIndex: "value",
       key: "value",
       width: "5%",

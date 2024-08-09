@@ -133,7 +133,7 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
         </div>
       </article>
       <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-4">
-        <h1 className="flex gap-4 text-xl font-bold mb-2">
+        <h1 className="flex gap-4 text-xl font-semibold mb-2">
           {`${selectedOffer?.projectName} (${selectedOffer?.version})`}
           {selectedOffer?.isFinalOffer ? (
             <div className="text-success-500 flex items-center">
@@ -144,7 +144,7 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
           )}
         </h1>
         <div className="flex gap-1 mb-2">
-          <h2 className="font-bold">Representación: </h2>
+          <h2 className="font-semibold">Representación: </h2>
           <span>{selectedOffer?.representativeName}</span>
         </div>
         {selectedOffer?.itemsList?.map((item, index) => (
@@ -153,7 +153,7 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
           </div>
         ))}
         <article className="flex items-center justify-end h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-lg">
-          <div className="flex font-bold">
+          <div className="flex font-semibold">
             <h2>VALOR TOTAL : </h2>
           </div>
           <div className="flex px-4">

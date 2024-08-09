@@ -1,8 +1,10 @@
 {
   "cSpell.words": [
     "adicion",
+    "borrará",
     "COMERCIAL",
     "CONSIDERADO",
+    "Contacto",
     "CUADRADAS",
     "expirado",
     "Hacer",
@@ -14,6 +16,7 @@
     "MUTIPLICA",
     "operaciones",
     "pago",
+    "permanente",
     "sustraccion",
     "vean"
   ],
@@ -35,5 +38,8 @@
     },
     "[jsonc]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }, // set as "true" to run 'prettier' last not first
+    },
+    "conventionalCommits.scopes": [
+      "App"
+    ], // set as "true" to run 'prettier' last not first
 }

@@ -47,7 +47,7 @@ export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-bold text-lg">Editar Tarea</span>
+          <span className="font-semibold text-lg">Editar Tarea</span>
         </div>
       }
       cancelText="Cancelar"
@@ -218,7 +218,7 @@ export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({
         >
           <InputNumber min={0} />
         </Form.Item> */}
-        <span className="flex mb-2 font-bold">Complejidad:</span>
+        <span className="flex mb-2 font-semibold">Complejidad:</span>
         <div className="flex gap-2">
           <Form.Item
             name="highComplexity"
@@ -242,7 +242,7 @@ export const EditServiceFeeTaskForm: React.FC<CollectionCreateFormProps> = ({
             <InputNumber min={0} />
           </Form.Item>
         </div>
-        <span className="flex mb-2 font-bold">Tiempo por Complejidad (h):</span>
+        <span className="flex mb-2 font-semibold">Tiempo por Complejidad (h):</span>
         <div className="flex gap-2">
           <Form.Item
             name="highComplexityTime"

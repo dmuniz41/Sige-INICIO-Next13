@@ -110,7 +110,7 @@ export const CreateProjectForm = () => {
           <div className="grid w-[50%]">
             <Form.Item
               className="mb-3"
-              label={<span className="font-bold text-md">Nombre del Cliente</span>}
+              label={<span className="font-semibold text-md">Nombre del Cliente</span>}
               name="clientName"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -136,7 +136,7 @@ export const CreateProjectForm = () => {
             </Form.Item>
             <Form.Item
               className="mb-3"
-              label={<span className="font-bold text-md">Proyecto</span>}
+              label={<span className="font-semibold text-md">Proyecto</span>}
               name="projectName"
               rules={[
                 { required: true, message: "Campo requerido" },
@@ -161,7 +161,7 @@ export const CreateProjectForm = () => {
             </Form.Item>
             <Form.Item
               className="mb-3"
-              label={<span className="font-bold text-md">Fecha de creación</span>}
+              label={<span className="font-semibold text-md">Fecha de creación</span>}
               name="initDate"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -170,7 +170,7 @@ export const CreateProjectForm = () => {
             <Form.Item
               className="mb-3"
               label={
-                <span className="font-bold text-md">Fecha en la que se necesita el servicio</span>
+                <span className="font-semibold text-md">Fecha en la que se necesita el servicio</span>
               }
               name="deliveryDate"
               rules={[{ required: true, message: "Campo requerido" }]}
@@ -179,7 +179,7 @@ export const CreateProjectForm = () => {
             </Form.Item>
             <Form.Item
               className="mb-3"
-              label={<span className="font-bold text-md">Moneda </span>}
+              label={<span className="font-semibold text-md">Moneda </span>}
               name="currency"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -215,7 +215,7 @@ export const CreateProjectForm = () => {
       <Form.Item>
         <button
           type="submit"
-          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-semibold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
           onClick={() => {
             form
               .validateFields()
@@ -281,19 +281,19 @@ const TableFormSection = (props: any) => {
 
   const columns: ColumnsType<IOfferItem> = [
     {
-      title: <span className="font-bold">No.</span>,
+      title: <span className="font-semibold">No.</span>,
       width: "5%",
       align: "center",
       render: (text, record, index) => index + 1
     },
     {
-      title: <span className="font-bold">Descripción</span>,
+      title: <span className="font-semibold">Descripción</span>,
       dataIndex: "description",
       key: "description",
       width: "90%"
     },
     {
-      title: <span className="font-bold">Acciones</span>,
+      title: <span className="font-semibold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, { ...record }) => (
@@ -316,7 +316,7 @@ const TableFormSection = (props: any) => {
   return (
     <section className=" flex w-full rounded-md p-2 border border-border_light shadow-sm">
       <div className="flex px-7 h-full text-center items-center justify-center bg-[#fafafa] rounded-l-md">
-        <span className="text-base font-bold">{sectionName?.toUpperCase()}</span>
+        <span className="text-base font-semibold">{sectionName?.toUpperCase()}</span>
       </div>
       <div className="grid pl-2 w-full gap-2">
         <Table

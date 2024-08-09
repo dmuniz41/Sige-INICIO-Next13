@@ -24,7 +24,7 @@ export const EditWarehouseForm: React.FC<CollectionCreateFormProps> = ({
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-bold text-lg">Editar Almacén</span>
+          <span className="font-semibold text-lg">Editar Almacén</span>
         </div>
       }
       centered

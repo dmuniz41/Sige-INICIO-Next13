@@ -48,16 +48,13 @@ const MaterialsNomenclatorsTable: React.FC = () => {
     dispatch(materialNomenclatorsStartLoading());
   }, [dispatch]);
 
-  const { materialsNomenclators }: { materialsNomenclators: IMaterialNomenclator[] } =
-    useAppSelector((state: RootState) => state?.nomenclator);
+  const { materialsNomenclators }: { materialsNomenclators: IMaterialNomenclator[] } = useAppSelector(
+    (state: RootState) => state?.nomenclator
+  );
 
   let data: IMaterialNomenclator[] = useMemo(() => materialsNomenclators, [materialsNomenclators]);
 
-  const handleSearch = (
-    selectedKeys: string[],
-    confirm: (param?: FilterConfirmProps) => void,
-    dataIndex: DataIndex
-  ) => {
+  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -122,11 +119,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
           >
             Search
           </Button>
-          <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{ width: 90 }}
-          >
+          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
             Reset
           </Button>
           <Button
@@ -152,9 +145,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
-    ),
+    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
     onFilter: (value, record) =>
       record[dataIndex]!.toString()
         .toLowerCase()
@@ -179,7 +170,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
 
   const columns: ColumnsType<IMaterialNomenclator> = [
     {
-      title: <span className="font-bold">Nombre</span>,
+      title: <span className="font-semibold">Nombre</span>,
       dataIndex: "name",
       key: "name",
       width: "30%",
@@ -190,12 +181,10 @@ const MaterialsNomenclatorsTable: React.FC = () => {
       title: (
         <Tooltip
           placement="top"
-          title={
-            "Si el material es gastable se le aplica un coeficiente de merma durante el calculo de la ficha de costo"
-          }
+          title={"Si el material es gastable se le aplica un coeficiente de merma durante el calculo de la ficha de costo"}
         >
           <div className="flex w-fit gap-2 items-center">
-            <span className="font-bold">Gastable</span>
+            <span className="font-semibold">Gastable</span>
             <InfoCircleSvg width={20} height={20} />
           </div>
         </Tooltip>
@@ -205,16 +194,12 @@ const MaterialsNomenclatorsTable: React.FC = () => {
       width: "20%",
       render: (_, { ...record }) => (
         <div className="flex gap-1 ">
-          {record.isDecrease ? (
-            <Badge status="warning" text="Gastable" />
-          ) : (
-            <Badge status="success" text="No Gastable" />
-          )}
+          {record.isDecrease ? <Badge status="warning" text="Gastable" /> : <Badge status="success" text="No Gastable" />}
         </div>
       )
     },
     {
-      title: <span className="font-bold">Acciones</span>,
+      title: <span className="font-semibold">Acciones</span>,
       key: "actions",
       width: "5%",
       align: "center",
@@ -222,11 +207,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
         <div className="flex gap-1 justify-center">
           {canEdit ? (
             <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
-              <button
-                disabled={!canList}
-                onClick={() => handleEdit(record)}
-                className="table-see-action-btn"
-              >
+              <button disabled={!canList} onClick={() => handleEdit(record)} className="table-see-action-btn">
                 <EditSvg width={20} height={20} />
               </button>
             </Tooltip>
@@ -235,11 +216,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
           )}
 
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canDelete}
-              onClick={() => handleDelete(record._id)}
-              className="table-delete-action-btn"
-            >
+            <button disabled={!canDelete} onClick={() => handleDelete(record._id)} className="table-delete-action-btn">
               <DeleteSvg width={20} height={20} />
             </button>
           </Tooltip>
@@ -252,10 +229,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
     <>
       <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <div className="flex gap-2">
-          <button
-            onClick={() => setCreateNewModal(true)}
-            className={`${canCreate ? "toolbar-primary-icon-btn" : "bg-success-200"} `}
-          >
+          <button onClick={() => setCreateNewModal(true)} className={`${canCreate ? "toolbar-primary-icon-btn" : "bg-success-200"} `}>
             <PlusSvg />
             Nuevo
           </button>
@@ -264,9 +238,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
           <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
             <button
               className={`${
-                canList
-                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                  : "opacity-20 pt-2 pl-2"
+                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={() => dispatch(materialNomenclatorsStartLoading())}
             >
@@ -282,11 +254,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
         pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
         className="shadow-md"
       />
-      <CreateMaterialNomenclatorForm
-        open={createNewModal}
-        onCancel={() => setCreateNewModal(false)}
-        onCreate={onCreate}
-      />
+      <CreateMaterialNomenclatorForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
       <EditMaterialNomenclatorForm
         open={editModal}
         onCancel={() => {

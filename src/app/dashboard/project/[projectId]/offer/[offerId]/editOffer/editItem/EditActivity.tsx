@@ -77,13 +77,13 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
     amount: number;
   }> = [
     {
-      title: <span className="font-bold">Descripción</span>,
+      title: <span className="font-semibold">Descripción</span>,
       dataIndex: "description",
       key: "description",
       width: "70%"
     },
     {
-      title: <span className="font-bold">Cantidad</span>,
+      title: <span className="font-semibold">Cantidad</span>,
       dataIndex: "size",
       key: "size",
       width: "10%",
@@ -97,13 +97,13 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
       )
     },
     {
-      title: <span className="font-bold">Unidad de Medida</span>,
+      title: <span className="font-semibold">Unidad de Medida</span>,
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "20%"
     },
     {
-      title: <span className="font-bold">Acciones</span>,
+      title: <span className="font-semibold">Acciones</span>,
       width: "10%",
       render: (_, { ...record }) => (
         <div className="flex gap-1 justify-center">
@@ -129,7 +129,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-bold text-lg">Editar Actividad</span>
+          <span className="font-semibold text-lg">Editar Actividad</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -217,7 +217,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
         // initialValues={{ complexity: defaultValues?.complexity }}
       >
         <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Descripción:</span>
+          <span className="font-semibold">Descripción:</span>
           <span>{defaultValues?.description}</span>
         </div>
         {/* SOLO SE MUESTRA SI LA UNIDAD DE MEDIDA DE LA TARIFA ES EN UNIDADES LINEALES */}
@@ -364,7 +364,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
                 <div
                   className={`flex gap-2 pl-2 mb-4 ${currentUnitMeasure.includes("Unidad (U)") || (currentUnitMeasure?.includes("Metro (m)") && "hidden")}`}
                 >
-                  <span className="font-bold">Cantidad:</span>
+                  <span className="font-semibold">Cantidad:</span>
                   <span>
                     {!form.getFieldValue("amount")
                       ? 0
@@ -376,7 +376,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
                 </div>
               ) : (
                 <div className=" flex gap-2 pl-2 mb-4">
-                  <span className="font-bold">Tamaño:</span>
+                  <span className="font-semibold">Tamaño:</span>
                   <span>
                     {activitiesTableValues
                       ?.reduce(
@@ -393,7 +393,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
                 </div>
               )}
               <div className=" flex gap-2 pl-2 mb-4">
-                <span className="font-bold">Precio:</span>
+                <span className="font-semibold">Precio:</span>
                 <span>
                   $
                   {currentPrice?.toLocaleString("DE", {
@@ -403,7 +403,7 @@ export const EditActivityModal: React.FC<CollectionCreateFormProps> = ({
                 </span>
               </div>
               <div className=" flex gap-2 pl-2 mb-4">
-                <span className="font-bold">Importe:</span>
+                <span className="font-semibold">Importe:</span>
                 <span>
                   $
                   {currentUnitMeasure?.includes("Unidad (U)") ||

@@ -22,7 +22,7 @@ export const EditRepresentativeNomenclatorForm: React.FC<CollectionCreateFormPro
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-bold text-lg">Nuevo Cliente</span>
+          <span className="font-semibold text-lg">Nuevo Cliente</span>
         </div>
       }
       style={{ textAlign: "left" }}

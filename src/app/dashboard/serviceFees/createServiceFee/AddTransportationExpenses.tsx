@@ -45,7 +45,7 @@ export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps>
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-bold text-lg">Gastos de Transportación</span>
+          <span className="font-semibold text-lg">Gastos de Transportación</span>
         </div>
       }
       cancelText="Cancelar"
@@ -138,15 +138,15 @@ export const AddTransportationExpensesModal: React.FC<CollectionCreateFormProps>
           />
         </Form.Item>
         <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Unidad de Medida:</span>
+          <span className="font-semibold">Unidad de Medida:</span>
           <span>$/m2</span>
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Precio/UM:</span>
+          <span className="font-semibold">Precio/UM:</span>
           <span>${currentTransportationExpense?.value?.toFixed(2)}</span>
         </div>
         <div className=" flex gap-2 pl-2 mb-4">
-          <span className="font-bold">Importe:</span>
+          <span className="font-semibold">Importe:</span>
           <span>${!currentPrice ? 0 : currentPrice?.toFixed(2)}</span>
         </div>
       </Form>

@@ -131,36 +131,36 @@ export const CostSheetView = () => {
 
       <article className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-2">
         {/* <div className="flex pr-20">
-          <h2 className="font-bold mr-auto w-[100%] flex pl-2">
+          <h2 className="font-semibold mr-auto w-[100%] flex pl-2">
             Tarea a ejecutar: <span className="ml-2 font-normal flex-1">{selectedCostSheet.taskName}</span>
           </h2>
         </div> */}
         <section className="w-full flex flex-row p-2 ">
-          <label className="font-bold mr-2 ">Descripción del servicio:</label>
+          <label className="font-semibold mr-2 ">Descripción del servicio:</label>
           <p className="w-[40%]">{selectedCostSheet.description}</p>
           <div className="w-[15%] flex flex-col pl-10">
-            <label className="font-bold">
+            <label className="font-semibold">
               Creador: <span className="font-normal">INICIO</span>
             </label>
-            <label className="font-bold">
+            <label className="font-semibold">
               Cantidad de trabajadores:{" "}
               <span className="font-normal">{selectedCostSheet.workersAmount}</span>
             </label>
           </div>
           <div className="flex flex-1 flex-col pl-10">
-            <label className="font-bold">
+            <label className="font-semibold">
               Nomenclador: <span className="font-normal">{selectedCostSheet.nomenclatorId}</span>
             </label>
-            <label className="font-bold">
+            <label className="font-semibold">
               Categoría: <span className="font-normal">{selectedCostSheet.category}</span>
             </label>
           </div>
           <div className="flex flex-1 flex-col pl-10">
-            <label className="font-bold">
+            <label className="font-semibold">
               Precio/UM:{" "}
               <span className="font-normal">{selectedCostSheet.valuePerUnitMeasure}</span>
             </label>
-            <label className="font-bold">
+            <label className="font-semibold">
               Cliente: <span className="font-normal">Cliente</span>
             </label>
           </div>
@@ -188,10 +188,10 @@ export const CostSheetView = () => {
           />
           <div className="flex w-full h-10 items-center border-solid border-[1px] mt-1 ">
             <div className="flex flex-1 justify-end pr-4">
-              <label className="font-bold">Importe Total de Costos:</label>
+              <label className="font-semibold">Importe Total de Costos:</label>
             </div>
             <div className="flex border-l-[1px] border-solid w-[8.7%] h-full items-center justify-center bg-background_light">
-              <span className="font-bold">
+              <span className="font-semibold">
                 ${(selectedCostSheet.costsTotalValue * 1).toFixed(2)}
               </span>
             </div>
@@ -218,20 +218,20 @@ export const CostSheetView = () => {
           />
           <div className="flex w-full h-10 items-center border-solid border-[1px] mt-1 ">
             <div className="flex flex-1 justify-end pr-4">
-              <label className="font-bold">Importe Total de Gastos:</label>
+              <label className="font-semibold">Importe Total de Gastos:</label>
             </div>
             <div className="flex border-l-[1px] border-solid w-[8.7%] h-full items-center justify-center bg-background_light">
-              <span className="font-bold">
+              <span className="font-semibold">
                 ${(selectedCostSheet.expensesTotalValue * 1).toFixed(2)}
               </span>
             </div>
           </div>
           <div className="flex w-full h-10 items-center border-solid border-[1px] mt-1 ">
             <div className="flex flex-1 justify-end pr-4">
-              <label className="font-bold">Importe Total de Costos y Gastos:</label>
+              <label className="font-semibold">Importe Total de Costos y Gastos:</label>
             </div>
             <div className="flex border-l-[1px] border-solid w-[8.7%] h-full items-center justify-center bg-background_light">
-              <span className="font-bold">
+              <span className="font-semibold">
                 ${(selectedCostSheet.expensesAndCostsTotalValue * 1).toFixed(2)}
               </span>
             </div>
@@ -239,19 +239,19 @@ export const CostSheetView = () => {
         </section>
         <section className="w-full flex flex-row gap-5 p-2">
           <div className="flex flex-col w-[40%]">
-            <label className="font-bold">
+            <label className="font-semibold">
               Talento Artístico ({selectedCostSheet.artisticTalent}%):{" "}
               <span className="font-normal">
                 ${(selectedCostSheet.artisticTalentValue * 1).toFixed(2)}
               </span>
             </label>
-            <label className="font-bold">
+            <label className="font-semibold">
               Utilidad ({selectedCostSheet.representationCost}%):{" "}
               <span className="font-normal">
                 ${(selectedCostSheet.representationCostValue * 1).toFixed(2)}
               </span>
             </label>
-            <label className="font-bold">
+            <label className="font-semibold">
               Precio del Creador:{" "}
               <span className="font-normal">
                 ${(selectedCostSheet.creatorPrice * 1).toFixed(2)}
@@ -259,17 +259,17 @@ export const CostSheetView = () => {
             </label>
           </div>
           <div className="flex flex-col w-[40%]">
-            <label className="font-bold">
+            <label className="font-semibold">
               Materias Primas y Materiales Aportados por el Cliente:{" "}
               <span className="font-normal">
                 ${(selectedCostSheet.rawMaterialsByClient * 1).toFixed(2)}
               </span>
             </label>
-            <label className="font-bold">
+            <label className="font-semibold">
               Precio de Venta (MN):{" "}
               <span className="font-normal">${(selectedCostSheet.salePrice * 1).toFixed(2)}</span>
             </label>
-            <label className="font-bold">
+            <label className="font-semibold">
               Precio de Venta (MLC):{" "}
               <span className="font-normal">
                 ${(selectedCostSheet.salePriceMLC * 1).toFixed(2)}

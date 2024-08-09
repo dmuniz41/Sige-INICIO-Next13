@@ -23,7 +23,7 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-bold text-lg">Gastos de Personal Contratado</span>
+          <span className="font-semibold text-lg">Gastos de Personal Contratado</span>
         </div>
       }
       cancelText="Cancelar"
@@ -84,14 +84,14 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
         ]}
       >
         <section className="pl-[8rem] flex gap-10 my-4 ">
-          <span className="font-bold">Cantidad</span>
-          <span className="font-bold">Precio</span>
-          <span className="font-bold">Importe</span>
+          <span className="font-semibold">Cantidad</span>
+          <span className="font-semibold">Precio</span>
+          <span className="font-semibold">Importe</span>
         </section>
         {/* Salarios Indirectos */}
         <section className="flex gap-2 items-center">
           <div className="flex pr-2">
-            <span className="font-bold">Salarios Indirectos:</span>
+            <span className="font-semibold">Salarios Indirectos:</span>
           </div>
           <div className=" flex w-[5rem]">
             <span>$ {activitiesTotalValue?.toFixed(2)}</span>
@@ -106,7 +106,7 @@ export const AddHiredPersonalExpensesModal: React.FC<CollectionCreateFormProps> 
         {/* Subcontratación */}
         <section className="flex gap-2 items-center">
           <div className="flex pr-2">
-            <span className="font-bold">Subcontratación:</span>
+            <span className="font-semibold">Subcontratación:</span>
           </div>
           <Form.Item className="flex mt-5" name="subcontractAmount">
             <InputNumber

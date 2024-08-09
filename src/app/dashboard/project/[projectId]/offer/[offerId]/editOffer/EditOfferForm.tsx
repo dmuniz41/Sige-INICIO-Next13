@@ -127,10 +127,10 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
       >
         <section className="flex gap-4 flex-col w-full overflow-none rounded-md shadow-md p-4">
           <div className="grid gap-2">
-            <h1 className="text-xl font-bold mb-2">{selectedOffer?.projectName}</h1>
+            <h1 className="text-xl font-semibold mb-2">{selectedOffer?.projectName}</h1>
             <Form.Item
               className="mb-3 w-[30%]"
-              label={<span className="font-bold text-md">Representación</span>}
+              label={<span className="font-semibold text-md">Representación</span>}
               name="representativeName"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -179,7 +179,7 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
             Añadir Item
           </button>
           <article className="flex items-center justify-end h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-lg">
-            <div className="flex font-bold">
+            <div className="flex font-semibold">
               <h2>VALOR TOTAL : </h2>
             </div>
             <div className="flex px-4">$ {totalValue}</div>
@@ -188,7 +188,7 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
         <Form.Item>
           <button
             type="submit"
-            className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
+            className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-semibold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
             onClick={() => {
               form
                 .validateFields()

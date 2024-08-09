@@ -35,7 +35,7 @@ export const MinusMaterialForm: React.FC<CollectionCreateFormProps> = ({
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-bold text-lg">Sustraer Material</span>
+          <span className="font-semibold text-lg">Sustraer Material</span>
         </div>
       }
       centered

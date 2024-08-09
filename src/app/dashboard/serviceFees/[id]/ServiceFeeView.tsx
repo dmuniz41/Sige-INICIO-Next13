@@ -54,27 +54,27 @@ export const ServiceFeeView = () => {
 
       <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-2">
         <article className="w-full flex flex-row p-4 ">
-          <label className="font-bold mr-3 ">Descripción del servicio:</label>
+          <label className="font-semibold mr-3 ">Descripción del servicio:</label>
           <p className="w-[25%]">{selectedServiceFee.taskName}</p>
           <div className="w-[20%] flex flex-col pl-10">
-            <label className="font-bold">
+            <label className="font-semibold">
               Creador: <span className="font-normal">INICIO</span>
             </label>
-            <label className="font-bold">
+            <label className="font-semibold">
               Cantidad de trabajadores:
               <span className="font-normal"> {selectedServiceFee?.workersAmount}</span>
             </label>
           </div>
           <div className="flex w-[20%] flex-col">
-            <label className="font-bold">
+            <label className="font-semibold">
               Nomenclador: <span className="font-normal">{selectedServiceFee?.nomenclatorId}</span>
             </label>
-            <label className="font-bold">
+            <label className="font-semibold">
               Categoría: <span className="font-normal">{selectedServiceFee?.category}</span>
             </label>
           </div>
           <div className="flex flex-1 flex-col">
-            <label className="font-bold">
+            <label className="font-semibold">
               Unidad de Medida: <span className="font-normal">{selectedServiceFee?.unitMeasure}</span>
             </label>
           </div>
@@ -130,12 +130,12 @@ export const ServiceFeeView = () => {
         /> */}
 
         <article className="flex justify-end pl-4 pr-4 items-center h-[39px] flex-grow bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
-          <div className="flex w-[150px] font-bold pl-2">MN</div>
+          <div className="flex w-[150px] font-semibold pl-2">MN</div>
           <Divider type="vertical" />
-          <div className="flex w-[150px] font-bold pl-2">USD</div>
+          <div className="flex w-[150px] font-semibold pl-2">USD</div>
         </article>
         {/* <article className="flex pl-4 pr-4 items-center h-[39px] flex-grow bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
-          <div className="flex flex-grow justify-end pr-4 font-bold">
+          <div className="flex flex-grow justify-end pr-4 font-semibold">
             <h2>PRECIO DE VENTA </h2>
           </div>
           <div className="flex w-[150px] pl-2">
@@ -160,7 +160,7 @@ export const ServiceFeeView = () => {
               key={index}
               className="flex pl-4 pr-4 items-center h-[39px] flex-grow bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg"
             >
-              <div className="flex flex-grow justify-end pr-4 font-bold">
+              <div className="flex flex-grow justify-end pr-4 font-semibold">
                 <h2>PRECIO DE VENTA {representative.representativeName}: </h2>
               </div>
               <div className="flex w-[150px] pl-2">
@@ -202,7 +202,7 @@ export const ServiceFeeViewSeccion = (props: any) => {
   const { name, value } = props;
   return (
     <article className="flex items-center pr-4 h-[39px] bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
-      <div className="flex flex-1 justify-end pr-4 font-bold">
+      <div className="flex flex-1 justify-end pr-4 font-semibold">
         <h2>{name}: </h2>
       </div>
       <div className="flex w-[150px] pl-2">$ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</div>
@@ -213,7 +213,7 @@ export const EstimateTimeViewSeccion = (props: any) => {
   const { name, value } = props;
   return (
     <article className="flex items-center pr-4 h-[39px] bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
-      <div className="flex flex-1 justify-end pr-4 font-bold">
+      <div className="flex flex-1 justify-end pr-4 font-semibold">
         <h2>{name}: </h2>
       </div>
       <div className="flex w-[150px] pl-2">{value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })} h</div>
@@ -225,7 +225,7 @@ export const SalePriceViewSeccion = (props: any) => {
   const { name, value } = props;
   return (
     <article className="flex pl-4 pr-4 items-center h-[39px] flex-grow bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
-      <div className="flex flex-grow justify-end pr-4 font-bold">
+      <div className="flex flex-grow justify-end pr-4 font-semibold">
         <h2>{name}: </h2>
       </div>
       <div className="flex w-[150px] pl-2">
