@@ -40,6 +40,10 @@
       "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "conventionalCommits.scopes": [
+<<<<<<< HEAD
       "App"
+=======
+      "Offers"
+>>>>>>> 0e1bf9e3950461e32e5496542445a86621b79c77
     ], // set as "true" to run 'prettier' last not first
 }

@@ -32,6 +32,13 @@ const initialState: {
     description: "",
     price: 0,
     unitMeasure: "",
+    pricePerRepresentative: [
+      {
+        representativeName: "",
+        price: 0,
+        priceUSD: 0
+      }
+    ],
     // complexity: "Baja",
     value: 0,
     listOfMeasures: [
@@ -91,9 +98,7 @@ export const offerReducer = (state = initialState, action: any) => {
         ...state,
         selectedOffer: {
           ...state.selectedOffer,
-          itemsList: state.selectedOffer.itemsList.filter(
-            (item, index) => item.description !== action.payload
-          )
+          itemsList: state.selectedOffer.itemsList.filter((item, index) => item.description !== action.payload)
         }
       };
     case types.editItem:

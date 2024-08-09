@@ -49,6 +49,7 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
           listOfMeasures: values.listOfMeasures ?? [],
           unitMeasure: values.unitMeasure,
           value: values.value,
+          pricePerRepresentative: values.pricePerRepresentative
           // complexity: values.complexity
         });
       } else {

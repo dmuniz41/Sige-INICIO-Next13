@@ -37,6 +37,7 @@ export async function POST(request: NextRequest) {
 
     const newWarehouse = new Warehouse({
       ...warehouse,
+      totalValue: 0,
       key: warehouse.name
     });
 

@@ -4,7 +4,7 @@ export interface IWarehouse {
   _id: string;
   key: string;
   name: string;
-  totalValue?: number;
+  totalValue: number;
 }
 
 const WarehouseSchema = new Schema<IWarehouse, Model<IWarehouse>>({

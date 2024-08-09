@@ -17,6 +17,7 @@ export const ItemTableSection = (props: any) => {
   const handleDelete = (record: IActivity) => {
     valuesSetter(values.filter((value: IActivity) => JSON.stringify(value) !== JSON.stringify(record)));
   };
+
   const handleEdit = (record: IActivity) => {
     const selectedActivity = values.find((value: IActivity) => value.description === record.description);
     dispatch(actionToDispatch(selectedActivity));

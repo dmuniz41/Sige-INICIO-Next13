@@ -12,12 +12,7 @@ import { CreateNomenclatorForm } from "./CreateNomenclatorForm";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { EditNomenclatorForm } from "./EditNomenclatorForm";
 import { EditSvg } from "@/app/global/EditSvg";
-import {
-  nomenclatorsStartLoading,
-  startAddNomenclator,
-  startDeleteNomenclator,
-  startUpdateNomenclator
-} from "@/actions/nomenclator";
+import { nomenclatorsStartLoading, startAddNomenclator, startDeleteNomenclator, startUpdateNomenclator } from "@/actions/nomenclator";
 import { INomenclator } from "../../../models/nomenclator";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
@@ -25,6 +20,8 @@ import { RootState, useAppSelector } from "@/store/store";
 import { useAppDispatch } from "@/hooks/hooks";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
+
+// TODO: asdasd
 
 type DataIndex = keyof INomenclator;
 
@@ -47,16 +44,12 @@ const NomenclatorsTable: React.FC = () => {
     dispatch(nomenclatorsStartLoading());
   }, [dispatch]);
 
-  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector(
-    (state: RootState) => state?.nomenclator
-  );
+  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
   let data: INomenclator[] = useMemo(
     () =>
       nomenclators.filter(
         (nomenclator) =>
-          nomenclator.category !== "Tarifa de Servicio" &&
-          nomenclator.category !== "Material" &&
-          nomenclator.category !== "Ficha de costo"
+          nomenclator.category !== "Tarifa de Servicio" && nomenclator.category !== "Material" && nomenclator.category !== "Ficha de costo"
       ),
     [nomenclators]
   );
@@ -78,11 +71,7 @@ const NomenclatorsTable: React.FC = () => {
     setEditModal(false);
   };
 
-  const handleSearch = (
-    selectedKeys: string[],
-    confirm: (param?: FilterConfirmProps) => void,
-    dataIndex: DataIndex
-  ) => {
+  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -132,11 +121,7 @@ const NomenclatorsTable: React.FC = () => {
           >
             Search
           </Button>
-          <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{ width: 90 }}
-          >
+          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
             Reset
           </Button>
           <Button
@@ -162,9 +147,7 @@ const NomenclatorsTable: React.FC = () => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
-    ),
+    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
     onFilter: (value, record: any) =>
       record[dataIndex]
         .toString()
@@ -296,9 +279,7 @@ const NomenclatorsTable: React.FC = () => {
             <button
               disabled={!canList}
               className={`${
-                canList
-                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                  : "opacity-20 pt-2 pl-2"
+                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={() => dispatch(nomenclatorsStartLoading())}
             >
@@ -308,17 +289,8 @@ const NomenclatorsTable: React.FC = () => {
         </div>
       </div>
 
-      <CreateNomenclatorForm
-        open={createNewModal}
-        onCancel={() => setCreateNewModal(false)}
-        onCreate={onCreate}
-      />
-      <EditNomenclatorForm
-        open={editModal}
-        onCancel={() => setEditModal(false)}
-        onCreate={onEdit}
-        defaultValues={selectedNomenclator}
-      />
+      <CreateNomenclatorForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
+      <EditNomenclatorForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedNomenclator} />
 
       <Table
         size="small"

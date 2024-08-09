@@ -1,33 +1,36 @@
 "use client";
+import { ColumnsType } from "antd/es/table";
 import { DatePicker, Form, Select, SelectProps, Table, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import TextArea from "antd/es/input/TextArea";
 
-import { IOfferItem } from "@/models/offer";
 import { AddItemModal } from "./AddItem";
 import { clientNomenclatorsStartLoading } from "@/actions/nomenclators/client";
-import { ColumnsType } from "antd/es/table";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { editItemList, startAddProject } from "@/actions/project";
 import { EditItemModal } from "./EditItem";
 import { EditSvg } from "@/app/global/EditSvg";
 import { IClientNomenclator } from "@/models/nomenclators/client";
 import { INomenclator } from "@/models/nomenclator";
+import { IOfferItem } from "@/models/offer";
+import { IProject } from "@/models/project";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
-import TextArea from "antd/es/input/TextArea";
-import { IProject } from "@/models/project";
+import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
+import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/representative";
 
 export const CreateProjectForm = () => {
+    const [representative, setRepresentative] = useState("");
   const [addItemModal, setAddItemModal] = useState(false);
-  const [editItemModal, setEditItemModal] = useState(false);
-  const [rowToEdit, setRowToEdit] = useState<IOfferItem>();
   const [clientNumber, setClientNumber] = useState(0);
+  const [editItemModal, setEditItemModal] = useState(false);
   const [form] = Form.useForm();
   const [itemsValues, setItemsValues]: any = useState([]);
+  const [rowToEdit, setRowToEdit] = useState<IOfferItem>();
   const currencyNomenclators: string[] | undefined = [];
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -36,15 +39,16 @@ export const CreateProjectForm = () => {
     dispatch(nomenclatorsStartLoading());
     dispatch(clientNomenclatorsStartLoading());
     dispatch(startLoadServiceFeeAuxiliary());
+    dispatch(representativeNomenclatorsStartLoading());
   }, [dispatch]);
 
-  const { projects }: { projects: IProject[] } = useAppSelector(
-    (state: RootState) => state?.project
-  );
-  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector(
-    (state: RootState) => state?.nomenclator
-  );
-  const { clientNomenclators }: { clientNomenclators: IClientNomenclator[] } = useAppSelector(
+  const { projects }: { projects: IProject[] } = useAppSelector((state: RootState) => state?.project);
+
+  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
+
+  const { clientNomenclators }: { clientNomenclators: IClientNomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
+
+  const { representativeNomenclators }: { representativeNomenclators: IRepresentativeNomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
 
@@ -63,6 +67,13 @@ export const CreateProjectForm = () => {
     return {
       label: `${currency}`,
       value: `${currency}`
+    };
+  });
+
+  const representativeOptions: SelectProps["options"] = representativeNomenclators?.map((representative) => {
+    return {
+      label: `${representative?.name}`,
+      value: `${representative?.name}`
     };
   });
 
@@ -119,13 +130,9 @@ export const CreateProjectForm = () => {
                 options={clientNameOptions}
                 showSearch
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) =>
-                  (option?.label ?? "").toLowerCase().includes(input)
-                }
+                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                  (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
                 }
                 onSelect={(value) => {
                   clientNomenclators.map((client) => {
@@ -143,12 +150,7 @@ export const CreateProjectForm = () => {
                 {
                   message: "Ya existe un proyecto con ese nombre",
                   validator: (_, value: string) => {
-                    if (
-                      !projects.some(
-                        (project) =>
-                          project?.projectName?.trim().toLowerCase() === value?.trim().toLowerCase()
-                      )
-                    ) {
+                    if (!projects.some((project) => project?.projectName?.trim().toLowerCase() === value?.trim().toLowerCase())) {
                       return Promise.resolve();
                     } else {
                       return Promise.reject("Ya existe un proyecto con ese nombre");
@@ -188,13 +190,28 @@ export const CreateProjectForm = () => {
                 options={currencyOptions}
                 showSearch
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) =>
-                  (option?.label ?? "").toLowerCase().includes(input)
-                }
+                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                  (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
+                }
+              />
+            </Form.Item>
+            <Form.Item
+              label={<span className="font-bold text-md">Representación</span>}
+              name="representative"
+              rules={[{ required: true, message: "Campo requerido" }]}
+            >
+              <Select
+                allowClear
+                options={representativeOptions}
+                showSearch
+                onSelect={(value) => {
+                  setRepresentative(value);
+                }}
+                optionFilterProp="children"
+                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
+                filterSort={(optionA: any, optionB: any) =>
+                  (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
                 }
               />
             </Form.Item>
@@ -230,7 +247,8 @@ export const CreateProjectForm = () => {
                     profits: 0,
                     totalValue: 0,
                     initDate: values.initDate.format("MM/DD/YYYY"),
-                    deliveryDate: values.deliveryDate.format("MM/DD/YYYY")
+                    deliveryDate: values.deliveryDate.format("MM/DD/YYYY"),
+                    payMethod:representative
                   })
                 );
                 router.push("/dashboard/project");
@@ -243,12 +261,7 @@ export const CreateProjectForm = () => {
           Crear
         </button>
       </Form.Item>
-      <AddItemModal
-        open={addItemModal}
-        onCancel={() => setAddItemModal(false)}
-        onCreate={onAddItem}
-        itemsList={itemsValues}
-      />
+      <AddItemModal open={addItemModal} onCancel={() => setAddItemModal(false)} onCreate={onAddItem} itemsList={itemsValues} />
       <EditItemModal
         open={editItemModal}
         onCancel={() => setEditItemModal(false)}
@@ -261,15 +274,7 @@ export const CreateProjectForm = () => {
 };
 
 const TableFormSection = (props: any) => {
-  const {
-    sectionName,
-    values,
-    valuesSetter,
-    addModalSetter,
-    editModalSetter,
-    valueToEditSetter,
-    buttonText
-  } = props;
+  const { sectionName, values, valuesSetter, addModalSetter, editModalSetter, valueToEditSetter, buttonText } = props;
 
   const handleDelete = (record: IOfferItem) => {
     valuesSetter(values.filter((value: IOfferItem) => value.description !== record.description));
