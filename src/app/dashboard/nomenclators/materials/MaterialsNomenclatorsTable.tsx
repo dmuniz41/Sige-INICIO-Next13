@@ -170,7 +170,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
 
   const columns: ColumnsType<IMaterialNomenclator> = [
     {
-      title: <span className="font-semibold">Nombre</span>,
+      title: <span className="font-bold">Nombre</span>,
       dataIndex: "name",
       key: "name",
       width: "30%",
@@ -184,7 +184,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
           title={"Si el material es gastable se le aplica un coeficiente de merma durante el calculo de la ficha de costo"}
         >
           <div className="flex w-fit gap-2 items-center">
-            <span className="font-semibold">Gastable</span>
+            <span className="font-bold">Gastable</span>
             <InfoCircleSvg width={20} height={20} />
           </div>
         </Tooltip>
@@ -199,7 +199,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
       )
     },
     {
-      title: <span className="font-semibold">Acciones</span>,
+      title: <span className="font-bold">Acciones</span>,
       key: "actions",
       width: "5%",
       align: "center",

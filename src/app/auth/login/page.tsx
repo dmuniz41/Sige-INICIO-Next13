@@ -42,32 +42,36 @@ export default function Login() {
       </div>
       <form
         onSubmit={handleSubmit}
-        className="grid w-[380px] p-[30px] h-[300px] border-t-[4px] border-solid border-t-primary-500 font-semibold bg-white-100 rounded-[5px] shadow-xl"
+        className="flex flex-col gap-4 w-[25%] px-8 py-10 border-t-[4px] border-solid border-t-primary-500 font-semibold bg-white-100 rounded-[5px] shadow-md"
       >
-        <h5 className="h-[15px] mb-0">Usuario</h5>
-        <input
-          className="w-full h-[50px] font-medium pl-[10px] outline-none border-solid border-[1px] rounded-md border-border_input  focus:border-primary-500 "
-          autoFocus
-          type="text"
-          name="user"
-          id="input_user"
-          autoComplete="user"
-        />
-        <h5 className="h-[15px] mb-0">Contraseña</h5>
-        <input
-          className="w-full h-[50px] font-medium pl-[10px] outline-none border-solid border-[1px] rounded-md border-border_input focus:border-primary-500"
-          type="password"
-          name="password"
-          id="input_password"
-          autoComplete="current-password"
-        />
+        <div className="grid">
+          <h5 className="mb-0 font-bold">Usuario</h5>
+          <input
+            className="w-full h-[50px] font-medium pl-[10px] outline-none border-solid border-[1px] rounded-md border-border_input  focus:border-primary-500 "
+            autoFocus
+            type="text"
+            name="user"
+            id="input_user"
+            autoComplete="user"
+          />
+        </div>
+        <div className="grid">
+          <h5 className="mb-0 font-bold">Contraseña</h5>
+          <input
+            className="w-full h-[50px] font-medium pl-[10px] outline-none border-solid border-[1px] rounded-md border-border_input focus:border-primary-500"
+            type="password"
+            name="password"
+            id="input_password"
+            autoComplete="current-password"
+          />
+        </div>
         <button type="submit">
-          <a className="cursor-pointer text-xl justify-center items-center uppercase flex bg-primary-500 rounded-md mt-2 w-full h-[50px] border-none transition ease-in delay-50 hover:bg-primary-600 shadow-md">
+          <a className="cursor-pointer text-xl mt-4 justify-center items-center uppercase flex bg-primary-500 rounded-md w-full h-[50px] border-none transition ease-in delay-50 hover:bg-primary-600 shadow-md">
             <span className="text-white-100 font-semibold">Entrar</span>
           </a>
         </button>
       </form>
-      <p className="font-semibold mt-20 text-border_input">Copyright © INICIO-TEAM 2022</p>
+      <p className="font-semibold mt-10 text-border_input">Copyright © INICIO-TEAM {new Date().getFullYear()}</p>
     </div>
   );
 }

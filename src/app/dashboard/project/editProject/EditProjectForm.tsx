@@ -27,16 +27,10 @@ export const EditProjectForm = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector(
-    (state: RootState) => state?.nomenclator
-  );
-  const { selectedProject }: { selectedProject: IProject } = useAppSelector(
-    (state: RootState) => state?.project
-  );
+  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
+  const { selectedProject }: { selectedProject: IProject } = useAppSelector((state: RootState) => state?.project);
   const [itemsValues, setItemsValues] = useState<IOfferItem[]>(selectedProject.itemsList);
-  const { clientNomenclators }: { clientNomenclators: IClientNomenclator[] } = useAppSelector(
-    (state: RootState) => state?.nomenclator
-  );
+  const { clientNomenclators }: { clientNomenclators: IClientNomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
 
   const [clientNumber, setClientNumber] = useState(selectedProject.clientNumber);
   const [clientName, setClientName] = useState(selectedProject?.clientName);
@@ -120,7 +114,7 @@ export const EditProjectForm = () => {
           <div className="grid w-[50%]">
             <Form.Item
               className="mb-3"
-              label={<span className="font-semibold text-md">Nombre del Cliente</span>}
+              label={<span className="font-bold text-md">Nombre del Cliente</span>}
               name="clientName"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -129,13 +123,9 @@ export const EditProjectForm = () => {
                 options={clientNameOptions}
                 showSearch
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) =>
-                  (option?.label ?? "").toLowerCase().includes(input)
-                }
+                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                  (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
                 }
                 onSelect={(value: string) => {
                   setClientName(value);
@@ -147,7 +137,7 @@ export const EditProjectForm = () => {
             </Form.Item>
             <Form.Item
               className="mb-3"
-              label={<span className="font-semibold text-md">Proyecto</span>}
+              label={<span className="font-bold text-md">Proyecto</span>}
               name="projectName"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -155,7 +145,7 @@ export const EditProjectForm = () => {
             </Form.Item>
             <Form.Item
               className="mb-3"
-              label={<span className="font-semibold text-md">Moneda </span>}
+              label={<span className="font-bold text-md">Moneda </span>}
               name="currency"
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -164,13 +154,9 @@ export const EditProjectForm = () => {
                 options={currencyOptions}
                 showSearch
                 optionFilterProp="children"
-                filterOption={(input: any, option: any) =>
-                  (option?.label ?? "").toLowerCase().includes(input)
-                }
+                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
                 filterSort={(optionA: any, optionB: any) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                  (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
                 }
               />
             </Form.Item>
@@ -191,7 +177,7 @@ export const EditProjectForm = () => {
       <Form.Item>
         <button
           type="submit"
-          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-semibold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
+          className="mt-4 select-none rounded-lg bg-success-500 py-3 px-6 text-center align-middle text-sm font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
           onClick={() => {
             form
               .validateFields()
@@ -215,31 +201,20 @@ export const EditProjectForm = () => {
           Editar
         </button>
       </Form.Item>
-      <AddItemModal
-        open={addItemModal}
-        onCancel={() => setAddItemModal(false)}
-        onCreate={onAddItem}
-      />
+      <AddItemModal open={addItemModal} onCancel={() => setAddItemModal(false)} onCreate={onAddItem} itemsList={itemsValues} />
       <EditItemModal
         open={editItemModal}
         onCancel={() => setEditItemModal(false)}
         onCreate={onEditItem}
         defaultValues={rowToEdit}
+        itemsList={itemsValues}
       />
     </Form>
   );
 };
 
 const TableFormSection = (props: any) => {
-  const {
-    sectionName,
-    values,
-    valuesSetter,
-    addModalSetter,
-    editModalSetter,
-    valueToEditSetter,
-    buttonText
-  } = props;
+  const { sectionName, values, valuesSetter, addModalSetter, editModalSetter, valueToEditSetter, buttonText } = props;
 
   const handleDelete = (record: IOfferItem) => {
     valuesSetter(values.filter((value: IOfferItem) => value.description !== record.description));
@@ -251,18 +226,18 @@ const TableFormSection = (props: any) => {
 
   const columns: ColumnsType<IOfferItem> = [
     {
-      title: <span className="font-semibold">No.</span>,
+      title: <span className="font-bold">No.</span>,
       width: "2%",
       render: (text, record, index) => <span className="flex justify-center">{index + 1}</span>
     },
     {
-      title: <span className="font-semibold">Descripción</span>,
+      title: <span className="font-bold">Descripción</span>,
       dataIndex: "description",
       key: "description",
       width: "95%"
     },
     {
-      title: <span className="font-semibold">Acciones</span>,
+      title: <span className="font-bold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, { ...record }) => (
@@ -285,7 +260,7 @@ const TableFormSection = (props: any) => {
   return (
     <section className=" flex w-full mb-8 rounded-md p-2 border border-border_light shadow-sm">
       <div className="flex w-[15%] h-full p-2 text-center items-center justify-center bg-[#fafafa] rounded-l-md">
-        <span className="text-base font-semibold">{sectionName?.toUpperCase()}</span>
+        <span className="text-base font-bold">{sectionName?.toUpperCase()}</span>
       </div>
       <div className="grid pl-2 w-full gap-2">
         <Table

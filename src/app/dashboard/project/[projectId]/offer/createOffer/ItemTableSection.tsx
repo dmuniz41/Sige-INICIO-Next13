@@ -27,7 +27,7 @@ export const ItemTableSection = (props: any) => {
 
   const columns: ColumnsType<IActivity> = [
     {
-      title: <span className="font-semibold">Descripción</span>,
+      title: <span className="font-bold">Descripción</span>,
       dataIndex: "description",
       key: "description",
       width: "50%",
@@ -36,34 +36,34 @@ export const ItemTableSection = (props: any) => {
       )
     },
     {
-      title: <span className="font-semibold">Cantidad</span>,
+      title: <span className="font-bold">Cantidad</span>,
       dataIndex: "amount",
       key: "amount",
       width: "15%",
       render: (value) => <span>{value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     },
     {
-      title: <span className="font-semibold">Unidad de Medida</span>,
+      title: <span className="font-bold">Unidad de Medida</span>,
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "10%"
     },
     {
-      title: <span className="font-semibold">Precio</span>,
+      title: <span className="font-bold">Precio</span>,
       dataIndex: "price",
       key: "price",
       width: "15%",
       render: (value) => <span>$ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     },
     {
-      title: <span className="font-semibold">Importe</span>,
+      title: <span className="font-bold">Importe</span>,
       dataIndex: "value",
       key: "value",
       width: "15%",
       render: (value) => <span>$ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     },
     {
-      title: <span className="font-semibold">Acciones</span>,
+      title: <span className="font-bold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, { ...record }) => (
@@ -86,7 +86,7 @@ export const ItemTableSection = (props: any) => {
   return (
     <section className=" flex w-full  rounded-md p-2 border border-border_light shadow-sm">
       <div className="flex w-[15%] h-full p-2 text-center items-center justify-center bg-[#fafafa] rounded-l-md">
-        <span className="text-base font-semibold">{sectionName?.toUpperCase()}</span>
+        <span className="text-base font-bold">{sectionName?.toUpperCase()}</span>
       </div>
       <div className="grid pl-2 w-full gap-2">
         <Table
@@ -99,10 +99,10 @@ export const ItemTableSection = (props: any) => {
           bordered
           footer={() => (
             <footer className="flex w-full justify-between pr-1">
-              <div className="font-semibold flex">
+              <div className="font-bold flex">
                 <span>Valor: </span>
               </div>
-              <div className="flex pl-1 font-semibold">
+              <div className="flex pl-1 font-bold">
                 <span>
                   ${" "}
                   {subtotal

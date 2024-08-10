@@ -186,21 +186,21 @@ const WorkersTable: React.FC = () => {
 
   const columns: ColumnsType<IWorker> = [
     {
-      title: <span className="font-semibold">Nombre</span>,
+      title: <span className="font-bold">Nombre</span>,
       dataIndex: "name",
       key: "name",
       width: "25%",
       ...getColumnSearchProps("name")
     },
     {
-      title: <span className="font-semibold">CI</span>,
+      title: <span className="font-bold">CI</span>,
       dataIndex: "CI",
       key: "CI",
       width: "10%",
       ...getColumnSearchProps("CI")
     },
     {
-      title: <span className="font-semibold">Cargo</span>,
+      title: <span className="font-bold">Cargo</span>,
       dataIndex: "role",
       key: "role",
       width: "30%",
@@ -214,28 +214,28 @@ const WorkersTable: React.FC = () => {
       )
     },
     {
-      title: <span className="font-semibold">Dirección</span>,
+      title: <span className="font-bold">Dirección</span>,
       dataIndex: "address",
       key: "address",
       width: "25%",
       ...getColumnSearchProps("address")
     },
     {
-      title: <span className="font-semibold">Cuenta Bancaria</span>,
+      title: <span className="font-bold">Cuenta Bancaria</span>,
       dataIndex: "bankAccount",
       key: "bankAccount",
       width: "20%",
       ...getColumnSearchProps("bankAccount")
     },
     {
-      title: <span className="font-semibold">Teléfono</span>,
+      title: <span className="font-bold">Teléfono</span>,
       dataIndex: "phoneNumber",
       key: "phoneNumber",
       width: "10%",
       ...getColumnSearchProps("phoneNumber")
     },
     {
-      title: <span className="font-semibold">Acciones</span>,
+      title: <span className="font-bold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, { ...record }) => (

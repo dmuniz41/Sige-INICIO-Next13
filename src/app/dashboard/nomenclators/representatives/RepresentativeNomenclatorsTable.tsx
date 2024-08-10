@@ -182,7 +182,7 @@ const RepresentativeNomenclatorsTable: React.FC = () => {
 
   const columns: ColumnsType<IRepresentativeNomenclator> = [
     {
-      title: <span className="font-semibold">Nombre</span>,
+      title: <span className="font-bold">Nombre</span>,
       dataIndex: "name",
       key: "name",
       width: "30%",
@@ -190,7 +190,7 @@ const RepresentativeNomenclatorsTable: React.FC = () => {
       ...getColumnSearchProps("name")
     },
     {
-      title: <span className="font-semibold">Persona de Contacto</span>,
+      title: <span className="font-bold">Persona de Contacto</span>,
       dataIndex: "contactPerson",
       key: "contactPerson",
       width: "20%",
@@ -198,25 +198,25 @@ const RepresentativeNomenclatorsTable: React.FC = () => {
       ...getColumnSearchProps("contactPerson")
     },
     {
-      title: <span className="font-semibold">Número de Representante</span>,
+      title: <span className="font-bold">Número de Representante</span>,
       dataIndex: "idNumber",
       key: "idNumber",
       width: "10%"
     },
     {
-      title: <span className="font-semibold">Representación (%)</span>,
+      title: <span className="font-bold">Representación (%)</span>,
       dataIndex: "percentage",
       key: "percentage",
       width: "10%"
     },
     {
-      title: <span className="font-semibold">Teléfono</span>,
+      title: <span className="font-bold">Teléfono</span>,
       dataIndex: "phoneNumber",
       key: "phoneNumber",
       width: "10%"
     },
     {
-      title: <span className="font-semibold">Dirección</span>,
+      title: <span className="font-bold">Dirección</span>,
       dataIndex: "address",
       key: "address",
       width: "20%",
@@ -224,7 +224,7 @@ const RepresentativeNomenclatorsTable: React.FC = () => {
       ...getColumnSearchProps("address")
     },
     {
-      title: <span className="font-semibold">Correo</span>,
+      title: <span className="font-bold">Correo</span>,
       dataIndex: "email",
       key: "email",
       width: "20%",
@@ -232,7 +232,7 @@ const RepresentativeNomenclatorsTable: React.FC = () => {
       ...getColumnSearchProps("email")
     },
     {
-      title: <span className="font-semibold">Acciones</span>,
+      title: <span className="font-bold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, { ...record }) => (

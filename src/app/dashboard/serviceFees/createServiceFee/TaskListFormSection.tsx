@@ -31,20 +31,20 @@ export const TaskListFormSection = (props: any) => {
 
   const columns: ColumnsType<IServiceFeeTask> = [
     {
-      title: <span className="font-semibold">Descripción (Complejidad)</span>,
+      title: <span className="font-bold">Descripción (Complejidad)</span>,
       dataIndex: "description",
       key: "description",
       width: "45%",
       render: (_, { ...record }) => <span>{`${record.description} (${record.currentComplexity?.name})`}</span>
     },
     {
-      title: <span className="font-semibold">Unidad de Medida</span>,
+      title: <span className="font-bold">Unidad de Medida</span>,
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "15%"
     },
     {
-      title: <span className="font-semibold">Cantidad</span>,
+      title: <span className="font-bold">Cantidad</span>,
       dataIndex: "amount",
       key: "amount",
       width: "10%",
@@ -58,7 +58,7 @@ export const TaskListFormSection = (props: any) => {
       )
     },
     {
-      title: <span className="font-semibold">Duración (h)</span>,
+      title: <span className="font-bold">Duración (h)</span>,
       dataIndex: "amount",
       key: "amount",
       width: "10%",
@@ -72,7 +72,7 @@ export const TaskListFormSection = (props: any) => {
       )
     },
     {
-      title: <span className="font-semibold">Precio</span>,
+      title: <span className="font-bold">Precio</span>,
       dataIndex: "price",
       key: "price",
       width: "10%",
@@ -86,7 +86,7 @@ export const TaskListFormSection = (props: any) => {
       )
     },
     {
-      title: <span className="font-semibold">Importe</span>,
+      title: <span className="font-bold">Importe</span>,
       dataIndex: "value",
       key: "value",
       width: "30%",
@@ -100,7 +100,7 @@ export const TaskListFormSection = (props: any) => {
       )
     },
     {
-      title: <span className="font-semibold">Acciones</span>,
+      title: <span className="font-bold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, { ...record }) => (
@@ -118,7 +118,7 @@ export const TaskListFormSection = (props: any) => {
   return (
     <section className=" flex w-full mb-4 rounded-md p-2 border border-border_light shadow-sm">
       <div className="flex w-[15%] h-full p-2 text-center items-center justify-center bg-[#fafafa] rounded-l-md">
-        <span className="text-base font-semibold">{sectionName?.toUpperCase()}</span>
+        <span className="text-base font-bold">{sectionName?.toUpperCase()}</span>
       </div>
       <div className="grid pl-2 w-full gap-2">
         <Table
@@ -131,10 +131,10 @@ export const TaskListFormSection = (props: any) => {
           bordered
           footer={() => (
             <footer className="flex w-full">
-              <div className="font-semibold flex w-[86.2%]">
+              <div className="font-bold flex w-[86.2%]">
                 <span>Subtotal: </span>
               </div>
-              <div className="flex justify-start font-semibold">
+              <div className="flex justify-start font-bold">
                 <span>
                   ${" "}
                   {subtotal

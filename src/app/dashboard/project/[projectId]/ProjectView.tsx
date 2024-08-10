@@ -91,37 +91,37 @@ export const ProjectView = (props: { projectId: string }) => {
       </article>
 
       <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-2">
-        <h1 className="pl-2 text-xl font-semibold">SOLICITUD DE SERVICIO</h1>
+        <h1 className="pl-2 text-xl font-bold">SOLICITUD DE SERVICIO</h1>
         <article className="w-full flex justify-between p-2 ">
           <article className="grid">
             <div className="flex gap-1">
-              <span className="font-semibold mr-2 ">No. de Cliente:</span>
+              <span className="font-bold mr-2 ">No. de Cliente:</span>
               <p>{selectedProject.clientNumber}</p>
             </div>
             <div className="flex gap-1">
-              <span className="font-semibold mr-2 ">Nombre del Cliente:</span>
+              <span className="font-bold mr-2 ">Nombre del Cliente:</span>
               <p>{selectedProject.clientName}</p>
             </div>
             <div className="flex gap-1">
-              <span className="font-semibold mr-2 ">Proyecto:</span>
+              <span className="font-bold mr-2 ">Proyecto:</span>
               <p>{selectedProject.projectName}</p>
             </div>
             <div className="flex gap-1">
-              <span className="font-semibold mr-2 ">Cobrado por:</span>
+              <span className="font-bold mr-2 ">Cobrado por:</span>
               <p>{selectedProject.payMethod}</p>
             </div>
           </article>
           <article className="grid">
             <div className="flex gap-1">
-              <span className="font-semibold mr-2 ">Fecha:</span>
+              <span className="font-bold mr-2 ">Fecha:</span>
               <p>{selectedProject.initDate?.toLocaleString()}</p>
             </div>
             <div className="flex gap-1">
-              <span className="font-semibold mr-2 ">No. de Solicitud:</span>
+              <span className="font-bold mr-2 ">No. de Solicitud:</span>
               <p>{selectedProject.projectNumber}</p>
             </div>
             <div className="flex gap-1">
-              <span className="font-semibold mr-2 ">Moneda:</span>
+              <span className="font-bold mr-2 ">Moneda:</span>
               <p>{selectedProject.currency}</p>
             </div>
           </article>
@@ -135,7 +135,7 @@ export const ProjectView = (props: { projectId: string }) => {
         <article className="w-full flex justify-between p-2">
           <article className="grid gap-1">
             <div className="flex gap-1">
-              <span className="font-semibold mr-2 ">Precio:</span>
+              <span className="font-bold mr-2 ">Precio:</span>
               <p>
                 $
                 {selectedProject?.totalValue === undefined
@@ -144,37 +144,37 @@ export const ProjectView = (props: { projectId: string }) => {
               </p>
             </div>
             <div className="flex gap-1">
-              <span className="font-semibold mr-2 ">Gastos:</span>
+              <span className="font-bold mr-2 ">Gastos:</span>
               <p>${selectedProject?.expenses === undefined ? 0 : selectedProject?.expenses}</p>
             </div>
             <div className="flex gap-1">
-              <span className="font-semibold mr-2 ">Ganancias:</span>
+              <span className="font-bold mr-2 ">Ganancias:</span>
               <p>${selectedProject?.profits === undefined ? 0 : selectedProject?.profits}</p>
             </div>
             <div className="flex gap-1">
-              <span className="font-semibold mr-2 ">Estado:</span>
+              <span className="font-bold mr-2 ">Estado:</span>
               {selectedProject.status === "Cerrado" ? (
-                <Tag className="font-semibold" color="#34b042">
+                <Tag className="font-bold" color="#34b042">
                   {selectedProject.status.toUpperCase()}
                 </Tag>
               ) : selectedProject.status === "Cobrado" ? (
-                <Tag className="font-semibold" color="#a2c9ff">
+                <Tag className="font-bold" color="#a2c9ff">
                   {selectedProject.status.toUpperCase()}
                 </Tag>
               ) : selectedProject.status === "Terminado" ? (
-                <Tag className="font-semibold" color="#34395e">
+                <Tag className="font-bold" color="#34395e">
                   {selectedProject.status.toUpperCase()}
                 </Tag>
               ) : selectedProject.status === "Contratado" ? (
-                <Tag className="font-semibold" color="#c6c013">
+                <Tag className="font-bold" color="#c6c013">
                   {selectedProject.status.toUpperCase()}
                 </Tag>
               ) : selectedProject.status === "Calculado" ? (
-                <Tag className="font-semibold" color="#ff6600">
+                <Tag className="font-bold" color="#ff6600">
                   {selectedProject.status.toUpperCase()}
                 </Tag>
               ) : selectedProject.status === "Pendiente de Oferta" ? (
-                <Tag className="font-semibold" color="#ffa426">
+                <Tag className="font-bold" color="#ffa426">
                   {selectedProject.status.toUpperCase()}
                 </Tag>
               ) : (
@@ -193,13 +193,13 @@ const ProjectViewTable = (props: any) => {
 
   const columns: ColumnsType<IOfferItem> = [
     {
-      title: <span className="font-semibold">No.</span>,
+      title: <span className="font-bold">No.</span>,
       width: "1%",
       align: "center",
       render: (text, record, index) => index + 1
     },
     {
-      title: <span className="font-semibold">Descripción del servicio</span>,
+      title: <span className="font-bold">Descripción del servicio</span>,
       dataIndex: "description",
       key: "description",
       width: "55%"

@@ -31,7 +31,7 @@ const OfferTable = (props: { projectId: string }) => {
 
   const columns: ColumnsType<IOffer> = [
     {
-      title: <span className="font-semibold">Nombre</span>,
+      title: <span className="font-bold">Nombre</span>,
       dataIndex: "projectName",
       key: "projectName",
       width: "60%",
@@ -52,7 +52,7 @@ const OfferTable = (props: { projectId: string }) => {
       sorter: (a: any, b: any) => a.projectName.localeCompare(b.projectName)
     },
     {
-      title: <span className="font-semibold">Valor</span>,
+      title: <span className="font-bold">Valor</span>,
       dataIndex: "value",
       key: "value",
       width: "10%",
@@ -67,14 +67,14 @@ const OfferTable = (props: { projectId: string }) => {
       )
     },
     {
-      title: <span className="font-semibold">Representación</span>,
+      title: <span className="font-bold">Representación</span>,
       dataIndex: "representativeName",
       key: "representativeName",
       width: "10%",
       render: (representativeName) => <span>{representativeName}</span>
     },
     {
-      title: <span className="font-semibold">Acciones</span>,
+      title: <span className="font-bold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, record) => (

@@ -62,13 +62,13 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
     amount: number;
   }> = [
     {
-      title: <span className="font-semibold">Descripción</span>,
+      title: <span className="font-bold">Descripción</span>,
       dataIndex: "description",
       key: "description",
       width: "70%"
     },
     {
-      title: <span className="font-semibold">Cantidad</span>,
+      title: <span className="font-bold">Cantidad</span>,
       dataIndex: "size",
       key: "size",
       width: "10%",
@@ -82,13 +82,13 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
       )
     },
     {
-      title: <span className="font-semibold">Unidad de Medida</span>,
+      title: <span className="font-bold">Unidad de Medida</span>,
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "20%"
     },
     {
-      title: <span className="font-semibold">Acciones</span>,
+      title: <span className="font-bold">Acciones</span>,
       width: "10%",
       key: "Actions",
       render: (_, { ...record }) => (
@@ -114,7 +114,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-semibold text-lg">Nueva Actividad</span>
+          <span className="font-bold text-lg">Nueva Actividad</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -353,7 +353,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
                 <div
                   className={`flex gap-2 pl-2 mb-4 ${currentUnitMeasure.includes("Unidad (U)") || (currentUnitMeasure?.includes("Metro (m)") && "hidden")}`}
                 >
-                  <span className="font-semibold">Cantidad:</span>
+                  <span className="font-bold">Cantidad:</span>
                   <span>
                     {!form.getFieldValue("amount")
                       ? 0
@@ -365,7 +365,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
                 </div>
               ) : (
                 <div className=" flex gap-2 pl-2 mb-4">
-                  <span className="font-semibold">Tamaño:</span>
+                  <span className="font-bold">Tamaño:</span>
                   <span>
                     {activitiesTableValues
                       .reduce((total, currentValue) => total + currentValue.amount * currentValue.width * currentValue.height, 0)
@@ -378,7 +378,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
                 </div>
               )}
               <div className=" flex gap-2 pl-2 mb-4">
-                <span className="font-semibold">Precio:</span>
+                <span className="font-bold">Precio:</span>
                 <span>
                   $
                   {currentPrice?.toLocaleString("DE", {
@@ -388,7 +388,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
                 </span>
               </div>
               <div className=" flex gap-2 pl-2 mb-4">
-                <span className="font-semibold">Importe:</span>
+                <span className="font-bold">Importe:</span>
                 <span>
                   $
                   {currentUnitMeasure.includes("Unidad (U)") || currentUnitMeasure?.includes("Metro (m)") ? (

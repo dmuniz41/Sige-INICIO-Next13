@@ -58,13 +58,13 @@ export const AuxiliaryView = () => {
 
   const columns = [
     {
-      title: <span className="font-semibold">Nombre</span>,
+      title: <span className="font-bold">Nombre</span>,
       dataIndex: "name",
       key: "name",
       width: "300px"
     },
     {
-      title: <span className="font-semibold">Valor</span>,
+      title: <span className="font-bold">Valor</span>,
       dataIndex: "value",
       key: "value",
       width: "150px",
