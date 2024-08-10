@@ -177,7 +177,7 @@ const ClientNomenclatorsTable: React.FC = () => {
 
   const columns: ColumnsType<IClientNomenclator> = [
     {
-      title: <span className="font-semibold">Nombre</span>,
+      title: <span className="font-bold">Nombre</span>,
       dataIndex: "name",
       key: "name",
       width: "30%",
@@ -185,13 +185,13 @@ const ClientNomenclatorsTable: React.FC = () => {
       ...getColumnSearchProps("name")
     },
     {
-      title: <span className="font-semibold">Número de Cliente</span>,
+      title: <span className="font-bold">Número de Cliente</span>,
       dataIndex: "idNumber",
       key: "idNumber",
       width: "10%"
     },
     {
-      title: <span className="font-semibold">Contacto</span>,
+      title: <span className="font-bold">Contacto</span>,
       dataIndex: "contactPerson",
       key: "contactPerson",
       width: "15%",
@@ -199,13 +199,13 @@ const ClientNomenclatorsTable: React.FC = () => {
       ...getColumnSearchProps("contactPerson")
     },
     {
-      title: <span className="font-semibold">Teléfono</span>,
+      title: <span className="font-bold">Teléfono</span>,
       dataIndex: "phoneNumber",
       key: "phoneNumber",
       width: "10%"
     },
     {
-      title: <span className="font-semibold">Dirección</span>,
+      title: <span className="font-bold">Dirección</span>,
       dataIndex: "address",
       key: "address",
       width: "20%",
@@ -213,7 +213,7 @@ const ClientNomenclatorsTable: React.FC = () => {
       ...getColumnSearchProps("address")
     },
     {
-      title: <span className="font-semibold">Correo</span>,
+      title: <span className="font-bold">Correo</span>,
       dataIndex: "email",
       key: "email",
       width: "20%",
@@ -221,7 +221,7 @@ const ClientNomenclatorsTable: React.FC = () => {
       ...getColumnSearchProps("email")
     },
     {
-      title: <span className="font-semibold">Acciones</span>,
+      title: <span className="font-bold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, { ...record }) => (

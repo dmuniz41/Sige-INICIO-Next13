@@ -173,7 +173,7 @@ const NomenclatorsTable: React.FC = () => {
 
   const columns: ColumnsType<INomenclator> = [
     {
-      title: <span className="font-semibold">Categoría</span>,
+      title: <span className="font-bold">Categoría</span>,
       dataIndex: "category",
       key: "category",
       filters: [
@@ -215,21 +215,21 @@ const NomenclatorsTable: React.FC = () => {
       width: "50%"
     },
     {
-      title: <span className="font-semibold">Código</span>,
+      title: <span className="font-bold">Código</span>,
       dataIndex: "code",
       key: "code",
       width: "40%",
       ...getColumnSearchProps("code")
     },
     {
-      title: <span className="font-semibold">Valor</span>,
+      title: <span className="font-bold">Valor</span>,
       dataIndex: "value",
       key: "value",
       width: "35%",
       render: (text) => text && <span>$ {parseFloat(text).toFixed(2)}</span>
     },
     {
-      title: <span className="font-semibold">Acciones</span>,
+      title: <span className="font-bold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, { ...record }) => (

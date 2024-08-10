@@ -445,13 +445,13 @@ const MaterialsTable: React.FC = () => {
 
   const columns: ColumnsType<DataType> = [
     {
-      title: <span className="font-semibold">Código</span>,
+      title: <span className="font-bold">Código</span>,
       dataIndex: "code",
       key: "code",
       width: "5%"
     },
     {
-      title: <span className="font-semibold">Categoría</span>,
+      title: <span className="font-bold">Categoría</span>,
       dataIndex: "category",
       key: "category",
       filters: categoryFilter,
@@ -460,20 +460,20 @@ const MaterialsTable: React.FC = () => {
       width: "15%"
     },
     {
-      title: <span className="font-semibold">Nombre</span>,
+      title: <span className="font-bold">Nombre</span>,
       dataIndex: "materialName",
       key: "materialName",
       width: "15%",
       ...getColumnSearchProps("materialName")
     },
     {
-      title: <span className="font-semibold">Descripción</span>,
+      title: <span className="font-bold">Descripción</span>,
       dataIndex: "description",
       key: "description",
       width: "15%"
     },
     {
-      title: <span className="font-semibold">Coste Unitario</span>,
+      title: <span className="font-bold">Coste Unitario</span>,
       dataIndex: "costPerUnit",
       key: "costPerUnit",
       width: "10%",
@@ -491,7 +491,7 @@ const MaterialsTable: React.FC = () => {
       )
     },
     {
-      title: <span className="font-semibold">Existencias</span>,
+      title: <span className="font-bold">Existencias</span>,
       dataIndex: "unitsTotal",
       key: "unitsTotal",
       width: "5%",
@@ -508,13 +508,13 @@ const MaterialsTable: React.FC = () => {
       }
     },
     {
-      title: <span className="font-semibold">Unidad de Medida</span>,
+      title: <span className="font-bold">Unidad de Medida</span>,
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "10%"
     },
     {
-      title: <span className="font-semibold">Existencias Mínimas</span>,
+      title: <span className="font-bold">Existencias Mínimas</span>,
       dataIndex: "minimumExistence",
       key: "minimumExistence",
       width: "5%",
@@ -528,7 +528,7 @@ const MaterialsTable: React.FC = () => {
       )
     },
     {
-      title: <span className="font-semibold">Proveedor</span>,
+      title: <span className="font-bold">Proveedor</span>,
       dataIndex: "provider",
       key: "provider",
       width: "10%",
@@ -536,7 +536,7 @@ const MaterialsTable: React.FC = () => {
       ...getColumnSearchProps("provider")
     },
     {
-      title: <span className="font-semibold">Fecha de Entrada</span>,
+      title: <span className="font-bold">Fecha de Entrada</span>,
       dataIndex: "enterDate",
       key: "enterDate",
       width: "8%",

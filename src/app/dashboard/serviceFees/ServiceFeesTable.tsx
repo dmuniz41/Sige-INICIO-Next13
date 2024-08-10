@@ -250,7 +250,7 @@ const ServiceFeeTable: React.FC = () => {
 
   const columns: ColumnsType<IServiceFee> = [
     {
-      title: <span className="font-semibold">Nombre de la Tarifa</span>,
+      title: <span className="font-bold">Nombre de la Tarifa</span>,
       dataIndex: "taskName",
       key: "taskName",
       width: "45%",
@@ -258,7 +258,7 @@ const ServiceFeeTable: React.FC = () => {
       ...getColumnSearchProps("taskName")
     },
     {
-      title: <span className="font-semibold">Nomenclador</span>,
+      title: <span className="font-bold">Nomenclador</span>,
       dataIndex: "nomenclatorId",
       key: "nomenclatorId",
       width: "10%",
@@ -266,7 +266,7 @@ const ServiceFeeTable: React.FC = () => {
       sorter: (a: any, b: any) => a.nomenclatorId.localeCompare(b.nomenclatorId)
     },
     {
-      title: <span className="font-semibold">Categoría</span>,
+      title: <span className="font-bold">Categoría</span>,
       dataIndex: "category",
       key: "category",
       width: "15%",
@@ -276,7 +276,7 @@ const ServiceFeeTable: React.FC = () => {
     },
 
     {
-      title: <span className="font-semibold">Precio</span>,
+      title: <span className="font-bold">Precio</span>,
       dataIndex: "salePrice",
       key: "salePrice",
       width: "10%",
@@ -290,7 +290,7 @@ const ServiceFeeTable: React.FC = () => {
       }
     },
     {
-      title: <span className="font-semibold">Precio USD</span>,
+      title: <span className="font-bold">Precio USD</span>,
       dataIndex: "salePriceUSD",
       key: "salePriceUSD",
       width: "10%",
@@ -308,13 +308,13 @@ const ServiceFeeTable: React.FC = () => {
       }
     },
     {
-      title: <span className="font-semibold">Unidad de Medida</span>,
+      title: <span className="font-bold">Unidad de Medida</span>,
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "15%"
     },
     {
-      title: <span className="font-semibold">Acciones</span>,
+      title: <span className="font-bold">Acciones</span>,
       key: "actions",
       width: "5%",
       render: (_, record) => (

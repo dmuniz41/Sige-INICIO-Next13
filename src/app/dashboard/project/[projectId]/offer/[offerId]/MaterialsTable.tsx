@@ -54,13 +54,13 @@ export const MaterialsListModal: React.FC<CollectionCreateFormProps> = ({
 
   const columns: ColumnsType<{ description: string; amount: number; unitMeasure: string }> = [
     {
-      title: <span className="font-semibold">Nombre del Material</span>,
+      title: <span className="font-bold">Nombre del Material</span>,
       dataIndex: "description",
       key: "description",
       width: "60%"
     },
     {
-      title: <span className="font-semibold">Cantidad</span>,
+      title: <span className="font-bold">Cantidad</span>,
       dataIndex: "amount",
       key: "amount",
       width: "10%",
@@ -77,7 +77,7 @@ export const MaterialsListModal: React.FC<CollectionCreateFormProps> = ({
       }
     },
     {
-      title: <span className="font-semibold">Unidad de Medida</span>,
+      title: <span className="font-bold">Unidad de Medida</span>,
       dataIndex: "unitMeasure",
       key: "unitMeasure",
       width: "15%"
@@ -89,7 +89,7 @@ export const MaterialsListModal: React.FC<CollectionCreateFormProps> = ({
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-semibold text-lg">Lista de Materiales</span>
+          <span className="font-bold text-lg">Lista de Materiales</span>
         </div>
       }
       style={{ textAlign: "left" }}
