@@ -2,21 +2,21 @@ import { connectDB } from "@/libs/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
 import { generateRandomString } from "@/helpers/randomStrings";
+import { IRepresentativeNomenclator } from "../../../models/nomenclators/representative";
 import { verifyJWT } from "@/libs/jwt";
 import Nomenclator, { INomenclator } from "@/models/nomenclator";
-import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 import RepresentativeNomenclator from "@/models/nomenclators/representative";
-import { IRepresentativeNomenclator } from "../../../models/nomenclators/representative";
+import ServiceFee, { IServiceFee } from "@/models/serviceFees";
+import ServiceFeeAuxiliary from "@/models/serviceFeeAuxiliary";
 
 export async function POST(request: NextRequest) {
   const { ...serviceFee }: IServiceFee = await request.json();
 
-  // TODO: MOVER ESTOS VALORES A LA HOJA DE AUXILIARES
-  const artisticTalentCoefficient = 0.5;
-  const comercialMarginCoefficient = 0.3;
-  const ONATCoefficient = 0.2;
-
   const representativeNomenclators = await RepresentativeNomenclator.find();
+  const serviceFeeAuxiliary = await ServiceFeeAuxiliary.find();
+
+  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100;
+  const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100;
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -92,10 +92,10 @@ export async function POST(request: NextRequest) {
       code: serviceFee?.nomenclatorId
     })) as INomenclator;
 
-    // ? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
+    // ! REVISAR: EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
     const artisticTalentValue = expensesTotalValue * artisticTalentCoefficient;
     // const comercialMarginValue = (expensesTotalValue + artisticTalentValue) * comercialMarginCoefficient;
-    const ONATValue = expensesTotalValue * ONATCoefficient;
+    const ONATValue = artisticTalentValue * ONATCoefficient;
     // const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
     const pricePerRepresentative = representativeNomenclators.map((representative: IRepresentativeNomenclator) => {
       if (representative.name === "EFECTIVO") {
@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
       } else {
         return {
           representativeName: representative.name,
-          price: expensesTotalValue + expensesTotalValue * (representative.percentage / 100) + ONATValue + artisticTalentValue,
+          price: expensesTotalValue + artisticTalentValue * (representative.percentage / 100) + ONATValue,
           priceUSD: 0
         };
       }
@@ -189,12 +189,11 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   const { ...serviceFee }: IServiceFee = await request.json();
 
-  // TODO: MOVER ESTOS VALORES A LA HOJA DE AUXILIARES
-  const artisticTalentCoefficient = 0.5;
-  const comercialMarginCoefficient = 0.3;
-  const ONATCoefficient = 0.2;
-
   const representativeNomenclators = await RepresentativeNomenclator.find();
+  const serviceFeeAuxiliary = await ServiceFeeAuxiliary.find();
+
+  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100;
+  const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100;
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -269,22 +268,22 @@ export async function PUT(request: NextRequest) {
       code: serviceFee.nomenclatorId
     });
 
-    // ? EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
+    // ! REVISAR: EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
     const artisticTalentValue = expensesTotalValue * artisticTalentCoefficient;
     // const comercialMarginValue = (expensesTotalValue + artisticTalentValue) * comercialMarginCoefficient;
-    const ONATValue = expensesTotalValue * ONATCoefficient;
+    const ONATValue = artisticTalentValue * ONATCoefficient;
     // const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
     const pricePerRepresentative = representativeNomenclators.map((representative: IRepresentativeNomenclator) => {
       if (representative.name === "EFECTIVO") {
         return {
           representativeName: "EFECTIVO",
           price: expensesTotalValue + artisticTalentValue,
-          priceUSD:  (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
+          priceUSD: (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
         };
       } else {
         return {
           representativeName: representative.name,
-          price: expensesTotalValue + expensesTotalValue * (representative.percentage / 100) + ONATValue + artisticTalentValue,
+          price: expensesTotalValue + artisticTalentValue * (representative.percentage / 100) + ONATValue,
           priceUSD: 0
         };
       }

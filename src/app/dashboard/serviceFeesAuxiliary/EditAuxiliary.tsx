@@ -1,10 +1,11 @@
 "use client";
 import { Button, Form, Input, InputNumber } from "antd";
-import { IServiceFeeAuxiliary } from "../../../models/serviceFeeAuxiliary";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { useEffect } from "react";
+
+import { IServiceFeeAuxiliary } from "../../../models/serviceFeeAuxiliary";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
-import React, { useEffect } from "react";
 
 export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
   const dispatch = useAppDispatch();
@@ -32,16 +33,12 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
       size="middle"
       fields={[
         {
-          name: "calculationCoefficient",
-          value: defaultValues?.calculationCoefficient
+          name: "ONATTaxPercentage",
+          value: defaultValues?.ONATTaxPercentage
         },
         {
-          name: "officialCurrencyChangeCoefficient",
-          value: defaultValues?.officialCurrencyChangeCoefficient
-        },
-        {
-          name: "informalCurrencyChange",
-          value: defaultValues?.informalCurrencyChange
+          name: "artisticTalentPercentage",
+          value: defaultValues?.artisticTalentPercentage
         },
         {
           name: "mermaCoefficient",
@@ -87,8 +84,8 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
         <div className="flex gap-2 pr-[13rem]">
           <Form.Item
             className="mb-3 flex-1"
-            label={<span className="font-semibold text-md">Coeficiente de Cálculo</span>}
-            name="calculationCoefficient"
+            label={<span className="font-semibold text-md">Impuesto ONAT (%)</span>}
+            name="ONATTaxPercentage"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
             <InputNumber min={0} />
@@ -97,18 +94,8 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
         <div className="flex gap-2 pr-[13rem]">
           <Form.Item
             className="mb-3 flex-1"
-            label={<span className="font-semibold text-md">Coef. de Cambio Informal</span>}
-            name="officialCurrencyChangeCoefficient"
-            rules={[{ required: true, message: "Campo requerido" }]}
-          >
-            <InputNumber min={0} />
-          </Form.Item>
-        </div>
-        <div className="flex gap-2 pr-[13rem]">
-          <Form.Item
-            className="mb-3 flex-1"
-            label={<span className="font-semibold text-md">Cambio Informal</span>}
-            name="informalCurrencyChange"
+            label={<span className="font-semibold text-md">Talento Artístico (%)</span>}
+            name="artisticTalentPercentage"
             rules={[{ required: true, message: "Campo requerido" }]}
           >
             <InputNumber min={0} />
@@ -150,11 +137,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
                     >
                       <Input placeholder="Descripción" className="w-full" />
                     </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "value"]}
-                      rules={[{ required: true, message: "Campo requerido" }]}
-                    >
+                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true, message: "Campo requerido" }]}>
                       <InputNumber min={0} placeholder="Coeficiente" />
                     </Form.Item>
                     <MinusCircleOutlined className="mb-auto" onClick={() => remove(name)} />
@@ -191,11 +174,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
                     >
                       <Input placeholder="Descripción" className="w-full" />
                     </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "value"]}
-                      rules={[{ required: true, message: "Campo requerido" }]}
-                    >
+                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true, message: "Campo requerido" }]}>
                       <InputNumber min={0} placeholder="Coeficiente" />
                     </Form.Item>
                     <MinusCircleOutlined className="mb-auto" onClick={() => remove(name)} />
@@ -232,11 +211,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
                     >
                       <Input placeholder="Descripción" className="w-full" />
                     </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "value"]}
-                      rules={[{ required: true, message: "Campo requerido" }]}
-                    >
+                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true, message: "Campo requerido" }]}>
                       <InputNumber min={0} placeholder="Coeficiente" />
                     </Form.Item>
                     <MinusCircleOutlined className="mb-auto" onClick={() => remove(name)} />
@@ -273,11 +248,7 @@ export const EditAuxiliary = ({ onCreate, defaultValues }: any) => {
                     >
                       <Input placeholder="Descripción" className="w-full" />
                     </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "value"]}
-                      rules={[{ required: true, message: "Campo requerido" }]}
-                    >
+                    <Form.Item {...restField} name={[name, "value"]} rules={[{ required: true, message: "Campo requerido" }]}>
                       <InputNumber min={0} placeholder="Coeficiente" />
                     </Form.Item>
                     <MinusCircleOutlined className="mb-auto" onClick={() => remove(name)} />
