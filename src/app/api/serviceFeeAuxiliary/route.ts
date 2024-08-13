@@ -28,7 +28,7 @@ export async function POST(request: Request) {
 
     const BDServiceFeeAuxiliary = await ServiceFeeAuxiliary.find();
 
-    // * Solo puede existir una hoja de auxiliares
+    // ? SOLO PUEDE EXISTIR UNA HOJA DE AUXILIARES
     if (BDServiceFeeAuxiliary.length > 0) {
       return NextResponse.json(
         {

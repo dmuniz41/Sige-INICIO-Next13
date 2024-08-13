@@ -3,19 +3,18 @@ import { Model, Schema, model, models } from "mongoose";
 export interface IServiceFeeAuxiliary {
   _id: string;
   key: string;
-  calculationCoefficient: number;
   indirectSalariesCoefficient: number;
   mermaCoefficient: number;
   currencyChange: number;
-  officialCurrencyChangeCoefficient: number;
+  artisticTalentPercentage: number;
+  ONATTaxPercentage: number;
+  currency: ["USD", "CUP"];
   transportationExpensesCoefficients: [
     {
       name: string;
       value: number;
     }
   ];
-  informalCurrencyChange: number;
-  currency: ["USD", "CUP"];
   administrativeExpensesCoefficients: [
     {
       name: string;
@@ -43,16 +42,13 @@ const ServiceFeeAuxiliarySchema = new Schema<IServiceFeeAuxiliary, Model<IServic
   currency: {
     type: [String]
   },
-  calculationCoefficient: {
-    type: Number
-  },
   indirectSalariesCoefficient: {
     type: Number
   },
-  officialCurrencyChangeCoefficient: {
+  artisticTalentPercentage: {
     type: Number
   },
-  informalCurrencyChange: {
+  ONATTaxPercentage: {
     type: Number
   },
   currencyChange: {
@@ -87,6 +83,5 @@ const ServiceFeeAuxiliarySchema = new Schema<IServiceFeeAuxiliary, Model<IServic
   ]
 });
 
-const ServiceFeeAuxiliary =
-  models.ServiceFeeAuxiliary || model("ServiceFeeAuxiliary", ServiceFeeAuxiliarySchema);
+const ServiceFeeAuxiliary = models.ServiceFeeAuxiliary || model("ServiceFeeAuxiliary", ServiceFeeAuxiliarySchema);
 export default ServiceFeeAuxiliary;

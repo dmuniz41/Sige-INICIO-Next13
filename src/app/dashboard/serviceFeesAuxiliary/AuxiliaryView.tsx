@@ -6,10 +6,7 @@ import { EditAuxiliary } from "./EditAuxiliary";
 import { EditSvg } from "@/app/global/EditSvg";
 import { IServiceFeeAuxiliary } from "../../../models/serviceFeeAuxiliary";
 import { RootState, useAppSelector } from "@/store/store";
-import {
-  startLoadServiceFeeAuxiliary,
-  startUpdateServiceFeeAuxiliary
-} from "@/actions/serviceFeeAuxiliary";
+import { startLoadServiceFeeAuxiliary, startUpdateServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import { AuxiliarySection } from "./AuxiliarySection";
 import { serviceFeeStartLoading } from "@/actions/serviceFee";
@@ -26,9 +23,8 @@ export const AuxiliaryView = () => {
     dispatch(serviceFeeStartLoading());
   }, [dispatch]);
 
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
-    (state: RootState) => state?.serviceFee
-  );
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
+  console.log("🚀 ~ AuxiliaryView ~ serviceFeeAuxiliary:", serviceFeeAuxiliary);
 
   const handleEdit = () => {
     setEditing(true);
@@ -40,7 +36,7 @@ export const AuxiliaryView = () => {
         _id: serviceFeeAuxiliary?._id,
         administrativeExpensesCoefficients: values.administrativeExpenses,
         indirectSalariesCoefficient: values.indirectSalariesCoefficient,
-        calculationCoefficient: values.calculationCoefficient,
+        artisticTalentPercentage: values.artisticTalentPercentage,
         currency: serviceFeeAuxiliary?.currency,
         currencyChange: values?.currencyChange,
         equipmentDepreciationCoefficients: values.equipmentDepreciation,
@@ -48,7 +44,7 @@ export const AuxiliaryView = () => {
         informalCurrencyChange: values.informalCurrencyChange,
         key: serviceFeeAuxiliary?.key,
         mermaCoefficient: values.mermaCoefficient,
-        officialCurrencyChangeCoefficient: values.officialCurrencyChangeCoefficient,
+        ONATTaxPercentage: values.ONATTaxPercentage,
         payMethod: values.payMethod,
         transportationExpensesCoefficients: values.transportationExpenses
       })
@@ -68,11 +64,7 @@ export const AuxiliaryView = () => {
       dataIndex: "value",
       key: "value",
       width: "150px",
-      render: (value: number) => (
-        <span>
-          $ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
-        </span>
-      )
+      render: (value: number) => <span>{value}</span>
     }
   ];
 
@@ -86,40 +78,36 @@ export const AuxiliaryView = () => {
               Editar
             </button>
           </article>
-          <article className=" flex flex-col items-start gap-3 p-4 rounded-md shadow-lg animate-fade animate-once animate-duration-200">
+          <article className="flex flex-col items-start gap-3 p-4  animate-fade animate-once animate-duration-200">
             <AuxiliarySection
               data={serviceFeeAuxiliary?.administrativeExpensesCoefficients}
               columns={columns}
-              sectionName="Gastos Administrativos"
+              sectionName="Coeficientes  Gastos Administrativos"
             />
             <AuxiliarySection
               data={serviceFeeAuxiliary?.equipmentDepreciationCoefficients}
               columns={columns}
-              sectionName="Depreciación de Equipos"
+              sectionName="Coeficientes  Depreciación de Equipos"
             />
             <AuxiliarySection
               data={serviceFeeAuxiliary?.equipmentMaintenanceCoefficients}
               columns={columns}
-              sectionName="Mantenimiento de Equipos"
+              sectionName="Coeficientes  Mantenimiento de Equipos"
             />
             <AuxiliarySection
               data={serviceFeeAuxiliary?.transportationExpensesCoefficients}
               columns={columns}
-              sectionName="Gastos de Transportación"
+              sectionName="Coeficientes  Gastos de Transportación"
             />
             <AuxiliarySection
               data={[
                 {
-                  name: "Coeficiente de Cálculo",
-                  value: serviceFeeAuxiliary?.calculationCoefficient
+                  name: "Impuesto ONAT (%)",
+                  value: serviceFeeAuxiliary?.ONATTaxPercentage
                 },
                 {
-                  name: "Coeficiente de Cambio Monetario Oficial",
-                  value: serviceFeeAuxiliary?.officialCurrencyChangeCoefficient
-                },
-                {
-                  name: "Cambio Informal",
-                  value: serviceFeeAuxiliary?.informalCurrencyChange
+                  name: "Talento Artístico (%)",
+                  value: serviceFeeAuxiliary?.artisticTalentPercentage
                 },
                 {
                   name: "Coeficiente de Merma",

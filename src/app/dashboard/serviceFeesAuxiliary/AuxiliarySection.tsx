@@ -4,11 +4,11 @@ import React from "react";
 export const AuxiliarySection = (props: any) => {
   const { data, columns, sectionName } = props;
   return (
-    <article className="flex gap-8 w-full">
-      <div className="font-semibold text-base flex items-center min-w-[200px] justify-center">
-        <span>{sectionName}</span>
+    <article className="flex border-1 border-solid border-border_light rounded-md bg-background_light">
+      <div className="font-bold text-lg flex items-center min-w-[350px] justify-center">
+        <span className="w-[250px] text-center">{sectionName}</span>
       </div>
-      <Table dataSource={data} columns={columns} pagination={false} size="small" bordered />
+      <Table dataSource={data} columns={columns} pagination={false} size="small" bordered className="p-2"/>
     </article>
   );
 };
