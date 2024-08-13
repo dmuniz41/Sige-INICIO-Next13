@@ -1,5 +1,4 @@
 import { Table } from "antd";
-import React from "react";
 
 export const AuxiliarySection = (props: any) => {
   const { data, columns, sectionName } = props;

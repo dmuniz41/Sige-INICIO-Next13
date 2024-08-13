@@ -1,15 +1,15 @@
 "use client";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
+import { AuxiliarySection } from "./AuxiliarySection";
 import { EditAuxiliary } from "./EditAuxiliary";
 import { EditSvg } from "@/app/global/EditSvg";
 import { IServiceFeeAuxiliary } from "../../../models/serviceFeeAuxiliary";
 import { RootState, useAppSelector } from "@/store/store";
+import { serviceFeeStartLoading } from "@/actions/serviceFee";
 import { startLoadServiceFeeAuxiliary, startUpdateServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
-import { AuxiliarySection } from "./AuxiliarySection";
-import { serviceFeeStartLoading } from "@/actions/serviceFee";
 
 export const AuxiliaryView = () => {
   const dispatch = useAppDispatch();

@@ -1,7 +1,7 @@
 "use client";
 import { Button, Form, Input, InputNumber } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 import { IServiceFeeAuxiliary } from "../../../models/serviceFeeAuxiliary";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
