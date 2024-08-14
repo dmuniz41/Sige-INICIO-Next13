@@ -49,7 +49,7 @@ export const CreateItemForm = (props: { projectId: string }) => {
       requiredMark={"optional"}
       size="middle"
     >
-      <section className=" flex-col">
+      <section className="flex-col">
         <Form.Item
           className="mb-3 w-[35%]"
           name="description"

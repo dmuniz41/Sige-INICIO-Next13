@@ -10,7 +10,7 @@ import { PlusSvg } from "@/app/global/PlusSvg";
 import { useAppDispatch } from "@/hooks/hooks";
 
 export const ItemTableSection = (props: any) => {
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const { sectionName, values, valuesSetter, addModalSetter, editModalSetter, valueToEditSetter, buttonText, actionToDispatch } =
     props;
 
@@ -86,7 +86,7 @@ export const ItemTableSection = (props: any) => {
   ];
 
   return (
-    <section className=" flex w-full  rounded-md p-2 border border-border_light shadow-sm">
+    <section className=" flex w-full  rounded-md p-2 border border-border_light shadow-md">
       <div className="flex w-[15%] h-full p-2 text-center items-center justify-center bg-[#fafafa] rounded-l-md">
         <span className="text-base font-bold">{sectionName?.toUpperCase()}</span>
       </div>
