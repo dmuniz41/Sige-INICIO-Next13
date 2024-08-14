@@ -7,9 +7,11 @@ import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { EditSvg } from "@/app/global/EditSvg";
 import { IActivity } from "@/models/offer";
 import { PlusSvg } from "@/app/global/PlusSvg";
+import { useAppDispatch } from "@/hooks/hooks";
 
 export const ItemTableSection = (props: any) => {
-  const { sectionName, values, valuesSetter, addModalSetter, editModalSetter, valueToEditSetter, buttonText, dispatch, actionToDispatch } =
+  const dispatch = useAppDispatch();
+  const { sectionName, values, valuesSetter, addModalSetter, editModalSetter, valueToEditSetter, buttonText, actionToDispatch } =
     props;
 
   const subtotal = useMemo(() => values?.map((value: IActivity) => value.value), [values]);
@@ -18,12 +20,12 @@ export const ItemTableSection = (props: any) => {
     valuesSetter(values.filter((value: IActivity) => JSON.stringify(value) !== JSON.stringify(record)));
   };
 
-  const handleEdit = (record: IActivity) => {
-    const selectedActivity = values.find((value: IActivity) => value.description === record.description);
-    dispatch(actionToDispatch(selectedActivity));
-    valueToEditSetter(record);
-    editModalSetter(true);
-  };
+  // const handleEdit = (record: IActivity) => {
+  //   const selectedActivity = values.find((value: IActivity) => value.description === record.description);
+  //   dispatch(actionToDispatch(selectedActivity));
+  //   valueToEditSetter(record);
+  //   editModalSetter(true);
+  // };
 
   const columns: ColumnsType<IActivity> = [
     {
@@ -68,11 +70,11 @@ export const ItemTableSection = (props: any) => {
       width: "5%",
       render: (_, { ...record }) => (
         <div className="flex gap-1 justify-center">
-          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+          {/* <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleEdit(record)} className="table-see-action-btn">
               <EditSvg width={18} height={18} />
             </button>
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
             <button onClick={() => handleDelete(record)} className="table-delete-action-btn">
               <DeleteSvg width={17} height={17} />

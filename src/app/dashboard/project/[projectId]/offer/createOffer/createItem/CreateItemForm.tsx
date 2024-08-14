@@ -8,7 +8,7 @@ import { AddActivityModal } from "./AddActivity";
 import { IActivity, IOffer } from "@/models/offer";
 import { ItemTableSection } from "../ItemTableSection";
 import { RootState, useAppSelector } from "@/store/store";
-import { setCurrentItem } from "@/actions/offer";
+import { editActivityList, setCurrentItem } from "@/actions/offer";
 import { useAppDispatch } from "@/hooks/hooks";
 
 export const CreateItemForm = (props: { projectId: string }) => {
@@ -84,6 +84,7 @@ export const CreateItemForm = (props: { projectId: string }) => {
             valuesSetter={setActivitiesValues}
             addModalSetter={setAddActivitiesModal}
             buttonText="Añadir Actividad"
+            // actionToDispatch={editActivityList}
             form={form}
           />
         </div>
@@ -114,7 +115,6 @@ export const CreateItemForm = (props: { projectId: string }) => {
           Crear
         </button>
       </Form.Item>
-
       <AddActivityModal open={addActivitiesModal} onCancel={() => setAddActivitiesModal(false)} onCreate={onAddActivity} />
     </Form>
   );

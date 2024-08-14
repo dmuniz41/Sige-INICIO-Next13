@@ -1,4 +1,5 @@
 "use client";
+import { Form, SelectProps, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import Swal from "sweetalert2";
@@ -6,20 +7,17 @@ import Swal from "sweetalert2";
 import { deleteItem, editItem, selectedItem, startAddOffer } from "@/actions/offer";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { EditSvg } from "@/app/global/EditSvg";
-import { Form, Select, SelectProps, Tooltip } from "antd";
 import { IOffer, IOfferItem } from "@/models/offer";
-import { IProject } from "@/models/project";
 import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
+import { Item } from "../Item";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/representative";
 import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
-import { Item } from "../Item";
 
 export const EditOfferForm = (props: { projectId: string; offerId: string }) => {
   const [form] = Form.useForm();
-  const [representativePercentage, setRepresentativePercentage] = useState(0);
   const { projectId, offerId } = props;
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -42,31 +40,17 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
     isItemUpdated: boolean;
   } = useAppSelector((state: RootState) => state?.offer);
 
-  const { selectedProject }: { selectedProject: IProject } = useAppSelector((state: RootState) => state?.project);
-
-  const [representativeName, setRepresentativeName] = useState(selectedOffer?.representativeName);
-
-  const { representativeNomenclators }: { representativeNomenclators: IRepresentativeNomenclator[] } = useAppSelector(
-    (state: RootState) => state?.nomenclator
-  );
-
-  const representativeOptions: SelectProps["options"] = representativeNomenclators?.map((representative) => {
-    return {
-      label: `${representative.name}`,
-      value: `${representative.name}`
-    };
-  });
+  const [representativeName] = useState(selectedOffer?.representativeName);
 
   const totalValue = useMemo(
     () =>
-      (
-        selectedOffer?.itemsList?.reduce((totalValue, item) => item.value + totalValue, 0) *
-        (representativePercentage / 100 + 1)
-      ).toLocaleString("DE", {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2
-      }),
-    [selectedOffer, representativePercentage]
+      selectedOffer?.itemsList
+        ?.reduce((totalValue, item) => item.value + totalValue, 0)
+        .toLocaleString("DE", {
+          maximumFractionDigits: 2,
+          minimumFractionDigits: 2
+        }),
+    [selectedOffer]
   );
 
   if (isItemUpdated) {
@@ -128,29 +112,6 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
         <section className="flex gap-4 flex-col w-full overflow-none rounded-md shadow-md p-4">
           <div className="grid gap-2">
             <h1 className="text-xl font-semibold mb-2">{selectedOffer?.projectName}</h1>
-            <Form.Item
-              className="mb-3 w-[30%]"
-              label={<span className="font-semibold text-md">Representación</span>}
-              name="representativeName"
-              rules={[{ required: true, message: "Campo requerido" }]}
-            >
-              <Select
-                allowClear
-                options={representativeOptions}
-                onSelect={(value) => {
-                  setRepresentativePercentage(
-                    representativeNomenclators.find((representative) => representative.name === value)?.percentage ?? 1
-                  );
-                  setRepresentativeName(form.getFieldValue("representativeName"));
-                }}
-                showSearch
-                optionFilterProp="children"
-                filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-                filterSort={(optionA: any, optionB: any) =>
-                  (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
-                }
-              />
-            </Form.Item>
             {selectedOffer?.itemsList?.map((item, index) => (
               <article className="flex gap-2 items-center" key={index}>
                 <Item number={index + 1} item={item} />
@@ -192,15 +153,10 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
             onClick={() => {
               form
                 .validateFields()
-                .then((values) => {
+                .then(() => {
                   dispatch(
                     startAddOffer({
                       ...selectedOffer,
-                      representativeName: values?.representativeName,
-                      representationPercentage: representativeNomenclators?.find(
-                        (representative) => representative?.name === values?.representativeName
-                      )?.percentage,
-                      projectName: `${selectedProject?.projectName}`,
                       version: `v${offers.length + 1}`,
                       value: selectedOffer?.itemsList?.map((item) => item.value).reduce((total, current) => total + current, 0)
                     })

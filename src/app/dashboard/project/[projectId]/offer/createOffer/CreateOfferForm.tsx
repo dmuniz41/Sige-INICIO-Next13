@@ -200,7 +200,13 @@ export const CreateOfferForm = (props: { projectId: string }) => {
               <div className="flex font-semibold">
                 <h2>VALOR TOTAL : </h2>
               </div>
-              <div className="flex px-4">$ {totalValue}</div>
+              <div className="flex px-4">
+                ${" "}
+                {totalValue.toLocaleString("DE", {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2
+                })}
+              </div>
             </article>
           </div>
         )}
