@@ -2,6 +2,7 @@
 import { Form } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import TextArea from "antd/es/input/TextArea";
 
 import { AddActivityModal } from "../../../createOffer/createItem/AddActivity";
 import { editActivityList, selectedActivity, setCurrentItem } from "@/actions/offer";
@@ -9,9 +10,8 @@ import { EditActivityModal } from "../editItem/EditActivity";
 import { generateRandomString } from "@/helpers/randomStrings";
 import { IActivity, IOffer } from "@/models/offer";
 import { ItemTableSection } from "../../../createOffer/ItemTableSection";
-import { useAppDispatch } from "@/hooks/hooks";
-import TextArea from "antd/es/input/TextArea";
 import { RootState, useAppSelector } from "@/store/store";
+import { useAppDispatch } from "@/hooks/hooks";
 
 export const CreateItemForm = (props: { projectId: string; offerId: string }) => {
   const [form] = Form.useForm();
@@ -75,7 +75,7 @@ export const CreateItemForm = (props: { projectId: string; offerId: string }) =>
       requiredMark={"optional"}
       size="middle"
     >
-      <section className=" flex-col">
+      <section className="flex-col">
         <Form.Item
           className="mb-3 w-[35%]"
           name="description"

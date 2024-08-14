@@ -96,7 +96,7 @@ export default function OfferPDFReport(props) {
       title: "Descripción",
       custom: true,
       component: (item) =>
-        `${item.description} ${item.listOfMeasures.map((e) => e.description)} (Complejidad ${item.complexity})`,
+        `${item.description} ${item.listOfMeasures.map((e) => e.description)}`,
       width: "50"
     },
     {

@@ -149,7 +149,6 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
                           unitMeasure: currentUnitMeasure,
                           value: size * currentPrice,
                           width: 0,
-
                           listOfMeasures: activitiesTableValues,
                           pricePerRepresentative: selectedServiceFee?.pricePerRepresentative!
                         }
@@ -198,13 +197,10 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
             options={listOfActivities}
             onSelect={(value) => {
               const currentServiceFee = serviceFees?.find((serviceFee) => serviceFee?.taskName === value.label);
-              console.log("🚀 ~ currentServiceFee:", currentServiceFee)
               const representativePrice = currentServiceFee?.pricePerRepresentative?.find(
                 (rep) => rep?.representativeName === selectedProject?.payMethod
               );
-              console.log("🚀 ~ selectedProject:", selectedProject)
-              console.log(representativePrice);
-              
+
               setSelectedServiceFee(currentServiceFee!);
               setCurrentUnitMeasure(currentServiceFee?.unitMeasure!);
               setCurrentPrice(representativePrice?.price!);

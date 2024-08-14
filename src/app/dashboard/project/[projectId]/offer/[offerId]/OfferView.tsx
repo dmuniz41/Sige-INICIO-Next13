@@ -133,7 +133,7 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
         </div>
       </article>
       <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-4">
-        <h1 className="flex gap-4 text-xl font-semibold mb-2">
+        <h1 className="flex gap-4 text-xl font-bold mb-2">
           {`${selectedOffer?.projectName} (${selectedOffer?.version})`}
           {selectedOffer?.isFinalOffer ? (
             <div className="text-success-500 flex items-center">
@@ -153,10 +153,10 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
           </div>
         ))}
         <article className="flex items-center justify-end h-[39px] flex-grow bg-white-100 border-solid border border-border_light rounded-lg">
-          <div className="flex font-semibold">
+          <div className="flex font-bold">
             <h2>VALOR TOTAL : </h2>
           </div>
-          <div className="flex px-4">
+          <div className="flex px-4 font-bold">
             ${" "}
             {selectedOffer?.value?.toLocaleString("DE", {
               maximumFractionDigits: 2,
