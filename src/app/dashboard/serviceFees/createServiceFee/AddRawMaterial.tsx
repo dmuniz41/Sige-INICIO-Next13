@@ -44,7 +44,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
 
   // TODO: QUITAR EL ID DEL ALMACEN HARCODEADO //
   useEffect(() => {
-    dispatch(materialsStartLoading("653957480a9e16fed4c1bbd5"));
+    dispatch(materialsStartLoading("66b679882628e2b4e1727b3d"));
   }, [dispatch]);
 
   nomenclators.map((nomenclator: INomenclator) => {
@@ -139,7 +139,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
               // ? SI EL MATERIAL ES GASTABLE SE LE APLICA EL COEFICIENTE DE MERMA AL PRECIO DEL MATERIAL, EN CASO CONTRARIO MANTIENE EL PRECIO ORIGINAL?//
               if (materialNomenclator?.isDecrease) {
                 setCurrentPrice(
-                  selectedMaterial?.costPerUnit! * serviceFeeAuxiliary?.indirectSalariesCoefficient
+                  selectedMaterial?.costPerUnit! * serviceFeeAuxiliary?.mermaCoefficient
                 );
               } else {
                 setCurrentPrice(selectedMaterial?.costPerUnit!);

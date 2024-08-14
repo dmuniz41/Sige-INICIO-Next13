@@ -5,13 +5,15 @@ import { generateRandomString } from "./randomStrings";
 import Nomenclator, { INomenclator } from "@/models/nomenclator";
 import RepresentativeNomenclator, { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 import ServiceFee, { IServiceFee } from "@/models/serviceFees";
-import ServiceFeeAuxiliary from "@/models/serviceFeeAuxiliary";
+import ServiceFeeAuxiliary, { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
+import MaterialNomenclator, { IMaterialNomenclator } from "@/models/nomenclators/materials";
 
 // ? CUANDO SE MODIFICA EL VALOR DE UN NOMENCLADOR ASOCIADO A UN MATERIAL DEL ALMACEN(CATEGORIA + NOMBRE) SE ACTUALIZAN TODAS LAS FICHAS DE COSTO QUE UTILIZAN ESE MATERIAL Y SE VUELVEN A CALCULAR SUS PRECIOS ?//
 
 export const updateServiceFeesMaterials = async (materialNomenclator: INomenclator, serviceFees: IServiceFee[]) => {
-  const representativeNomenclators = await RepresentativeNomenclator.find();
-  const serviceFeeAuxiliary = await ServiceFeeAuxiliary.find();
+  const representativeNomenclators = (await RepresentativeNomenclator.find()) as IRepresentativeNomenclator[];
+  const serviceFeeAuxiliary = (await ServiceFeeAuxiliary.find()) as IServiceFeeAuxiliary[];
+  const decreaseMaterialsNomenclators = (await MaterialNomenclator.find()).map((mn) => mn.isDecrease && mn.name);
 
   const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100;
   const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100;
@@ -25,14 +27,26 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
     let rawMaterials = serviceFees[index].rawMaterials;
     rawMaterials.forEach((rawMaterial, index, rawMaterials) => {
       if (rawMaterial.description.trim().toLowerCase() === materialNomenclator.code.trim().toLowerCase()) {
-        rawMaterials[index] = {
-          description: rawMaterial.description,
-          unitMeasure: rawMaterial.unitMeasure,
-          amount: rawMaterial.amount,
-          price: materialNomenclator.value ?? 0,
-          value: materialNomenclator.value! * rawMaterial.amount
-        };
-        return rawMaterials[index];
+        // ? SI EL MATERIAL ESTA EN LA LISTA DE MATERIALES GASTABLES ENTOCES APLICA EL COEFICIENTE DE MERMA AL VALOR DEL MATERIAL
+        if (decreaseMaterialsNomenclators.some((value) => value === rawMaterial.description.split(" ")[0])) {
+          rawMaterials[index] = {
+            description: rawMaterial.description,
+            unitMeasure: rawMaterial.unitMeasure,
+            amount: rawMaterial.amount,
+            price: materialNomenclator.value! * serviceFeeAuxiliary[0].mermaCoefficient,
+            value: materialNomenclator.value! * rawMaterial.amount * serviceFeeAuxiliary[0].mermaCoefficient
+          };
+          return rawMaterials[index];
+        } else {
+          rawMaterials[index] = {
+            description: rawMaterial.description,
+            unitMeasure: rawMaterial.unitMeasure,
+            amount: rawMaterial.amount,
+            price: materialNomenclator.value! * serviceFeeAuxiliary[0].mermaCoefficient,
+            value: materialNomenclator.value! * rawMaterial.amount
+          };
+          return rawMaterials[index];
+        }
       }
     });
   });
@@ -92,7 +106,7 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
         category: "Tarifa de Servicio",
         code: serviceFee.nomenclatorId
       });
-      
+
       // ! REVISAR: EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
       const artisticTalentValue = expensesTotalValue * artisticTalentCoefficient;
       // const comercialMarginValue = (expensesTotalValue + artisticTalentValue) * comercialMarginCoefficient;
