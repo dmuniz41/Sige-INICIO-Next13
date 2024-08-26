@@ -90,7 +90,6 @@ export async function POST(request: NextRequest) {
         );
       } else {
         // ? SI LAS EXISTENCIAS DESPUES DE EXTRAER EL MATERIAL ES CERO ELIMINA EL MATERIAL //
-        //! REVISAR ESTE ERROR DE TS //
         if (newTotal === 0) {
           let code = BDMaterial.code;
           let deletedMaterial: IMaterial = (await Material.findOneAndDelete({ code })) as unknown as IMaterial;
@@ -100,7 +99,7 @@ export async function POST(request: NextRequest) {
             materialName: deletedMaterial?.materialName
           });
           if (materialList.length == 0) {
-            await await Nomenclator.findOneAndDelete({
+            await Nomenclator.findOneAndDelete({
               category: "Material",
               code: `${deletedMaterial?.category} ${deletedMaterial?.materialName}`
             });
@@ -197,9 +196,7 @@ export async function POST(request: NextRequest) {
 
       // ? ACTUALIZA EL VALOR TOTAL DEL ALMACEN //
       const DBWarehouse = await Warehouse.findById(material?.warehouse);
-      console.log("🚀 ~ POST ~ DBWarehouse:", DBWarehouse)
       let newWarehouseValue = DBWarehouse?.totalValue + material?.operation?.amount * material?.costPerUnit;
-      console.log("🚀 ~ POST ~ newWarehouseValue:", newWarehouseValue)
       await Warehouse.findByIdAndUpdate(material?.warehouse, { totalValue: newWarehouseValue });
 
       await newMaterial.save();
@@ -211,6 +208,8 @@ export async function POST(request: NextRequest) {
       });
       const prices: number[] = materialList.map((material) => material?.costPerUnit);
       const maxPrice: number = Math.max(...prices);
+      console.log("🚀 ~ POST ~ prices:", prices)
+      console.log("🚀 ~ POST ~ maxPrice:", maxPrice)
 
       // ? CREA UN NUEVO NOMENCLADOR ASOCIADO A ESE MATERIAL //
       const BDNomenclator = (await Nomenclator.findOne({
@@ -488,9 +487,10 @@ export async function DELETE(request: NextRequest) {
     }
 
     // ? ACTUALIZA EL VALOR TOTAL DEL ALMACEN SI SE ELIMINA UN MATERIAL //
+    // TODO: Revisar
     const deletedMaterial = await Material.findOneAndDelete({
       code: params.get("code")
-    });
+    }) as unknown as IMaterial;
     const DBWarehouse = await Warehouse.findById(params.get("warehouse"));
     let newWarehouseValue = DBWarehouse.totalValue - deletedMaterial.materialTotalValue!;
     await Warehouse.findByIdAndUpdate(params.get("warehouse"), { totalValue: newWarehouseValue });

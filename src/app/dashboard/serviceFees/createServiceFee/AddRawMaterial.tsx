@@ -38,6 +38,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
     (state: RootState) => state?.serviceFee
   );
+  console.log("🚀 ~ serviceFeeAuxiliary:", serviceFeeAuxiliary.mermaCoefficient)
 
   const DBMaterials: INomenclator[] = [];
   const dispatch = useAppDispatch();
@@ -129,6 +130,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
                   `${material.category} ${material.materialName}`.trim().toLowerCase() ===
                   String(value.label).trim().toLowerCase()
               );
+              console.log("🚀 ~ selectedMaterial:", selectedMaterial)
               const materialNomenclator = materialsNomenclators.find(
                 (mn) =>
                   mn.name.trim().toLocaleLowerCase() ===
@@ -139,7 +141,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
               // ? SI EL MATERIAL ES GASTABLE SE LE APLICA EL COEFICIENTE DE MERMA AL PRECIO DEL MATERIAL, EN CASO CONTRARIO MANTIENE EL PRECIO ORIGINAL?//
               if (materialNomenclator?.isDecrease) {
                 setCurrentPrice(
-                  selectedMaterial?.costPerUnit! * serviceFeeAuxiliary?.indirectSalariesCoefficient
+                  selectedMaterial?.costPerUnit! * serviceFeeAuxiliary?.mermaCoefficient
                 );
               } else {
                 setCurrentPrice(selectedMaterial?.costPerUnit!);
