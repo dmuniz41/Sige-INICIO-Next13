@@ -15,12 +15,7 @@ import type { InputRef } from "antd";
 
 import { AddMaterialForm } from "./AddMaterialForm";
 import { DeleteSvg } from "../../../global/DeleteSvg";
-import {
-  editMaterial,
-  materialsStartLoading,
-  startAddMaterial,
-  startDeleteMaterial
-} from "@/actions/material";
+import { editMaterial, materialsStartLoading, startAddMaterial, startDeleteMaterial } from "@/actions/material";
 import { EditMaterialForm } from "./EditMaterialForm";
 import { EditSvg } from "../../../global/EditSvg";
 import { INomenclator } from "@/models/nomenclator";
@@ -41,13 +36,10 @@ import PDFReport from "@/helpers/PDFReport";
 import { materialNomenclatorsStartLoading } from "@/actions/nomenclators/material";
 import { IMaterialNomenclator } from "@/models/nomenclators/materials";
 
-const PDFDownloadLink = dynamic(
-  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
-  {
-    ssr: false,
-    loading: () => <p>Loading...</p>
-  }
-);
+const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
+  ssr: false,
+  loading: () => <p>Loading...</p>
+});
 interface DataType {
   _id: string;
   category: string;
@@ -158,11 +150,9 @@ const MaterialsTable: React.FC = () => {
     data = [];
   }
 
-  const {
-    nomenclators,
-    materialsNomenclators
-  }: { nomenclators: INomenclator[]; materialsNomenclators: IMaterialNomenclator[] } =
-    useAppSelector((state: RootState) => state?.nomenclator);
+  const { materialsNomenclators }: { nomenclators: INomenclator[]; materialsNomenclators: IMaterialNomenclator[] } = useAppSelector(
+    (state: RootState) => state?.nomenclator
+  );
 
   const categoryFilter: any[] = [];
   materialsNomenclators.map((materialNomenclator) => {
@@ -232,11 +222,7 @@ const MaterialsTable: React.FC = () => {
     dispatch(materialsStartLoading(selectedWarehouse));
   };
 
-  const handleSearch = (
-    selectedKeys: string[],
-    confirm: (param?: FilterConfirmProps) => void,
-    dataIndex: DataIndex
-  ) => {
+  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -343,14 +329,7 @@ const MaterialsTable: React.FC = () => {
 
   const onEditMaterial = (values: any): void => {
     dispatch(
-      editMaterial(
-        selectedRow?.category!,
-        values.code,
-        values.description,
-        values.materialName,
-        values.minimumExistence,
-        selectedWarehouse
-      )
+      editMaterial(selectedRow?.category!, values.code, values.description, values.materialName, values.minimumExistence, selectedWarehouse)
     );
     setEditMaterialModal(false);
   };
@@ -383,15 +362,11 @@ const MaterialsTable: React.FC = () => {
             icon={<SearchOutlined />}
             size="small"
             style={{ width: 90 }}
-            className="bg-blue-500 items-center flex"
+            className="flex items-center bg-blue-500"
           >
             Search
           </Button>
-          <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{ width: 90 }}
-          >
+          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
             Reset
           </Button>
           <Button
@@ -417,9 +392,7 @@ const MaterialsTable: React.FC = () => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
-    ),
+    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
     onFilter: (value, record) =>
       record[dataIndex]
         .toString()
@@ -546,7 +519,7 @@ const MaterialsTable: React.FC = () => {
 
   return (
     <>
-      <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
+      <div className="flex items-center w-full h-16 gap-4 pl-4 mb-4 rounded-md shadow-md bg-white-100">
         <div className="flex gap-2">
           <button disabled={!canAdd} onClick={handleAdd} className="toolbar-primary-icon-btn ">
             <PlusSvg />
@@ -562,9 +535,7 @@ const MaterialsTable: React.FC = () => {
             <button
               disabled={!canCreate}
               className={`${
-                canCreate
-                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                  : "opacity-20 pt-2 pl-2"
+                canCreate ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleNew}
             >
@@ -575,9 +546,7 @@ const MaterialsTable: React.FC = () => {
             <button
               disabled={!canEditMaterial}
               className={`${
-                canEditMaterial
-                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                  : "opacity-20 pt-2 pl-2"
+                canEditMaterial ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleEditMaterial}
             >
@@ -589,9 +558,7 @@ const MaterialsTable: React.FC = () => {
             <button
               disabled={!canDelete}
               className={`${
-                canDelete
-                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                  : "opacity-20 pt-2 pl-2"
+                canDelete ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleDelete}
             >
@@ -602,26 +569,18 @@ const MaterialsTable: React.FC = () => {
             <button
               disabled={!canList}
               className={`${
-                canList
-                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                  : "opacity-20 pt-2 pl-2"
+                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleRefresh}
             >
               <RefreshSvg />
             </button>
           </Tooltip>
-          <Tooltip
-            placement="top"
-            title={"Historial de Operaciones"}
-            arrow={{ pointAtCenter: true }}
-          >
+          <Tooltip placement="top" title={"Historial de Operaciones"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canList}
               className={`${
-                canList
-                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                  : "opacity-20 pt-2 pl-2"
+                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleShowOperations}
             >
@@ -630,9 +589,7 @@ const MaterialsTable: React.FC = () => {
           </Tooltip>
           <Tooltip placement="top" title={"Generar Reporte"} arrow={{ pointAtCenter: true }}>
             <PDFDownloadLink
-              document={
-                <PDFReport fields={fields} data={PDFReportData} title={"REPORTE DE ALMACÉN "} />
-              }
+              document={<PDFReport fields={fields} data={PDFReportData} title={"REPORTE DE ALMACÉN "} />}
               fileName={`Reporte de almacén (${currentDate})`}
             >
               {({ blob, url, loading, error }) =>
@@ -647,9 +604,7 @@ const MaterialsTable: React.FC = () => {
                   <button
                     disabled={!canList}
                     className={`${
-                      canList
-                        ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                        : "opacity-20 pt-2 pl-2"
+                      canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
                     } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
                   >
                     <PDFSvg />
@@ -661,23 +616,9 @@ const MaterialsTable: React.FC = () => {
         </div>
       </div>
 
-      <NewMaterialForm
-        open={createNewModal}
-        onCancel={() => setCreateNewModal(false)}
-        onCreate={onCreate}
-      />
-      <AddMaterialForm
-        open={addModal}
-        onCancel={() => setAddModal(false)}
-        onCreate={onAdd}
-        defaultValues={selectedRow}
-      />
-      <MinusMaterialForm
-        open={minusModal}
-        onCancel={() => setMinusModal(false)}
-        onCreate={onMinus}
-        defaultValues={selectedRow}
-      />
+      <NewMaterialForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
+      <AddMaterialForm open={addModal} onCancel={() => setAddModal(false)} onCreate={onAdd} defaultValues={selectedRow} />
+      <MinusMaterialForm open={minusModal} onCancel={() => setMinusModal(false)} onCreate={onMinus} defaultValues={selectedRow} />
       <EditMaterialForm
         open={editMaterialModal}
         onCancel={() => setEditMaterialModal(false)}

@@ -6,7 +6,7 @@ import Nomenclator, { INomenclator } from "@/models/nomenclator";
 import RepresentativeNomenclator, { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 import ServiceFeeAuxiliary, { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
-import MaterialNomenclator, { IMaterialNomenclator } from "@/models/nomenclators/materials";
+import MaterialNomenclator from "@/models/nomenclators/materials";
 
 // ? CUANDO SE MODIFICA EL VALOR DE UN NOMENCLADOR ASOCIADO A UN MATERIAL DEL ALMACEN(CATEGORIA + NOMBRE) SE ACTUALIZAN TODAS LAS FICHAS DE COSTO QUE UTILIZAN ESE MATERIAL Y SE VUELVEN A CALCULAR SUS PRECIOS ?//
 
@@ -14,13 +14,12 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
   const representativeNomenclators = (await RepresentativeNomenclator.find()) as IRepresentativeNomenclator[];
   const serviceFeeAuxiliary = (await ServiceFeeAuxiliary.find()) as IServiceFeeAuxiliary[];
   const decreaseMaterialsNomenclators = (await MaterialNomenclator.find()).map((mn) => mn.isDecrease && mn.name);
+  console.log("🚀 ~ updateServiceFeesMaterials ~ decreaseMaterialsNomenclators:", decreaseMaterialsNomenclators);
 
   const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100;
   const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100;
 
   //? BUSCA EN CADA LISTA DE MATERIAS PRIMAS DE CADA TARIFA DE SERVICIO SI EXISTE EL MATERIAL QUE SE PASA POR PARÁMETRO. SI EXISTE, ACTUALIZA EL VALOR DE LA TARIFA DE SERVICIO CON EL NUEVO VALOR DEL MATERIAL ?//
-
-  // TODO: HACER QUE SI SE ACTUALIZA EL PRECIO DE UN MATERIAL GASTABLE EN EL ALMACEN SE LE APLIQUE EL COEFICIENTE DE MERMA AL NUEVO PRECIO //
 
   const serviceFeesToUpdate: IServiceFee[] = [];
   serviceFees.forEach((serviceFee, index, serviceFees) => {
@@ -42,7 +41,7 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
             description: rawMaterial.description,
             unitMeasure: rawMaterial.unitMeasure,
             amount: rawMaterial.amount,
-            price: materialNomenclator.value! * serviceFeeAuxiliary[0].mermaCoefficient,
+            price: materialNomenclator.value!,
             value: materialNomenclator.value! * rawMaterial.amount
           };
           return rawMaterials[index];

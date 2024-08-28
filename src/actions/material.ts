@@ -5,22 +5,15 @@ import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
 
 /**
- * 
- * @param material: IMaterial 
+ *
+ * @param material: IMaterial
  * @returns Success message if the material was created successfully
  */
 export const startAddMaterial = ({ ...material }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_URL}/material`,
-        {
-          ...material
-        },
-
-        { headers: { accessToken: token } }
-      )
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/material`, { ...material }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(addMaterial(material));
         dispatch(materialsStartLoading(material?.warehouse));
