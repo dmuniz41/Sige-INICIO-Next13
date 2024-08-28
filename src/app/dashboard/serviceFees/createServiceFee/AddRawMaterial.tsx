@@ -17,35 +17,25 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel
-}) => {
+export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
   const [currentPrice, setCurrentPrice] = useState<number>(0);
   const [currentUnitMeasure, setCurrentUnitMeasure] = useState<string>("");
   const [rawMaterialValue, setRawMaterialValue] = useState<number>(0);
-  const { materials }: { materials: IMaterial[] } = useAppSelector(
-    (state: RootState) => state?.material
-  );
-
-  const {
-    nomenclators,
-    materialsNomenclators
-  }: { nomenclators: INomenclator[]; materialsNomenclators: IMaterialNomenclator[] } =
+  const { materials }: { materials: IMaterial[] } = useAppSelector((state: RootState) => state?.material);
+  
+  console.log("🚀 ~ currentPrice:", currentPrice)
+  
+  const { nomenclators, materialsNomenclators }: { nomenclators: INomenclator[]; materialsNomenclators: IMaterialNomenclator[] } =
     useAppSelector((state: RootState) => state?.nomenclator);
 
-  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
-    (state: RootState) => state?.serviceFee
-  );
-  console.log("🚀 ~ serviceFeeAuxiliary:", serviceFeeAuxiliary.mermaCoefficient)
+  const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
 
   const DBMaterials: INomenclator[] = [];
   const dispatch = useAppDispatch();
 
   // TODO: QUITAR EL ID DEL ALMACEN HARCODEADO //
   useEffect(() => {
-    dispatch(materialsStartLoading("66b679882628e2b4e1727b3d"));
+    dispatch(materialsStartLoading("653957480a9e16fed4c1bbd5"));
   }, [dispatch]);
 
   nomenclators.map((nomenclator: INomenclator) => {
@@ -65,8 +55,8 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
     <Modal
       className="flex flex-col"
       title={
-        <div className="flex w-full justify-center">
-          <span className="font-semibold text-lg">Nueva Materia Prima</span>
+        <div className="flex justify-center w-full">
+          <span className="text-lg font-semibold">Nueva Materia Prima</span>
         </div>
       }
       cancelText="Cancelar"
@@ -79,7 +69,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
       style={{ textAlign: "left" }}
       width={"1000px"}
       footer={[
-        <div key="footer" className="flex gap-2 w-full justify-end">
+        <div key="footer" className="flex justify-end w-full gap-2">
           <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
@@ -113,11 +103,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
       ]}
     >
       <Form form={form} layout="horizontal" name="addRawMaterial" size="middle">
-        <Form.Item
-          name="description"
-          label="Descripción"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="description" label="Descripción" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select
             autoFocus
             allowClear
@@ -126,23 +112,21 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
             options={listOfMaterials}
             onSelect={(value) => {
               const selectedMaterial = materials.find(
-                (material) =>
-                  `${material.category} ${material.materialName}`.trim().toLowerCase() ===
-                  String(value.label).trim().toLowerCase()
+                (material: IMaterial) =>
+                  `${material.category} ${material.materialName}`.trim().toLowerCase() === String(value.label).trim().toLowerCase()
               );
-              console.log("🚀 ~ selectedMaterial:", selectedMaterial)
+              
+              console.log("🚀 ~ materials:", materials)
+              console.log("🚀 ~ selectedMaterial:", selectedMaterial);
+
               const materialNomenclator = materialsNomenclators.find(
-                (mn) =>
-                  mn.name.trim().toLocaleLowerCase() ===
-                  selectedMaterial?.category.trim().toLocaleLowerCase()
+                (mn) => mn.name.trim().toLocaleLowerCase() === selectedMaterial?.category.trim().toLocaleLowerCase()
               );
               setCurrentUnitMeasure(selectedMaterial?.unitMeasure!);
 
               // ? SI EL MATERIAL ES GASTABLE SE LE APLICA EL COEFICIENTE DE MERMA AL PRECIO DEL MATERIAL, EN CASO CONTRARIO MANTIENE EL PRECIO ORIGINAL?//
               if (materialNomenclator?.isDecrease) {
-                setCurrentPrice(
-                  selectedMaterial?.costPerUnit! * serviceFeeAuxiliary?.mermaCoefficient
-                );
+                setCurrentPrice(selectedMaterial?.costPerUnit! * serviceFeeAuxiliary?.mermaCoefficient);
               } else {
                 setCurrentPrice(selectedMaterial?.costPerUnit!);
               }
@@ -156,22 +140,13 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
             }}
             showSearch
             optionFilterProp="children"
-            filterOption={(input: any, option: any) =>
-              (option?.label ?? "").toLowerCase().includes(input)
-            }
+            filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
             filterSort={(optionA: any, optionB: any) =>
-              (optionA?.label ?? "")
-                .toLowerCase()
-                .localeCompare((optionB?.label ?? "").toLowerCase())
+              (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
             }
           />
         </Form.Item>
-        <Form.Item
-          name="amount"
-          label="Cantidad"
-          className="w-[10rem]"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber
             min={0}
             onChange={(value: number | null) => {
@@ -179,15 +154,15 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
             }}
           />
         </Form.Item>
-        <div className=" flex gap-2 pl-2 mb-4">
+        <div className="flex gap-2 pl-2 mb-4 ">
           <span className="font-semibold">Unidad de Medida:</span>
           <span>{currentUnitMeasure}</span>
         </div>
-        <div className=" flex gap-2 pl-2 mb-4">
+        <div className="flex gap-2 pl-2 mb-4 ">
           <span className="font-semibold">Precio:</span>
           <span>${currentPrice?.toFixed(2)}</span>
         </div>
-        <div className=" flex gap-2 pl-2 mb-4">
+        <div className="flex gap-2 pl-2 mb-4 ">
           <span className="font-semibold">Importe:</span>
           <span>${rawMaterialValue?.toFixed(2)}</span>
         </div>

@@ -283,8 +283,9 @@ export async function GET(request: NextRequest) {
         }
       );
     }
+
     await connectDB();
-    const listOfMaterials = (await Material.find()).reverse();
+    const listOfMaterials = (await Material.find()).reverse() as IMaterial[];
 
     return new NextResponse(
       JSON.stringify({

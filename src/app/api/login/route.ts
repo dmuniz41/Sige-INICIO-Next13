@@ -1,8 +1,9 @@
-import { signJwtAccessToken } from "@/libs/jwt";
-import { connectDB } from "@/libs/mongodb";
-import User from "@/models/user";
-import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+
+import { connectDB } from "@/libs/mongodb";
+import { signJwtAccessToken } from "@/libs/jwt";
+import User from "@/models/user";
 
 interface RequestBody {
   user: string;
@@ -33,6 +34,6 @@ export async function POST(request: Request) {
   } catch (error) {
     console.log(error);
 
-    return new Response(JSON.stringify(error));
+    return new NextResponse(JSON.stringify(error));
   }
 }

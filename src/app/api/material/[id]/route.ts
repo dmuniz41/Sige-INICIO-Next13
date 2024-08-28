@@ -1,13 +1,15 @@
-import { verifyJWT } from "@/libs/jwt";
-import { connectDB } from "@/libs/mongodb";
-import Material from "@/models/material";
 import { NextRequest, NextResponse } from "next/server";
 
+import { connectDB } from "@/libs/mongodb";
+import { verifyJWT } from "@/libs/jwt";
+import Material from "@/models/material";
+
 export async function GET(request: NextRequest) {
-  const accessToken = request.headers.get("accessToken");
   const { pathname } = request.nextUrl;
+  const accessToken = request.headers.get("accessToken");
   const urlParams = pathname.split("/");
   const warehouse = urlParams[3];
+
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(
@@ -20,6 +22,7 @@ export async function GET(request: NextRequest) {
         }
       );
     }
+    
     await connectDB();
     const listOfMaterials = (await Material.find({ warehouse })).reverse();
 

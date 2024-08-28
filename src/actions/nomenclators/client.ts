@@ -4,18 +4,16 @@ import Swal from "sweetalert2";
 import { Toast } from "@/helpers/customAlert";
 import { types } from "@/types/types";
 
-// * CREA UN NUEVO NOMENCLADOR DE CLIENTE * //
+/**
+ *
+ * @param clientNomenclator: IClienNomenclator
+ * @returns Success message if the client nomenclator was created successfully
+ */
 export const startAddClientNomenclator = ({ ...clientNomenclator }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/client`,
-        {
-          ...clientNomenclator
-        },
-        { headers: { accessToken: token } }
-      )
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/client`, { ...clientNomenclator }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(addClientNomenclator(clientNomenclator));
         dispatch(clientNomenclatorsStartLoading());
@@ -27,27 +25,21 @@ export const startAddClientNomenclator = ({ ...clientNomenclator }): any => {
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
         console.log("🚀 ~ return ~ message:", message);
-        Swal.fire(
-          "Error",
-          "Error al crear el nomenclador de cliente. (El nombre del cliente debe ser único)",
-          "error"
-        );
+        Swal.fire("Error", "Error al crear el nomenclador de cliente", "error");
       });
   };
 };
 
-// * ACTUALIZA UN NOMENCLADOR DE CLIENTE POR SU ID * //
+/**
+ *
+ * @param clientNomenclator: IClienNomenclator
+ * @returns Success message if the client nomenclator was updated successfully
+ */
 export const startUpdateClientNomenclator = ({ ...clientNomenclator }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(
-        `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/client`,
-        {
-          ...clientNomenclator
-        },
-        { headers: { accessToken: token } }
-      )
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/client`, { ...clientNomenclator }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(updateClientNomenclator(clientNomenclator));
         dispatch(clientNomenclatorsStartLoading());
@@ -59,16 +51,16 @@ export const startUpdateClientNomenclator = ({ ...clientNomenclator }): any => {
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
         console.log("🚀 ~ return ~ message:", message);
-        Swal.fire(
-          "Error",
-          "Error al actualizar el nomenclador de cliente. (El nombre del cliente debe ser único)",
-          "error"
-        );
+        Swal.fire("Error", "Error al actualizar el nomenclador de cliente.", "error");
       });
   };
 };
 
-// * ELIMINA UN NOMENCLADOR DE CLIENTE POR SU ID * //
+/**
+ *
+ * @param id
+ * @returns Success message if the client nomenclator was deleted successfully
+ */
 export const startDeleteClientNomenclator = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -92,7 +84,10 @@ export const startDeleteClientNomenclator = (id: string): any => {
   };
 };
 
-// * CARGA TODOS LOS NOMENCLADORES DE CLIENTE * //
+/**
+ *
+ * @returns List of all client nomenclators
+ */
 export const clientNomenclatorsStartLoading = () => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {

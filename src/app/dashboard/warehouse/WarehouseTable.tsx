@@ -3,6 +3,7 @@ import { Button, Input, Space, Table, Tooltip } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import Swal from "sweetalert2";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import type { InputRef } from "antd";
@@ -26,7 +27,6 @@ import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { SeeSvg } from "../../global/SeeSvg";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import Swal from "sweetalert2";
 
 type DataIndex = keyof IWarehouse;
 
@@ -55,6 +55,7 @@ const WarehousesTable: React.FC = () => {
   if (!canList) {
     data = [];
   }
+  
   const handleNew = (): void => {
     setCreateNewModal(true);
   };
@@ -129,7 +130,7 @@ const WarehousesTable: React.FC = () => {
             icon={<SearchOutlined />}
             size="small"
             style={{ width: 90 }}
-            className="bg-blue-500 items-center flex"
+            className="flex items-center bg-blue-500"
           >
             Search
           </Button>
@@ -216,7 +217,7 @@ const WarehousesTable: React.FC = () => {
       key: "actions",
       width: "5%",
       render: (_, { ...record }) => (
-        <div className="flex gap-1 justify-center">
+        <div className="flex justify-center gap-1">
           {!canList ? (
             <></>
           ) : (
@@ -257,7 +258,7 @@ const WarehousesTable: React.FC = () => {
 
   return (
     <>
-      <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
+      <div className="flex items-center w-full h-16 gap-4 pl-4 mb-4 rounded-md shadow-md bg-white-100">
         <div className="flex gap-2">
           <button disabled={!canCreate} onClick={handleNew} className="toolbar-primary-icon-btn">
             <PlusSvg />

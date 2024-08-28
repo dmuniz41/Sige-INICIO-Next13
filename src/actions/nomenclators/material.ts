@@ -4,16 +4,16 @@ import Swal from "sweetalert2";
 import { Toast } from "@/helpers/customAlert";
 import { types } from "@/types/types";
 
-// * CREA UN NUEVO NOMENCLADOR DE MATERIAL //
+/**
+ *
+ * @param materialNomenclator: IMaterialNomenclator
+ * @returns Success message if the material nomenclator was created successfully
+ */
 export const startAddMaterialNomenclator = ({ ...materialNomenclator }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`,
-        { ...materialNomenclator },
-        { headers: { accessToken: token } }
-      )
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`, { ...materialNomenclator }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(addMaterialNomenclator(materialNomenclator));
         dispatch(materialNomenclatorsStartLoading());
@@ -25,21 +25,21 @@ export const startAddMaterialNomenclator = ({ ...materialNomenclator }): any => 
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
         console.log("🚀 ~ return ~ message:", message);
-        Swal.fire("Error", message, "error");
+        Swal.fire("Error", "Error al crear el nomenclador de material", "error");
       });
   };
 };
 
-// * ACTUALIZA UN NOMENCLADOR DE MATERIAL POR SU ID //
+/**
+ *
+ * @param materialNomenclator: IMaterialNomenclator
+ * @returns Success message if the material nomenclator was updated successfully
+ */
 export const startUpdateMaterialNomenclator = ({ ...materialNomenclator }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(
-        `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`,
-        { ...materialNomenclator },
-        { headers: { accessToken: token } }
-      )
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`, { ...materialNomenclator }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(updateMaterialNomenclator(materialNomenclator));
         dispatch(materialNomenclatorsStartLoading());
@@ -51,12 +51,16 @@ export const startUpdateMaterialNomenclator = ({ ...materialNomenclator }): any 
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
         console.log("🚀 ~ return ~ message:", message);
-        Swal.fire("Error", message, "error");
+        Swal.fire("Error", "Error al editar el nomenclador de material", "error");
       });
   };
 };
 
-// * ELIMINA UN NOMENCLADOR DE MATERIAL POR SU ID //
+/**
+ *
+ * @param id
+ * @returns Success message if the material nomenclator was deleted successfully
+ */
 export const startDeleteMaterialNomenclator = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -75,12 +79,15 @@ export const startDeleteMaterialNomenclator = (id: string): any => {
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
         console.log("🚀 ~ return ~ message:", message);
-        Swal.fire("Error", message, "error");
+        Swal.fire("Error", "Error al eliminar el nomenclador de material", "error");
       });
   };
 };
 
-// * CARGA TODOS LOS NOMENCLADORES DE MATERIALES//
+/**
+ *
+ * @returns List of all material nomenclators
+ */
 export const materialNomenclatorsStartLoading = () => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -95,7 +102,7 @@ export const materialNomenclatorsStartLoading = () => {
       .catch((error: AxiosError) => {
         let { message }: any = error?.response?.data;
         console.log("🚀 ~ return ~ message:", message);
-        Swal.fire("Error", message, "error");
+        Swal.fire("Error", "Error al cargar los nomencladores de materiales", "error");
       });
   };
 };

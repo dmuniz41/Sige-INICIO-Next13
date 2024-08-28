@@ -4,7 +4,11 @@ import Swal from "sweetalert2";
 import { Toast } from "@/helpers/customAlert";
 import { types } from "@/types/types";
 
-// * CREA UN NUEVO NOMENCLADOR DE REPRESENTANTE * //
+/**
+ *
+ * @param representativeNomenclator: IRepresentativeNomenclator
+ * @returns Success message if the representative nomenclator was created successfully
+ */
 export const startAddRepresentativeNomenclator = ({ ...representativeNomenclator }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -27,16 +31,16 @@ export const startAddRepresentativeNomenclator = ({ ...representativeNomenclator
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
         console.log("🚀 ~ return ~ message:", message);
-        Swal.fire(
-          "Error",
-          "Error al crear el nomenclador de representante. (El nombre del representante debe ser único)",
-          "error"
-        );
+        Swal.fire("Error", "Error al crear el nomenclador de representante ", "error");
       });
   };
 };
 
-// * ACTUALIZA UN NOMENCLADOR DE REPRESENTANTE POR SU ID * //
+/**
+ *
+ * @param representativeNomenclator: IRepresentativeNomenclator
+ * @returns Success message if the representative nomenclator was updated successfully
+ */
 export const startUpdateRepresentativeNomenclator = ({ ...representativeNomenclator }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -59,16 +63,16 @@ export const startUpdateRepresentativeNomenclator = ({ ...representativeNomencla
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
         console.log("🚀 ~ return ~ message:", message);
-        Swal.fire(
-          "Error",
-          "Error al actualizar el nomenclador de representante. (El nombre del representante debe ser único)",
-          "error"
-        );
+        Swal.fire("Error", "Error al actualizar el nomenclador de representante", "error");
       });
   };
 };
 
-// * ELIMINA UN NOMENCLADOR DE REPRESENTANTE POR SU ID * //
+/**
+ *
+ * @param id
+ * @returns Success message if the representative nomenclator was deleted successfully
+ */
 export const startDeleteRepresentativeNomenclator = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -92,7 +96,10 @@ export const startDeleteRepresentativeNomenclator = (id: string): any => {
   };
 };
 
-// * CARGA TODOS LOS NOMENCLADORES DE REPRESENTANTES * //
+/**
+ *
+ * @returns List of all representative nomenclators
+ */
 export const representativeNomenclatorsStartLoading = () => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
@@ -107,7 +114,7 @@ export const representativeNomenclatorsStartLoading = () => {
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
         console.log("🚀 ~ return ~ message:", message);
-        Swal.fire("Error", "Error al cargar los nomencladores de representantes", "error");
+        Swal.fire("Error", "Error al cargar los nomencladores de representante", "error");
       });
   };
 };
