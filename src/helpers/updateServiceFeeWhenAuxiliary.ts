@@ -2,19 +2,21 @@ import { NextResponse } from "next/server";
 
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "./randomStrings";
-import ServiceFeeAuxiliary, { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
-import Nomenclator from "@/models/nomenclator";
+import MaterialNomenclator, { IMaterialNomenclator } from "@/models/nomenclators/materials";
+import Nomenclator, { INomenclator } from "@/models/nomenclator";
 import RepresentativeNomenclator, { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 import ServiceFee, { IServiceFee } from "@/models/serviceFees";
+import ServiceFeeAuxiliary, { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 
 //? CUANDO SE MODIFICA CUALQUIER VALOR DE LA HOJA DE AUXILIARES SE ACTUALIZAN TODAS LAS TARIFAS DE SERVICIO Y SE VUELVEN A CALCULAR SUS PRECIOS. SI UNO DE LOS COEFICIENTES ES ELIMINADO SE ELIMINA DE TODAS LAS TARIFAS DE SERVICIO Y SE RECALCULA EL VALOR DE ESTAS ?//
 
 export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxiliary, serviceFees: IServiceFee[]) => {
   const representativeNomenclators = await RepresentativeNomenclator.find();
   const serviceFeeAuxiliary = await ServiceFeeAuxiliary.find();
-
+  const decreaseMaterialsNomenclators = ((await MaterialNomenclator.find()) as IMaterialNomenclator[]).filter((mn) => mn.isDecrease);
   const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100;
   const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100;
+  const materialNomenclators = (await Nomenclator.find({ category: "Material" })) as INomenclator[];
 
   //? ALMACENA LOS NOMBRES DE LOS COEFICIENTES SEPARADOS POR SECCIONES ?//
   const administrativeExpensesNames = auxiliary.administrativeExpensesCoefficients.map(
@@ -39,6 +41,35 @@ export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxili
     );
 
     serviceFee.currencyChange = auxiliary.currencyChange;
+    const example = serviceFees.find((sf) => sf.taskName === "Vinilo impreso con corte (revisar material de corte (cuchillas))");
+    console.log("🚀 ~ serviceFees.forEach ~ example:", example)
+    serviceFees.forEach((serviceFee, index, serviceFees) => {
+      let rawMaterials = serviceFees[index].rawMaterials;
+      rawMaterials.forEach((rawMaterial, index, rawMaterials) => {
+        // ? BUSCA EL NOMENCLADOR DE MATERIAL CORRESPONDIENTE PARA OBTENER SU VALOR
+        let materialNomenclator = materialNomenclators.find((value) => rawMaterial.description === value.code);
+        // ? SI EL MATERIAL ESTA EN LA LISTA DE MATERIALES GASTABLES ENTOCES APLICA EL COEFICIENTE DE MERMA AL VALOR DEL MATERIAL
+        if (decreaseMaterialsNomenclators?.some((value) => rawMaterial.description.includes(value.name))) {
+          rawMaterials[index] = {
+            description: rawMaterial.description,
+            unitMeasure: rawMaterial.unitMeasure,
+            amount: rawMaterial.amount,
+            price: materialNomenclator?.value! * serviceFeeAuxiliary[0].mermaCoefficient,
+            value: materialNomenclator?.value! * rawMaterial.amount * serviceFeeAuxiliary[0].mermaCoefficient
+          };
+          return rawMaterials[index];
+        } else {
+          rawMaterials[index] = {
+            description: rawMaterial.description,
+            unitMeasure: rawMaterial.unitMeasure,
+            amount: rawMaterial.amount,
+            price: materialNomenclator?.value!,
+            value: materialNomenclator?.value! * rawMaterial.amount
+          };
+          return rawMaterials[index];
+        }
+      });
+    });
 
     administrativeExpenses.forEach((administrativeExpense, index, administrativeExpenses) => {
       if (administrativeExpensesNames.includes(administrativeExpense.description)) {

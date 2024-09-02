@@ -98,8 +98,8 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
     <Modal
       className="flex flex-col"
       title={
-        <div className="flex w-full justify-center">
-          <span className="font-semibold text-lg">Nueva Depreciación de Equipo</span>
+        <div className="flex justify-center w-full">
+          <span className="text-lg font-semibold">Nueva Depreciación de Equipo</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -112,7 +112,7 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
       open={open}
       width={"1000px"}
       footer={[
-        <div key="footer" className="flex gap-2 w-full justify-end">
+        <div key="footer" className="flex justify-end w-full gap-2">
           <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
@@ -196,15 +196,15 @@ export const AddEquipmentDepreciationModal: React.FC<CollectionCreateFormProps> 
             }
           />
         </Form.Item>
-        <div className=" flex gap-2 pl-2 mb-4">
+        <div className="flex gap-2 pl-2 mb-4 ">
           <span className="font-semibold">Total de horas:</span>
           <span>{currentTotalTime?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })} h</span>
         </div>
-        <div className=" flex gap-2 pl-2 mb-4">
+        <div className="flex gap-2 pl-2 mb-4 ">
           <span className="font-semibold">Precio/UM:</span>
           <span>${selectedEquipmentDepreciation?.value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
         </div>
-        <div className=" flex gap-2 pl-2 mb-4">
+        <div className="flex gap-2 pl-2 mb-4 ">
           <span className="font-semibold">Importe:</span>
           <span>${!price ? 0 : price?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
         </div>
