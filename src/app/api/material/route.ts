@@ -54,7 +54,6 @@ export async function POST(request: NextRequest) {
 
       // ? ACTUALIZA EL VALOR TOTAL DEL ALMACEN //'
       const DBWarehouse = await Warehouse.findById(material?.warehouse);
-      console.log("🚀 ~ POST ~ DBWarehouse:", DBWarehouse);
       let newWarehouseValue = DBWarehouse.totalValue + material?.operation?.amount * material?.costPerUnit;
       await Warehouse.findByIdAndUpdate(material?.warehouse, { totalValue: newWarehouseValue });
 
