@@ -197,9 +197,7 @@ export async function POST(request: NextRequest) {
 
       // ? ACTUALIZA EL VALOR TOTAL DEL ALMACEN //
       const DBWarehouse = await Warehouse.findById(material?.warehouse);
-      console.log("🚀 ~ POST ~ DBWarehouse:", DBWarehouse)
       let newWarehouseValue = DBWarehouse?.totalValue + material?.operation?.amount * material?.costPerUnit;
-      console.log("🚀 ~ POST ~ newWarehouseValue:", newWarehouseValue)
       await Warehouse.findByIdAndUpdate(material?.warehouse, { totalValue: newWarehouseValue });
 
       await newMaterial.save();
@@ -227,14 +225,17 @@ export async function POST(request: NextRequest) {
           code: `${material?.category} ${material?.materialName}`,
           value: maxPrice
         });
+
         await newNomenclator.save();
+
       } else {
-        const updatedNMaterialNomenclator = await Nomenclator.findOneAndUpdate(
+        const updatedMaterialNomenclator = await Nomenclator.findOneAndUpdate(
           { category: "Material", code: `${material?.category} ${material?.materialName}` },
           { value: maxPrice },
           { new: true }
         );
-        await updateServiceFeesMaterials(updatedNMaterialNomenclator, await ServiceFee.find());
+        //? MANDA A ACTUALIZAR TODAS LAS TARIFAS EN LA BD
+        await updateServiceFeesMaterials(updatedMaterialNomenclator, await ServiceFee.find());
       }
 
       return new NextResponse(
@@ -421,6 +422,7 @@ export async function PUT(request: NextRequest) {
           { value: maxPrice },
           { new: true }
         );
+        //? MANDA A ACTUALIZAR TODAS LAS TARIFAS EN LA BD
         await updateServiceFeesMaterials(updatedNMaterialNomenclator, await ServiceFee.find());
       }
     }
@@ -518,6 +520,7 @@ export async function DELETE(request: NextRequest) {
         { value: maxPrice },
         { new: true }
       );
+      //? MANDA A ACTUALIZAR TODAS LAS TARIFAS EN LA BD
       await updateServiceFeesMaterials(updatedNMaterialNomenclator, await ServiceFee.find());
     }
     return new NextResponse(

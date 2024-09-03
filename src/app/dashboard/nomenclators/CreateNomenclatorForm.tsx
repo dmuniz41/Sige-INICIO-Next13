@@ -21,10 +21,6 @@ const category: SelectProps["options"] = [
     value: "Cargo de trabajador"
   },
   {
-    label: "Categoría de material",
-    value: "Categoría de material"
-  },
-  {
     label: "Unidad de medida",
     value: "Unidad de medida"
   },

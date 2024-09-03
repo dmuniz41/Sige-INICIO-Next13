@@ -139,7 +139,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
               // ? SI EL MATERIAL ES GASTABLE SE LE APLICA EL COEFICIENTE DE MERMA AL PRECIO DEL MATERIAL, EN CASO CONTRARIO MANTIENE EL PRECIO ORIGINAL?//
               if (materialNomenclator?.isDecrease) {
                 setCurrentPrice(
-                  selectedMaterial?.costPerUnit! * serviceFeeAuxiliary?.indirectSalariesCoefficient
+                  selectedMaterial?.costPerUnit! * serviceFeeAuxiliary?.mermaCoefficient
                 );
               } else {
                 setCurrentPrice(selectedMaterial?.costPerUnit!);
