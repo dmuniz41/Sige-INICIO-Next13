@@ -38,13 +38,14 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector(
     (state: RootState) => state?.serviceFee
   );
+  console.log("🚀 ~ serviceFeeAuxiliary:", serviceFeeAuxiliary.mermaCoefficient)
 
   const DBMaterials: INomenclator[] = [];
   const dispatch = useAppDispatch();
 
   // TODO: QUITAR EL ID DEL ALMACEN HARCODEADO //
   useEffect(() => {
-    dispatch(materialsStartLoading("653957480a9e16fed4c1bbd5"));
+    dispatch(materialsStartLoading("66b679882628e2b4e1727b3d"));
   }, [dispatch]);
 
   nomenclators.map((nomenclator: INomenclator) => {
@@ -129,6 +130,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({
                   `${material.category} ${material.materialName}`.trim().toLowerCase() ===
                   String(value.label).trim().toLowerCase()
               );
+              console.log("🚀 ~ selectedMaterial:", selectedMaterial)
               const materialNomenclator = materialsNomenclators.find(
                 (mn) =>
                   mn.name.trim().toLocaleLowerCase() ===
