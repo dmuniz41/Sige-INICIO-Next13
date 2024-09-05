@@ -15,8 +15,8 @@ export async function POST(request: NextRequest) {
   const representativeNomenclators = await RepresentativeNomenclator.find();
   const serviceFeeAuxiliary = await ServiceFeeAuxiliary.find();
 
-  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100;
-  const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100;
+  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100 + 1;
+  const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100 + 1;
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -101,13 +101,13 @@ export async function POST(request: NextRequest) {
       if (representative.name === "EFECTIVO") {
         return {
           representativeName: "EFECTIVO",
-          price: expensesTotalValue + artisticTalentValue,
-          priceUSD: (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
+          price: artisticTalentValue,
+          priceUSD: artisticTalentValue / serviceFee?.currencyChange
         };
       } else {
         return {
           representativeName: representative.name,
-          price: expensesTotalValue + artisticTalentValue * (representative.percentage / 100) + ONATValue,
+          price: artisticTalentValue * (representative.percentage / 100) + ONATValue,
           priceUSD: 0
         };
       }
@@ -192,8 +192,8 @@ export async function PUT(request: NextRequest) {
   const representativeNomenclators = await RepresentativeNomenclator.find();
   const serviceFeeAuxiliary = await ServiceFeeAuxiliary.find();
 
-  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100;
-  const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100;
+  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100 + 1;
+  const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100 + 1;
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -277,13 +277,13 @@ export async function PUT(request: NextRequest) {
       if (representative.name === "EFECTIVO") {
         return {
           representativeName: "EFECTIVO",
-          price: expensesTotalValue + artisticTalentValue,
-          priceUSD: (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
+          price: artisticTalentValue,
+          priceUSD: artisticTalentValue / serviceFee?.currencyChange
         };
       } else {
         return {
           representativeName: representative.name,
-          price: expensesTotalValue + artisticTalentValue * (representative.percentage / 100) + ONATValue,
+          price: artisticTalentValue * (representative.percentage / 100) + ONATValue,
           priceUSD: 0
         };
       }

@@ -11,17 +11,15 @@ import ServiceFeeAuxiliary from "@/models/serviceFeeAuxiliary";
 // TODO: REFACTORIZAR EL PARA QUE SE EJECUTE TODO EN UN SOLO BUCLE
 
 //? CUANDO SE MODIFICA EL VALOR DE UNA TAREA SE ACTUALIZA EL VALOR DE TODAS LAS FICHAS DE COSTO DONDE ESTE ESA TAREA ?//
-
 export const updateServiceFeeWhenTask = async (task: IServiceFeeTask, serviceFees: IServiceFee[]) => {
   const representativeNomenclators = await RepresentativeNomenclator.find();
   const serviceFeeAuxiliary = await ServiceFeeAuxiliary.find();
 
-  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100;
-  const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100;
+  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100 + 1;
+  const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100 + 1;
 
   //? BUSCA EN CADA LISTA DE TAREAS DE CADA TARIFA DE SERVICIO SI EXISTE LA TAREA QUE SE PASA POR PARÁMETRO. SI EXISTE, ACTUALIZA EL VALOR DE LA TARIFA DE SERVICIO CON EL NUEVO VALOR DE LA TAREA ?//
   serviceFees.forEach(async (serviceFee, index, serviceFees) => {
-
     const taskList = serviceFees[index]?.taskList;
     const administrativeExpenses = serviceFees[index]?.administrativeExpenses;
 
@@ -125,13 +123,13 @@ export const updateServiceFeeWhenTask = async (task: IServiceFeeTask, serviceFee
         if (representative.name === "EFECTIVO") {
           return {
             representativeName: "EFECTIVO",
-            price: expensesTotalValue + artisticTalentValue,
-            priceUSD: (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
+            price: artisticTalentValue,
+            priceUSD: artisticTalentValue / serviceFee?.currencyChange
           };
         } else {
           return {
             representativeName: representative.name,
-            price: expensesTotalValue + artisticTalentValue * (representative.percentage / 100) + ONATValue,
+            price: artisticTalentValue * (representative.percentage / 100) + ONATValue,
             priceUSD: 0
           };
         }

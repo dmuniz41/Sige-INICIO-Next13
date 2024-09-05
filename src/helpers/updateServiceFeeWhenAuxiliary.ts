@@ -14,8 +14,8 @@ export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxili
   const representativeNomenclators = await RepresentativeNomenclator.find();
   const serviceFeeAuxiliary = await ServiceFeeAuxiliary.find();
   const decreaseMaterialsNomenclators = ((await MaterialNomenclator.find()) as IMaterialNomenclator[]).filter((mn) => mn.isDecrease);
-  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100;
-  const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100;
+  const artisticTalentCoefficient = (serviceFeeAuxiliary[0].artisticTalentPercentage / 100) + 1;
+  const ONATCoefficient = (serviceFeeAuxiliary[0].ONATTaxPercentage / 100) + 1;
   const materialNomenclators = (await Nomenclator.find({ category: "Material" })) as INomenclator[];
 
   //? ALMACENA LOS NOMBRES DE LOS COEFICIENTES SEPARADOS POR SECCIONES ?//
@@ -41,8 +41,6 @@ export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxili
     );
 
     serviceFee.currencyChange = auxiliary.currencyChange;
-    const example = serviceFees.find((sf) => sf.taskName === "Vinilo impreso con corte (revisar material de corte (cuchillas))");
-    console.log("🚀 ~ serviceFees.forEach ~ example:", example)
     serviceFees.forEach((serviceFee, index, serviceFees) => {
       let rawMaterials = serviceFees[index].rawMaterials;
       rawMaterials.forEach((rawMaterial, index, rawMaterials) => {
@@ -217,13 +215,13 @@ export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxili
         if (representative.name === "EFECTIVO") {
           return {
             representativeName: "EFECTIVO",
-            price: expensesTotalValue + artisticTalentValue,
-            priceUSD: (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
+            price: artisticTalentValue,
+            priceUSD: artisticTalentValue / serviceFee?.currencyChange
           };
         } else {
           return {
             representativeName: representative.name,
-            price: expensesTotalValue + artisticTalentValue * (representative.percentage / 100) + ONATValue,
+            price: artisticTalentValue * (representative.percentage / 100) + ONATValue,
             priceUSD: 0
           };
         }

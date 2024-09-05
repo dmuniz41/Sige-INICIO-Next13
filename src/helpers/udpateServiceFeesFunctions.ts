@@ -15,8 +15,8 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
   const serviceFeeAuxiliary = (await ServiceFeeAuxiliary.find()) as IServiceFeeAuxiliary[];
   const decreaseMaterialsNomenclators = ((await MaterialNomenclator.find()) as IMaterialNomenclator[]).filter((mn) => mn.isDecrease);
 
-  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100;
-  const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100;
+  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100 + 1;
+  const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100 + 1;
 
   //? BUSCA EN CADA LISTA DE MATERIAS PRIMAS DE CADA TARIFA DE SERVICIO SI EXISTE EL MATERIAL QUE SE PASA POR PARÁMETRO. SI EXISTE, ACTUALIZA EL VALOR DE LA TARIFA DE SERVICIO CON EL NUEVO VALOR DEL MATERIAL ?//
 
@@ -114,13 +114,13 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
         if (representative.name === "EFECTIVO") {
           return {
             representativeName: "EFECTIVO",
-            price: expensesTotalValue + artisticTalentValue,
-            priceUSD: (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
+            price: artisticTalentValue,
+            priceUSD: artisticTalentValue / serviceFee?.currencyChange
           };
         } else {
           return {
             representativeName: representative.name,
-            price: expensesTotalValue + artisticTalentValue * (representative.percentage / 100) + ONATValue,
+            price: artisticTalentValue * (representative.percentage / 100) + ONATValue,
             priceUSD: 0
           };
         }

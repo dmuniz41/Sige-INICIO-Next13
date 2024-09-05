@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
       );
     }
     await connectDB();
+    
     let BDMaterial = (await Material.findOne({
       materialName: material?.materialName,
       category: material?.category,
@@ -213,7 +214,6 @@ export async function POST(request: NextRequest) {
         category: "Material",
         code: `${material?.category} ${material?.materialName}`
       })) as INomenclator;
-      console.log("🚀 ~ POST ~ BDNomenclator:", BDNomenclator)
 
       const key = generateRandomString(26);
 

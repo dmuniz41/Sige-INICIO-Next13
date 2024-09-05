@@ -17,7 +17,6 @@ export const startAddMaterial = ({ ...material }): any => {
       .then(() => {
         dispatch(addMaterial(material));
         dispatch(materialsStartLoading(material?.warehouse));
-
         if (material.operation.tipo === "Sustraer") {
           Toast.fire({
             icon: "success",

@@ -110,6 +110,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
                 (material: IMaterial) =>
                   `${material.category} ${material.materialName}`.trim().toLowerCase() === String(value.label).trim().toLowerCase()
               );
+              console.log("🚀 ~ warehouseMaterial:", warehouseMaterial)
 
               // ? BUSCA EL MATERIAL EN LOS NOMENCLADORES DE MATERIALES PARA SABER SI ES GASTABLE
               const materialNomenclator = materialsNomenclators.find(
