@@ -213,6 +213,7 @@ export async function POST(request: NextRequest) {
         category: "Material",
         code: `${material?.category} ${material?.materialName}`
       })) as INomenclator;
+      console.log("🚀 ~ POST ~ BDNomenclator:", BDNomenclator)
 
       const key = generateRandomString(26);
 

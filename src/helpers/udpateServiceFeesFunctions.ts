@@ -6,15 +6,14 @@ import Nomenclator, { INomenclator } from "@/models/nomenclator";
 import RepresentativeNomenclator, { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 import ServiceFeeAuxiliary, { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
-import MaterialNomenclator from "@/models/nomenclators/materials";
+import MaterialNomenclator, { IMaterialNomenclator } from "@/models/nomenclators/materials";
 
 // ? CUANDO SE MODIFICA EL VALOR DE UN NOMENCLADOR ASOCIADO A UN MATERIAL DEL ALMACEN(CATEGORIA + NOMBRE) SE ACTUALIZAN TODAS LAS FICHAS DE COSTO QUE UTILIZAN ESE MATERIAL Y SE VUELVEN A CALCULAR SUS PRECIOS ?//
 
 export const updateServiceFeesMaterials = async (materialNomenclator: INomenclator, serviceFees: IServiceFee[]) => {
   const representativeNomenclators = (await RepresentativeNomenclator.find()) as IRepresentativeNomenclator[];
   const serviceFeeAuxiliary = (await ServiceFeeAuxiliary.find()) as IServiceFeeAuxiliary[];
-  const decreaseMaterialsNomenclators = (await MaterialNomenclator.find()).map((mn) => mn.isDecrease && mn.name);
-  console.log("🚀 ~ updateServiceFeesMaterials ~ decreaseMaterialsNomenclators:", decreaseMaterialsNomenclators);
+  const decreaseMaterialsNomenclators = ((await MaterialNomenclator.find()) as IMaterialNomenclator[]).filter((mn) => mn.isDecrease);
 
   const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100;
   const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100;
@@ -27,7 +26,7 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
     rawMaterials.forEach((rawMaterial, index, rawMaterials) => {
       if (rawMaterial.description.trim().toLowerCase() === materialNomenclator.code.trim().toLowerCase()) {
         // ? SI EL MATERIAL ESTA EN LA LISTA DE MATERIALES GASTABLES ENTOCES APLICA EL COEFICIENTE DE MERMA AL VALOR DEL MATERIAL
-        if (decreaseMaterialsNomenclators.some((value) => value === rawMaterial.description.split(" ")[0])) {
+        if (decreaseMaterialsNomenclators?.some((value) => rawMaterial.description.includes(value.name))) {
           rawMaterials[index] = {
             description: rawMaterial.description,
             unitMeasure: rawMaterial.unitMeasure,
@@ -195,7 +194,8 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
           // artisticTalentValue: artisticTalentValue,
           salePrice: salePrice,
           salePriceUSD: salePrice / serviceFee?.currencyChange,
-          estimatedTime: estimatedTime
+          estimatedTime: estimatedTime,
+          pricePerRepresentative
         },
         { new: true }
       );

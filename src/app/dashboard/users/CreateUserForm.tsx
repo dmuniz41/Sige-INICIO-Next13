@@ -156,8 +156,8 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({
     <Modal
       className="flex flex-col"
       title={
-        <div className="flex w-full justify-center">
-          <span className="font-semibold text-lg">Nuevo Usuario</span>
+        <div className="flex justify-center w-full">
+          <span className="text-lg font-semibold">Nuevo Usuario</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -169,7 +169,7 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({
       okText="Crear"
       cancelText="Cancelar"
       footer={[
-        <div key="footer" className="flex gap-2 w-full justify-end">
+        <div key="footer" className="flex justify-end w-full gap-2">
           <button key="2" className="modal-btn-danger" onClick={onCancel}>
             Cancelar
           </button>
