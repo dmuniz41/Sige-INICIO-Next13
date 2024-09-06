@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       );
     }
     await connectDB();
-    
+
     let BDMaterial = (await Material.findOne({
       materialName: material?.materialName,
       category: material?.category,
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
       } else {
         // ? SI LAS EXISTENCIAS DESPUES DE EXTRAER EL MATERIAL ES CERO ELIMINA EL MATERIAL //
         if (newTotal === 0) {
-          let code = BDMaterial.code;
+          let code = BDMaterial?.code;
           let deletedMaterial: IMaterial = (await Material.findOneAndDelete({ code })) as unknown as IMaterial;
 
           const materialList: IMaterial[] = await Material.find({
@@ -173,7 +173,7 @@ export async function POST(request: NextRequest) {
       let listOfMaterials = await Material.find();
       let materialCount = 0;
       if (listOfMaterials.length != 0) {
-        materialCount = listOfMaterials.at(-1).code;
+        materialCount = listOfMaterials.at(-1)?.code;
       }
 
       const newMaterial = new Material({

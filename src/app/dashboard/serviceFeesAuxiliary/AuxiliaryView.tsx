@@ -24,7 +24,6 @@ export const AuxiliaryView = () => {
   }, [dispatch]);
 
   const { serviceFeeAuxiliary }: { serviceFeeAuxiliary: IServiceFeeAuxiliary } = useAppSelector((state: RootState) => state?.serviceFee);
-  console.log("🚀 ~ AuxiliaryView ~ serviceFeeAuxiliary:", serviceFeeAuxiliary);
 
   const handleEdit = () => {
     setEditing(true);
@@ -72,13 +71,13 @@ export const AuxiliaryView = () => {
     <>
       {!editing ? (
         <section className="grid w-full gap-4">
-          <article className="flex h-16 w-full bg-white-100 rounded-md shadow-md  items-center pl-4 gap-3 animate-fade animate-once animate-duration-200">
+          <article className="flex items-center w-full h-16 gap-3 pl-4 rounded-md shadow-md bg-white-100 animate-fade animate-once animate-duration-200">
             <button disabled={!canEdit} onClick={handleEdit} className="toolbar-primary-icon-btn">
               <EditSvg />
               Editar
             </button>
           </article>
-          <article className="flex flex-col items-start gap-3 p-4  animate-fade animate-once animate-duration-200">
+          <article className="flex flex-col items-start gap-3 p-4 animate-fade animate-once animate-duration-200">
             <AuxiliarySection
               data={serviceFeeAuxiliary?.administrativeExpensesCoefficients}
               columns={columns}

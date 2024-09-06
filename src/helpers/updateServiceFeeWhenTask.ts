@@ -16,7 +16,7 @@ export const updateServiceFeeWhenTask = async (task: IServiceFeeTask, serviceFee
   const serviceFeeAuxiliary = await ServiceFeeAuxiliary.find();
 
   const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100 + 1;
-  const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100 + 1;
+  const ONATCoefficient = (serviceFeeAuxiliary[0].ONATTaxPercentage / 100 - 1) * -1;
 
   //? BUSCA EN CADA LISTA DE TAREAS DE CADA TARIFA DE SERVICIO SI EXISTE LA TAREA QUE SE PASA POR PARÁMETRO. SI EXISTE, ACTUALIZA EL VALOR DE LA TARIFA DE SERVICIO CON EL NUEVO VALOR DE LA TAREA ?//
   serviceFees.forEach(async (serviceFee, index, serviceFees) => {
@@ -116,9 +116,6 @@ export const updateServiceFeeWhenTask = async (task: IServiceFeeTask, serviceFee
 
       // ! REVISAR: EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
       const artisticTalentValue = expensesTotalValue * artisticTalentCoefficient;
-      // const comercialMarginValue = (expensesTotalValue + artisticTalentValue) * comercialMarginCoefficient;
-      const ONATValue = artisticTalentValue * ONATCoefficient;
-      // const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
       const pricePerRepresentative = representativeNomenclators.map((representative: IRepresentativeNomenclator) => {
         if (representative.name === "EFECTIVO") {
           return {
@@ -127,9 +124,10 @@ export const updateServiceFeeWhenTask = async (task: IServiceFeeTask, serviceFee
             priceUSD: artisticTalentValue / serviceFee?.currencyChange
           };
         } else {
+          const denominator = (representative.percentage / 100 - 1) * -1 * ONATCoefficient;
           return {
             representativeName: representative.name,
-            price: artisticTalentValue * (representative.percentage / 100) + ONATValue,
+            price: artisticTalentValue / denominator,
             priceUSD: 0
           };
         }

@@ -110,7 +110,6 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
                 (material: IMaterial) =>
                   `${material.category} ${material.materialName}`.trim().toLowerCase() === String(value.label).trim().toLowerCase()
               );
-              console.log("🚀 ~ warehouseMaterial:", warehouseMaterial)
 
               // ? BUSCA EL MATERIAL EN LOS NOMENCLADORES DE MATERIALES PARA SABER SI ES GASTABLE
               const materialNomenclator = materialsNomenclators.find(
@@ -146,7 +145,7 @@ export const AddRawMaterialModal: React.FC<CollectionCreateFormProps> = ({ open,
         </Form.Item>
         <Form.Item name="amount" label="Cantidad" className="w-[10rem]" rules={[{ required: true, message: "Campo requerido" }]}>
           <InputNumber
-            min={1}
+            min={0}
             onChange={(value: number | null) => {
               setRawMaterialValue(value! * currentPrice);
             }}
