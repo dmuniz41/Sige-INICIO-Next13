@@ -170,15 +170,12 @@ export async function POST(request: NextRequest) {
     } else {
       // ? SI NO EXISTE UN MATERIAL CON ESE CODIGO CREA UNA NUEVA ENTRADA EN EL ALMACEN //
       let newOperation = new Operation(material?.operation);
-      let listOfMaterials = await Material.find();
-      let materialCount = 0;
-      if (listOfMaterials.length != 0) {
-        materialCount = listOfMaterials.at(-1)?.code;
-      }
+      // ? BUSCA EL MATERIAL CON EL CODIGO MAS GRANDE
+      const lastMaterial = await Material.find().sort({code:-1}).limit(1);
 
       const newMaterial = new Material({
         category: material?.category,
-        code: ++materialCount,
+        code: ++lastMaterial[0].code ?? 1,
         costPerUnit: material?.costPerUnit,
         description: material?.description,
         enterDate: material?.enterDate,
