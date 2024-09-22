@@ -175,7 +175,7 @@ export async function POST(request: NextRequest) {
 
       const newMaterial = new Material({
         category: material?.category,
-        code: ++lastMaterial[0].code ?? 1,
+        code: ++lastMaterial[0].code,
         costPerUnit: material?.costPerUnit,
         description: material?.description,
         enterDate: material?.enterDate,
