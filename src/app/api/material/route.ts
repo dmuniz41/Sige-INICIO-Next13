@@ -12,7 +12,6 @@ import Warehouse from "@/models/warehouse";
 
 export async function POST(request: NextRequest) {
   const { ...material }: any = await request.json();
-  console.log("🚀 ~ POST ~ material:", material);
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -27,6 +26,7 @@ export async function POST(request: NextRequest) {
       );
     }
     await connectDB();
+
     let BDMaterial = (await Material.findOne({
       materialName: material?.materialName,
       category: material?.category,
@@ -55,7 +55,6 @@ export async function POST(request: NextRequest) {
 
       // ? ACTUALIZA EL VALOR TOTAL DEL ALMACEN //'
       const DBWarehouse = await Warehouse.findById(material?.warehouse);
-      console.log("🚀 ~ POST ~ DBWarehouse:", DBWarehouse);
       let newWarehouseValue = DBWarehouse.totalValue + material?.operation?.amount * material?.costPerUnit;
       await Warehouse.findByIdAndUpdate(material?.warehouse, { totalValue: newWarehouseValue });
 
@@ -91,25 +90,26 @@ export async function POST(request: NextRequest) {
       } else {
         // ? SI LAS EXISTENCIAS DESPUES DE EXTRAER EL MATERIAL ES CERO ELIMINA EL MATERIAL //
         if (newTotal === 0) {
-          let code = BDMaterial.code;
+          let code = BDMaterial?.code;
           let deletedMaterial: IMaterial = (await Material.findOneAndDelete({ code })) as unknown as IMaterial;
 
           const materialList: IMaterial[] = await Material.find({
             category: deletedMaterial?.category,
             materialName: deletedMaterial?.materialName
           });
+
           if (materialList.length == 0) {
             await Nomenclator.findOneAndDelete({
               category: "Material",
               code: `${deletedMaterial?.category} ${deletedMaterial?.materialName}`
             });
           }
+
           const prices = materialList.map((material) => material.costPerUnit);
           const maxPrice = Math.max(...prices);
 
           // ? VERIFICA SI EXISTE UN NOMENCLADOR CON ESA CATEGORIA Y MATERIAL EN LA BD, SI NO EXISTE CREA UN NUEVO //
-
-          await Nomenclator.findOneAndUpdate(
+          const updatedMaterialNomenclator = await Nomenclator.findOneAndUpdate(
             {
               category: "Material",
               code: `${deletedMaterial?.category} ${deletedMaterial?.materialName}`
@@ -121,6 +121,7 @@ export async function POST(request: NextRequest) {
           let DBWarehouse = await Warehouse.findById(material?.warehouse);
           let newWarehouseValue = DBWarehouse?.totalValue - deletedMaterial?.materialTotalValue!;
           await Warehouse.findByIdAndUpdate(material?.warehouse, { totalValue: newWarehouseValue });
+          await updateServiceFeesMaterials(updatedMaterialNomenclator, await ServiceFee.find());
 
           return NextResponse.json(
             {
@@ -149,7 +150,6 @@ export async function POST(request: NextRequest) {
       );
 
       // ? ACTUALIZA EL VALOR TOTAL DEL ALMACEN //
-
       const DBWarehouse = await Warehouse.findById(material.warehouse);
       let newWarehouseValue = DBWarehouse.totalValue - material?.operation?.amount * material?.costPerUnit;
       await Warehouse.findByIdAndUpdate(material?.warehouse, { totalValue: newWarehouseValue });
@@ -175,7 +175,7 @@ export async function POST(request: NextRequest) {
 
       const newMaterial = new Material({
         category: material?.category,
-        code: ++lastMaterial[0].code ?? 1,
+        code: ++lastMaterial[0].code,
         costPerUnit: material?.costPerUnit,
         description: material?.description,
         enterDate: material?.enterDate,
@@ -223,7 +223,6 @@ export async function POST(request: NextRequest) {
         });
 
         await newNomenclator.save();
-
       } else {
         const updatedMaterialNomenclator = await Nomenclator.findOneAndUpdate(
           { category: "Material", code: `${material?.category} ${material?.materialName}` },
@@ -278,8 +277,9 @@ export async function GET(request: NextRequest) {
         }
       );
     }
+
     await connectDB();
-    const listOfMaterials = (await Material.find()).reverse();
+    const listOfMaterials = (await Material.find()).reverse() as IMaterial[];
 
     return new NextResponse(
       JSON.stringify({
@@ -486,10 +486,9 @@ export async function DELETE(request: NextRequest) {
     }
 
     // ? ACTUALIZA EL VALOR TOTAL DEL ALMACEN SI SE ELIMINA UN MATERIAL //
-    // TODO: Revisar
-    const deletedMaterial = await Material.findOneAndDelete({
+    const deletedMaterial = (await Material.findOneAndDelete({
       code: params.get("code")
-    }) as unknown as IMaterial;
+    })) as unknown as IMaterial;
     const DBWarehouse = await Warehouse.findById(params.get("warehouse"));
     let newWarehouseValue = DBWarehouse.totalValue - deletedMaterial.materialTotalValue!;
     await Warehouse.findByIdAndUpdate(params.get("warehouse"), { totalValue: newWarehouseValue });

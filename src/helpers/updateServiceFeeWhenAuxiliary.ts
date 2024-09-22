@@ -2,19 +2,22 @@ import { NextResponse } from "next/server";
 
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "./randomStrings";
-import ServiceFeeAuxiliary, { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
-import Nomenclator from "@/models/nomenclator";
+import MaterialNomenclator, { IMaterialNomenclator } from "@/models/nomenclators/materials";
+import Nomenclator, { INomenclator } from "@/models/nomenclator";
 import RepresentativeNomenclator, { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 import ServiceFee, { IServiceFee } from "@/models/serviceFees";
+import ServiceFeeAuxiliary, { IServiceFeeAuxiliary } from "@/models/serviceFeeAuxiliary";
 
 //? CUANDO SE MODIFICA CUALQUIER VALOR DE LA HOJA DE AUXILIARES SE ACTUALIZAN TODAS LAS TARIFAS DE SERVICIO Y SE VUELVEN A CALCULAR SUS PRECIOS. SI UNO DE LOS COEFICIENTES ES ELIMINADO SE ELIMINA DE TODAS LAS TARIFAS DE SERVICIO Y SE RECALCULA EL VALOR DE ESTAS ?//
 
 export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxiliary, serviceFees: IServiceFee[]) => {
   const representativeNomenclators = await RepresentativeNomenclator.find();
   const serviceFeeAuxiliary = await ServiceFeeAuxiliary.find();
+  const decreaseMaterialsNomenclators = ((await MaterialNomenclator.find()) as IMaterialNomenclator[]).filter((mn) => mn.isDecrease);
+  const materialNomenclators = (await Nomenclator.find({ category: "Material" })) as INomenclator[];
 
-  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100;
-  const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100;
+  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100 + 1;
+  const ONATCoefficient = (serviceFeeAuxiliary[0].ONATTaxPercentage / 100 - 1) * -1;
 
   //? ALMACENA LOS NOMBRES DE LOS COEFICIENTES SEPARADOS POR SECCIONES ?//
   const administrativeExpensesNames = auxiliary.administrativeExpensesCoefficients.map(
@@ -39,6 +42,33 @@ export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxili
     );
 
     serviceFee.currencyChange = auxiliary.currencyChange;
+    serviceFees.forEach((serviceFee, index, serviceFees) => {
+      let rawMaterials = serviceFees[index].rawMaterials;
+      rawMaterials.forEach((rawMaterial, index, rawMaterials) => {
+        // ? BUSCA EL NOMENCLADOR DE MATERIAL CORRESPONDIENTE PARA OBTENER SU VALOR
+        let materialNomenclator = materialNomenclators.find((value) => rawMaterial.description === value.code);
+        // ? SI EL MATERIAL ESTA EN LA LISTA DE MATERIALES GASTABLES ENTOCES APLICA EL COEFICIENTE DE MERMA AL VALOR DEL MATERIAL
+        if (decreaseMaterialsNomenclators?.some((value) => rawMaterial.description.includes(value.name))) {
+          rawMaterials[index] = {
+            description: rawMaterial.description,
+            unitMeasure: rawMaterial.unitMeasure,
+            amount: rawMaterial.amount,
+            price: materialNomenclator?.value! * serviceFeeAuxiliary[0].mermaCoefficient,
+            value: materialNomenclator?.value! * rawMaterial.amount * serviceFeeAuxiliary[0].mermaCoefficient
+          };
+          return rawMaterials[index];
+        } else {
+          rawMaterials[index] = {
+            description: rawMaterial.description,
+            unitMeasure: rawMaterial.unitMeasure,
+            amount: rawMaterial.amount,
+            price: materialNomenclator?.value!,
+            value: materialNomenclator?.value! * rawMaterial.amount
+          };
+          return rawMaterials[index];
+        }
+      });
+    });
 
     administrativeExpenses.forEach((administrativeExpense, index, administrativeExpenses) => {
       if (administrativeExpensesNames.includes(administrativeExpense.description)) {
@@ -179,20 +209,18 @@ export const updateServiceFeeWhenAuxiliary = async (auxiliary: IServiceFeeAuxili
 
       // ! REVISAR: EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
       const artisticTalentValue = expensesTotalValue * artisticTalentCoefficient;
-      // const comercialMarginValue = (expensesTotalValue + artisticTalentValue) * comercialMarginCoefficient;
-      const ONATValue = artisticTalentValue * ONATCoefficient;
-      // const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
       const pricePerRepresentative = representativeNomenclators.map((representative: IRepresentativeNomenclator) => {
         if (representative.name === "EFECTIVO") {
           return {
             representativeName: "EFECTIVO",
-            price: expensesTotalValue + artisticTalentValue,
-            priceUSD: (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
+            price: artisticTalentValue,
+            priceUSD: artisticTalentValue / serviceFee?.currencyChange
           };
         } else {
+          const denominator = (representative.percentage / 100 - 1) * -1 * ONATCoefficient;
           return {
             representativeName: representative.name,
-            price: expensesTotalValue + artisticTalentValue * (representative.percentage / 100) + ONATValue,
+            price: artisticTalentValue / denominator,
             priceUSD: 0
           };
         }

@@ -4,23 +4,19 @@ import axios, { AxiosError } from "axios";
 import { types } from "../types/types";
 import { Toast } from "../helpers/customAlert";
 
-// * CREA UN NUEVO MATERIAL * //
+/**
+ *
+ * @param material: IMaterial
+ * @returns Success message if the material was created successfully
+ */
 export const startAddMaterial = ({ ...material }): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_URL}/material`,
-        {
-          ...material
-        },
-
-        { headers: { accessToken: token } }
-      )
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/material`, { ...material }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(addMaterial(material));
         dispatch(materialsStartLoading(material?.warehouse));
-
         if (material.operation.tipo === "Sustraer") {
           Toast.fire({
             icon: "success",
@@ -41,12 +37,16 @@ export const startAddMaterial = ({ ...material }): any => {
   };
 };
 
-// * CARGA UN MATERIAL POR SU ID * //
-export const materialsStartLoading = (id: string) => {
+/**
+ *
+ * @param warehouseId
+ * @returns List of all materials inside a warehouse
+ */
+export const materialsStartLoading = (warehouseId: string) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/material/${id}`, { headers: { accessToken: token } })
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/material/${warehouseId}`, { headers: { accessToken: token } })
       .then((resp) => {
         let { listOfMaterials } = resp.data;
         dispatch(materialsLoaded(listOfMaterials));
@@ -59,17 +59,22 @@ export const materialsStartLoading = (id: string) => {
   };
 };
 
-// * ELIMINA UN MATERIAL POR SU CODIGO EN EL ALMACEN SELECCIONADO * //
-export const startDeleteMaterial = (code: string, warehouse: string): any => {
+/**
+ *
+ * @param materialCode
+ * @param warehouseId
+ * @returns Success message if the material was deleted successfully
+ */
+export const startDeleteMaterial = (materialCode: string, warehouseId: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .delete(`${process.env.NEXT_PUBLIC_API_URL}/material?code=${code}&warehouse=${warehouse}`, {
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/material?code=${materialCode}&warehouse=${warehouseId}`, {
         headers: { accessToken: token }
       })
       .then(() => {
-        dispatch(deleteMaterial(code));
-        dispatch(materialsStartLoading(warehouse));
+        dispatch(deleteMaterial(materialCode));
+        dispatch(materialsStartLoading(warehouseId));
         Toast.fire({
           icon: "success",
           title: "Material Eliminado"
@@ -83,7 +88,16 @@ export const startDeleteMaterial = (code: string, warehouse: string): any => {
   };
 };
 
-// * EDITA EL MATERIAL SELECCIONADO * //
+/**
+ *
+ * @param category
+ * @param code
+ * @param description
+ * @param materialName
+ * @param minimumExistence
+ * @param warehouse
+ * @returns Success message if the material was edited successfully
+ */
 export const editMaterial = (
   category: string,
   code: string,
@@ -134,12 +148,7 @@ const deleteMaterial = (code: string) => ({
   }
 });
 
-const updateMaterial = (
-  code: string,
-  minimumExistence: number,
-  materialName: string,
-  description: string
-) => ({
+const updateMaterial = (code: string, minimumExistence: number, materialName: string, description: string) => ({
   type: types.editMaterial,
   payload: {
     code,

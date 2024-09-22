@@ -25,13 +25,11 @@ export const ServiceFeeView = () => {
   }, [dispatch, selectedServiceFeeId]);
 
   const { selectedServiceFee }: { selectedServiceFee: IServiceFee } = useAppSelector((state: RootState) => state?.serviceFee);
-  console.log("🚀 ~ ServiceFeeView ~ selectedServiceFee:", selectedServiceFee);
   let rawMaterials: IServiceFeeSubItem[] = useMemo(() => selectedServiceFee.rawMaterials, [selectedServiceFee]);
   let taskList: IServiceFeeTask[] = useMemo(() => selectedServiceFee.taskList, [selectedServiceFee]);
   let equipmentDepreciation: IServiceFeeSubItem[] = useMemo(() => selectedServiceFee.equipmentDepreciation, [selectedServiceFee]);
   let equipmentMaintenance: IServiceFeeSubItem[] = useMemo(() => selectedServiceFee.equipmentMaintenance, [selectedServiceFee]);
   let administrativeExpenses: IServiceFeeSubItem[] = selectedServiceFee.administrativeExpenses;
-  console.log("🚀 ~ ServiceFeeView ~ administrativeExpenses:", administrativeExpenses);
   let transportationExpenses: IServiceFeeSubItem[] = selectedServiceFee.transportationExpenses;
   let hiredPersonalExpenses: IServiceFeeSubItem[] = selectedServiceFee.hiredPersonalExpenses;
 
@@ -42,7 +40,7 @@ export const ServiceFeeView = () => {
   return (
     <>
       <article>
-        <div className="flex h-16 w-full  rounded-md shadow-md mb-4 items-center pl-4 gap-4">
+        <div className="flex items-center w-full h-16 gap-4 pl-4 mb-4 rounded-md shadow-md">
           <div className="flex gap-2">
             <button className="toolbar-primary-icon-btn" onClick={handleEdit}>
               <EditSvg />
@@ -52,9 +50,9 @@ export const ServiceFeeView = () => {
         </div>
       </article>
 
-      <section className="flex gap-1 flex-col w-full overflow-none rounded-md shadow-md p-2">
-        <article className="w-full flex flex-row p-4 ">
-          <label className="font-semibold mr-3 ">Descripción del servicio:</label>
+      <section className="flex flex-col w-full gap-1 p-2 rounded-md shadow-md overflow-none">
+        <article className="flex flex-row w-full p-4 ">
+          <label className="mr-3 font-semibold ">Descripción del servicio:</label>
           <p className="w-[25%]">{selectedServiceFee.taskName}</p>
           <div className="w-[20%] flex flex-col pl-10">
             <label className="font-semibold">
@@ -73,14 +71,14 @@ export const ServiceFeeView = () => {
               Categoría: <span className="font-normal">{selectedServiceFee?.category}</span>
             </label>
           </div>
-          <div className="flex flex-1 flex-col">
+          <div className="flex flex-col flex-1">
             <label className="font-semibold">
               Unidad de Medida: <span className="font-normal">{selectedServiceFee?.unitMeasure}</span>
             </label>
           </div>
         </article>
 
-        <article className=" flex flex-1 flex-col">
+        <article className="flex flex-col flex-1 ">
           <ServiceFeeViewTableSection name="Materias Primas" data={rawMaterials} subtotal={selectedServiceFee?.rawMaterialsSubtotal} />
           <ServiceFeeViewTaskListSection name="Actividades a Ejecutar" data={taskList} subtotal={selectedServiceFee?.taskListSubtotal} />
           <ServiceFeeViewTableSection
@@ -135,7 +133,7 @@ export const ServiceFeeView = () => {
           <div className="flex w-[150px] font-semibold pl-2">USD</div>
         </article>
         {/* <article className="flex pl-4 pr-4 items-center h-[39px] flex-grow bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
-          <div className="flex flex-grow justify-end pr-4 font-semibold">
+          <div className="flex justify-end flex-grow pr-4 font-semibold">
             <h2>PRECIO DE VENTA </h2>
           </div>
           <div className="flex w-[150px] pl-2">
@@ -160,7 +158,7 @@ export const ServiceFeeView = () => {
               key={index}
               className="flex pl-4 pr-4 items-center h-[39px] flex-grow bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg"
             >
-              <div className="flex flex-grow justify-end pr-4 font-semibold">
+              <div className="flex justify-end flex-grow pr-4 font-semibold">
                 <h2>PRECIO DE VENTA {representative.representativeName}: </h2>
               </div>
               <div className="flex w-[150px] pl-2">
@@ -202,7 +200,7 @@ export const ServiceFeeViewSeccion = (props: any) => {
   const { name, value } = props;
   return (
     <article className="flex items-center pr-4 h-[39px] bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
-      <div className="flex flex-1 justify-end pr-4 font-semibold">
+      <div className="flex justify-end flex-1 pr-4 font-semibold">
         <h2>{name}: </h2>
       </div>
       <div className="flex w-[150px] pl-2">$ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</div>
@@ -213,7 +211,7 @@ export const EstimateTimeViewSeccion = (props: any) => {
   const { name, value } = props;
   return (
     <article className="flex items-center pr-4 h-[39px] bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
-      <div className="flex flex-1 justify-end pr-4 font-semibold">
+      <div className="flex justify-end flex-1 pr-4 font-semibold">
         <h2>{name}: </h2>
       </div>
       <div className="flex w-[150px] pl-2">{value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })} h</div>
@@ -225,7 +223,7 @@ export const SalePriceViewSeccion = (props: any) => {
   const { name, value } = props;
   return (
     <article className="flex pl-4 pr-4 items-center h-[39px] flex-grow bg-[#fafafa] border-solid border-[1px] border-border_light rounded-lg">
-      <div className="flex flex-grow justify-end pr-4 font-semibold">
+      <div className="flex justify-end flex-grow pr-4 font-semibold">
         <h2>{name}: </h2>
       </div>
       <div className="flex w-[150px] pl-2">

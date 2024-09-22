@@ -15,8 +15,8 @@ export async function POST(request: NextRequest) {
   const representativeNomenclators = await RepresentativeNomenclator.find();
   const serviceFeeAuxiliary = await ServiceFeeAuxiliary.find();
 
-  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100;
-  const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100;
+  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100 + 1;
+  const ONATCoefficient = (serviceFeeAuxiliary[0].ONATTaxPercentage / 100 - 1) * -1;
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -94,20 +94,18 @@ export async function POST(request: NextRequest) {
 
     // ! REVISAR: EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
     const artisticTalentValue = expensesTotalValue * artisticTalentCoefficient;
-    // const comercialMarginValue = (expensesTotalValue + artisticTalentValue) * comercialMarginCoefficient;
-    const ONATValue = artisticTalentValue * ONATCoefficient;
-    // const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
     const pricePerRepresentative = representativeNomenclators.map((representative: IRepresentativeNomenclator) => {
       if (representative.name === "EFECTIVO") {
         return {
           representativeName: "EFECTIVO",
-          price: expensesTotalValue + artisticTalentValue,
-          priceUSD: (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
+          price: artisticTalentValue,
+          priceUSD: artisticTalentValue / serviceFee?.currencyChange
         };
       } else {
+        const denominator = (representative.percentage / 100 - 1) * -1 * ONATCoefficient;
         return {
           representativeName: representative.name,
-          price: expensesTotalValue + artisticTalentValue * (representative.percentage / 100) + ONATValue,
+          price: artisticTalentValue / denominator,
           priceUSD: 0
         };
       }
@@ -192,8 +190,8 @@ export async function PUT(request: NextRequest) {
   const representativeNomenclators = await RepresentativeNomenclator.find();
   const serviceFeeAuxiliary = await ServiceFeeAuxiliary.find();
 
-  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100;
-  const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100;
+  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100 + 1;
+  const ONATCoefficient = (serviceFeeAuxiliary[0].ONATTaxPercentage / 100 - 1) * -1;
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -270,20 +268,18 @@ export async function PUT(request: NextRequest) {
 
     // ! REVISAR: EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
     const artisticTalentValue = expensesTotalValue * artisticTalentCoefficient;
-    // const comercialMarginValue = (expensesTotalValue + artisticTalentValue) * comercialMarginCoefficient;
-    const ONATValue = artisticTalentValue * ONATCoefficient;
-    // const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
     const pricePerRepresentative = representativeNomenclators.map((representative: IRepresentativeNomenclator) => {
       if (representative.name === "EFECTIVO") {
         return {
           representativeName: "EFECTIVO",
-          price: expensesTotalValue + artisticTalentValue,
-          priceUSD: (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
+          price: artisticTalentValue,
+          priceUSD: artisticTalentValue / serviceFee?.currencyChange
         };
       } else {
+        const denominator = (representative.percentage / 100 - 1) * -1 * ONATCoefficient;
         return {
           representativeName: representative.name,
-          price: expensesTotalValue + artisticTalentValue * (representative.percentage / 100) + ONATValue,
+          price: artisticTalentValue / denominator,
           priceUSD: 0
         };
       }

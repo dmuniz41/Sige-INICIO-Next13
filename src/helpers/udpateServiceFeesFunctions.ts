@@ -13,14 +13,12 @@ import MaterialNomenclator, { IMaterialNomenclator } from "@/models/nomenclators
 export const updateServiceFeesMaterials = async (materialNomenclator: INomenclator, serviceFees: IServiceFee[]) => {
   const representativeNomenclators = (await RepresentativeNomenclator.find()) as IRepresentativeNomenclator[];
   const serviceFeeAuxiliary = (await ServiceFeeAuxiliary.find()) as IServiceFeeAuxiliary[];
-  const decreaseMaterialsNomenclators = (await MaterialNomenclator.find()).map((mn) => mn.isDecrease && mn.name);
+  const decreaseMaterialsNomenclators = ((await MaterialNomenclator.find()) as IMaterialNomenclator[]).filter((mn) => mn.isDecrease);
 
-  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100;
-  const ONATCoefficient = serviceFeeAuxiliary[0].ONATTaxPercentage / 100;
+  const artisticTalentCoefficient = serviceFeeAuxiliary[0].artisticTalentPercentage / 100 + 1;
+  const ONATCoefficient = (serviceFeeAuxiliary[0].ONATTaxPercentage / 100 - 1) * -1;
 
   //? BUSCA EN CADA LISTA DE MATERIAS PRIMAS DE CADA TARIFA DE SERVICIO SI EXISTE EL MATERIAL QUE SE PASA POR PARÁMETRO. SI EXISTE, ACTUALIZA EL VALOR DE LA TARIFA DE SERVICIO CON EL NUEVO VALOR DEL MATERIAL ?//
-
-  // TODO: HACER QUE SI SE ACTUALIZA EL PRECIO DE UN MATERIAL GASTABLE EN EL ALMACEN SE LE APLIQUE EL COEFICIENTE DE MERMA AL NUEVO PRECIO //
 
   const serviceFeesToUpdate: IServiceFee[] = [];
   serviceFees.forEach((serviceFee, index, serviceFees) => {
@@ -28,7 +26,7 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
     rawMaterials.forEach((rawMaterial, index, rawMaterials) => {
       if (rawMaterial.description.trim().toLowerCase() === materialNomenclator.code.trim().toLowerCase()) {
         // ? SI EL MATERIAL ESTA EN LA LISTA DE MATERIALES GASTABLES ENTOCES APLICA EL COEFICIENTE DE MERMA AL VALOR DEL MATERIAL
-        if (decreaseMaterialsNomenclators.some((value) => value === rawMaterial.description.split(" ")[0])) {
+        if (decreaseMaterialsNomenclators?.some((value) => rawMaterial.description.includes(value.name))) {
           rawMaterials[index] = {
             description: rawMaterial.description,
             unitMeasure: rawMaterial.unitMeasure,
@@ -42,7 +40,7 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
             description: rawMaterial.description,
             unitMeasure: rawMaterial.unitMeasure,
             amount: rawMaterial.amount,
-            price: materialNomenclator.value! * serviceFeeAuxiliary[0].mermaCoefficient,
+            price: materialNomenclator.value!,
             value: materialNomenclator.value! * rawMaterial.amount
           };
           return rawMaterials[index];
@@ -109,20 +107,18 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
 
       // ! REVISAR: EL PRECIO FINAL SE CALCULA (SUMA DE EL VALOR DE TODOS LOS GASTOS + VALOR DEL MARGEN COMERCIAL + VALOR DEL IMPUESTO DE LA ONAT) //
       const artisticTalentValue = expensesTotalValue * artisticTalentCoefficient;
-      // const comercialMarginValue = (expensesTotalValue + artisticTalentValue) * comercialMarginCoefficient;
-      const ONATValue = artisticTalentValue * ONATCoefficient;
-      // const salePrice = expensesTotalValue + comercialMarginValue + ONATValue + artisticTalentValue;
       const pricePerRepresentative = representativeNomenclators.map((representative: IRepresentativeNomenclator) => {
         if (representative.name === "EFECTIVO") {
           return {
             representativeName: "EFECTIVO",
-            price: expensesTotalValue + artisticTalentValue,
-            priceUSD: (expensesTotalValue + artisticTalentValue) / serviceFee?.currencyChange
+            price: artisticTalentValue,
+            priceUSD: artisticTalentValue / serviceFee?.currencyChange
           };
         } else {
+          const denominator = (representative.percentage / 100 - 1) * -1 * ONATCoefficient;
           return {
             representativeName: representative.name,
-            price: expensesTotalValue + artisticTalentValue * (representative.percentage / 100) + ONATValue,
+            price: artisticTalentValue / denominator,
             priceUSD: 0
           };
         }
@@ -196,7 +192,8 @@ export const updateServiceFeesMaterials = async (materialNomenclator: INomenclat
           // artisticTalentValue: artisticTalentValue,
           salePrice: salePrice,
           salePriceUSD: salePrice / serviceFee?.currencyChange,
-          estimatedTime: estimatedTime
+          estimatedTime: estimatedTime,
+          pricePerRepresentative
         },
         { new: true }
       );
