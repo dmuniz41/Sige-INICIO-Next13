@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Form, Input, Modal, Select, SelectProps } from "antd";
+import { Form, Input, Modal, Select, SelectProps } from "antd";
 interface Values {
   code: string;
   category: string;
@@ -41,11 +41,7 @@ const category: SelectProps["options"] = [
     value: "Moneda"
   }
 ];
-export const CreateNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel
-}) => {
+export const CreateNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel }) => {
   const [form] = Form.useForm();
   return (
     <Modal
@@ -89,18 +85,10 @@ export const CreateNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
       ]}
     >
       <Form form={form} layout="vertical" name="createNomenclatorForm" size="middle">
-        <Form.Item
-          name="category"
-          label="Categoría"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="category" label="Categoría" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select allowClear style={{ width: "100%" }} options={category} />
         </Form.Item>
-        <Form.Item
-          name="code"
-          label="Código"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="code" label="Código" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
       </Form>
