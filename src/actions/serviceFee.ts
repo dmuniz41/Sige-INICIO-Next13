@@ -23,7 +23,9 @@ export const startAddServiceFee = ({ ...serviceFee }): any => {
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
         console.log("🚀 ~ file: serviceFee.ts:31 ~ return ~ message:", message);
-        Swal.fire("Error", "Error al crear la tarifa de servicio", "error");
+        if (error.response?.status === 409) {
+          Swal.fire("Error", "Ya existe una tarifa de servicio con ese nombre", "error");
+        } else Swal.fire("Error", "Error al crear la tarifa de servicio", "error");
       });
   };
 };
@@ -114,16 +116,12 @@ export const loadSelectedServiceFee = (id: string) => {
 
 const addServiceFee = ({ ...serviceFee }) => ({
   type: types.addServiceFee,
-  payload: {
-    serviceFee
-  }
+  payload: JSON.stringify(serviceFee)
 });
 
 export const updateServiceFee = ({ ...serviceFee }) => ({
   type: types.updateServiceFee,
-  payload: {
-    serviceFee
-  }
+  payload: JSON.stringify(serviceFee)
 });
 
 export const serviceFeeLoaded = (serviceFees: any) => ({
@@ -133,9 +131,7 @@ export const serviceFeeLoaded = (serviceFees: any) => ({
 
 const deleteServiceFee = (id: string) => ({
   type: types.deleteServiceFee,
-  payload: {
-    id
-  }
+  payload: id
 });
 
 const selectedServiceFee = (serviceFee: any) => ({
