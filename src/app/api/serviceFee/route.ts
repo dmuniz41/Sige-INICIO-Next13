@@ -112,16 +112,6 @@ export async function POST(request: NextRequest) {
     });
     const salePrice = expensesTotalValue;
 
-    // ? CALCULA EL VALOR DE LOS 3 NIVELES DE COMPLEJIDAD EN DEPENDENCIA DEL COEFICIENTE ASIGNADO //
-    // const complexityValues = serviceFee?.complexity?.map((complexity) => {
-    //   return {
-    //     name: complexity?.name,
-    //     coefficient: complexity?.coefficient,
-    //     value: salePrice * complexity?.coefficient,
-    //     USDValue: (salePrice * complexity?.coefficient) / serviceFee?.currencyChange
-    //   };
-    // });
-
     if (!BDNomenclator) {
       const newNomenclator = new Nomenclator({
         key: newKey,
@@ -141,12 +131,7 @@ export async function POST(request: NextRequest) {
       administrativeExpensesSubtotal,
       transportationExpensesSubtotal,
       hiredPersonalExpensesSubtotal,
-      // complexity: complexityValues,
       expensesTotalValue,
-      // ONAT: serviceFee.ONAT,
-      // ONATValue: ONATValue,
-      // commercialMarginValue: comercialMarginValue,
-      // artisticTalentValue: artisticTalentValue,
       salePrice: salePrice,
       salePriceUSD: salePrice / serviceFee?.currencyChange,
       estimatedTime: estimatedTime,

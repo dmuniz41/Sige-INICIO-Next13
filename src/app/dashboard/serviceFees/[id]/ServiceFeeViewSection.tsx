@@ -44,7 +44,7 @@ export const ServiceFeeViewTableSection = (props: any) => {
   ];
 
   return (
-    <section className="flex w-full mb-5 rounded-md p-2 border border-border_light shadow-sm">
+    <section className="flex w-full mb-5 rounded-md p-2 border border-white-600">
       <div className="flex w-[15%] p-2 text-center items-center justify-center bg-[#fafafa] rounded-l-md">
         <span className="text-base font-bold">{name.toUpperCase()}</span>
       </div>

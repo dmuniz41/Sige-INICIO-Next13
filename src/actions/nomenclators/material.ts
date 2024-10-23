@@ -25,7 +25,9 @@ export const startAddMaterialNomenclator = ({ ...materialNomenclator }): any => 
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
         console.log("🚀 ~ return ~ message:", message);
-        Swal.fire("Error", "Error al crear el nomenclador de material", "error");
+        if (error.response?.status === 409) {
+          Swal.fire("Error", "Ya existe un nomenclador de material con ese nombre", "error");
+        } else Swal.fire("Error", "Error al crear el nomenclador de material", "error");
       });
   };
 };
@@ -51,7 +53,9 @@ export const startUpdateMaterialNomenclator = ({ ...materialNomenclator }): any 
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
         console.log("🚀 ~ return ~ message:", message);
-        Swal.fire("Error", "Error al editar el nomenclador de material", "error");
+        if (error.response?.status == 409) {
+          Swal.fire("Error", "Ya existe un nomenclador de material con ese nombre", "error");
+        } else Swal.fire("Error", "Error al editar el nomenclador de material", "error");
       });
   };
 };
