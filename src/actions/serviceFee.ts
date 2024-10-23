@@ -23,7 +23,9 @@ export const startAddServiceFee = ({ ...serviceFee }): any => {
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;
         console.log("🚀 ~ file: serviceFee.ts:31 ~ return ~ message:", message);
-        Swal.fire("Error", "Error al crear la tarifa de servicio", "error");
+        if (error.response?.status === 409) {
+          Swal.fire("Error", "Ya existe una tarifa de servicio con ese nombre", "error");
+        } else Swal.fire("Error", "Error al crear la tarifa de servicio", "error");
       });
   };
 };
