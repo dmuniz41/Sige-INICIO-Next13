@@ -153,6 +153,22 @@ export async function PUT(request: Request) {
       );
     }
 
+    const DBNomenclator = await MaterialNomenclator.findOne({
+      name: materialNomenclator.name
+    });
+
+    if (DBNomenclator) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Ya existe un nomenclador de material con ese nombre"
+        },
+        {
+          status: 409
+        }
+      );
+    }
+
     const updatedNomenclator = await MaterialNomenclator.findByIdAndUpdate(
       materialNomenclator._id,
       {
