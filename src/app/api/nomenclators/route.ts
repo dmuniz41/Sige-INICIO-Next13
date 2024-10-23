@@ -151,11 +151,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const updatedNomenclator = await Nomenclator.findByIdAndUpdate(
-      id,
-      { code, category },
-      { new: true }
-    );
+    const updatedNomenclator = await Nomenclator.findByIdAndUpdate(id, { code, category }, { new: true });
 
     return new NextResponse(
       JSON.stringify({

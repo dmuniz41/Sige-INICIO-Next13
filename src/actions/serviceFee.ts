@@ -116,16 +116,12 @@ export const loadSelectedServiceFee = (id: string) => {
 
 const addServiceFee = ({ ...serviceFee }) => ({
   type: types.addServiceFee,
-  payload: {
-    serviceFee
-  }
+  payload: JSON.stringify(serviceFee)
 });
 
 export const updateServiceFee = ({ ...serviceFee }) => ({
   type: types.updateServiceFee,
-  payload: {
-    serviceFee
-  }
+  payload: JSON.stringify(serviceFee)
 });
 
 export const serviceFeeLoaded = (serviceFees: any) => ({
@@ -135,9 +131,7 @@ export const serviceFeeLoaded = (serviceFees: any) => ({
 
 const deleteServiceFee = (id: string) => ({
   type: types.deleteServiceFee,
-  payload: {
-    id
-  }
+  payload: id
 });
 
 const selectedServiceFee = (serviceFee: any) => ({

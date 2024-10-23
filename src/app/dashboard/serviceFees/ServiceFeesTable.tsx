@@ -24,20 +24,13 @@ import { SeeSvg } from "@/app/global/SeeSvg";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
-import {
-  loadSelectedServiceFee,
-  serviceFeeStartLoading,
-  startDeleteServiceFee
-} from "@/actions/serviceFee";
+import { loadSelectedServiceFee, serviceFeeStartLoading, startDeleteServiceFee } from "@/actions/serviceFee";
 import PDFReport from "@/helpers/PDFReport";
 
-const PDFDownloadLink = dynamic(
-  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
-  {
-    ssr: false,
-    loading: () => <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
-  }
-);
+const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
+  ssr: false,
+  loading: () => <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+});
 
 type DataIndex = keyof IServiceFee;
 
@@ -73,8 +66,7 @@ const ServiceFeeTable: React.FC = () => {
     {
       title: "Precio",
       custom: true,
-      component: (item: any) =>
-        `$ ${item.salePrice.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}`,
+      component: (item: any) => `$ ${item.salePrice.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}`,
       width: "20"
     },
     {
@@ -129,11 +121,7 @@ const ServiceFeeTable: React.FC = () => {
     }
   };
 
-  const handleSearch = (
-    selectedKeys: string[],
-    confirm: (param?: FilterConfirmProps) => void,
-    dataIndex: DataIndex
-  ) => {
+  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -151,9 +139,7 @@ const ServiceFeeTable: React.FC = () => {
       confirmButtonText: "Eliminar"
     }).then((result) => {
       if (result.isConfirmed) {
-        const nomenclatorToDelete = nomenclators.find(
-          (nomenclator: INomenclator) => nomenclator?.code === record?.nomenclatorId
-        );
+        const nomenclatorToDelete = nomenclators.find((nomenclator: INomenclator) => nomenclator?.code === record?.nomenclatorId);
         dispatch(startDeleteServiceFee(record._id));
         dispatch(startDeleteNomenclator(nomenclatorToDelete?._id));
       }
@@ -167,7 +153,6 @@ const ServiceFeeTable: React.FC = () => {
 
   const onChange: TableProps<IServiceFee>["onChange"] = (pagination, filters, sorter, extra) => {
     setFilteredData(extra.currentDataSource);
-    console.log(filteredData);
   };
 
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<IServiceFee> => ({
@@ -192,11 +177,7 @@ const ServiceFeeTable: React.FC = () => {
           >
             Search
           </Button>
-          <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{ width: 90 }}
-          >
+          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
             Reset
           </Button>
           <Button
@@ -222,9 +203,7 @@ const ServiceFeeTable: React.FC = () => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
-    ),
+    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
     onFilter: (value, record) =>
       record[dataIndex]
         .toString()
@@ -280,11 +259,7 @@ const ServiceFeeTable: React.FC = () => {
       dataIndex: "salePrice",
       key: "salePrice",
       width: "10%",
-      render: (value) => (
-        <span>
-          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
-        </span>
-      ),
+      render: (value) => <span>$ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>,
       sorter: {
         compare: (a, b) => a.salePrice - b.salePrice
       }
@@ -323,11 +298,7 @@ const ServiceFeeTable: React.FC = () => {
             <></>
           ) : (
             <Tooltip placement="top" title={"Ver"} arrow={{ pointAtCenter: true }}>
-              <button
-                disabled={!canList}
-                onClick={() => handleView(record._id)}
-                className="table-see-action-btn"
-              >
+              <button disabled={!canList} onClick={() => handleView(record._id)} className="table-see-action-btn">
                 <SeeSvg width={20} height={20} />
               </button>
             </Tooltip>
@@ -336,11 +307,7 @@ const ServiceFeeTable: React.FC = () => {
             <></>
           ) : (
             <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-              <button
-                disabled={!canDelete}
-                className="table-delete-action-btn"
-                onClick={() => handleDelete(record)}
-              >
+              <button disabled={!canDelete} className="table-delete-action-btn" onClick={() => handleDelete(record)}>
                 <DeleteSvg width={20} height={20} />
               </button>
             </Tooltip>
@@ -366,9 +333,7 @@ const ServiceFeeTable: React.FC = () => {
         <div className="flex">
           <PDFDownloadLink
             className=" flex w-[2.5rem] h-[2.5rem]"
-            document={
-              <PDFReport fields={fields} data={PDFReportData} title={`LISTADO DE TARIFAS `} />
-            }
+            document={<PDFReport fields={fields} data={PDFReportData} title={`LISTADO DE TARIFAS `} />}
             fileName={`Listado de Tarifas (${currentDate})`}
           >
             {({ blob, url, loading, error }) =>
@@ -390,9 +355,7 @@ const ServiceFeeTable: React.FC = () => {
             <button
               disabled={!canList}
               className={`${
-                canList
-                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                  : "opacity-20 pt-2 pl-2"
+                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={() => dispatch(serviceFeeStartLoading())}
             >

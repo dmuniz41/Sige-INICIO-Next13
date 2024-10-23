@@ -165,7 +165,6 @@ export const EditServiceFeeForm = () => {
   // };
 
   const onAddTaskList = (values: IServiceFeeTask) => {
-    console.log("🚀 ~ onAddTaskList ~ values:", values);
     setTaskListValues([
       {
         description: values.description,
