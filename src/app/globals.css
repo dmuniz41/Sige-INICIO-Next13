@@ -38,6 +38,9 @@
   .table-see-offer-action-btn {
     @apply flex justify-center items-center p-2 rounded-md bg-primary-500 text-white-100 cursor-pointer hover:bg-primary-700 ease-in-out duration-300;
   }
+  .table-see-materials-action-btn {
+    @apply flex justify-center items-center p-2 rounded-md bg-blue-500 text-white-100 cursor-pointer hover:bg-blue-400 ease-in-out duration-300;
+  }
   .table-check-action-btn {
     @apply flex justify-center items-center p-2 rounded-md bg-success-500 text-white-100 cursor-pointer hover:bg-success-700 ease-in-out duration-300;
   }
