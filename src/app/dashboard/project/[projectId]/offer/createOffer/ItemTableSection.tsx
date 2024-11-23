@@ -4,28 +4,17 @@ import { useMemo } from "react";
 import Table, { ColumnsType } from "antd/es/table";
 
 import { DeleteSvg } from "@/app/global/DeleteSvg";
-import { EditSvg } from "@/app/global/EditSvg";
 import { IActivity } from "@/models/offer";
 import { PlusSvg } from "@/app/global/PlusSvg";
-import { useAppDispatch } from "@/hooks/hooks";
 
 export const ItemTableSection = (props: any) => {
-  // const dispatch = useAppDispatch();
-  const { sectionName, values, valuesSetter, addModalSetter, editModalSetter, valueToEditSetter, buttonText, actionToDispatch } =
-    props;
+  const { sectionName, values, valuesSetter, addModalSetter, buttonText } = props;
 
   const subtotal = useMemo(() => values?.map((value: IActivity) => value.value), [values]);
 
   const handleDelete = (record: IActivity) => {
     valuesSetter(values.filter((value: IActivity) => JSON.stringify(value) !== JSON.stringify(record)));
   };
-
-  // const handleEdit = (record: IActivity) => {
-  //   const selectedActivity = values.find((value: IActivity) => value.description === record.description);
-  //   dispatch(actionToDispatch(selectedActivity));
-  //   valueToEditSetter(record);
-  //   editModalSetter(true);
-  // };
 
   const columns: ColumnsType<IActivity> = [
     {

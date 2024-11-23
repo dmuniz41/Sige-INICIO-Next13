@@ -1,11 +1,11 @@
 import { Schema, model, models, Model } from "mongoose";
 
 export interface IActivity {
+  itemId: string;
   amount: number;
   description: string;
   price: number;
   unitMeasure: string;
-  // complexity: "Alta" | "Media" | "Baja";
   pricePerRepresentative: [
     {
       representativeName: string;
@@ -26,6 +26,7 @@ export interface IActivity {
   }[];
 }
 export interface IOfferItem {
+  offerId: string;
   idNumber?: number;
   key: string;
   description: string;
@@ -41,7 +42,6 @@ export interface IOffer {
   projectName: string;
   value?: number;
   isFinalOffer?: boolean;
-  // representationPercentage: number;
   representativeName: string;
   version: string;
 }
@@ -54,13 +54,14 @@ const OfferSchema = new Schema<IOffer, Model<IOffer>>({
   itemsList: {
     type: [
       {
+        offerId: String,
         idNumber: Number,
         key: String,
         description: String,
         activities: [
           {
+            itemId: String,
             amount: Number,
-            // complexity: String,
             pricePerRepresentative: [
               {
                 representativeName: String,
@@ -121,10 +122,6 @@ const OfferSchema = new Schema<IOffer, Model<IOffer>>({
     type: Boolean,
     required: false
   },
-  // representationPercentage: {
-  //   type: Number,
-  //   required: true
-  // },
   version: {
     type: String,
     required: false
