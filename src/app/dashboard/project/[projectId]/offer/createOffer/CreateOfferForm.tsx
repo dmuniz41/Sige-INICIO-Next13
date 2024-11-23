@@ -1,19 +1,18 @@
 "use client";
-import { Form, Select, SelectProps, Tooltip } from "antd";
+import { Form, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import Swal from "sweetalert2";
 
 import { changeProjectStatus } from "@/actions/project";
 import { IOffer, IOfferItem } from "@/models/offer";
 import { IProject } from "@/models/project";
-import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 import { Item } from "../[offerId]/Item";
 import { NoDataSvg } from "@/app/global/NoDataSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/representative";
 import { RootState, useAppSelector } from "@/store/store";
-import { deleteItem, editItem, selectedItem, startAddOffer } from "@/actions/offer";
+import { deleteItem, editItem, loadSelectedOffer, selectedItem, startAddOffer, startUpdateOffer } from "@/actions/offer";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
 import { EditSvg } from "@/app/global/EditSvg";
@@ -21,8 +20,6 @@ import { DeleteSvg } from "@/app/global/DeleteSvg";
 
 export const CreateOfferForm = (props: { projectId: string }) => {
   const [form] = Form.useForm();
-  // const [representativePercentage, setRepresentativePercentage] = useState(0);
-  const [representative, setRepresentative] = useState("");
   const { projectId } = props;
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -42,32 +39,9 @@ export const CreateOfferForm = (props: { projectId: string }) => {
     (state: RootState) => state?.offer
   );
 
-  // const totalValue = useMemo(
-  //   () =>
-  //     (
-  //       selectedOffer?.itemsList?.reduce((totalValue, item) => item.value + totalValue, 0) *
-  //       (representativePercentage / 100 + 1)
-  //     ).toLocaleString("DE", {
-  //       maximumFractionDigits: 2,
-  //       minimumFractionDigits: 2
-  //     }),
-  //   [selectedOffer, representativePercentage]
-  // );
-
   const totalValue = useMemo(() => {
     return selectedOffer?.itemsList?.reduce((totalValue, item) => item.value + totalValue, 0);
   }, [selectedOffer]);
-
-  const { representativeNomenclators }: { representativeNomenclators: IRepresentativeNomenclator[] } = useAppSelector(
-    (state: RootState) => state?.nomenclator
-  );
-
-  const representativeOptions: SelectProps["options"] = representativeNomenclators?.map((representative) => {
-    return {
-      label: `${representative?.name}`,
-      value: `${representative?.name}`
-    };
-  });
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
@@ -77,7 +51,8 @@ export const CreateOfferForm = (props: { projectId: string }) => {
     selectedOffer.itemsList.map((item, index, itemList) => {
       if (item.key === itemUpdated.key) {
         itemList[index] = itemUpdated;
-        dispatch(editItem({ key: "", description: "", activities: [], value: 0 }, false));
+        console.log(JSON.stringify({offerId: selectedOffer._id}))
+        dispatch(editItem({offerId: selectedOffer._id, key: "", description: "", activities: [], value: 0}, false));
       }
       return itemList[index];
     });
@@ -123,30 +98,6 @@ export const CreateOfferForm = (props: { projectId: string }) => {
           Nombre: <span className="font-normal">{selectedProject.projectName}</span>
         </h1>
       </div>
-      {/* <Form.Item
-        className="mb-3 w-[30%]"
-        label={<span className="font-semibold text-md">Representación</span>}
-        name="representative"
-        rules={[{ required: true, message: "Campo requerido" }]}
-      >
-        <Select
-          allowClear
-          options={representativeOptions}
-          showSearch
-          onSelect={(value) => {
-            setRepresentative(value);
-            // setRepresentativePercentage(
-            //   representativeNomenclators.find((representative) => representative.name === value)
-            //     ?.percentage ?? 1
-            // );
-          }}
-          optionFilterProp="children"
-          filterOption={(input: any, option: any) => (option?.label ?? "").toLowerCase().includes(input)}
-          filterSort={(optionA: any, optionB: any) =>
-            (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
-          }
-        />
-      </Form.Item> */}
       <section className=" flex w-full gap-2 mb-4 ">
         {selectedOffer?.itemsList?.length == 0 ? (
           <article className="flex flex-col w-full justify-center items-center border border-border_light py-4 rounded-md">
@@ -202,7 +153,7 @@ export const CreateOfferForm = (props: { projectId: string }) => {
               </div>
               <div className="flex px-4">
                 ${" "}
-                {totalValue.toLocaleString("DE", {
+                {totalValue?.toLocaleString("DE", {
                   maximumFractionDigits: 2,
                   minimumFractionDigits: 2
                 })}
@@ -218,20 +169,16 @@ export const CreateOfferForm = (props: { projectId: string }) => {
           onClick={() => {
             form
               .validateFields()
-              .then((values) => {
-                dispatch(changeProjectStatus(selectedProject, "Calculado"));
+              .then(() => {
                 dispatch(
-                  startAddOffer({
-                    name: selectedProject?.projectName,
+                  startUpdateOffer({
+                    name: selectedOffer?.projectName,
                     itemsList: selectedOffer?.itemsList,
-                    projectName: selectedProject?.projectName,
-                    projectId: selectedProject?._id,
-                    representativeName: selectedProject?.payMethod,
-                    // representationPercentage: representativeNomenclators.find(
-                    //   (representative) => representative.name === values.representative
-                    // )?.percentage,
+                    projectName: selectedOffer?.projectName,
+                    projectId: selectedOffer?.projectId,
+                    representativeName: selectedOffer?.representativeName,
                     value: selectedOffer?.itemsList?.map((item) => item.value).reduce((total, current) => total + current, 0),
-                    version: "v1"
+                    version: selectedOffer.version
                   })
                 );
                 router.push(`/dashboard/project/${projectId}/offer`);

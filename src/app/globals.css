@@ -23,6 +23,9 @@
   .toolbar-secondary-icon-btn {
     @apply gap-2 flex select-none rounded-lg bg-secondary-500 px-4 py-2.5 justify-center text-center items-center align-middle text-base font-semibold uppercase text-white-100 shadow-md shadow-secondary-500/20 transition-all hover:shadow-lg hover:shadow-secondary-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
   }
+  .toolbar-orange-icon-btn {
+    @apply gap-2 flex select-none rounded-lg bg-primary-500 py-2.5 px-4 justify-center text-center items-center align-middle text-base font-semibold uppercase text-white-100 shadow-md shadow-primary-500/20 transition-all hover:shadow-lg hover:shadow-primary-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+  }
   .toolbar-danger-icon-btn {
     @apply gap-2 flex select-none rounded-lg bg-danger-500 py-2.5 px-4 justify-center text-center items-center align-middle text-base font-semibold uppercase text-white-100 shadow-md shadow-danger-500/20 transition-all hover:shadow-lg hover:shadow-danger-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
   }

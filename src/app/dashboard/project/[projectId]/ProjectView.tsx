@@ -8,21 +8,19 @@ import dynamic from "next/dynamic";
 import React, { useEffect } from "react";
 import Table, { ColumnsType } from "antd/es/table";
 
-import { clearOffer, startLoadSelectedProject } from "@/actions/project";
+import { changeProjectStatus, startLoadSelectedProject } from "@/actions/project";
 import { EditSvg } from "@/app/global/EditSvg";
 import { IOfferItem } from "@/models/offer";
 import { IProject } from "@/models/project";
 import { PDFSvg } from "@/app/global/PDFSvg";
 import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
 import ProjectPDFReport from "@/helpers/ProjectPDFReport";
+import { startAddOffer } from "@/actions/offer";
 
-const PDFDownloadLink = dynamic(
-  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
-  {
-    ssr: false,
-    loading: () => <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
-  }
-);
+const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
+  ssr: false,
+  loading: () => <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+});
 
 export const ProjectView = (props: { projectId: string }) => {
   const { projectId } = props;
@@ -33,10 +31,7 @@ export const ProjectView = (props: { projectId: string }) => {
     dispatch(startLoadSelectedProject(projectId));
   }, [dispatch, projectId]);
 
-  const { selectedProject }: { selectedProject: IProject } = useAppSelector(
-    (state: RootState) => state?.project
-  );
-
+  const { selectedProject }: { selectedProject: IProject } = useAppSelector((state: RootState) => state?.project);
   const itemsList = selectedProject.itemsList;
 
   const handleEdit = (): void => {
@@ -45,8 +40,24 @@ export const ProjectView = (props: { projectId: string }) => {
 
   // ? SETEA UNA PLANTILLA PARA LA OFERTA DONDE LOS ITEM SE AUTOGENERAN CON LOS ITEMS DEL PROYECTO //
   const handleCreateOffer = (): void => {
-    dispatch(clearOffer(itemsList));
-    router.push(`/dashboard/project/${projectId}/offer/createOffer`);
+    dispatch(
+      startAddOffer({
+        name: selectedProject?.projectName,
+        itemsList: itemsList,
+        projectName: selectedProject?.projectName,
+        projectId: selectedProject?._id,
+        representativeName: selectedProject?.payMethod,
+        value: itemsList?.map((item) => item.value).reduce((total, current) => total + current, 0),
+        version: "v1"
+      })
+    ).then(() => {
+      dispatch(changeProjectStatus(selectedProject, "Calculado"));
+    });
+  };
+
+  const handleViewOffers = (): void => {
+    dispatch(startLoadSelectedProject(projectId));
+    router.push(`/dashboard/project/${projectId}/offer`);
   };
 
   return (
@@ -58,6 +69,10 @@ export const ProjectView = (props: { projectId: string }) => {
               <EditSvg />
               Editar
             </button>
+            <button className="toolbar-orange-icon-btn " onClick={handleViewOffers}>
+              <ReportMoneySvg width={20} height={20} />
+              Ver Ofertas
+            </button>
             {selectedProject.status === "Pendiente de Oferta" && (
               <button className="toolbar-secondary-icon-btn" onClick={handleCreateOffer}>
                 <ReportMoneySvg />
@@ -66,9 +81,7 @@ export const ProjectView = (props: { projectId: string }) => {
             )}
             <PDFDownloadLink
               className=" flex w-[2.5rem] h-[2.5rem]"
-              document={
-                <ProjectPDFReport data={selectedProject} itemsList={selectedProject?.itemsList} />
-              }
+              document={<ProjectPDFReport data={selectedProject} itemsList={selectedProject?.itemsList} />}
               fileName={`${selectedProject?.projectName}`}
             >
               {({ blob, url, loading, error }) =>
@@ -136,12 +149,7 @@ export const ProjectView = (props: { projectId: string }) => {
           <article className="grid gap-1">
             <div className="flex gap-1">
               <span className="font-bold mr-2 ">Precio:</span>
-              <p>
-                $
-                {selectedProject?.totalValue === undefined
-                  ? 0
-                  : selectedProject?.totalValue?.toLocaleString("DE")}
-              </p>
+              <p>${selectedProject?.totalValue === undefined ? 0 : selectedProject?.totalValue?.toLocaleString("DE")}</p>
             </div>
             <div className="flex gap-1">
               <span className="font-bold mr-2 ">Gastos:</span>
@@ -206,14 +214,5 @@ const ProjectViewTable = (props: any) => {
     }
   ];
 
-  return (
-    <Table
-      size="small"
-      columns={columns}
-      dataSource={data}
-      className="border-solid w-full"
-      pagination={false}
-      bordered
-    />
-  );
+  return <Table size="small" columns={columns} dataSource={data} className="border-solid w-full" pagination={false} bordered />;
 };

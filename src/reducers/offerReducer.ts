@@ -21,12 +21,14 @@ const initialState: {
     version: ""
   },
   selectedItem: {
+    offerId: "",
     key: "",
     description: "",
     activities: [],
     value: 0
   },
   selectedActivity: {
+    itemId: "",
     amount: 0,
     description: "",
     price: 0,
@@ -38,7 +40,6 @@ const initialState: {
         priceUSD: 0
       }
     ],
-    // complexity: "Baja",
     value: 0,
     listOfMeasures: [
       {
@@ -51,6 +52,7 @@ const initialState: {
     ]
   },
   itemUpdated: {
+    offerId: "",
     key: "",
     description: "",
     activities: [],

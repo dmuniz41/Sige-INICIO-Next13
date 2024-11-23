@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import Swal from "sweetalert2";
 
 import { IActivity, IOffer, IOfferItem } from "@/models/offer";
@@ -19,13 +19,12 @@ export const startAddOffer = ({ ...offer }: any) => {
           projectId: offer?.projectId,
           value: offer?.value,
           representativeName: offer?.representativeName,
-          // representationPercentage: offer?.representationPercentage,
           version: offer?.version
         },
         { headers: { accessToken: token } }
       )
-      .then(() => {
-        dispatch(addOffer(offer));
+      .then((response) => {
+        dispatch(addOffer(response.data.newOffer));
         Toast.fire({
           icon: "success",
           title: "Oferta Creada"
@@ -44,14 +43,9 @@ export const startUpdateOffer = ({ ...offer }: any) => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .put(
-        `${process.env.NEXT_PUBLIC_API_URL}/offer`,
-        { ...offer },
-        { headers: { accessToken: token } }
-      )
+      .put(`${process.env.NEXT_PUBLIC_API_URL}/offer`, { ...offer }, { headers: { accessToken: token } })
       .then(() => {
         dispatch(updateOffer(offer));
-        // dispatch(offersStartLoading(offer.projectId));
         Toast.fire({
           icon: "success",
           title: "Oferta Actualizada"
@@ -116,8 +110,8 @@ export const loadSelectedOffer = (projectId: string) => {
       .get(`${process.env.NEXT_PUBLIC_API_URL}/offer/${projectId}`, {
         headers: { accessToken: token }
       })
-      .then((resp) => {
-        const { BDOffer } = resp?.data;
+      .then((response) => {
+        const { BDOffer } = response?.data;
         dispatch(selectedOffer(BDOffer));
       })
       .catch((error: AxiosError) => {
