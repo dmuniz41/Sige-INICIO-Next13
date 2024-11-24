@@ -1,5 +1,5 @@
 "use client";
-import { Form, SelectProps, Tooltip } from "antd";
+import { Form, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import Swal from "sweetalert2";
@@ -8,7 +8,6 @@ import { deleteItem, editItem, selectedItem, startAddOffer } from "@/actions/off
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { EditSvg } from "@/app/global/EditSvg";
 import { IOffer, IOfferItem } from "@/models/offer";
-import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
 import { Item } from "../Item";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/representative";
@@ -57,7 +56,7 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
     selectedOffer.itemsList.map((item, index, itemList) => {
       if (item.key === itemUpdated.key) {
         itemList[index] = itemUpdated;
-        dispatch(editItem({ key: "", description: "", activities: [], value: 0 }, false));
+        dispatch(editItem({offerId: selectedOffer.key, key: "", description: "", activities: [], value: 0 }, false));
       }
       return itemList[index];
     });

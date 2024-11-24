@@ -12,6 +12,8 @@ export async function POST(request: NextRequest) {
   const uniqueActivities: { description: string; amount: number }[] = [];
   const activitiesMaterials: { description: string; amount: number; unitMeasure: string }[] = [];
   const uniqueMaterials: { description: string; amount: number; unitMeasure: string }[] = [];
+  let newKey = generateRandomString(26);
+
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -28,13 +30,16 @@ export async function POST(request: NextRequest) {
     await connectDB();
 
     // ? CREA UN NUEVO ARRAY CON LAS DESCRIPCIONES Y LAS CANTIDADES DE CADA ACTIVIDAD
-    offer.itemsList.map((item) =>
-      item.activities.map((act) => {
-        activitiesList.push({
-          description: act.description,
-          amount: act.amount
-        });
-      })
+    offer.itemsList.map(
+      (item) => (
+        (item.offerId = newKey),
+        item.activities.map((act) => {
+          activitiesList.push({
+            description: act.description,
+            amount: act.amount
+          });
+        })
+      )
     );
     // ?  AGRUPA TODAS LAS ACTIVIDADES EN UN NUEVO ARRAY DONDE LAS ACTIVIDADES NO SE REPITEN (SI LA ACTIVIDAD EXISTE SUMA LAS CANTIDADES)
     activitiesList.map((activity) => {
@@ -110,9 +115,6 @@ export async function POST(request: NextRequest) {
         }
       );
     }
-
-    let newKey = generateRandomString(26);
-    // const finalValue = offer.value! * (offer?.representationPercentage / 100 + 1);
 
     const newOffer = new Offer({
       ...offer,

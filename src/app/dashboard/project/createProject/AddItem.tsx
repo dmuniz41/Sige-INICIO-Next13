@@ -10,12 +10,7 @@ interface CollectionCreateFormProps {
   itemsList: any[];
 }
 
-export const AddItemModal: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel,
-  itemsList
-}) => {
+export const AddItemModal: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, itemsList }) => {
   const [form] = Form.useForm();
   return (
     <Modal
@@ -46,6 +41,7 @@ export const AddItemModal: React.FC<CollectionCreateFormProps> = ({
                 .validateFields()
                 .then((values) => {
                   onCreate({
+                    offerId: "",
                     idNumber: itemsList?.length + 1,
                     key: generateRandomString(26),
                     description: values?.description,
@@ -73,12 +69,7 @@ export const AddItemModal: React.FC<CollectionCreateFormProps> = ({
             {
               message: "Ya existe un item con esa descripción",
               validator: (_, value: string) => {
-                if (
-                  !itemsList.some(
-                    (item) =>
-                      item?.description?.trim().toLowerCase() === value?.trim().toLowerCase()
-                  )
-                ) {
+                if (!itemsList.some((item) => item?.description?.trim().toLowerCase() === value?.trim().toLowerCase())) {
                   return Promise.resolve();
                 } else {
                   return Promise.reject("Ya existe un item con esa descripción");

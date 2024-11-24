@@ -18,7 +18,7 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const { selectedItem, selectedOffer }: { selectedItem: IOfferItem; selectedOffer: IOffer } =
+  const { selectedItem }: { selectedItem: IOfferItem } =
     useAppSelector((state: RootState) => state?.offer);
 
   const [activitiesValues, setActivitiesValues] = useState<IActivity[]>(selectedItem.activities);
@@ -50,7 +50,6 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
           unitMeasure: values.unitMeasure,
           value: values.value,
           pricePerRepresentative: values.pricePerRepresentative
-          // complexity: values.complexity
         });
       } else {
         newActivityList.push(value);

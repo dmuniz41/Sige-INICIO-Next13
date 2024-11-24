@@ -69,10 +69,12 @@ export const ProjectView = (props: { projectId: string }) => {
               <EditSvg />
               Editar
             </button>
-            <button className="toolbar-orange-icon-btn " onClick={handleViewOffers}>
-              <ReportMoneySvg width={20} height={20} />
-              Ver Ofertas
-            </button>
+            {selectedProject.status === "Calculado" && (
+              <button className="toolbar-orange-icon-btn " onClick={handleViewOffers}>
+                <ReportMoneySvg width={20} height={20} />
+                Ver Ofertas
+              </button>
+            )}
             {selectedProject.status === "Pendiente de Oferta" && (
               <button className="toolbar-secondary-icon-btn" onClick={handleCreateOffer}>
                 <ReportMoneySvg />

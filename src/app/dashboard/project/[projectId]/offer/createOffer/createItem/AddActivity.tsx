@@ -1,16 +1,16 @@
 "use client";
 import { ColumnsType } from "antd/es/table";
-import { Form, InputNumber, Modal, Radio, Select, SelectProps, Table, Tooltip } from "antd";
+import { Form, InputNumber, Modal, Select, SelectProps, Table, Tooltip } from "antd";
 import { useEffect, useMemo, useState } from "react";
 
 import { DeleteSvg } from "@/app/global/DeleteSvg";
-import { IActivity } from "@/models/offer";
+import { IActivity, IOfferItem } from "@/models/offer";
+import { IProject } from "@/models/project";
 import { IServiceFee } from "@/models/serviceFees";
 import { PlusCircleSvg } from "@/app/global/PlusCircleSvg";
 import { RootState, useAppSelector } from "@/store/store";
 import { serviceFeeStartLoading } from "@/actions/serviceFee";
 import { useAppDispatch } from "@/hooks/hooks";
-import { IProject } from "@/models/project";
 
 interface CollectionCreateFormProps {
   open: boolean;
@@ -46,6 +46,7 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
 
   const { serviceFees }: { serviceFees: IServiceFee[] } = useAppSelector((state: RootState) => state?.serviceFee);
   const { selectedProject }: { selectedProject: IProject } = useAppSelector((state: RootState) => state?.project);
+  const { selectedItem }: { selectedItem: IOfferItem } = useAppSelector((state: RootState) => state?.offer);
 
   const listOfActivities: SelectProps["options"] = serviceFees.map((serviceFee) => {
     return {
@@ -150,7 +151,8 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
                           value: size * currentPrice,
                           width: 0,
                           listOfMeasures: activitiesTableValues,
-                          pricePerRepresentative: selectedServiceFee?.pricePerRepresentative!
+                          pricePerRepresentative: selectedServiceFee?.pricePerRepresentative!,
+                          itemId: selectedItem?.key
                         }
                       : {
                           amount: activitiesTableValues.reduce(
@@ -168,7 +170,8 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
                           value: Number(activityValue.toFixed(2)),
                           width: values.width,
                           listOfMeasures: activitiesTableValues,
-                          pricePerRepresentative: selectedServiceFee?.pricePerRepresentative!
+                          pricePerRepresentative: selectedServiceFee?.pricePerRepresentative!,
+                          itemId: selectedItem?.key
                         }
                   );
                   form.resetFields();
@@ -313,35 +316,6 @@ export const AddActivityModal: React.FC<CollectionCreateFormProps> = ({ open, on
               </div>
             </article>
             <article className="w-fit grid">
-              {/* <Form.Item
-                name="complexity"
-                label="Complejidad"
-                rules={[{ required: true, message: "Seleccione un nivel de complejidad" }]}
-              >
-                <Radio.Group
-                  buttonStyle="solid"
-                  onChange={(value) => {
-                    value.target.value === "Alta"
-                      ? selectedServiceFee?.complexity.find(
-                          (complexity) =>
-                            complexity.name === "Alta" && setCurrentPrice(complexity.value)
-                        )
-                      : value.target.value === "Media"
-                        ? selectedServiceFee?.complexity.find(
-                            (complexity) =>
-                              complexity.name === "Media" && setCurrentPrice(complexity.value)
-                          )
-                        : selectedServiceFee?.complexity.find(
-                            (complexity) =>
-                              complexity.name === "Baja" && setCurrentPrice(complexity.value)
-                          );
-                  }}
-                >
-                  <Radio.Button value="Alta">Alta</Radio.Button>
-                  <Radio.Button value="Media">Media</Radio.Button>
-                  <Radio.Button value="Baja">Baja</Radio.Button>
-                </Radio.Group>
-              </Form.Item> */}
               <Form.Item name="size" label="Tamano" className="w-[12rem] hidden" rules={[{ required: true, message: "" }]}>
                 <InputNumber min={0} precision={2} disabled className="w-full" />
               </Form.Item>
