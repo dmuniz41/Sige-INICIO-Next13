@@ -32,10 +32,10 @@ const PDFDownloadLink = dynamic(
 );
 
 export const OfferView = (props: { offerId: string; projectId: string }) => {
+  const [materialsTableModal, setMaterialsTableModal] = useState(false);
   const { offerId, projectId } = props;
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [materialsTableModal, setMaterialsTableModal] = useState(false);
 
   const handleEdit = (): void => {
     router.push(`/dashboard/project/${projectId}/offer/${offerId}/editOffer`);

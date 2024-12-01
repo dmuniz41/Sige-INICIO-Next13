@@ -8,10 +8,10 @@ import ServiceFee, { IServiceFeeSubItem } from "@/models/serviceFees";
 
 export async function POST(request: NextRequest) {
   const { ...offer }: IOffer = await request.json();
-  const activitiesList: { description: string; amount: number }[] = [];
-  const uniqueActivities: { description: string; amount: number }[] = [];
-  const activitiesMaterials: { description: string; amount: number; unitMeasure: string }[] = [];
-  const uniqueMaterials: { description: string; amount: number; unitMeasure: string }[] = [];
+  const activitiesList: { itemId: string; description: string; amount: number }[] = [];
+  const uniqueActivities: { itemId: string; description: string; amount: number }[] = [];
+  const activitiesMaterials: { itemId: string; description: string; amount: number; unitMeasure: string }[] = [];
+  const uniqueMaterials: { itemId: string; description: string; amount: number; unitMeasure: string }[] = [];
   let newKey = generateRandomString(26);
 
   const accessToken = request.headers.get("accessToken");
@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
         (item.offerId = newKey),
         item.activities.map((act) => {
           activitiesList.push({
+            itemId: act.itemId,
             description: act.description,
             amount: act.amount
           });
@@ -55,6 +56,7 @@ export async function POST(request: NextRequest) {
         });
       } else {
         uniqueActivities?.push({
+          itemId: activity.itemId,
           description: activity.description,
           amount: activity.amount
         });
@@ -72,6 +74,7 @@ export async function POST(request: NextRequest) {
         if (actMaterials?.rawMaterials) {
           actMaterials?.rawMaterials?.forEach((material: IServiceFeeSubItem) => {
             activitiesMaterials.push({
+              itemId: uniqueActivity.itemId,
               description: material?.description,
               amount: material?.amount * uniqueActivity.amount,
               unitMeasure: material?.unitMeasure ?? ""
@@ -95,6 +98,7 @@ export async function POST(request: NextRequest) {
         });
       } else {
         uniqueMaterials?.push({
+          itemId: material.itemId,
           description: material.description,
           amount: material.amount,
           unitMeasure: material.unitMeasure ?? ""

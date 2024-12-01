@@ -8,9 +8,8 @@ import { AddActivityModal } from "../../../createOffer/createItem/AddActivity";
 import { editActivityList, selectedActivity, setCurrentItem } from "@/actions/offer";
 import { EditActivityModal } from "../editItem/EditActivity";
 import { generateRandomString } from "@/helpers/randomStrings";
-import { IActivity, IOffer } from "@/models/offer";
+import { IActivity} from "@/models/offer";
 import { ItemTableSection } from "../../../createOffer/ItemTableSection";
-import { RootState, useAppSelector } from "@/store/store";
 import { useAppDispatch } from "@/hooks/hooks";
 
 export const CreateItemForm = (props: { projectId: string; offerId: string }) => {
@@ -18,12 +17,6 @@ export const CreateItemForm = (props: { projectId: string; offerId: string }) =>
   const { projectId, offerId } = props;
   const dispatch = useAppDispatch();
   const router = useRouter();
-
-  const {
-    selectedOffer
-  }: {
-    selectedOffer: IOffer;
-  } = useAppSelector((state: RootState) => state?.offer);
 
   const [activitiesValues, setActivitiesValues] = useState<IActivity[]>([]);
   const [addActivitiesModal, setAddActivitiesModal] = useState(false);
