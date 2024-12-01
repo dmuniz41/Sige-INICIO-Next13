@@ -5,10 +5,10 @@ import React, { useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 
 import { AddActivityModal } from "./AddActivity";
-import { IActivity, IOffer } from "@/models/offer";
+import { generateRandomString } from "@/helpers/randomStrings";
+import { IActivity } from "@/models/offer";
 import { ItemTableSection } from "../ItemTableSection";
-import { RootState, useAppSelector } from "@/store/store";
-import { editActivityList, setCurrentItem } from "@/actions/offer";
+import { setCurrentItem } from "@/actions/offer";
 import { useAppDispatch } from "@/hooks/hooks";
 
 export const CreateItemForm = (props: { projectId: string }) => {
@@ -16,12 +16,6 @@ export const CreateItemForm = (props: { projectId: string }) => {
   const { projectId } = props;
   const dispatch = useAppDispatch();
   const router = useRouter();
-
-  const {
-    selectedOffer
-  }: {
-    selectedOffer: IOffer;
-  } = useAppSelector((state: RootState) => state?.offer);
 
   const [activitiesValues, setActivitiesValues] = useState<IActivity[]>([]);
   const [addActivitiesModal, setAddActivitiesModal] = useState(false);
@@ -84,7 +78,6 @@ export const CreateItemForm = (props: { projectId: string }) => {
             valuesSetter={setActivitiesValues}
             addModalSetter={setAddActivitiesModal}
             buttonText="Añadir Actividad"
-            // actionToDispatch={editActivityList}
             form={form}
           />
         </div>
@@ -100,6 +93,7 @@ export const CreateItemForm = (props: { projectId: string }) => {
                 dispatch(
                   setCurrentItem({
                     ...values,
+                    key: generateRandomString(26),
                     activities: activitiesValues,
                     value: activitiesValues.map((activity) => activity.value).reduce((total, current) => total + current, 0)
                   })

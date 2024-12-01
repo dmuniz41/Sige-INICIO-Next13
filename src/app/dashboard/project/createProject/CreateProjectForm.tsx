@@ -24,12 +24,12 @@ import { IRepresentativeNomenclator } from "@/models/nomenclators/representative
 import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/representative";
 
 export const CreateProjectForm = () => {
-    const [representative, setRepresentative] = useState("");
+  const [representative, setRepresentative] = useState("");
   const [addItemModal, setAddItemModal] = useState(false);
   const [clientNumber, setClientNumber] = useState(0);
   const [editItemModal, setEditItemModal] = useState(false);
   const [form] = Form.useForm();
-  const [itemsValues, setItemsValues]: any = useState([]);
+  const [itemsValues, setItemsValues] = useState<IOfferItem[]>([]);
   const [rowToEdit, setRowToEdit] = useState<IOfferItem>();
   const currencyNomenclators: string[] | undefined = [];
   const dispatch = useAppDispatch();
@@ -43,11 +43,8 @@ export const CreateProjectForm = () => {
   }, [dispatch]);
 
   const { projects }: { projects: IProject[] } = useAppSelector((state: RootState) => state?.project);
-
   const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
-
   const { clientNomenclators }: { clientNomenclators: IClientNomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
-
   const { representativeNomenclators }: { representativeNomenclators: IRepresentativeNomenclator[] } = useAppSelector(
     (state: RootState) => state?.nomenclator
   );
