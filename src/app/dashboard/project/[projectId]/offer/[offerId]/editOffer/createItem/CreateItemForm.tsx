@@ -7,10 +7,10 @@ import TextArea from "antd/es/input/TextArea";
 import { AddActivityModal } from "../../../createOffer/createItem/AddActivity";
 import { editActivityList, selectedActivity, setCurrentItem } from "@/actions/offer";
 import { EditActivityModal } from "../editItem/EditActivity";
-import { generateRandomString } from "@/helpers/randomStrings";
-import { IActivity} from "@/models/offer";
+import { IActivity, IOfferItem } from "@/models/offer";
 import { ItemTableSection } from "../../../createOffer/ItemTableSection";
 import { useAppDispatch } from "@/hooks/hooks";
+import { RootState, useAppSelector } from "@/store/store";
 
 export const CreateItemForm = (props: { projectId: string; offerId: string }) => {
   const [form] = Form.useForm();
@@ -22,6 +22,8 @@ export const CreateItemForm = (props: { projectId: string; offerId: string }) =>
   const [addActivitiesModal, setAddActivitiesModal] = useState(false);
   const [editActivityModal, setEditActivityModal] = useState(false);
   const [rowToEdit, setRowToEdit] = useState<IActivity>();
+
+  const { selectedItem }: { selectedItem: IOfferItem } = useAppSelector((state: RootState) => state?.offer);
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
@@ -44,7 +46,8 @@ export const CreateItemForm = (props: { projectId: string; offerId: string }) =>
           price: values.price,
           listOfMeasures: values.listOfMeasures ?? [],
           unitMeasure: values.unitMeasure,
-          value: values.value
+          value: values.value,
+          itemId: values.itemId
         });
       } else {
         newActivityList.push(value);
@@ -122,12 +125,9 @@ export const CreateItemForm = (props: { projectId: string; offerId: string }) =>
                 dispatch(
                   setCurrentItem({
                     ...values,
-                    key: generateRandomString(26),
-                    description: values.description,
+                    key: selectedItem.key,
                     activities: activitiesValues,
-                    value: activitiesValues
-                      .map((activity) => activity.value)
-                      .reduce((total, current) => total + current, 0)
+                    value: activitiesValues.map((activity) => activity.value).reduce((total, current) => total + current, 0)
                   })
                 );
                 form.resetFields();
@@ -142,11 +142,7 @@ export const CreateItemForm = (props: { projectId: string; offerId: string }) =>
         </button>
       </Form.Item>
 
-      <AddActivityModal
-        open={addActivitiesModal}
-        onCancel={() => setAddActivitiesModal(false)}
-        onCreate={onAddActivity}
-      />
+      <AddActivityModal open={addActivitiesModal} onCancel={() => setAddActivitiesModal(false)} onCreate={onAddActivity} />
 
       <EditActivityModal
         open={editActivityModal}

@@ -14,13 +14,14 @@ import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/r
 import { RootState, useAppSelector } from "@/store/store";
 import { startLoadServiceFeeAuxiliary } from "@/actions/serviceFeeAuxiliary";
 import { useAppDispatch } from "@/hooks/hooks";
+import { generateRandomString } from "@/helpers/randomStrings";
 
 export const EditOfferForm = (props: { projectId: string; offerId: string }) => {
   const [form] = Form.useForm();
   const { projectId, offerId } = props;
   const dispatch = useAppDispatch();
   const router = useRouter();
-
+  
   useEffect(() => {
     dispatch(startLoadServiceFeeAuxiliary());
     dispatch(representativeNomenclatorsStartLoading());
@@ -56,7 +57,7 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
     selectedOffer.itemsList.map((item, index, itemList) => {
       if (item.key === itemUpdated.key) {
         itemList[index] = itemUpdated;
-        dispatch(editItem({offerId: selectedOffer.key, key: "", description: "", activities: [], value: 0 }, false));
+        dispatch(editItem({ offerId: selectedOffer.key, key: "", description: "", activities: [], value: 0 }, false));
       }
       return itemList[index];
     });
@@ -86,6 +87,12 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
+  };
+
+  const handleAddNewItem = () => {
+    const key = generateRandomString(26);
+    dispatch(selectedItem({ offerId: offerId, key: key, description: "", activities: [], value: 0 }));
+    router.push(`/dashboard/project/${projectId}/offer/${offerId}/editOffer/createItem`);
   };
 
   return (
@@ -129,12 +136,7 @@ export const EditOfferForm = (props: { projectId: string; offerId: string }) => 
               </article>
             ))}
           </div>
-          <button
-            className="add-item-form-btn"
-            onClick={() => {
-              router.push(`/dashboard/project/${projectId}/offer/${offerId}/editOffer/createItem`);
-            }}
-          >
+          <button className="add-item-form-btn" onClick={handleAddNewItem}>
             <PlusSvg width={20} height={20} />
             Añadir Item
           </button>
