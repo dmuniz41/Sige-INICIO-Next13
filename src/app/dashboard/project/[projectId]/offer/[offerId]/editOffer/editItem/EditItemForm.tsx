@@ -38,7 +38,6 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
   };
 
   const onEditActivity = (values: IActivity) => {
-    console.log("🚀 ~ onEditActivity ~ values:", values.description)
     const newActivityList: IActivity[] = [];
     // TODO: CAMBIAR EL CRITERIO DE COMPARACION PARA QUE NO SEA POR DESCRIPCION
     activitiesValues.map((value: IActivity) => {
@@ -51,7 +50,6 @@ export const EditItemForm = (props: { projectId: string; offerId: string }) => {
           listOfMeasures: values.listOfMeasures ?? [],
           unitMeasure: values.unitMeasure,
           value: values.value,
-          // complexity: values.complexity
         });
       } else {
         newActivityList.push(value);

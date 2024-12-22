@@ -13,7 +13,7 @@ export const ActivitiesTable = (props: any) => {
       width: "50%",
       render: (_, { ...record }) => (
         <span className="flex gap-1">
-          {`${record.description}${record.listOfMeasures.map((e) => e.description)}`}
+          {`${record.description}${record.listOfMeasures.map((e, index) => <span key={index}>{e.description}</span>)}`}
         </span>
       )
     },
@@ -29,33 +29,21 @@ export const ActivitiesTable = (props: any) => {
       dataIndex: "amount",
       key: "amount",
       width: "5%",
-      render: (value) => (
-        <span>
-          {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
-        </span>
-      )
+      render: (value) => <span>{value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     },
     {
       title: <span className="font-bold">Precio CUP</span>,
       dataIndex: "price",
       key: "price",
       width: "5%",
-      render: (value) => (
-        <span>
-          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
-        </span>
-      )
+      render: (value) => <span>$ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     },
     {
       title: <span className="font-bold">Importe CUP</span>,
       dataIndex: "value",
       key: "value",
       width: "5%",
-      render: (value) => (
-        <span>
-          $ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
-        </span>
-      )
+      render: (value) => <span>$ {value.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
     }
   ];
   return (

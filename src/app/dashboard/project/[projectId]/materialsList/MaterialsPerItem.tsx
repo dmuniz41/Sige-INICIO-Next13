@@ -20,5 +20,5 @@ export const MaterialsPerItem = (props: { projectId: string }) => {
 
   const { selectedOffer }: { selectedOffer: IOffer } = useAppSelector((state: RootState) => state?.offer);
 
-  return <>SECTION {JSON.stringify(selectedOffer.materialsList)}</>;
+  return <>SECTION {JSON.stringify(selectedOffer?.materialsList)}</>;
 };

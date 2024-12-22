@@ -11,9 +11,9 @@ import { ItemTableSection } from "../ItemTableSection";
 import { setCurrentItem } from "@/actions/offer";
 import { useAppDispatch } from "@/hooks/hooks";
 
-export const CreateItemForm = (props: { projectId: string }) => {
+export const CreateItemForm = (props: { projectId: string; offerId: string }) => {
   const [form] = Form.useForm();
-  const { projectId } = props;
+  const { projectId, offerId } = props;
   const dispatch = useAppDispatch();
   const router = useRouter();
 
