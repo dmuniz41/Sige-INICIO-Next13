@@ -10,7 +10,6 @@ import { IOffer } from "@/models/offer";
 export const MaterialsPerItem = () => {
   const dispatch = useAppDispatch();
 
-  
   const { selectedProject }: { selectedProject: IProject } = useAppSelector((state: RootState) => state?.project);
   const { selectedOffer }: { selectedOffer: IOffer } = useAppSelector((state: RootState) => state?.offer);
   
