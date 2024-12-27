@@ -10,6 +10,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const projectId = searchParams.get("projectId");
   const activity_materials: {
+    itemDescription: string;
     itemId: string;
     description: string;
     amount: number;
@@ -67,6 +68,7 @@ export async function GET(request: NextRequest) {
             try {
               const materials = await getMaterialsPerActivity(activity);
               activity_materials.push({
+                itemDescription: item.description,
                 itemId: activity.itemId,
                 description: activity.description,
                 amount: activity.amount,
@@ -80,10 +82,12 @@ export async function GET(request: NextRequest) {
       })
     );
 
+    const groupedActivities = groupActivitiesByItemId(activity_materials);
+
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        activity_materials
+        groupedActivities
       }),
       {
         headers: {
@@ -122,4 +126,36 @@ const getMaterialsPerActivity = async (activity: IActivity) => {
       unitMeasure: material?.unitMeasure ?? ""
     }));
   }
+};
+
+//? AGRUPA LOS ACTIVIDADES POR EL ID DE LA ACTIVIDAD
+const groupActivitiesByItemId = (
+  data: { itemId: string; itemDescription: string; description: string; amount: number; materials: any[] }[]
+) => {
+  return data.reduce(
+    (acc, activity) => {
+      const { itemId, itemDescription, description, amount, materials } = activity;
+
+      //? SI EL ITEM ID NO EXISTE EN EL ACCUMULATOR, CREA UNA NUEVA ENTRADA
+      if (!acc[itemId]) {
+        acc[itemId] = {
+          itemId,
+          itemDescription,
+          activities: []
+        };
+      }
+
+      //? SI EL ITEM ID EXISTE EN EL ACCUMULATOR, AÑADE LA ACTIVIDAD ACTUAL
+      acc[itemId].activities.push({
+        description,
+        amount,
+        materials
+      });
+
+      return acc;
+    },
+    {} as {
+      [key: string]: { itemId: string; itemDescription: string; activities: { description: string; amount: number; materials: any[] }[] };
+    }
+  );
 };
