@@ -3,11 +3,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/libs/mongodb";
 import { verifyJWT } from "@/libs/jwt";
 import Project, { IProject } from "@/models/project";
-import Offer, { IOffer } from "@/models/offer";
+import Offer, { IActivity, IOffer } from "@/models/offer";
+import ServiceFee, { IServiceFee, IServiceFeeSubItem } from "@/models/serviceFees";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const projectId = searchParams.get("projectId");
+  const activity_materials: {
+    itemId: string;
+    description: string;
+    amount: number;
+    materials: { itemId: string; description: string; amount: number; unitMeasure: string }[];
+  }[] = [];
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -51,18 +58,32 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const materialList = DBOffer?.materialsList ?? [];
     const itemsList = DBOffer.itemsList ?? [];
 
-    const result = materialList.map((material) => {
-      const matchingItem = itemsList.find((item) => item.key === material.itemId);
-      return { material: material.description, amount: material.amount, unitMeasure: material.unitMeasure, ItemDescription: matchingItem?.description };
-    });
+    await Promise.all(
+      itemsList.map(async (item) => {
+        await Promise.all(
+          item.activities.map(async (activity) => {
+            try {
+              const materials = await getMaterialsPerActivity(activity);
+              activity_materials.push({
+                itemId: activity.itemId,
+                description: activity.description,
+                amount: activity.amount,
+                materials: materials ?? [] // Use empty array if materials is undefined
+              });
+            } catch (error) {
+              console.error(`Error fetching materials for activity ${activity.itemId}:`, error);
+            }
+          })
+        );
+      })
+    );
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        result
+        activity_materials
       }),
       {
         headers: {
@@ -87,3 +108,18 @@ export async function GET(request: NextRequest) {
     }
   }
 }
+
+//? RECIBE UNA ACTIVIDAD Y RETORNA LOS MATERIALES CORRESPONDIENTES A LA FICHA DE COSTO DE DICHA ACTIVIDAD
+const getMaterialsPerActivity = async (activity: IActivity) => {
+  const activity_serviceFee = await ServiceFee.findOne<IServiceFee>({
+    taskName: `${activity.description.trim()}`
+  });
+  if (activity_serviceFee?.rawMaterials) {
+    return activity_serviceFee.rawMaterials?.map((material) => ({
+      itemId: activity.itemId,
+      description: material?.description,
+      amount: material?.amount,
+      unitMeasure: material?.unitMeasure ?? ""
+    }));
+  }
+};
