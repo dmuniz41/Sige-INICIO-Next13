@@ -1,24 +1,46 @@
 "use client";
+import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
 
-import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { IProject } from "@/models/project";
 import { RootState } from "@/store/store";
-import { loadSelectedOffer } from "@/actions/offer";
 import { startLoadSelectedProject } from "@/actions/project";
-import { IOffer } from "@/models/offer";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import Loading from "./loading";
+import useDisaggregationByMaterialsAPI from "@/hooks/offers/useDisaggregationByMaterials";
 
-export const MaterialsPerItem = (props: { projectId: string }) => {
-  const { projectId } = props;
+export const MaterialsPerItem = () => {
+  const { projectId }: { projectId: string } = useParams();
   const dispatch = useAppDispatch();
 
-  const { selectedProject }: { selectedProject: IProject } = useAppSelector((state: RootState) => state?.project);
-
   useEffect(() => {
-    dispatch(loadSelectedOffer(selectedProject.finalOfferId));
-  }, [dispatch]);
+    if (projectId) {
+      dispatch(startLoadSelectedProject(projectId));
+    }
+  }, [dispatch, projectId]);
 
-  const { selectedOffer }: { selectedOffer: IOffer } = useAppSelector((state: RootState) => state?.offer);
+  const { selectedProject }: { selectedProject: IProject } = useAppSelector(
+    (state: RootState) => state?.project
+  );
+  const { data, error, isLoading } = useDisaggregationByMaterialsAPI(
+    selectedProject.finalOfferId
+  );
 
-  return <>SECTION {JSON.stringify(selectedOffer?.materialsList)}</>;
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (!data) {
+    return <div>No data available.</div>;
+  }
+  return (
+    <>
+      <br />
+      NEW ARRAY {JSON.stringify(data)}
+    </>
+  );
 };
