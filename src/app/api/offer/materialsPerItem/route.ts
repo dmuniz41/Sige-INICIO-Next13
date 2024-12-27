@@ -4,11 +4,11 @@ import { connectDB } from "@/libs/mongodb";
 import { verifyJWT } from "@/libs/jwt";
 import Project, { IProject } from "@/models/project";
 import Offer, { IActivity, IOffer } from "@/models/offer";
-import ServiceFee, { IServiceFee, IServiceFeeSubItem } from "@/models/serviceFees";
+import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const projectId = searchParams.get("projectId");
+  const finalOfferId = searchParams.get("finalOfferId");
   const activity_materials: {
     itemDescription: string;
     itemId: string;
@@ -31,21 +31,7 @@ export async function GET(request: NextRequest) {
       );
     }
     await connectDB();
-    const BDProject = await Project.findById<IProject>(projectId);
-
-    if (!BDProject) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "El proyecto no existe"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    const DBOffer = await Offer.findById<IOffer>(BDProject?.finalOfferId);
+    const DBOffer = await Offer.findById<IOffer>(finalOfferId);
 
     if (!DBOffer) {
       return NextResponse.json(
