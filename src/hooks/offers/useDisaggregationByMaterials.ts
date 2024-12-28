@@ -17,7 +17,7 @@ const useDisaggregationByMaterialsAPI = (finalOfferId: string) => {
   return useQuery(
     {
       queryKey: ["disaggregationByMaterials"],
-      queryFn: () => disaggregationByMaterialsAPI(finalOfferId)
+      queryFn: () => disaggregationByMaterialsAPI(finalOfferId),
     }
   );
 };
