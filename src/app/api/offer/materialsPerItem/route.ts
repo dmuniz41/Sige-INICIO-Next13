@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { connectDB } from "@/libs/mongodb";
 import { verifyJWT } from "@/libs/jwt";
-import Project, { IProject } from "@/models/project";
 import Offer, { IActivity, IOffer } from "@/models/offer";
 import ServiceFee, { IServiceFee } from "@/models/serviceFees";
 
@@ -14,7 +13,12 @@ export async function GET(request: NextRequest) {
     itemId: string;
     description: string;
     amount: number;
-    materials: { itemId: string; description: string; amount: number; unitMeasure: string }[];
+    materials: {
+      itemId: string;
+      description: string;
+      amount: number;
+      unitMeasure: string;
+    }[];
   }[] = [];
 
   const accessToken = request.headers.get("accessToken");
@@ -61,7 +65,10 @@ export async function GET(request: NextRequest) {
                 materials: materials ?? [] // Use empty array if materials is undefined
               });
             } catch (error) {
-              console.error(`Error fetching materials for activity ${activity.itemId}:`, error);
+              console.error(
+                `Error fetching materials for activity ${activity.itemId}:`,
+                error
+              );
             }
           })
         );
@@ -116,23 +123,34 @@ const getMaterialsPerActivity = async (activity: IActivity) => {
 
 //? AGRUPA LOS ACTIVIDADES POR EL ID DE LA ACTIVIDAD
 const groupActivitiesByItemId = (
-  data: { itemId: string; itemDescription: string; description: string; amount: number; materials: any[] }[]
+  data: {
+    itemId: string;
+    itemDescription: string;
+    description: string;
+    amount: number;
+    materials: any[];
+  }[]
 ) => {
-  return data.reduce(
+  const grouped = data.reduce(
     (acc, activity) => {
-      const { itemId, itemDescription, description, amount, materials } = activity;
+      const { itemId, itemDescription, description, amount, materials } =
+        activity;
 
-      //? SI EL ITEM ID NO EXISTE EN EL ACCUMULATOR, CREA UNA NUEVA ENTRADA
-      if (!acc[itemId]) {
-        acc[itemId] = {
+      // Check if the itemId already exists in the accumulator
+      let itemGroup = acc.find((item) => item.itemId === itemId);
+
+      // If it doesn't exist, create a new entry
+      if (!itemGroup) {
+        itemGroup = {
           itemId,
           itemDescription,
           activities: []
         };
+        acc.push(itemGroup);
       }
 
-      //? SI EL ITEM ID EXISTE EN EL ACCUMULATOR, AÑADE LA ACTIVIDAD ACTUAL
-      acc[itemId].activities.push({
+      // Add the current activity to the activities array
+      itemGroup.activities.push({
         description,
         amount,
         materials
@@ -140,8 +158,12 @@ const groupActivitiesByItemId = (
 
       return acc;
     },
-    {} as {
-      [key: string]: { itemId: string; itemDescription: string; activities: { description: string; amount: number; materials: any[] }[] };
-    }
+    [] as {
+      itemId: string;
+      itemDescription: string;
+      activities: { description: string; amount: number; materials: any[] }[];
+    }[]
   );
+
+  return grouped;
 };
