@@ -10,6 +10,16 @@ import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import useDisaggregationByMaterialsAPI from "@/hooks/offers/useDisaggregationByMaterials";
 import { Spin } from "antd";
 
+interface IItemsListProps {
+  itemId: string;
+  itemDescription: string;
+  activities: {
+    description: string;
+    amount: number;
+    materials: any[];
+  }[];
+}
+
 export const MaterialsPerItem = () => {
   const { projectId }: { projectId: string } = useParams();
   const dispatch = useAppDispatch();
@@ -32,22 +42,21 @@ export const MaterialsPerItem = () => {
   }
 
   if (!data || isLoading) {
-    return <div className="w-full h-full  justify-center items-center flex"><Spin tip="Cargando" size="large"/></div>;
+    return (
+      <div className="w-full h-full  justify-center items-center flex">
+        <Spin tip="Cargando" size="large" />
+      </div>
+    );
   }
 
   return (
     <>
-      {data?.groupedActivities?.map(
-        (item: {
-          itemId: string;
-          itemDescription: string;
-          activities: {
-            description: string;
-            amount: number;
-            materials: any[];
-          }[];
-        }) => <ItemSection key={item.itemId} item={item} />
-      )}
+      <header className="font-normal text-2xl mb-4">
+        <span>Desagregacion de Materiales por actividades</span>
+      </header>
+      {data?.groupedActivities?.map((item: IItemsListProps, index: number) => (
+        <ItemSection index={index} key={item.itemId} item={item} />
+      ))}
     </>
   );
 };

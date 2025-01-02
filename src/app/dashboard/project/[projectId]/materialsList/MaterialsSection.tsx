@@ -1,5 +1,6 @@
 import { Table } from "antd";
 import { ColumnsType } from "antd/es/table";
+import { NoDataSvg } from "@/app/global/NoDataSvg";
 
 export const MaterialsSection = ({
   materials
@@ -50,13 +51,22 @@ export const MaterialsSection = ({
 
   return (
     <section>
-      <Table
-        size="small"
-        columns={columns}
-        dataSource={materials}
-        pagination={{ position: ["bottomCenter"]}}
-        className="shadow-md"
-      />
+      {materials.length == 0 ? (
+        <section className="grid p-4 w-full  justify-center border border-border_light rounded-md">
+            <div className="flex justify-center">
+              <NoDataSvg width={100} height={100} />
+            </div>
+            <p className="font-bold">Esta actividad no contiene materiales</p>
+        </section>
+      ) : (
+        <Table
+          size="small"
+          columns={columns}
+          dataSource={materials}
+          pagination={false}
+          bordered
+        />
+      )}
     </section>
   );
 };

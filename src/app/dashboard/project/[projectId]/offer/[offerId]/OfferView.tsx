@@ -27,7 +27,9 @@ const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
   {
     ssr: false,
-    loading: () => <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+    loading: () => (
+      <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+    )
   }
 );
 
@@ -54,18 +56,17 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
     (state: RootState) => state?.project
   );
 
-  const { clientNomenclators }: { clientNomenclators: IClientNomenclator[] } = useAppSelector(
-    (state: RootState) => state?.nomenclator
-  );
+  const { clientNomenclators }: { clientNomenclators: IClientNomenclator[] } =
+    useAppSelector((state: RootState) => state?.nomenclator);
 
   const {
     representativeNomenclators
-  }: { representativeNomenclators: IRepresentativeNomenclator[] } = useAppSelector(
-    (state: RootState) => state?.nomenclator
-  );
+  }: { representativeNomenclators: IRepresentativeNomenclator[] } =
+    useAppSelector((state: RootState) => state?.nomenclator);
 
   const clientInfo = clientNomenclators.find(
-    (clientNomenclator) => clientNomenclator.name === selectedProject?.clientName
+    (clientNomenclator) =>
+      clientNomenclator.name === selectedProject?.clientName
   );
 
   const representativeInfo = representativeNomenclators.find(
@@ -121,8 +122,15 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
               )}
             </PDFDownloadLink>
             {!selectedOffer?.isFinalOffer ? (
-              <Tooltip placement="top" title={"Marcar como final"} arrow={{ pointAtCenter: true }}>
-                <button className="toolbar-auxiliary-icon" onClick={setOfferAsFinal}>
+              <Tooltip
+                placement="top"
+                title={"Marcar como final"}
+                arrow={{ pointAtCenter: true }}
+              >
+                <button
+                  className="toolbar-auxiliary-icon"
+                  onClick={setOfferAsFinal}
+                >
                   <CheckSvg />
                 </button>
               </Tooltip>
@@ -168,7 +176,10 @@ export const OfferView = (props: { offerId: string; projectId: string }) => {
       <MaterialsListModal
         open={materialsTableModal}
         onCancel={() => setMaterialsTableModal(false)}
-        values={{ values: selectedOffer?.materialsList!, name: selectedOffer?.projectName }}
+        values={{
+          values: selectedOffer?.materialsList!,
+          name: selectedOffer?.projectName
+        }}
       />
     </>
   );
