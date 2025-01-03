@@ -21,7 +21,11 @@ import { IRepresentativeNomenclator } from "@/models/nomenclators/representative
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { PDFSvg } from "@/app/global/PDFSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
-import { projectsStartLoading, startDeleteProject, startLoadSelectedProject } from "@/actions/project";
+import {
+  projectsStartLoading,
+  startDeleteProject,
+  startLoadSelectedProject
+} from "@/actions/project";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { ReportMoneySvg } from "@/app/global/ReportMoneySvg";
 import { representativeNomenclatorsStartLoading } from "@/actions/nomenclators/representative";
@@ -30,11 +34,17 @@ import { SeeSvg } from "@/app/global/SeeSvg";
 import { TreeListSvg } from "@/app/global/TreeListSvg";
 import { useAppDispatch } from "@/hooks/hooks";
 import PDFReport from "@/helpers/PDFReport";
+import { BookDowloadSvg } from "@/app/global/BookDowloadSvg";
 
-const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
-  ssr: false,
-  loading: () => <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
-});
+const PDFDownloadLink = dynamic(
+  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+  {
+    ssr: false,
+    loading: () => (
+      <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+    )
+  }
+);
 
 type DataIndex = keyof IProject;
 
@@ -135,7 +145,9 @@ const ProjectTable: React.FC = () => {
     clientNomenclators: IClientNomenclator[];
   } = useAppSelector((state: RootState) => state?.nomenclator);
 
-  const { projects }: any = useAppSelector((state: RootState) => state?.project);
+  const { projects }: any = useAppSelector(
+    (state: RootState) => state?.project
+  );
 
   let data: IProject[] = useMemo(() => projects, [projects]);
   if (!canList) {
@@ -153,14 +165,17 @@ const ProjectTable: React.FC = () => {
   });
 
   const representativeFilter: any[] = [];
-  representativeNomenclators.map((representative: IRepresentativeNomenclator) => {
-    representativeFilter.push({
-      text: `${representative.name}`,
-      value: `${representative.name}`
-    });
-  });
+  representativeNomenclators.map(
+    (representative: IRepresentativeNomenclator) => {
+      representativeFilter.push({
+        text: `${representative.name}`,
+        value: `${representative.name}`
+      });
+    }
+  );
 
   const clientFilter: any[] = [];
+
   clientNomenclators.map((client: IClientNomenclator) => {
     clientFilter.push({
       text: `${client.name}`,
@@ -210,7 +225,16 @@ const ProjectTable: React.FC = () => {
     router.push(`/dashboard/project/${projectId}/materialsList`);
   };
 
-  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
+  const handleDischargeMaterials = (projectId: string): void => {
+    dispatch(startLoadSelectedProject(projectId));
+    router.push(`/dashboard/project/${projectId}/dischargeMaterials`);
+  };
+
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex
+  ) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -238,26 +262,45 @@ const ProjectTable: React.FC = () => {
     setSearchText("");
   };
 
-  const onChange: TableProps<IProject>["onChange"] = (pagination, filters, sorter, extra) => {
+  const onChange: TableProps<IProject>["onChange"] = (
+    pagination,
+    filters,
+    sorter,
+    extra
+  ) => {
     setFilteredData(extra.currentDataSource);
     console.log(filteredData);
   };
 
-  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<IProject> => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+  const getColumnSearchProps = (
+    dataIndex: DataIndex
+  ): ColumnType<IProject> => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close
+    }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            handleSearch(selectedKeys as string[], confirm, dataIndex)
+          }
           style={{ marginBottom: 8, display: "block" }}
         />
         <Space>
           <Button
             type="primary"
-            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            onClick={() =>
+              handleSearch(selectedKeys as string[], confirm, dataIndex)
+            }
             icon={<SearchOutlined />}
             size="small"
             style={{ width: 90 }}
@@ -265,7 +308,11 @@ const ProjectTable: React.FC = () => {
           >
             Search
           </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
           <Button
@@ -291,7 +338,9 @@ const ProjectTable: React.FC = () => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
+    ),
     onFilter: (value, record) =>
       record[dataIndex]!.toString()
         .toLowerCase()
@@ -329,7 +378,8 @@ const ProjectTable: React.FC = () => {
       key: "clientName",
       width: "10%",
       filters: clientFilter,
-      onFilter: (value: any, record: any) => record.clientName.startsWith(value),
+      onFilter: (value: any, record: any) =>
+        record.clientName.startsWith(value),
       filterSearch: true
     },
     {
@@ -398,7 +448,15 @@ const ProjectTable: React.FC = () => {
       dataIndex: "totalValue",
       key: "totalValue",
       width: "10%",
-      render: (value) => <span>$ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>,
+      render: (value) => (
+        <span>
+          ${" "}
+          {value?.toLocaleString("DE", {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })}
+        </span>
+      ),
       sorter: {
         compare: (a, b) => a.totalValue - b.totalValue
       }
@@ -408,7 +466,15 @@ const ProjectTable: React.FC = () => {
       dataIndex: "expenses",
       key: "expenses",
       width: "10%",
-      render: (value) => <span>$ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>,
+      render: (value) => (
+        <span>
+          ${" "}
+          {value?.toLocaleString("DE", {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })}
+        </span>
+      ),
       sorter: {
         compare: (a, b) => a.expenses - b.expenses
       }
@@ -418,7 +484,15 @@ const ProjectTable: React.FC = () => {
       dataIndex: "profits",
       key: "profits",
       width: "10%",
-      render: (value) => <span>$ {value?.toLocaleString("DE", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>,
+      render: (value) => (
+        <span>
+          ${" "}
+          {value?.toLocaleString("DE", {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })}
+        </span>
+      ),
       sorter: {
         compare: (a, b) => a.profits - b.profits
       }
@@ -440,8 +514,16 @@ const ProjectTable: React.FC = () => {
           {record.status === "Pendiente de Oferta" ? (
             <></>
           ) : (
-            <Tooltip placement="top" title={"Ver Ofertas"} arrow={{ pointAtCenter: true }}>
-              <button disabled={!canList} onClick={() => handleViewOffer(record._id)} className="table-see-offer-action-btn">
+            <Tooltip
+              placement="top"
+              title={"Ver Ofertas"}
+              arrow={{ pointAtCenter: true }}
+            >
+              <button
+                disabled={!canList}
+                onClick={() => handleViewOffer(record._id)}
+                className="table-see-offer-action-btn"
+              >
                 <ReportMoneySvg width={20} height={20} />
               </button>
             </Tooltip>
@@ -449,22 +531,50 @@ const ProjectTable: React.FC = () => {
           {record.status === "Pendiente de Oferta" ? (
             <></>
           ) : (
-            <Tooltip placement="top" title={"Desagregación de Materiales"} arrow={{ pointAtCenter: true }}>
+            <Tooltip
+              placement="top"
+              title={"Desagregación de Materiales"}
+              arrow={{ pointAtCenter: true }}
+            >
               <button
                 disabled={!canList}
                 onClick={() => handleViewMaterialsList(record._id)}
-                className="table-see-materials-action-btn {
-"
+                className="table-see-materials-action-btn"
               >
                 <TreeListSvg width={20} height={20} />
+              </button>
+            </Tooltip>
+          )}
+          {record.status === "Pendiente de Oferta" ? (
+            <></>
+          ) : (
+            <Tooltip
+              placement="top"
+              title={"Descargar Materiales"}
+              arrow={{ pointAtCenter: true }}
+            >
+              <button
+                disabled={!canList}
+                onClick={() => handleDischargeMaterials(record._id)}
+                className="table-discharge-materials-action-btn"
+              >
+                <BookDowloadSvg width={20} height={20} />
               </button>
             </Tooltip>
           )}
           {!canList ? (
             <></>
           ) : (
-            <Tooltip placement="top" title={"Detalles"} arrow={{ pointAtCenter: true }}>
-              <button disabled={!canList} onClick={() => handleView(record?._id)} className="table-see-action-btn">
+            <Tooltip
+              placement="top"
+              title={"Detalles"}
+              arrow={{ pointAtCenter: true }}
+            >
+              <button
+                disabled={!canList}
+                onClick={() => handleView(record?._id)}
+                className="table-see-action-btn"
+              >
                 <SeeSvg width={20} height={20} />
               </button>
             </Tooltip>
@@ -472,8 +582,16 @@ const ProjectTable: React.FC = () => {
           {!canDelete ? (
             <></>
           ) : (
-            <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-              <button disabled={!canDelete} onClick={() => handleDelete(record._id)} className="table-delete-action-btn">
+            <Tooltip
+              placement="top"
+              title={"Eliminar"}
+              arrow={{ pointAtCenter: true }}
+            >
+              <button
+                disabled={!canDelete}
+                onClick={() => handleDelete(record._id)}
+                className="table-delete-action-btn"
+              >
                 <DeleteSvg width={20} height={20} />
               </button>
             </Tooltip>
@@ -497,11 +615,17 @@ const ProjectTable: React.FC = () => {
           </button>
         </div>
         <div className="flex">
-          <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
+          <Tooltip
+            placement="top"
+            title={"Refrescar"}
+            arrow={{ pointAtCenter: true }}
+          >
             <button
               disabled={!canList}
               className={`${
-                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                canList
+                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                  : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={() => dispatch(projectsStartLoading())}
             >
@@ -509,11 +633,17 @@ const ProjectTable: React.FC = () => {
             </button>
           </Tooltip>
           <PDFDownloadLink
-            document={<PDFReport fields={fields} data={PDFReportData} title={"REPORTE DE PROYECTOS"} />}
+            document={
+              <PDFReport
+                fields={fields}
+                data={PDFReportData}
+                title={"REPORTE DE PROYECTOS"}
+              />
+            }
             fileName={`Reporte de proyectos (${currentDate})`}
           >
-            {({ blob, url, loading, error }) =>
-              !canList ? (
+            <>
+              {!canList ? (
                 <button
                   disabled
                   className={`opacity-20 pt-2 pl-2" flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
@@ -524,13 +654,15 @@ const ProjectTable: React.FC = () => {
                 <button
                   disabled={!canList}
                   className={`${
-                    canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+                    canList
+                      ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
+                      : "opacity-20 pt-2 pl-2"
                   } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
                 >
                   <PDFSvg />
                 </button>
-              )
-            }
+              )}
+            </>
           </PDFDownloadLink>
         </div>
       </div>

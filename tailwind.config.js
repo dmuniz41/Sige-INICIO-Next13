@@ -1,4 +1,4 @@
-/** @type {import('tailwindcss').Config} */
+/** @type {import("tailwindcss").Config} */
 
 module.exports = {
   content: [
@@ -78,6 +78,17 @@ module.exports = {
         700: "#990000",
         800: "#660000",
         900: "#330000"
+      },
+      purple: {
+        100: "#e0d4ff",
+        200: "#c0a9ff",
+        300: "#a685ff",
+        400: "#8a5dff",
+        500: "#6c2383",
+        600: "#4a1a7f",
+        700: "#331466",
+        800: "#1d0d4c",
+        900: "#0a0526"
       },
       light: "#e3eaef",
       dark: "#191d21",

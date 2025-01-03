@@ -37,7 +37,9 @@ export async function POST(request: NextRequest) {
     // ? SI YA EXISTE UN MATERIAL CON ESE CODIGO, SUMA LA CANTIDAD QUE SE ESTA EN ENTRANDO AL TOTAL Y AGREGA LA NUEVA OPERACION A LA LISTA DE OPERACIONES DEL MATERIAL YA EXISTENTE //
     if (BDMaterial && material?.operation?.tipo === "Añadir") {
       let newTotal = BDMaterial.unitsTotal + material?.operation?.amount;
-      let newTotalValue = BDMaterial.materialTotalValue! + material?.operation?.amount * BDMaterial.costPerUnit;
+      let newTotalValue =
+        BDMaterial.materialTotalValue! +
+        material?.operation?.amount * BDMaterial.costPerUnit;
       let updatedMaterial = await Material.findOneAndUpdate(
         {
           materialName: material.materialName,
@@ -55,8 +57,12 @@ export async function POST(request: NextRequest) {
 
       // ? ACTUALIZA EL VALOR TOTAL DEL ALMACEN //'
       const DBWarehouse = await Warehouse.findById(material?.warehouse);
-      let newWarehouseValue = DBWarehouse.totalValue + material?.operation?.amount * material?.costPerUnit;
-      await Warehouse.findByIdAndUpdate(material?.warehouse, { totalValue: newWarehouseValue });
+      let newWarehouseValue =
+        DBWarehouse.totalValue +
+        material?.operation?.amount * material?.costPerUnit;
+      await Warehouse.findByIdAndUpdate(material?.warehouse, {
+        totalValue: newWarehouseValue
+      });
 
       return new NextResponse(
         JSON.stringify({
@@ -76,12 +82,15 @@ export async function POST(request: NextRequest) {
     // ? SI YA EXISTE UN MATERIAL CON ESE CODIGO, SUSTRAE LA CANTIDAD QUE SE ESTA EN ENTRANDO AL TOTAL Y AGREGA LA NUEVA OPERACION A LA LISTA DE OPERACIONES DEL MATERIAL YA EXISTENTE //
     if (BDMaterial && material?.operation.tipo === "Sustraer") {
       let newTotal = BDMaterial.unitsTotal - material?.operation?.amount;
-      let newTotalValue = BDMaterial.materialTotalValue! - material?.operation?.amount * BDMaterial.costPerUnit;
+      let newTotalValue =
+        BDMaterial.materialTotalValue! -
+        material?.operation?.amount * BDMaterial.costPerUnit;
       if (newTotal < 0) {
         return NextResponse.json(
           {
             ok: false,
-            message: "No hay existencias suficientes para extraer esa cantidad de material"
+            message:
+              "No hay existencias suficientes para extraer esa cantidad de material"
           },
           {
             status: 500
@@ -91,7 +100,9 @@ export async function POST(request: NextRequest) {
         // ? SI LAS EXISTENCIAS DESPUES DE EXTRAER EL MATERIAL ES CERO ELIMINA EL MATERIAL //
         if (newTotal === 0) {
           let code = BDMaterial?.code;
-          let deletedMaterial: IMaterial = (await Material.findOneAndDelete({ code })) as unknown as IMaterial;
+          let deletedMaterial: IMaterial = (await Material.findOneAndDelete({
+            code
+          })) as unknown as IMaterial;
 
           const materialList: IMaterial[] = await Material.find({
             category: deletedMaterial?.category,
@@ -119,9 +130,15 @@ export async function POST(request: NextRequest) {
           );
 
           let DBWarehouse = await Warehouse.findById(material?.warehouse);
-          let newWarehouseValue = DBWarehouse?.totalValue - deletedMaterial?.materialTotalValue!;
-          await Warehouse.findByIdAndUpdate(material?.warehouse, { totalValue: newWarehouseValue });
-          await updateServiceFeesMaterials(updatedMaterialNomenclator, await ServiceFee.find());
+          let newWarehouseValue =
+            DBWarehouse?.totalValue - deletedMaterial?.materialTotalValue!;
+          await Warehouse.findByIdAndUpdate(material?.warehouse, {
+            totalValue: newWarehouseValue
+          });
+          await updateServiceFeesMaterials(
+            updatedMaterialNomenclator,
+            await ServiceFee.find()
+          );
 
           return NextResponse.json(
             {
@@ -151,8 +168,12 @@ export async function POST(request: NextRequest) {
 
       // ? ACTUALIZA EL VALOR TOTAL DEL ALMACEN //
       const DBWarehouse = await Warehouse.findById(material.warehouse);
-      let newWarehouseValue = DBWarehouse.totalValue - material?.operation?.amount * material?.costPerUnit;
-      await Warehouse.findByIdAndUpdate(material?.warehouse, { totalValue: newWarehouseValue });
+      let newWarehouseValue =
+        DBWarehouse.totalValue -
+        material?.operation?.amount * material?.costPerUnit;
+      await Warehouse.findByIdAndUpdate(material?.warehouse, {
+        totalValue: newWarehouseValue
+      });
 
       return new NextResponse(
         JSON.stringify({
@@ -171,7 +192,7 @@ export async function POST(request: NextRequest) {
       // ? SI NO EXISTE UN MATERIAL CON ESE CODIGO CREA UNA NUEVA ENTRADA EN EL ALMACEN //
       let newOperation = new Operation(material?.operation);
       // ? BUSCA EL MATERIAL CON EL CODIGO MAS GRANDE
-      const lastMaterial = await Material.find().sort({code:-1}).limit(1);
+      const lastMaterial = await Material.find().sort({ code: -1 }).limit(1);
 
       const newMaterial = new Material({
         category: material?.category,
@@ -179,7 +200,11 @@ export async function POST(request: NextRequest) {
         costPerUnit: material?.costPerUnit,
         description: material?.description,
         enterDate: material?.enterDate,
-        key: material?.category + material?.materialName + material?.costPerUnit + material?.description,
+        key:
+          material?.category +
+          material?.materialName +
+          material?.costPerUnit +
+          material?.description,
         materialName: material.materialName,
         materialTotalValue: material?.costPerUnit * material?.operation?.amount,
         minimumExistence: material.minimumExistence,
@@ -193,8 +218,12 @@ export async function POST(request: NextRequest) {
 
       // ? ACTUALIZA EL VALOR TOTAL DEL ALMACEN //
       const DBWarehouse = await Warehouse.findById(material?.warehouse);
-      let newWarehouseValue = DBWarehouse?.totalValue + material?.operation?.amount * material?.costPerUnit;
-      await Warehouse.findByIdAndUpdate(material?.warehouse, { totalValue: newWarehouseValue });
+      let newWarehouseValue =
+        DBWarehouse?.totalValue +
+        material?.operation?.amount * material?.costPerUnit;
+      await Warehouse.findByIdAndUpdate(material?.warehouse, {
+        totalValue: newWarehouseValue
+      });
 
       await newMaterial.save();
 
@@ -203,7 +232,9 @@ export async function POST(request: NextRequest) {
         category: material?.category,
         materialName: material?.materialName
       });
-      const prices: number[] = materialList.map((material) => material?.costPerUnit);
+      const prices: number[] = materialList.map(
+        (material) => material?.costPerUnit
+      );
       const maxPrice: number = Math.max(...prices);
 
       // ? CREA UN NUEVO NOMENCLADOR ASOCIADO A ESE MATERIAL //
@@ -225,12 +256,18 @@ export async function POST(request: NextRequest) {
         await newNomenclator.save();
       } else {
         const updatedMaterialNomenclator = await Nomenclator.findOneAndUpdate(
-          { category: "Material", code: `${material?.category} ${material?.materialName}` },
+          {
+            category: "Material",
+            code: `${material?.category} ${material?.materialName}`
+          },
           { value: maxPrice },
           { new: true }
         );
         //? MANDA A ACTUALIZAR TODAS LAS TARIFAS EN LA BD
-        await updateServiceFeesMaterials(updatedMaterialNomenclator, await ServiceFee.find());
+        await updateServiceFeesMaterials(
+          updatedMaterialNomenclator,
+          await ServiceFee.find()
+        );
       }
 
       return new NextResponse(
@@ -311,7 +348,12 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const { code = "", description = "", materialName = "", minimumExistence = 1 } = await request.json();
+  const {
+    code = "",
+    description = "",
+    materialName = "",
+    minimumExistence = 1
+  } = await request.json();
   const accessToken = request.headers.get("accessToken");
   const key = generateRandomString(26);
 
@@ -329,7 +371,9 @@ export async function PUT(request: NextRequest) {
     }
     await connectDB();
 
-    const materialToUpdate: IMaterial = (await Material.findOne({ code })) as IMaterial;
+    const materialToUpdate: IMaterial = (await Material.findOne({
+      code
+    })) as IMaterial;
 
     if (!materialToUpdate) {
       return NextResponse.json({
@@ -391,7 +435,9 @@ export async function PUT(request: NextRequest) {
         code: `${materialToUpdate.category} ${materialToUpdate.materialName}`
       });
     } else {
-      const prices: number[] = materialList.map((material) => material.costPerUnit);
+      const prices: number[] = materialList.map(
+        (material) => material.costPerUnit
+      );
       const maxPrice: number = Math.max(...prices);
 
       // ? VERIFICA SI EXISTE UN NOMENCLADOR CON ESA CATEGORIA Y MATERIAL EN LA BD, SI NO EXISTE CREA UNO NUEVO //
@@ -419,7 +465,10 @@ export async function PUT(request: NextRequest) {
           { new: true }
         );
         //? MANDA A ACTUALIZAR TODAS LAS TARIFAS EN LA BD
-        await updateServiceFeesMaterials(updatedNMaterialNomenclator, await ServiceFee.find());
+        await updateServiceFeesMaterials(
+          updatedNMaterialNomenclator,
+          await ServiceFee.find()
+        );
       }
     }
 
@@ -490,8 +539,11 @@ export async function DELETE(request: NextRequest) {
       code: params.get("code")
     })) as unknown as IMaterial;
     const DBWarehouse = await Warehouse.findById(params.get("warehouse"));
-    let newWarehouseValue = DBWarehouse.totalValue - deletedMaterial.materialTotalValue!;
-    await Warehouse.findByIdAndUpdate(params.get("warehouse"), { totalValue: newWarehouseValue });
+    let newWarehouseValue =
+      DBWarehouse.totalValue - deletedMaterial.materialTotalValue!;
+    await Warehouse.findByIdAndUpdate(params.get("warehouse"), {
+      totalValue: newWarehouseValue
+    });
 
     // ? CALCULA EL MAYOR VALOR DENTRO DE UN GRUPO DE MATERIALES CON IGUAL CATEGORIA Y NOMBRE //
     const materialList: IMaterial[] = await Material.find({
@@ -504,7 +556,9 @@ export async function DELETE(request: NextRequest) {
         code: `${deletedMaterial.category} ${deletedMaterial.materialName}`
       });
     } else {
-      const prices: number[] = materialList.map((material) => material.costPerUnit);
+      const prices: number[] = materialList.map(
+        (material) => material.costPerUnit
+      );
       const maxPrice: number = Math.max(...prices);
 
       // ? VERIFICA SI EXISTE UN NOMENCLADOR CON ESA CATEGORIA Y MATERIAL EN LA BD, SI NO EXISTE CREA UNO NUEVO //
@@ -517,7 +571,10 @@ export async function DELETE(request: NextRequest) {
         { new: true }
       );
       //? MANDA A ACTUALIZAR TODAS LAS TARIFAS EN LA BD
-      await updateServiceFeesMaterials(updatedNMaterialNomenclator, await ServiceFee.find());
+      await updateServiceFeesMaterials(
+        updatedNMaterialNomenclator,
+        await ServiceFee.find()
+      );
     }
     return new NextResponse(
       JSON.stringify({
