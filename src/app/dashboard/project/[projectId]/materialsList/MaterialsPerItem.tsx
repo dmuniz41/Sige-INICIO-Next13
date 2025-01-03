@@ -1,14 +1,14 @@
 "use client";
+import React, { useEffect } from "react";
+import { Spin } from "antd";
 import { useParams } from "next/navigation";
-import React, { useEffect, Suspense } from "react";
 
 import { IProject } from "@/models/project";
 import { ItemSection } from "./ItemSection";
 import { RootState } from "@/store/store";
 import { startLoadSelectedProject } from "@/actions/project";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
-import useDisaggregationByMaterialsAPI from "@/hooks/offers/useDisaggregationByMaterials";
-import { Spin } from "antd";
+import { useDisaggregationByMaterial } from "@/hooks/offers/useDisaggregationByMaterials";
 
 interface IItemsListProps {
   itemId: string;
@@ -33,7 +33,7 @@ export const MaterialsPerItem = () => {
   const { selectedProject }: { selectedProject: IProject } = useAppSelector(
     (state: RootState) => state?.project
   );
-  const { data, error, isLoading } = useDisaggregationByMaterialsAPI(
+  const { data, error, isLoading } = useDisaggregationByMaterial(
     selectedProject.finalOfferId
   );
 
@@ -43,7 +43,7 @@ export const MaterialsPerItem = () => {
 
   if (!data || isLoading) {
     return (
-      <div className="w-full h-full  justify-center items-center flex">
+      <div className="w-full h-full justify-center items-center flex">
         <Spin tip="Cargando" size="large" />
       </div>
     );

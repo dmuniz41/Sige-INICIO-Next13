@@ -9,17 +9,12 @@ const disaggregationByMaterialsAPI = async (finalOfferId: string) => {
       headers: { accessToken: token }
     }
   );
-  return response.data; // Return the data directly
+  return response.data;
 };
 
-// Custom hook
-const useDisaggregationByMaterialsAPI = (finalOfferId: string) => {
-  return useQuery(
-    {
-      queryKey: ["disaggregationByMaterials"],
-      queryFn: () => disaggregationByMaterialsAPI(finalOfferId),
-    }
-  );
+export const useDisaggregationByMaterial = (finalOfferId: string) => {
+  return useQuery({
+    queryKey: ["disaggregationByMaterials"],
+    queryFn: () => disaggregationByMaterialsAPI(finalOfferId)
+  });
 };
-
-export default useDisaggregationByMaterialsAPI;

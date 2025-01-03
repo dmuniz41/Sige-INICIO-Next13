@@ -53,10 +53,10 @@ export const MaterialsSection = ({
     <section>
       {materials.length == 0 ? (
         <section className="grid p-4 w-full  justify-center border border-border_light rounded-md">
-            <div className="flex justify-center">
-              <NoDataSvg width={100} height={100} />
-            </div>
-            <p className="font-bold">Esta actividad no contiene materiales</p>
+          <div className="flex justify-center">
+            <NoDataSvg width={100} height={100} />
+          </div>
+          <p className="font-bold">Esta actividad no contiene materiales</p>
         </section>
       ) : (
         <Table
