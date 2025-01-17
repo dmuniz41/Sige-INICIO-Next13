@@ -1,18 +1,20 @@
 "use client";
-import { useParams } from "next/navigation";
 import { ColumnsType } from "antd/es/table";
+import { Table } from "antd";
+import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Title from "antd/es/typography/Title";
 
 import { useGetProjectById } from "@/hooks/projects/useProject";
 import { BookDowloadSvg } from "@/app/global/BookDowloadSvg";
-import { Input, Table } from "antd";
 import { useGetOfferById } from "@/hooks/offers/useDisaggregationByMaterials";
 
-export const DischargeMaterials = () => {
+export const DischargeMaterialsTable = () => {
   const { projectId }: { projectId: string } = useParams();
   const { data: project } = useGetProjectById(projectId);
   const { data: offer } = useGetOfferById(project?.BDProject?.finalOfferId);
+  const router = useRouter();
 
   const [materials, setMaterials] = useState<any[]>([]);
 
@@ -22,21 +24,16 @@ export const DischargeMaterials = () => {
     }
   }, [offer]);
 
-  const handleInputChange = (key: any, value: any) => {
-    console.log("🚀 ~ handleInputChange ~ key:", key);
-    const newData = materials?.map((item: any) => {
-      if (item.description === key) {
-        return { ...item, inputValue: value };
-      }
-      return item;
-    });
-    setMaterials(newData);
-  };
-
   const getRowClassName = (record: any) => {
     const inputValue = record.inputValue || 0;
     const difference = record.amount - inputValue;
     return difference < 0 ? "negative-row" : "positive-row";
+  };
+
+  const handleGoToEditDischargeMaterials = () => {
+    router.push(
+      `/dashboard/project/${projectId}/dischargeMaterials/editDischargeMaterials`
+    );
   };
 
   const columns: ColumnsType<{
@@ -45,6 +42,7 @@ export const DischargeMaterials = () => {
     difference: number;
     unitMeasure: string;
     amount: number;
+    amountReal: number;
   }> = [
     {
       title: <span className="font-bold">Nombre del Material</span>,
@@ -60,18 +58,8 @@ export const DischargeMaterials = () => {
     },
     {
       title: <span className="font-bold">Real</span>,
-      key: "input",
-      width: "10%",
-      render: (text, record) => (
-        <Input
-          type="number"
-          defaultValue={0}
-          min={0}
-          onChange={(e) =>
-            handleInputChange(record.description, e.target.value)
-          }
-        />
-      )
+      key: "amountReal",
+      width: "10%"
     },
     {
       title: <span className="font-bold">Diferencia</span>,
@@ -99,7 +87,10 @@ export const DischargeMaterials = () => {
       {/* BARRA SUPERIOR */}
       <section className="flex items-center w-full h-16 gap-4 pl-4 mb-4 rounded-md shadow-md bg-white-100">
         <div className="flex gap-2">
-          <button className="toolbar-primary-icon-btn">
+          <button
+            onClick={handleGoToEditDischargeMaterials}
+            className="toolbar-primary-icon-btn"
+          >
             <BookDowloadSvg />
             Descargar Materiales
           </button>
@@ -113,9 +104,9 @@ export const DischargeMaterials = () => {
           size="small"
           columns={columns}
           dataSource={materials}
-          pagination={false}
           bordered
           rowClassName={getRowClassName}
+          pagination={materials.length <= 10 ? false : { pageSize: 10 }}
         />
       </section>
     </>
