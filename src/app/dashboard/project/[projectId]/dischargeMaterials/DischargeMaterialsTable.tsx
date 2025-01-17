@@ -36,6 +36,10 @@ export const DischargeMaterialsTable = () => {
     );
   };
 
+  const handleGoBack = () => {
+    router.push(`/dashboard/project`);
+  };
+
   const columns: ColumnsType<{
     description: string;
     input: any;
@@ -96,8 +100,9 @@ export const DischargeMaterialsTable = () => {
           </button>
         </div>
       </section>
-      <header>
-        <Title level={3}>{project?.BDProject?.projectName}</Title>
+      <header className="flex items-center gap-2 mb-4">
+        <p className="text-2xl font-bold">Proyecto: </p>
+        <p className="text-2xl ">{project?.BDProject?.projectName}</p>
       </header>
       <section>
         <Table
@@ -108,6 +113,14 @@ export const DischargeMaterialsTable = () => {
           rowClassName={getRowClassName}
           pagination={materials.length <= 10 ? false : { pageSize: 10 }}
         />
+      </section>
+            <section className="flex gap-2">
+        <button
+          onClick={handleGoBack}
+          className="mt-4 select-none rounded-lg bg-danger-500 py-3 px-6 text-center align-middle text-sm font-semibold uppercase text-white-100 shadow-md shadow-danger-500/20 transition-all hover:shadow-lg hover:shadow-danger-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+        >
+          Cancelar
+        </button>
       </section>
     </>
   );
