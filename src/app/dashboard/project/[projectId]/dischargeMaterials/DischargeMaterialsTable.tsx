@@ -3,26 +3,22 @@ import { ColumnsType } from "antd/es/table";
 import { Table } from "antd";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Title from "antd/es/typography/Title";
 
-import { useGetProjectById } from "@/hooks/projects/useProject";
 import { BookDowloadSvg } from "@/app/global/BookDowloadSvg";
 import { useGetOfferById } from "@/hooks/offers/useDisaggregationByMaterials";
+import { useGetProjectById } from "@/hooks/projects/useProject";
+import useDischargeMaterials from "@/hooks/dischargeMaterials/useDischargeMaterials";
 
 export const DischargeMaterialsTable = () => {
+  const { useGetDischargeMaterials } = useDischargeMaterials();
+  const router = useRouter();
+  
   const { projectId }: { projectId: string } = useParams();
   const { data: project } = useGetProjectById(projectId);
   const { data: offer } = useGetOfferById(project?.BDProject?.finalOfferId);
-  const router = useRouter();
-
-  const [materials, setMaterials] = useState<any[]>([]);
-
-  useEffect(() => {
-    if (offer?.BDOffer?.materialsList) {
-      setMaterials(offer.BDOffer.materialsList);
-    }
-  }, [offer]);
+  const { data: materials } = useGetDischargeMaterials(offer?.BDOffer?._id);
 
   const getRowClassName = (record: any) => {
     const inputValue = record.inputValue || 0;
@@ -108,13 +104,17 @@ export const DischargeMaterialsTable = () => {
         <Table
           size="small"
           columns={columns}
-          dataSource={materials}
+          dataSource={materials?.dischargeMaterials[0]?.materials}
           bordered
           rowClassName={getRowClassName}
-          pagination={materials.length <= 10 ? false : { pageSize: 10 }}
+          pagination={
+            materials?.dischargeMaterials[0]?.materials?.length <= 10
+              ? false
+              : { pageSize: 10 }
+          }
         />
       </section>
-            <section className="flex gap-2">
+      <section className="flex gap-2">
         <button
           onClick={handleGoBack}
           className="mt-4 select-none rounded-lg bg-danger-500 py-3 px-6 text-center align-middle text-sm font-semibold uppercase text-white-100 shadow-md shadow-danger-500/20 transition-all hover:shadow-lg hover:shadow-danger-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
