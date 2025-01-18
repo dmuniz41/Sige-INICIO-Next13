@@ -205,38 +205,6 @@ export async function POST(request: NextRequest) {
       version: offer.version ?? ""
     });
 
-    // After creating the newOffer and before saving it
-    // const dischargeMaterialsExists = await DischargeMaterials.findOne({
-    //   offerId: newKey
-    // });
-
-    // if (dischargeMaterialsExists) {
-    //   return NextResponse.json(
-    //     {
-    //       ok: false,
-    //       message: "Los materiales de descarga para esta oferta ya existen"
-    //     },
-    //     {
-    //       status: 409 // Conflict
-    //     }
-    //   );
-    // }
-
-    // // If no existing discharge materials, create a new one
-    // const newDischargeMaterials = new DischargeMaterials({
-    //   offerId: newKey,
-    //   updatedAt: new Date(),
-    //   materials: uniqueMaterials.map((material) => ({
-    //     description: material.description,
-    //     amount: material.amount,
-    //     amountReal: material.amount,
-    //     difference: material.amount,
-    //     unitMeasure: material.unitMeasure
-    //   }))
-    // });
-
-    // // Save the new discharge materials
-    // await newDischargeMaterials.save();
     await newOffer.save();
 
     return new NextResponse(
