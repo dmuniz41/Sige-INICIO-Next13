@@ -5,7 +5,6 @@ import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
 import Offer, { IOffer } from "@/models/offer";
 import ServiceFee, { IServiceFeeSubItem } from "@/models/serviceFees";
-import DischargeMaterials from "@/models/dischargeMaterials";
 
 export async function GET(request: NextRequest) {
   const accessToken = request.headers.get("accessToken");

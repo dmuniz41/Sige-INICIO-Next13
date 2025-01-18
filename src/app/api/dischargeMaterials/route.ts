@@ -8,6 +8,57 @@ import DischargeMaterials, {
 } from "@/models/dischargeMaterials";
 import Offer from "@/models/offer";
 
+export async function GET(request: NextRequest) {
+  const url = new URL(request.url);
+  const offerId = url.searchParams.get("offerId");
+
+  const accessToken = request.headers.get("accessToken");
+  try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
+        },
+        {
+          status: 401
+        }
+      );
+    }
+    await connectDB();
+    const BDDischargeMaterials = await DischargeMaterials.find({
+      offerId: offerId
+    });
+
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        dischargeMaterials: BDDischargeMaterials
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        status: 200
+      }
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("🚀 ~ GET ~ error:", error);
+      return NextResponse.json(
+        {
+          ok: false,
+          message: error.message
+        },
+        {
+          status: 500
+        }
+      );
+    }
+  }
+}
+
 export async function POST(request: NextRequest) {
   const { offerId }: { offerId: string } = await request.json();
 
