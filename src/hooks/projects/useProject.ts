@@ -27,7 +27,6 @@ export const useGetProjectById = (projectId: string) => {
   return useQuery({
     queryKey: ["useGetProjectById", projectId],
     queryFn: () => getProjectByIdAPI(projectId),
-    staleTime: 60000,
     enabled: !!projectId // Only run the query if projectId is truthy
   });
 };

@@ -38,5 +38,5 @@ const DischargeMaterialsSchema = new Schema<
 
 const DischargeMaterials =
   models.DischargeMaterials ||
-  model("DischargeMaterials ", DischargeMaterialsSchema);
+  model("DischargeMaterials", DischargeMaterialsSchema);
 export default DischargeMaterials;
