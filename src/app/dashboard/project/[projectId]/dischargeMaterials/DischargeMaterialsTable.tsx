@@ -21,8 +21,8 @@ export const DischargeMaterialsTable = () => {
   const { data: materials } = useGetDischargeMaterials(offer?.BDOffer?._id);
 
   const getRowClassName = (record: any) => {
-    const inputValue = record.inputValue || 0;
-    const difference = record.amount - inputValue;
+    const amountReal = record.amountReal || 0;
+    const difference = record.amount - amountReal;
     return difference < 0 ? "negative-row" : "positive-row";
   };
 
@@ -58,7 +58,7 @@ export const DischargeMaterialsTable = () => {
     },
     {
       title: <span className="font-bold">Real</span>,
-      key: "amountReal",
+      dataIndex: "amountReal",
       width: "10%"
     },
     {
@@ -66,8 +66,7 @@ export const DischargeMaterialsTable = () => {
       key: "difference",
       width: "10%",
       render: (text, record: any) => {
-        const inputValue = record.inputValue || 0; // Default to 0 if undefined
-        const difference = record.amount - inputValue;
+        const difference = record.amount - record.amountReal;
         return <span>{difference}</span>;
       }
     },
