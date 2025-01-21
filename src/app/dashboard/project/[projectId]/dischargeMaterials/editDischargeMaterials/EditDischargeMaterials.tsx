@@ -1,41 +1,51 @@
-
 "use client";
 import { ColumnsType } from "antd/es/table";
-import { Input, Table } from "antd";
+import { Input, InputNumber, Table } from "antd";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Title from "antd/es/typography/Title";
 
 import { useGetProjectById } from "@/hooks/projects/useProject";
 import { useGetOfferById } from "@/hooks/offers/useDisaggregationByMaterials";
+import useDischargeMaterials from "@/hooks/dischargeMaterials/useDischargeMaterials";
 
 export const EditDischargeMaterials = () => {
+  const { useUpdateDischargeMaterials, useGetDischargeMaterials } =
+    useDischargeMaterials();
+  const router = useRouter();
   const { projectId }: { projectId: string } = useParams();
   const { data: project } = useGetProjectById(projectId);
   const { data: offer } = useGetOfferById(project?.BDProject?.finalOfferId);
-  const router = useRouter();
+  const { data: materials } = useGetDischargeMaterials(offer?.BDOffer?._id);
 
-  const [materials, setMaterials] = useState<any[]>([]);
+  const [newMaterials, setNewMaterials] = useState<any[]>([]);
+  const { mutateAsync } = useUpdateDischargeMaterials({
+    offerId: project?.BDProject?.finalOfferId,
+    updatedAt: new Date(),
+    materials: newMaterials
+  });
 
   useEffect(() => {
     if (offer?.BDOffer?.materialsList) {
-      setMaterials(offer.BDOffer.materialsList);
+      setNewMaterials(offer.BDOffer.materialsList);
     }
   }, [offer]);
 
   const handleInputChange = (key: any, value: any) => {
-    const newData = materials?.map((item: any) => {
-      if (item.description === key) {
-        return { ...item, inputValue: value };
+    const newData = materials?.dischargeMaterials[0]?.materials?.map(
+      (item: any) => {
+        if (item.description === key) {
+          return { ...item, amountReal: value };
+        }
+        return item;
       }
-      return item;
-    });
-    setMaterials(newData);
+    );
+    setNewMaterials(newData);
   };
 
   const getRowClassName = (record: any) => {
-    const inputValue = record.inputValue || 0;
-    const difference = record.amount - inputValue;
+    const amountReal = record.amountReal || 0;
+    const difference = record.amount - amountReal;
     return difference < 0 ? "negative-row" : "positive-row";
   };
 
@@ -44,12 +54,13 @@ export const EditDischargeMaterials = () => {
   };
 
   const handleSave = () => {
-    console.log("Save");
+    mutateAsync();
+    handleGoBack();
   };
 
   const columns: ColumnsType<{
     description: string;
-    input: any;
+    amountReal: number;
     difference: number;
     unitMeasure: string;
     amount: number;
@@ -68,26 +79,24 @@ export const EditDischargeMaterials = () => {
     },
     {
       title: <span className="font-bold">Real</span>,
-      key: "input",
+      dataIndex: "amountReal",
+      key: "amountReal",
       width: "10%",
       render: (text, record) => (
-        <Input
-          type="number"
-          defaultValue={0}
+        <InputNumber
+          defaultValue={record?.amountReal ?? 0}
           min={0}
-          onChange={(e) =>
-            handleInputChange(record.description, e.target.value)
-          }
+          onChange={(value) => handleInputChange(record.description, value)}
         />
       )
     },
     {
       title: <span className="font-bold">Diferencia</span>,
-      key: "difference",
+      dataIndex: "difference",
       width: "10%",
       render: (text, record: any) => {
-        const inputValue = record.inputValue || 0; // Default to 0 if undefined
-        const difference = record.amount - inputValue;
+        const amountReal = record.amountReal || 0; // Default to 0 if undefined
+        const difference = record.amount - amountReal;
         return <span>{difference}</span>;
       }
     },
@@ -112,8 +121,8 @@ export const EditDischargeMaterials = () => {
         <Table
           size="small"
           columns={columns}
-          dataSource={materials}
-          pagination={materials.length <= 10 ? false : { pageSize: 10 }}
+          dataSource={newMaterials}
+          pagination={newMaterials.length <= 10 ? false : { pageSize: 10 }}
           bordered
           rowClassName={getRowClassName}
         />

@@ -165,10 +165,10 @@ export async function PUT(request: NextRequest) {
       { offerId: dischargeMaterials.offerId },
       {
         ...dischargeMaterials,
-        updatedAt: new Date()
       },
       { new: true }
     );
+    console.log("🚀 ~ PUT ~ updatedDischargeMaterials:", updatedDischargeMaterials)
 
     return new NextResponse(
       JSON.stringify({
