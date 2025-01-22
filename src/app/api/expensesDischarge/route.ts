@@ -5,7 +5,7 @@ import { connectDB } from "@/libs/mongodb";
 import ExpensesDischarge, {
   IExpensesDischarge,
   IExpensesDischargeMaterials
-} from "@/models/dischargeExpenses";
+} from "@/models/expensesDischarge";
 import Offer from "@/models/offer";
 
 export async function GET(request: NextRequest) {

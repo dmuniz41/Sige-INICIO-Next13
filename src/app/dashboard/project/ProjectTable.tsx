@@ -225,9 +225,9 @@ const ProjectTable: React.FC = () => {
     router.push(`/dashboard/project/${projectId}/materialsList`);
   };
 
-  const handleDischargeMaterials = (projectId: string): void => {
+  const handleExpensesDischarge = (projectId: string): void => {
     dispatch(startLoadSelectedProject(projectId));
-    router.push(`/dashboard/project/${projectId}/dischargeMaterials`);
+    router.push(`/dashboard/project/${projectId}/expensesDischarge`);
   };
 
   const handleSearch = (
@@ -555,7 +555,7 @@ const ProjectTable: React.FC = () => {
             >
               <button
                 disabled={!canList}
-                onClick={() => handleDischargeMaterials(record._id)}
+                onClick={() => handleExpensesDischarge(record._id)}
                 className="table-discharge-materials-action-btn"
               >
                 <BookDowloadSvg width={20} height={20} />
