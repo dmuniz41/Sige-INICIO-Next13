@@ -3,29 +3,45 @@ import { ColumnsType } from "antd/es/table";
 import { Table } from "antd";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useMemo } from "react";
 import Title from "antd/es/typography/Title";
 
 import { BookDowloadSvg } from "@/app/global/BookDowloadSvg";
 import { useGetOfferById } from "@/hooks/offers/useDisaggregationByMaterials";
 import { useGetProjectById } from "@/hooks/projects/useProject";
-import useDischargeMaterials from "@/hooks/dischargeMaterials/useDischargeMaterials";
+import useExpensesDischarge from "@/hooks/expensesDischarge/useExpensesDischarge";
 
-export const DischargeMaterialsTable = () => {
-  const { useGetDischargeMaterials } = useDischargeMaterials();
+export const ExpensesDischargeTable = () => {
+  const { useGetExpensesDischarge } = useExpensesDischarge();
   const router = useRouter();
 
   const { projectId }: { projectId: string } = useParams();
   const { data: project } = useGetProjectById(projectId);
   const { data: offer } = useGetOfferById(project?.BDProject?.finalOfferId);
-  const { data: dischargeMaterials } = useGetDischargeMaterials(
-    offer?.BDOffer?._id
+  const { data: expensesDischarge } = useGetExpensesDischarge(offer?.BDOffer?._id);
+
+  const totalValue = useMemo(
+    () =>
+      expensesDischarge?.expensesDischarge[0]?.materials.reduce(
+        (totalValue: any, expensesDischargeMaterials: any) =>
+          totalValue + expensesDischargeMaterials.amount,
+        0
+      ),
+    [expensesDischarge]
+  );
+  const totalCost = useMemo(
+    () =>
+      expensesDischarge?.expensesDischarge[0]?.materials.reduce(
+        (totalValue: any, expensesDischargeMaterials: any) =>
+          totalValue + expensesDischargeMaterials.amountReal,
+        0
+      ),
+    [expensesDischarge]
   );
 
-  const newDate = new Date(
-    dischargeMaterials?.dischargeMaterials[0]?.updatedAt
-  );
+  const totalDifference = useMemo(() => totalValue - totalCost, [totalValue, totalCost]);
 
+  const newDate = new Date(expensesDischarge?.expensesDischarge[0]?.updatedAt);
   const formattedDate = newDate?.toLocaleString("en-GB", {
     hour12: true,
     day: "2-digit",
@@ -41,10 +57,8 @@ export const DischargeMaterialsTable = () => {
     return difference < 0 ? "negative-row" : "positive-row";
   };
 
-  const handleGoToEditDischargeMaterials = () => {
-    router.push(
-      `/dashboard/project/${projectId}/dischargeMaterials/editDischargeMaterials`
-    );
+  const handleGoToEditExpensesDischarge = () => {
+    router.push(`/dashboard/project/${projectId}/expensesDischarge/editExpensesDischarge`);
   };
 
   const handleGoBack = () => {
@@ -89,24 +103,21 @@ export const DischargeMaterialsTable = () => {
       title: <span className="font-bold">Unidad de Medida</span>,
       dataIndex: "unitMeasure",
       key: "unitMeasure",
-      width: "15%"
+      width: "20%"
     }
   ];
 
   return (
     <>
       <header className="font-normal text-2xl mb-4">
-        <Title level={3}>Descargar Materiales</Title>
+        <Title level={3}>Descargar Gastos</Title>
       </header>
       {/* BARRA SUPERIOR */}
       <section className="flex items-center w-full h-16 gap-4 pl-4 mb-4 rounded-md shadow-md bg-white-100">
         <div className="flex gap-2">
-          <button
-            onClick={handleGoToEditDischargeMaterials}
-            className="toolbar-primary-icon-btn"
-          >
+          <button onClick={handleGoToEditExpensesDischarge} className="toolbar-primary-icon-btn">
             <BookDowloadSvg />
-            Descargar Materiales
+            Descargar Gastos
           </button>
         </div>
       </section>
@@ -122,15 +133,24 @@ export const DischargeMaterialsTable = () => {
         <Table
           size="small"
           columns={columns}
-          dataSource={dischargeMaterials?.dischargeMaterials[0]?.materials}
+          dataSource={expensesDischarge?.expensesDischarge[0]?.materials}
           bordered
           rowClassName={getRowClassName}
           rowKey={(record) => record.description}
           pagination={
-            dischargeMaterials?.dischargeMaterials[0]?.materials?.length <= 10
+            expensesDischarge?.expensesDischarge[0]?.materials?.length <= 10
               ? false
               : { pageSize: 10 }
           }
+          footer={() => (
+            <div className="w-full flex">
+              <div className="w-[50%] text-start font-bold">Total</div>
+              <div className="w-[10%] pl-2 font-bold"><span>{totalValue}</span></div>
+              <div className="w-[10%] pl-2 font-bold"><span>{totalCost}</span></div>
+              <div className="w-[10%] pl-2 font-bold"><span>{totalDifference}</span></div>
+              <div className="w-[20%] font-bold"></div>
+            </div>
+          )}
         />
       </section>
       <section className="flex gap-2">

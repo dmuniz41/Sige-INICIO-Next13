@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { verifyJWT } from "@/libs/jwt";
 import { connectDB } from "@/libs/mongodb";
-import DischargeMaterials, {
-  IDischargeMaterials,
-  IDischargeMaterialsList
-} from "@/models/dischargeMaterials";
+import ExpensesDischarge, {
+  IExpensesDischarge,
+  IExpensesDischargeMaterials
+} from "@/models/expensesDischarge";
 import Offer from "@/models/offer";
 
 export async function GET(request: NextRequest) {
@@ -26,14 +26,14 @@ export async function GET(request: NextRequest) {
       );
     }
     await connectDB();
-    const BDDischargeMaterials = await DischargeMaterials.find({
+    const BDExpensesDischarge = await ExpensesDischarge.find({
       offerId: offerId
     });
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        dischargeMaterials: BDDischargeMaterials
+        expensesDischarge: BDExpensesDischarge
       }),
       {
         headers: {
@@ -77,15 +77,15 @@ export async function POST(request: NextRequest) {
     }
     await connectDB();
 
-    const DBDischargeMaterials = await DischargeMaterials.findOne({
+    const DBExpensesDischarge = await ExpensesDischarge.findOne({
       offerId: offerId
     });
 
-    if (DBDischargeMaterials) {
+    if (DBExpensesDischarge) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Ya existe una descarga de materiales para esta oferta"
+          message: "Ya existe una descarga de gastos para esta oferta"
         },
         {
           status: 409
@@ -96,28 +96,35 @@ export async function POST(request: NextRequest) {
     const offerMaterialsList = offer?.materialsList;
 
     //? CONVIERTE EL LISTADO DE MATERIALES DE LA OFFERTA AL TIPO DE LISTADO DE MATERIALES DE DESCARGA DE MATERIALES
-    const dischargeMaterialsList: IDischargeMaterialsList[] =
-      offerMaterialsList?.map((material: any) => ({
+    const expensesDischargeMaterials: IExpensesDischargeMaterials[] = offerMaterialsList?.map(
+      (material: any) => ({
         description: material.description,
         amount: material.amount,
         amountReal: 0,
         difference: 0,
         unitMeasure: material.unitMeasure
-      }));
+      })
+    );
 
     //? CREA LA NUEVA DESCARGA DE MATERIALES
-    const newDischargeMaterials = new DischargeMaterials({
+    const newExpensesDischarge = new ExpensesDischarge({
       offerId: offerId,
       updatedAt: new Date(),
-      materials: dischargeMaterialsList
+      materials: expensesDischargeMaterials,
+      totalValue: expensesDischargeMaterials.reduce(
+        (totalValue, expensesDischargeMaterials) => totalValue + expensesDischargeMaterials.amount,
+        0
+      ),
+      totalCost: 0,
+      totalDifference: 0
     });
 
-    await newDischargeMaterials.save();
+    await newExpensesDischarge.save();
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        newDischargeMaterials
+        newExpensesDischarge
       }),
       {
         headers: {
@@ -144,7 +151,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const { ...dischargeMaterials }: IDischargeMaterials = await request.json();
+  const { ...expensesDischarge }: IExpensesDischarge = await request.json();
 
   const accessToken = request.headers.get("accessToken");
   try {
@@ -161,19 +168,31 @@ export async function PUT(request: NextRequest) {
     }
     await connectDB();
 
-    const updatedDischargeMaterials = await DischargeMaterials.findOneAndUpdate(
-      { offerId: dischargeMaterials.offerId },
+    const totalValue = expensesDischarge.materials.reduce(
+      (totalValue, expensesDischargeMaterials) => totalValue + expensesDischargeMaterials.amount,
+      0
+    );
+    const totalCost = expensesDischarge.materials.reduce(
+      (totalValue, expensesDischargeMaterials) =>
+        totalValue + expensesDischargeMaterials.amountReal,
+      0
+    );
+
+    const updatedExpensesDischarge = await ExpensesDischarge.findOneAndUpdate(
+      { offerId: expensesDischarge.offerId },
       {
-        ...dischargeMaterials,
+        ...expensesDischarge,
+        totalValue: totalValue,
+        totalCost: totalCost,
+        totalDifference: totalValue - totalCost
       },
       { new: true }
     );
-    console.log("🚀 ~ PUT ~ updatedDischargeMaterials:", updatedDischargeMaterials)
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        updatedDischargeMaterials
+        updatedExpensesDischarge
       }),
       {
         headers: {

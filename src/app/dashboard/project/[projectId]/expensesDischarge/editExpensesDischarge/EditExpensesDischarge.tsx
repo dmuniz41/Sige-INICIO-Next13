@@ -1,35 +1,56 @@
 "use client";
 import { ColumnsType } from "antd/es/table";
-import { Input, InputNumber, Table } from "antd";
+import { InputNumber, Table } from "antd";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Title from "antd/es/typography/Title";
 
 import { useGetProjectById } from "@/hooks/projects/useProject";
 import { useGetOfferById } from "@/hooks/offers/useDisaggregationByMaterials";
-import useDischargeMaterials from "@/hooks/dischargeMaterials/useDischargeMaterials";
+import usExpensesDischarge from "@/hooks/expensesDischarge/useExpensesDischarge";
 
-export const EditDischargeMaterials = () => {
-  const [newMaterials, setNewMaterials] = useState<any[]>([]);
-  const { useUpdateDischargeMaterials, useGetDischargeMaterials } =
-    useDischargeMaterials();
+export const EditExpensesDischarge = () => {
   const router = useRouter();
+  const { useUpdateExpensesDischarge, useGetExpensesDischarge } = usExpensesDischarge();
+
+  const [newMaterials, setNewMaterials] = useState<any[]>([]);
+  const totalValue = useMemo(
+    () =>
+      newMaterials.reduce(
+        (totalValue, expensesDischargeMaterials) => totalValue + expensesDischargeMaterials.amount,
+        0
+      ),
+    [newMaterials]
+  );
+  const totalCost = useMemo(
+    () =>
+      newMaterials.reduce(
+        (totalValue, expensesDischargeMaterials) =>
+          totalValue + expensesDischargeMaterials.amountReal,
+        0
+      ),
+    [newMaterials]
+  );
+
   const { projectId }: { projectId: string } = useParams();
   const { data: project } = useGetProjectById(projectId);
   const { data: offer } = useGetOfferById(project?.BDProject?.finalOfferId);
-  const { data: materials } = useGetDischargeMaterials(offer?.BDOffer?._id);
+  const { data: expensesDischarge } = useGetExpensesDischarge(offer?.BDOffer?._id);
 
-  const { mutateAsync } = useUpdateDischargeMaterials({
+  const { mutateAsync } = useUpdateExpensesDischarge({
     offerId: project?.BDProject?.finalOfferId,
     updatedAt: new Date(),
-    materials: newMaterials
+    materials: newMaterials,
+    totalValue: totalValue,
+    totalCost: totalCost,
+    totalDifference: totalValue - totalCost
   });
 
   useEffect(() => {
-    if (materials?.dischargeMaterials[0]?.materials) {
-      setNewMaterials(materials?.dischargeMaterials[0]?.materials);
+    if (expensesDischarge?.expensesDischarge[0]?.materials) {
+      setNewMaterials(expensesDischarge?.expensesDischarge[0]?.materials);
     }
-  }, [materials]);
+  }, [expensesDischarge]);
 
   const handleInputChange = (key: any, value: any) => {
     const newData = newMaterials.map((item: any) => {
@@ -48,7 +69,7 @@ export const EditDischargeMaterials = () => {
   };
 
   const handleGoBack = () => {
-    router.push(`/dashboard/project/${projectId}/dischargeMaterials`);
+    router.push(`/dashboard/project/${projectId}/expensesDischarge`);
   };
 
   const handleSave = () => {
@@ -95,7 +116,7 @@ export const EditDischargeMaterials = () => {
       dataIndex: "difference",
       width: "10%",
       render: (text, record: any) => {
-        const amountReal = record.amountReal || 0; // Default to 0 if undefined
+        const amountReal = record.amountReal || 0;
         const difference = record.amount - amountReal;
         return <span>{difference}</span>;
       }
@@ -111,7 +132,7 @@ export const EditDischargeMaterials = () => {
   return (
     <>
       <header className="font-normal text-2xl mb-4">
-        <Title level={2}>Descargar Materiales</Title>
+        <Title level={2}>Descargar Gastos</Title>
       </header>
       <header className="flex items-center gap-2 mb-4">
         <p className="text-2xl font-bold">Proyecto: </p>
