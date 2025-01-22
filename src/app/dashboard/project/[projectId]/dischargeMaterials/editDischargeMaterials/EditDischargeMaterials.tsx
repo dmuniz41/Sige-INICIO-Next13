@@ -10,6 +10,7 @@ import { useGetOfferById } from "@/hooks/offers/useDisaggregationByMaterials";
 import useDischargeMaterials from "@/hooks/dischargeMaterials/useDischargeMaterials";
 
 export const EditDischargeMaterials = () => {
+  const [newMaterials, setNewMaterials] = useState<any[]>([]);
   const { useUpdateDischargeMaterials, useGetDischargeMaterials } =
     useDischargeMaterials();
   const router = useRouter();
@@ -18,7 +19,6 @@ export const EditDischargeMaterials = () => {
   const { data: offer } = useGetOfferById(project?.BDProject?.finalOfferId);
   const { data: materials } = useGetDischargeMaterials(offer?.BDOffer?._id);
 
-  const [newMaterials, setNewMaterials] = useState<any[]>([]);
   const { mutateAsync } = useUpdateDischargeMaterials({
     offerId: project?.BDProject?.finalOfferId,
     updatedAt: new Date(),
@@ -26,20 +26,18 @@ export const EditDischargeMaterials = () => {
   });
 
   useEffect(() => {
-    if (offer?.BDOffer?.materialsList) {
-      setNewMaterials(offer.BDOffer.materialsList);
+    if (materials?.dischargeMaterials[0]?.materials) {
+      setNewMaterials(materials?.dischargeMaterials[0]?.materials);
     }
-  }, [offer]);
+  }, [materials]);
 
   const handleInputChange = (key: any, value: any) => {
-    const newData = materials?.dischargeMaterials[0]?.materials?.map(
-      (item: any) => {
-        if (item.description === key) {
-          return { ...item, amountReal: value };
-        }
-        return item;
+    const newData = newMaterials.map((item: any) => {
+      if (item.description === key) {
+        return { ...item, amountReal: value };
       }
-    );
+      return item;
+    });
     setNewMaterials(newData);
   };
 
@@ -82,13 +80,15 @@ export const EditDischargeMaterials = () => {
       dataIndex: "amountReal",
       key: "amountReal",
       width: "10%",
-      render: (text, record) => (
-        <InputNumber
-          defaultValue={record?.amountReal ?? 0}
-          min={0}
-          onChange={(value) => handleInputChange(record.description, value)}
-        />
-      )
+      render: (text, record) => {
+        return (
+          <InputNumber
+            value={record?.amountReal ?? 0}
+            min={0}
+            onChange={(value) => handleInputChange(record.description, value)}
+          />
+        );
+      }
     },
     {
       title: <span className="font-bold">Diferencia</span>,
@@ -122,9 +122,10 @@ export const EditDischargeMaterials = () => {
           size="small"
           columns={columns}
           dataSource={newMaterials}
-          pagination={newMaterials.length <= 10 ? false : { pageSize: 10 }}
+          pagination={newMaterials?.length <= 10 ? false : { pageSize: 10 }}
           bordered
           rowClassName={getRowClassName}
+          rowKey={(record) => record.description}
         />
       </section>
       <section className="flex gap-2">
