@@ -1,4 +1,4 @@
-import { IDischargeMaterials } from "@/models/dischargeMaterials";
+import { IDischargeMaterials } from "@/models/dischargeExpenses";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from "axios";
 
