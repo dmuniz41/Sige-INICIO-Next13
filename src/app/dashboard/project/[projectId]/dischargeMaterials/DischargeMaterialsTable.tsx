@@ -14,11 +14,26 @@ import useDischargeMaterials from "@/hooks/dischargeMaterials/useDischargeMateri
 export const DischargeMaterialsTable = () => {
   const { useGetDischargeMaterials } = useDischargeMaterials();
   const router = useRouter();
-  
+
   const { projectId }: { projectId: string } = useParams();
   const { data: project } = useGetProjectById(projectId);
   const { data: offer } = useGetOfferById(project?.BDProject?.finalOfferId);
-  const { data: materials } = useGetDischargeMaterials(offer?.BDOffer?._id);
+  const { data: dischargeMaterials } = useGetDischargeMaterials(
+    offer?.BDOffer?._id
+  );
+
+  const newDate = new Date(
+    dischargeMaterials?.dischargeMaterials[0]?.updatedAt
+  );
+
+  const formattedDate = newDate?.toLocaleString("en-GB", {
+    hour12: true,
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
 
   const getRowClassName = (record: any) => {
     const amountReal = record.amountReal || 0;
@@ -38,7 +53,6 @@ export const DischargeMaterialsTable = () => {
 
   const columns: ColumnsType<{
     description: string;
-    input: any;
     difference: number;
     unitMeasure: string;
     amount: number;
@@ -63,10 +77,11 @@ export const DischargeMaterialsTable = () => {
     },
     {
       title: <span className="font-bold">Diferencia</span>,
-      key: "difference",
+      dataIndex: "difference",
       width: "10%",
       render: (text, record: any) => {
-        const difference = record.amount - record.amountReal;
+        const amountReal = record.amountReal || 0;
+        const difference = record.amount - amountReal;
         return <span>{difference}</span>;
       }
     },
@@ -99,15 +114,20 @@ export const DischargeMaterialsTable = () => {
         <p className="text-2xl font-bold">Proyecto: </p>
         <p className="text-2xl ">{project?.BDProject?.projectName}</p>
       </header>
+      <header className="flex items-center gap-2 mb-4">
+        <p className="text-2xl font-bold">Actualizado: </p>
+        <p className="text-2xl ">{formattedDate}</p>
+      </header>
       <section>
         <Table
           size="small"
           columns={columns}
-          dataSource={materials?.dischargeMaterials[0]?.materials}
+          dataSource={dischargeMaterials?.dischargeMaterials[0]?.materials}
           bordered
           rowClassName={getRowClassName}
+          rowKey={(record) => record.description}
           pagination={
-            materials?.dischargeMaterials[0]?.materials?.length <= 10
+            dischargeMaterials?.dischargeMaterials[0]?.materials?.length <= 10
               ? false
               : { pageSize: 10 }
           }
