@@ -6,6 +6,7 @@ import { generateRandomString } from "@/helpers/randomStrings";
 import { verifyJWT } from "@/libs/jwt";
 import Offer from "@/models/offer";
 import Project, { IProject } from "@/models/project";
+import ProjectNomenclator from "../../../models/nomenclators/project";
 
 export async function POST(request: NextRequest) {
   const { ...project }: IProject = await request.json();
@@ -61,6 +62,13 @@ export async function POST(request: NextRequest) {
     });
 
     await newProject.save();
+
+    const newProjectNomenclator = new ProjectNomenclator({
+      projectName: project.projectName ?? "",
+      projectNumber: newProjectNumber ?? ""
+    });
+
+    await newProjectNomenclator.save();
 
     return new NextResponse(
       JSON.stringify({
