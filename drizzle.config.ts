@@ -1,24 +1,13 @@
 import { defineConfig } from "drizzle-kit";
 
-// export default defineConfig({
-//   dialect: "postgresql",
-//   schema: "./src/schema/*",
-//   dbCredentials: {
-//     database: "DB_INICIO",
-//     host: "localhost",
-//     port: 5432,
-//     user: "postgres",
-//     password: "postgres"
-//   }
-// });
 
 export default defineConfig({
-  schema: "./src/db/schema.ts", // Path to your schema file
+  schema: "./src/db/migrations/schema.ts",
   out: "./src/db/migrations",
-  dialect: "postgresql", // Use "pg" as the driver (even for the `postgres` package)
+  dialect: "postgresql",
   dbCredentials: {
     database: "DB_INICIO",
-    host: "localhost",
+    host: "127.0.0.1",
     port: 5432,
     user: "postgres",
     password: "postgres",
@@ -26,6 +15,6 @@ export default defineConfig({
       rejectUnauthorized: false
     }
   },
-  verbose: true, // Optional: Enable detailed logging
-  strict: true // Optional: Enable strict schema checks,
+  verbose: true, 
+  strict: true 
 });

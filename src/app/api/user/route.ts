@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 
-import User, { IUser } from "@/models/user";
-import { connectDB } from "@/libs/mongodb";
+import { IUser } from "@/models/user";
+// import { connectDB } from "@/libs/mongodb";
 import { verifyJWT } from "@/libs/jwt";
 import { generateRandomString } from "@/helpers/randomStrings";
+import { db } from "@/db/drizzle";
+import { User, users } from "@/db/migrations/schema";
+import { eq } from "drizzle-orm";
 
 export async function POST(request: NextRequest) {
   const { ...user }: IUser = await request.json();
@@ -34,10 +37,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await connectDB();
-    const BDuser = await User.findOne({ user: user.user });
+    // await connectDB();
+    // const BDuser = await User.findOne({ user: user.user });
 
-    if (BDuser) {
+    // if (BDuser) {
+    //   return NextResponse.json(
+    //     {
+    //       ok: false,
+    //       message: "El usuario ya existe en la base de datos"
+    //     },
+    //     {
+    //       status: 409
+    //     }
+    //   );
+    // }
+
+    const existingUser = await db.select().from(users).where(eq(users.userName, user.userName));
+
+    if (existingUser.length > 0) {
       return NextResponse.json(
         {
           ok: false,
@@ -50,12 +67,23 @@ export async function POST(request: NextRequest) {
     }
 
     const hashedPassword = await bcrypt.hash(user.password, 12);
-
     const newKey = generateRandomString(26);
 
-    const newUser = new User({ ...user, password: hashedPassword, key: newKey });
+    const newUser = await db
+      .insert(users)
+      .values({
+        name: user.userName,
+        lastName: user.lastName,
+        key: newKey,
+        userName: user.userName,
+        privileges: user.privileges,
+        area: user.area,
+        password: hashedPassword
+      })
+      .returning();
 
-    await newUser.save();
+    // const newUser = new User({ ...user, password: hashedPassword, key: newKey });
+    // await newUser.save();
 
     return new NextResponse(
       JSON.stringify({
@@ -100,12 +128,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    await connectDB();
-    const listOfUsers = (await User.find()).reverse();
+    // await connectDB();
+    // const listOfUsers = (await User.find()).reverse();
+
+    const listOfUsers = await db.select().from(users);
+
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        listOfUsers
+        data: listOfUsers
       }),
       {
         headers: {
@@ -131,7 +162,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const { ...user }: IUser = await request.json();
+  const { ...user }: User = await request.json();
   const accessToken = request.headers.get("accessToken");
 
   try {
@@ -146,10 +177,12 @@ export async function PUT(request: NextRequest) {
         }
       );
     }
-    await connectDB();
-    const userToUpdate = await User.findById(user._id);
+    // await connectDB();
+    // const userToUpdate = await User.findById(user._id);
 
-    if (!userToUpdate) {
+    const userToUpdate = await db.select().from(users).where(eq(users.id, user.id));
+
+    if (userToUpdate.length === 0) {
       return NextResponse.json(
         {
           ok: false,
@@ -161,12 +194,15 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const updatedUser = await User.findByIdAndUpdate(user._id, { ...user }, { new: true });
+    // const updatedUser = await User.findByIdAndUpdate(user._id, { ...user }, { new: true });
+
+    // Perform the update
+    const updatedUser = await db.update(users).set(user).where(eq(users.id, user.id)).returning();
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        updatedUser
+        data: updatedUser
       }),
       {
         headers: {
@@ -178,67 +214,6 @@ export async function PUT(request: NextRequest) {
   } catch (error) {
     if (error instanceof Error) {
       console.log("🚀 ~ PUT ~ error:", error);
-      return NextResponse.json(
-        {
-          ok: false,
-          message: error.message
-        },
-        {
-          status: 500
-        }
-      );
-    }
-  }
-}
-
-export async function DELETE(request: NextRequest) {
-  const params = request.nextUrl.searchParams;
-  const accessToken = request.headers.get("accessToken");
-
-  try {
-    if (!accessToken || !verifyJWT(accessToken)) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-    await connectDB();
-    const userToDelete = await User.findById(params.get("id"));
-
-    if (!userToDelete) {
-      return NextResponse.json(
-        {
-          ok: true,
-          message: "El usuario a borrar no existe"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    const deletedUser = await User.findByIdAndDelete(params.get("id"));
-
-    return new NextResponse(
-      JSON.stringify({
-        ok: true,
-        deletedUser
-      }),
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        }
-      }
-    );
-  } catch (error) {
-    if (error instanceof Error) {
-      console.log("🚀 ~ DELETE ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
