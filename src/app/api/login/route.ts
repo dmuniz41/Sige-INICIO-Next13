@@ -1,23 +1,31 @@
-import { signJwtAccessToken } from "@/libs/jwt";
-import { connectDB } from "@/libs/mongodb";
-import User from "@/models/user";
-import bcrypt from "bcryptjs";
+import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 
-interface RequestBody {
-  user: string;
-  password: string;
-}
+import { db } from "@/db/drizzle";
+import { signJwtAccessToken } from "@/libs/jwt";
+import { users } from "@/db/migrations/schema";
 
 export async function POST(request: Request) {
   const { user, password } = await request.json();
   try {
-    connectDB();
-    const DBUser = await User.findOne({ user });
+    const DBUser = await db.select().from(users).where(eq(users.userName, user));
 
-    if (DBUser && (await bcrypt.compare(password, DBUser.password))) {
-      const accessToken = signJwtAccessToken(DBUser.toJSON());
-      const DBUserJSON = DBUser.toJSON();
+    if(DBUser.length === 0) {
+      return new NextResponse(
+        JSON.stringify({
+          ok: false,
+          message: "El usuario no existe"
+        }),
+        {
+          status: 404
+        }
+      );
+    }
+
+    if (DBUser && (await bcrypt.compare(password, DBUser[0].password))) {
+      const accessToken = signJwtAccessToken(DBUser[0]);
+      const DBUserJSON = DBUser[0];
       const result = {
         ...DBUserJSON,
         accessToken

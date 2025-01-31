@@ -19,7 +19,7 @@ export const Navbar = () => {
   const router = useRouter();
   let currentWarehouseName = "";
   const { data: sessionData } = useSession();
-  const username = sessionData?.user?.user;
+  const username = sessionData?.user?.userName;
 
   const { warehouses }: { warehouses: IWarehouse[] } = useAppSelector(
     (state: RootState) => state?.warehouse
