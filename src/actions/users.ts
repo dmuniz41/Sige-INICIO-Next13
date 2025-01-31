@@ -60,7 +60,7 @@ export const startDeleteUser = (id: string): any => {
   const token = localStorage.getItem("accessToken");
   return async (dispatch: any) => {
     await axios
-      .delete(`${process.env.NEXT_PUBLIC_API_URL}/user?id=${id}`, {
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/user/${id}`, {
         headers: { accessToken: token }
       })
       .then(() => {
@@ -87,8 +87,8 @@ export const usersStartLoading = () => {
     await axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/user`, { headers: { accessToken: token } })
       .then((resp) => {
-        let { listOfUsers } = resp.data;
-        dispatch(usersLoaded(listOfUsers));
+        let { data } = resp.data;
+        dispatch(usersLoaded(data));
       })
       .catch((error: AxiosError) => {
         let { message }: any = error.response?.data;

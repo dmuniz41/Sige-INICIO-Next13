@@ -13,7 +13,6 @@ import { CreateUserForm } from "./CreateUserForm";
 import { DeleteSvg } from "../../global/DeleteSvg";
 import { EditSvg } from "../../global/EditSvg";
 import { EditUserForm } from "./EditUserForm";
-import { IUser } from "@/models/user";
 import { nomenclatorsStartLoading } from "@/actions/nomenclator";
 import { PlusSvg } from "../../global/PlusSvg";
 import { PrivilegesForm } from "./PrivilegesForm";
@@ -24,8 +23,9 @@ import { startAddUser, startDeleteUser, startUpdateUser, usersStartLoading } fro
 import { useAppDispatch } from "@/hooks/hooks";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
+import { User } from "@/db/migrations/schema";
 
-type DataIndex = keyof IUser;
+type DataIndex = keyof User;
 
 const UserTable: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -34,7 +34,7 @@ const UserTable: React.FC = () => {
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [privilegesModal, setPrivilegesModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<IUser>();
+  const [selectedUser, setSelectedUser] = useState<User>();
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
 
@@ -49,8 +49,8 @@ const UserTable: React.FC = () => {
     dispatch(costSheetsStartLoading());
   }, [dispatch]);
 
-  const { users }: { users: IUser[] } = useAppSelector((state: RootState) => state?.user);
-  let data: IUser[] = useMemo(() => users, [users]);
+  const { users }: { users: User[] } = useAppSelector((state: RootState) => state?.user);
+  let data: User[] = useMemo(() => users, [users]);
   if (!canList) {
     data = [];
   }
@@ -59,12 +59,12 @@ const UserTable: React.FC = () => {
     setCreateNewModal(true);
   };
 
-  const handleEdit = (record: IUser) => {
+  const handleEdit = (record: User) => {
     setSelectedUser(record);
     setEditModal(true);
   };
 
-  const handleEditPrivileges = (record: IUser) => {
+  const handleEditPrivileges = (record: User) => {
     setSelectedUser(record);
     setPrivilegesModal(true);
   };
@@ -76,7 +76,7 @@ const UserTable: React.FC = () => {
   };
 
   const onEdit = (values: any) => {
-    dispatch(startUpdateUser({ _id: selectedUser?._id, ...values }));
+    dispatch(startUpdateUser({ id: selectedUser?.id, ...values }));
     setEditModal(false);
   };
 
@@ -90,7 +90,7 @@ const UserTable: React.FC = () => {
       values.serviceFeePrivileges,
       values.projectPrivileges
     );
-    dispatch(startUpdateUser({ _id: selectedUser?._id, privileges: privileges }));
+    dispatch(startUpdateUser({ id: selectedUser?.id, privileges: privileges }));
     setPrivilegesModal(false);
   };
 
@@ -104,7 +104,7 @@ const UserTable: React.FC = () => {
     setSearchedColumn(dataIndex);
   };
 
-  const handleDelete = (record: IUser) => {
+  const handleDelete = (record: User) => {
     Swal.fire({
       title: "Eliminar Usuario",
       text: "El usuario seleccionado se borrará de forma permanente",
@@ -116,7 +116,7 @@ const UserTable: React.FC = () => {
       confirmButtonText: "Eliminar"
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(startDeleteUser(record?._id!));
+        dispatch(startDeleteUser(record?.id.toString()));
       }
     });
   };
@@ -126,7 +126,7 @@ const UserTable: React.FC = () => {
     setSearchText("");
   };
 
-  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<IUser> => ({
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<User> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
@@ -203,32 +203,28 @@ const UserTable: React.FC = () => {
       )
   });
 
-  const columns: ColumnsType<IUser> = [
+  const columns: ColumnsType<User> = [
     {
       title: <span className="font-bold">Usuario</span>,
-      dataIndex: "user",
-      key: "user",
+      dataIndex: "userName",
       width: "10%",
-      ...getColumnSearchProps("user")
+      ...getColumnSearchProps("userName")
     },
     {
       title: <span className="font-bold">Nombre</span>,
-      dataIndex: "userName",
-      key: "userName",
+      dataIndex: "name",
       width: "10%",
-      ...getColumnSearchProps("lastName")
+      ...getColumnSearchProps("name")
     },
     {
       title: <span className="font-bold">Apellidos</span>,
       dataIndex: "lastName",
-      key: "lastName",
       width: "10%",
       ...getColumnSearchProps("lastName")
     },
     {
       title: <span className="font-bold">Privilegios</span>,
       dataIndex: "privileges",
-      key: "privileges",
       width: "60%",
       ...getColumnSearchProps("privileges"),
       render: (_, { privileges }) => (
@@ -242,13 +238,12 @@ const UserTable: React.FC = () => {
     {
       title: <span className="font-bold">Area</span>,
       dataIndex: "area",
-      key: "area",
       width: "15%",
       ...getColumnSearchProps("area"),
       render: (_, { area }) => (
         <>
-          {area?.map((a) => {
-            return <Tag key={a}>{a}</Tag>;
+          {area?.map((area) => {
+            return <Tag key={area}>{area}</Tag>;
           })}
         </>
       )
@@ -266,15 +261,8 @@ const UserTable: React.FC = () => {
                   <EditSvg width={20} height={20} />
                 </button>
               </Tooltip>
-              <Tooltip
-                placement="top"
-                title={"Cambiar Privilegios"}
-                arrow={{ pointAtCenter: true }}
-              >
-                <button
-                  onClick={() => handleEditPrivileges(record)}
-                  className="table-see-offer-action-btn"
-                >
+              <Tooltip placement="top" title={"Cambiar Privilegios"} arrow={{ pointAtCenter: true }}>
+                <button onClick={() => handleEditPrivileges(record)} className="table-see-offer-action-btn">
                   <ShieldSvg width={20} height={20} />
                 </button>
               </Tooltip>
@@ -344,6 +332,7 @@ const UserTable: React.FC = () => {
         dataSource={data}
         pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
         className="shadow-md"
+        rowKey={"id"}
       />
     </>
   );

@@ -2,22 +2,17 @@
 import { Form, Input, Modal, Select, SelectProps } from "antd";
 
 import { INomenclator } from "@/models/nomenclator";
-import { IUser } from "@/models/user";
 import { RootState, useAppSelector } from "@/store/store";
+import { User } from "@/db/migrations/schema";
 
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: IUser) => void;
+  onCreate: (values: User) => void;
   onCancel: () => void;
-  defaultValues?: IUser;
+  defaultValues?: User;
 }
 
-export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel,
-  defaultValues
-}) => {
+export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
   const userArea: string[] | undefined = [];
 
@@ -263,8 +258,8 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({
         size="middle"
         fields={[
           {
-            name: "user",
-            value: defaultValues?.user
+            name: "name",
+            value: defaultValues?.name
           },
           {
             name: "userName",
@@ -284,15 +279,11 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({
           },
           {
             name: "nomenclatorPrivileges",
-            value: defaultValues?.privileges?.filter((privilege) =>
-              privilege.includes("Nomenclador")
-            )
+            value: defaultValues?.privileges?.filter((privilege) => privilege.includes("Nomenclador"))
           },
           {
             name: "humanResourcesPrivileges",
-            value: defaultValues?.privileges?.filter((privilege) =>
-              privilege.includes("Trabajador")
-            )
+            value: defaultValues?.privileges?.filter((privilege) => privilege.includes("Trabajador"))
           },
           {
             name: "warehousePrivileges",
@@ -304,15 +295,11 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({
           },
           {
             name: "costSheetPrivileges",
-            value: defaultValues?.privileges?.filter((privilege) =>
-              privilege.includes("Ficha de Costo")
-            )
+            value: defaultValues?.privileges?.filter((privilege) => privilege.includes("Ficha de Costo"))
           },
           {
             name: "serviceFeePrivileges",
-            value: defaultValues?.privileges?.filter((privilege) =>
-              privilege.includes("Tarifas de Servicio")
-            )
+            value: defaultValues?.privileges?.filter((privilege) => privilege.includes("Tarifas de Servicio"))
           },
           {
             name: "projectPrivileges",
@@ -324,104 +311,44 @@ export const PrivilegesForm: React.FC<CollectionCreateFormProps> = ({
           }
         ]}
       >
-        <Form.Item
-          className="hidden"
-          name="user"
-          label="Usuario"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item className="hidden" name="name" label="Nombre" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item
-          className="hidden"
-          name="userName"
-          label="Nombre"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item className="hidden" name="userName" label="Nombre" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item
-          className="hidden"
-          name="lastName"
-          label="Apellidos"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item className="hidden" name="lastName" label="Apellidos" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item
-          className="hidden"
-          name="area"
-          label="Área"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item className="hidden" name="area" label="Área" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={areas} />
         </Form.Item>
         <Form.Item className="hidden" name="privileges" label="Privilegios">
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={privileges} />
         </Form.Item>
         <Form.Item name="securityPrivileges" label="Usuarios">
-          <Select
-            mode="multiple"
-            allowClear
-            style={{ width: "100%" }}
-            options={securityPrivileges}
-          />
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={securityPrivileges} />
         </Form.Item>
         <Form.Item name="nomenclatorPrivileges" label="Nomencladores">
-          <Select
-            mode="multiple"
-            allowClear
-            style={{ width: "100%" }}
-            options={nomenclatorPrivileges}
-          />
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={nomenclatorPrivileges} />
         </Form.Item>
         <Form.Item name="humanResourcesPrivileges" label="Recursos Humanos">
-          <Select
-            mode="multiple"
-            allowClear
-            style={{ width: "100%" }}
-            options={humanResourcesPrivileges}
-          />
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={humanResourcesPrivileges} />
         </Form.Item>
         <Form.Item name="warehousePrivileges" label="Almacenes">
-          <Select
-            mode="multiple"
-            allowClear
-            style={{ width: "100%" }}
-            options={warehousePrivileges}
-          />
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={warehousePrivileges} />
         </Form.Item>
         <Form.Item name="materialPrivileges" label="Materiales">
-          <Select
-            mode="multiple"
-            allowClear
-            style={{ width: "100%" }}
-            options={materialPrivileges}
-          />
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={materialPrivileges} />
         </Form.Item>
         <Form.Item name="costSheetPrivileges" label="Fichas de Costo">
-          <Select
-            mode="multiple"
-            allowClear
-            style={{ width: "100%" }}
-            options={costSheetPrivileges}
-          />
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={costSheetPrivileges} />
         </Form.Item>
         <Form.Item name="serviceFeePrivileges" label="Tarifas de Servicio">
-          <Select
-            mode="multiple"
-            allowClear
-            style={{ width: "100%" }}
-            options={serviceFeePrivileges}
-          />
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={serviceFeePrivileges} />
         </Form.Item>
         <Form.Item name="projectPrivileges" label="Proyectos">
-          <Select
-            mode="multiple"
-            allowClear
-            style={{ width: "100%" }}
-            options={projectPrivileges}
-          />
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={projectPrivileges} />
         </Form.Item>
       </Form>
     </Modal>

@@ -2,22 +2,17 @@
 import { Form, Input, Modal, Select, SelectProps } from "antd";
 
 import { INomenclator } from "@/models/nomenclator";
-import { IUser } from "@/models/user";
 import { RootState, useAppSelector } from "@/store/store";
+import { User } from "@/db/migrations/schema";
 
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: IUser) => void;
+  onCreate: (values: User) => void;
   onCancel: () => void;
-  defaultValues?: IUser;
+  defaultValues?: User;
 }
 
-export const EditUserForm: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel,
-  defaultValues
-}) => {
+export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
   const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
   const userArea: string[] | undefined = [];
   nomenclators.map((nomenclator: INomenclator) => {
@@ -196,8 +191,8 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({
         size="middle"
         fields={[
           {
-            name: "user",
-            value: defaultValues?.user
+            name: "name",
+            value: defaultValues?.name
           },
           {
             name: "userName",
@@ -217,40 +212,19 @@ export const EditUserForm: React.FC<CollectionCreateFormProps> = ({
           }
         ]}
       >
-        <Form.Item
-          name="user"
-          label="Usuario"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="userName" label="Usuario" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item
-          name="userName"
-          label="Nombre"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="name" label="Nombre" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item
-          name="lastName"
-          label="Apellidos"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="lastName" label="Apellidos" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item
-          className="hidden"
-          name="privileges"
-          label="Privilegios"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item className="hidden" name="privileges" label="Privilegios" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={privileges} />
         </Form.Item>
-        <Form.Item
-          name="area"
-          label="Área"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="area" label="Área" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={areas} />
         </Form.Item>
       </Form>
