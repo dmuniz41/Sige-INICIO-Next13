@@ -294,3 +294,4 @@ export const materialCategoryNomenclators = pgTable("material_category_nomenclat
 
 export type User = typeof users.$inferSelect;
 export type MaterialCategoryNomenclators = typeof materialCategoryNomenclators.$inferSelect;
+

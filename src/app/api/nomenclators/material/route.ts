@@ -1,13 +1,16 @@
+import { db } from "@/db/drizzle";
+import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 import { connectDB } from "@/libs/mongodb";
 import { generateRandomString } from "@/helpers/randomStrings";
+import { materialCategoryNomenclators, MaterialCategoryNomenclators } from "@/db/migrations/schema";
 import { verifyJWT } from "@/libs/jwt";
-import MaterialNomenclator, { IMaterialNomenclator } from "@/models/nomenclators/materials";
+import { generateAlphanumericCode } from "@/helpers/generateAlphanumericCode";
+// import MaterialNomenclator, { IMaterialNomenclator } from "@/models/nomenclators/materials";
 
 export async function POST(request: Request) {
-  const { ...materialNomenclator }: IMaterialNomenclator = await request.json();
-  console.log("🚀 ~ POST ~ materialNomenclator:", materialNomenclator);
+  const { ...materialCategoryNomenclator }: MaterialCategoryNomenclators = await request.json();
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -21,16 +24,21 @@ export async function POST(request: Request) {
         }
       );
     }
-    await connectDB();
-    const DBNomenclator = await MaterialNomenclator.findOne({
-      name: materialNomenclator.name
-    });
+    // await connectDB();
+    // const DBNomenclator = await MaterialNomenclator.findOne({
+    //   name: materialNomenclator.name
+    // });
 
-    if (DBNomenclator) {
+    const DBNomenclator = await db
+      .select()
+      .from(materialCategoryNomenclators)
+      .where(eq(materialCategoryNomenclators.value, materialCategoryNomenclator.value));
+
+    if (DBNomenclator.length > 0) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Ya existe un nomenclador de material con ese nombre"
+          message: `Ya existe un nomenclador de categoria de material con ese nombre: Nombre{${materialCategoryNomenclator.value}}`
         },
         {
           status: 409
@@ -38,19 +46,29 @@ export async function POST(request: Request) {
       );
     }
 
-    let newKey = generateRandomString(26);
+    let code = generateAlphanumericCode("N_MC");
 
-    const newMaterialNomenclator = new MaterialNomenclator({
-      ...materialNomenclator,
-      key: newKey
-    });
+    // const newMaterialNomenclator = new MaterialNomenclator({
+    //   ...materialNomenclator,
+    //   key: newKey
+    // });
 
-    await newMaterialNomenclator.save();
+    const newMaterialCategoryNomenclator = await db
+      .insert(materialCategoryNomenclators)
+      .values({
+        code,
+        category: materialCategoryNomenclator.category,
+        value: materialCategoryNomenclator.value,
+        isDecrease: materialCategoryNomenclator.isDecrease
+      })
+      .returning();
+
+    // await newMaterialCategoryNomenclator.save();
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        newMaterialNomenclator
+        data: newMaterialCategoryNomenclator
       }),
       {
         headers: {
@@ -90,13 +108,15 @@ export async function GET(request: Request) {
         }
       );
     }
-    await connectDB();
-    const listOfMaterialNomenclators = (await MaterialNomenclator.find()).reverse();
+    // await connectDB();
+    // const listOfMaterialNomenclators = (await MaterialNomenclator.find()).reverse();
+
+    const listOfMaterialCategoryNomenclators = await db.select().from(materialCategoryNomenclators);
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        counter: listOfMaterialNomenclators.length,
-        listOfMaterialNomenclators
+        counter: listOfMaterialCategoryNomenclators.length,
+        data: listOfMaterialCategoryNomenclators
       }),
       {
         headers: {
@@ -109,135 +129,6 @@ export async function GET(request: Request) {
   } catch (error) {
     if (error instanceof Error) {
       console.log("🚀 ~ GET ~ error:", error);
-      return NextResponse.json(
-        {
-          ok: false,
-          message: error.message
-        },
-        {
-          status: 500
-        }
-      );
-    }
-  }
-}
-
-export async function PUT(request: Request) {
-  const { ...materialNomenclator }: IMaterialNomenclator = await request.json();
-  const accessToken = request.headers.get("accessToken");
-
-  try {
-    if (!accessToken || !verifyJWT(accessToken)) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-    await connectDB();
-    const nomenclatorToUpdate = await MaterialNomenclator.findById(materialNomenclator._id);
-
-    if (!nomenclatorToUpdate) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "El nomenclador de material a actualizar no existe"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    const updatedNomenclator = await MaterialNomenclator.findByIdAndUpdate(
-      materialNomenclator._id,
-      {
-        ...materialNomenclator
-      },
-      { new: true }
-    );
-
-    return new NextResponse(
-      JSON.stringify({
-        ok: true,
-        updatedNomenclator
-      }),
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        status: 200
-      }
-    );
-  } catch (error) {
-    if (error instanceof Error) {
-      console.log("🚀 ~ PUT ~ error:", error);
-      return NextResponse.json(
-        {
-          ok: false,
-          message: error.message
-        },
-        {
-          status: 500
-        }
-      );
-    }
-  }
-}
-
-export async function DELETE(request: NextRequest) {
-  const params = request.nextUrl.searchParams;
-  const accessToken = request.headers.get("accessToken");
-  try {
-    if (!accessToken || !verifyJWT(accessToken)) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-    await connectDB();
-    const nomenclatorToDelete = await MaterialNomenclator.findById(params.get("id"));
-
-    if (!nomenclatorToDelete) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "El nomenclador a borrar no existe"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    const deletedNomenclator = await MaterialNomenclator.findByIdAndDelete(params.get("id"));
-
-    return new NextResponse(
-      JSON.stringify({
-        ok: true,
-        deletedNomenclator
-      }),
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        status: 200
-      }
-    );
-  } catch (error) {
-    if (error instanceof Error) {
-      console.log("🚀 ~ DELETE ~ error:", error);
       return NextResponse.json(
         {
           ok: false,
