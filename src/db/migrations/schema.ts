@@ -1,5 +1,5 @@
-import { pgTable, uuid, varchar, integer, numeric, serial, boolean, foreignKey, bigint, date, text } from "drizzle-orm/pg-core"
-import { sql } from "drizzle-orm"
+import { pgTable, uuid, varchar, integer, numeric, serial, boolean, foreignKey, bigint, date, text } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 export const users = pgTable("users", {
   id: serial().primaryKey().notNull(),
@@ -12,12 +12,11 @@ export const users = pgTable("users", {
   password: varchar().notNull()
 });
 
-// export const nomenclators = pgTable("nomenclators", {
-//   id: serial().primaryKey().notNull(),
-//   key: varchar().notNull(),
-//   code: varchar().notNull(),
-//   category: varchar().notNull()
-// });
+export const materialNomenclators = pgTable("material_nomenclators", {
+  code: varchar().primaryKey().notNull(),
+  category: varchar().notNull(), // Indica el tipo de nomenclador(Cliente, Representante, Material, ....)
+  value: varchar().notNull()
+});
 
 // export const clientNomenclators = pgTable("client_nomenclators", {
 //   id: serial().primaryKey().notNull(),

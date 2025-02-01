@@ -8,6 +8,13 @@
       "when": 1738206071135,
       "tag": "0000_dear_doomsday",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1738421003331,
+      "tag": "0001_heavy_lady_bullseye",
+      "breakpoints": true
     }
   ]
 }
