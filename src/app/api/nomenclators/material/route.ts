@@ -2,14 +2,11 @@ import { db } from "@/db/drizzle";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
-import { connectDB } from "@/libs/mongodb";
-import { generateRandomString } from "@/helpers/randomStrings";
 import { materialCategoryNomenclators, MaterialCategoryNomenclators } from "@/db/migrations/schema";
 import { verifyJWT } from "@/libs/jwt";
 import { generateAlphanumericCode } from "@/helpers/generateAlphanumericCode";
-// import MaterialNomenclator, { IMaterialNomenclator } from "@/models/nomenclators/materials";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const { ...materialCategoryNomenclator }: MaterialCategoryNomenclators = await request.json();
   const accessToken = request.headers.get("accessToken");
   try {
@@ -94,7 +91,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -108,15 +105,38 @@ export async function GET(request: Request) {
         }
       );
     }
+
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get("page") || "1", 10); // Default to page 1
+    const limit = parseInt(searchParams.get("limit") || "10", 10); // Default to 10 items per page
+
+    if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Parámetros de paginacion inválidos. 'page' y 'limit' deben ser mayor a 0."
+        },
+        {
+          status: 400
+        }
+      );
+    }
+
+    const offset = (page - 1) * limit;
+    const paginatedData = await db.select().from(materialCategoryNomenclators).limit(limit).offset(offset);
+    const totalCount = await db.$count(materialCategoryNomenclators);
+
     // await connectDB();
     // const listOfMaterialNomenclators = (await MaterialNomenclator.find()).reverse();
 
-    const listOfMaterialCategoryNomenclators = await db.select().from(materialCategoryNomenclators);
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        counter: listOfMaterialCategoryNomenclators.length,
-        data: listOfMaterialCategoryNomenclators
+        counter: paginatedData.length,
+        total: totalCount,
+        page,
+        limit,
+        data: paginatedData
       }),
       {
         headers: {
