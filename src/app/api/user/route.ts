@@ -196,7 +196,6 @@ export async function PUT(request: NextRequest) {
 
     // const updatedUser = await User.findByIdAndUpdate(user._id, { ...user }, { new: true });
 
-    // Perform the update
     const updatedUser = await db.update(users).set(user).where(eq(users.id, user.id)).returning();
 
     return new NextResponse(
