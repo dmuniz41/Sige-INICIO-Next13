@@ -1,9 +1,9 @@
 "use client";
-import { Badge, Button, Form, Input, Space, Table, Tag, Tooltip } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Badge, Button, Form, Input, Space, Spin, Table, Tag, Tooltip } from "antd";
+import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import { useSession } from "next-auth/react";
 import Highlighter from "react-highlight-words";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Swal from "sweetalert2";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
@@ -13,9 +13,7 @@ import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { EditSvg } from "@/app/global/EditSvg";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
-import { RootState, useAppSelector } from "@/store/store";
 import { useAppDispatch } from "@/hooks/hooks";
-import { IMaterialNomenclator } from "@/models/nomenclators/materials";
 import {
   materialNomenclatorsStartLoading,
   startAddMaterialNomenclator,
@@ -25,34 +23,28 @@ import {
 import { InfoCircleSvg } from "@/app/global/InfoCircleSvg";
 import { CreateMaterialNomenclatorForm } from "./CreateMaterialNomenclatorForm";
 import { EditMaterialNomenclatorForm } from "./EditMaterialNomenclatorForm";
+import { useMaterialCategoryNomenclator } from "@/hooks/nomenclators/materialCategory/useMaterialCategoryNomenclator";
+import { MaterialCategoryNomenclators } from "@/db/migrations/schema";
 
-type DataIndex = keyof IMaterialNomenclator;
+type DataIndex = keyof MaterialCategoryNomenclators;
 
 const MaterialsNomenclatorsTable: React.FC = () => {
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [searchedColumn, setSearchedColumn] = useState("");
   const [searchText, setSearchText] = useState("");
-  const [selectedNomenclator, setSelectedNomenclator] = useState<IMaterialNomenclator>();
+  const [selectedNomenclator, setSelectedNomenclator] = useState<MaterialCategoryNomenclators>();
   const { data: sessionData } = useSession();
   const dispatch = useAppDispatch();
   const searchInput = useRef<InputRef>(null);
-  const [form] = Form.useForm();
+
+  const { useGetMaterialCategoryNomenclator } = useMaterialCategoryNomenclator();
+  const { data: materialsCategoryNomenclatorsQuery, isLoading, isError } = useGetMaterialCategoryNomenclator();
 
   const canList = sessionData?.user.role.includes("Listar Nomencladores");
   const canCreate = sessionData?.user.role.includes("Crear Nomenclador");
   const canEdit = sessionData?.user.role.includes("Editar Nomenclador");
   const canDelete = sessionData?.user.role.includes("Eliminar Nomenclador");
-
-  useEffect(() => {
-    dispatch(materialNomenclatorsStartLoading());
-  }, [dispatch]);
-
-  const { materialsNomenclators }: { materialsNomenclators: IMaterialNomenclator[] } = useAppSelector(
-    (state: RootState) => state?.nomenclator
-  );
-
-  let data: IMaterialNomenclator[] = useMemo(() => materialsNomenclators, [materialsNomenclators]);
 
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
@@ -60,13 +52,13 @@ const MaterialsNomenclatorsTable: React.FC = () => {
     setSearchedColumn(dataIndex);
   };
 
-  const onCreate = (values: IMaterialNomenclator) => {
+  const onCreate = (values: MaterialCategoryNomenclators) => {
     dispatch(startAddMaterialNomenclator(values));
     setCreateNewModal(false);
   };
 
-  const onEdit = (values: IMaterialNomenclator) => {
-    dispatch(startUpdateMaterialNomenclator({ ...values, _id: selectedNomenclator?._id }));
+  const onEdit = (values: MaterialCategoryNomenclators) => {
+    dispatch(startUpdateMaterialNomenclator({ ...values, code: selectedNomenclator?.code }));
     setEditModal(false);
   };
 
@@ -92,12 +84,12 @@ const MaterialsNomenclatorsTable: React.FC = () => {
     setSearchText("");
   };
 
-  const handleEdit = (record: IMaterialNomenclator) => {
+  const handleEdit = (record: MaterialCategoryNomenclators) => {
     setSelectedNomenclator(record);
     setEditModal(true);
   };
 
-  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<IMaterialNomenclator> => ({
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<MaterialCategoryNomenclators> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
@@ -168,14 +160,13 @@ const MaterialsNomenclatorsTable: React.FC = () => {
       )
   });
 
-  const columns: ColumnsType<IMaterialNomenclator> = [
+  const columns: ColumnsType<MaterialCategoryNomenclators> = [
     {
       title: <span className="font-bold">Nombre</span>,
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "value",
       width: "30%",
-      sorter: (a: any, b: any) => a.name.localeCompare(b.name),
-      ...getColumnSearchProps("name")
+      sorter: (a: any, b: any) => a.value.localeCompare(b.value),
+      ...getColumnSearchProps("value")
     },
     {
       title: (
@@ -216,7 +207,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
           )}
 
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-            <button disabled={!canDelete} onClick={() => handleDelete(record._id)} className="table-delete-action-btn">
+            <button disabled={!canDelete} onClick={() => handleDelete(record.code)} className="table-delete-action-btn">
               <DeleteSvg width={20} height={20} />
             </button>
           </Tooltip>
@@ -224,6 +215,15 @@ const MaterialsNomenclatorsTable: React.FC = () => {
       )
     }
   ];
+
+  if (isLoading) return <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />;
+  if (isError) {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Hubo un error al cargar los nomencladores de categorias de materiales"
+    });
+  };
 
   return (
     <>
@@ -250,11 +250,12 @@ const MaterialsNomenclatorsTable: React.FC = () => {
       <Table
         size="small"
         columns={columns}
-        dataSource={data}
+        dataSource={materialsCategoryNomenclatorsQuery?.data}
         pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
         className="shadow-md"
+        rowKey={(record) => record.code}
       />
-      <CreateMaterialNomenclatorForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
+      {/* <CreateMaterialNomenclatorForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
       <EditMaterialNomenclatorForm
         open={editModal}
         onCancel={() => {
@@ -263,7 +264,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
         }}
         onCreate={onEdit}
         defaultValues={selectedNomenclator!}
-      />
+      /> */}
     </>
   );
 };
