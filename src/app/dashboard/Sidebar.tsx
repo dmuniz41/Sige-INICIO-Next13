@@ -290,7 +290,7 @@ const items: MenuProps["items"] = [
       {
         label: (
           <Link prefetch href="/dashboard/nomenclators/materials">
-            Materiales
+            Categorías de materiales
           </Link>
         ),
         key: "materials"
@@ -313,7 +313,7 @@ export const Sidebar: React.FC = () => {
       onClick={onClick}
       selectedKeys={[current]}
       style={{
-        width: "240px",
+        width: "250px",
         backgroundColor: "#f4f6f9",
         fontWeight: "bold",
         fontSize: "16px",

@@ -15,6 +15,13 @@
       "when": 1738421003331,
       "tag": "0001_heavy_lady_bullseye",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1738421858550,
+      "tag": "0002_daffy_freak",
+      "breakpoints": true
     }
   ]
 }

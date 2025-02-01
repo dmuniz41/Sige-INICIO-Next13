@@ -12,10 +12,11 @@ export const users = pgTable("users", {
   password: varchar().notNull()
 });
 
-export const materialNomenclators = pgTable("material_nomenclators", {
+export const materialCategoryNomenclators = pgTable("material_category_nomenclators", {
   code: varchar().primaryKey().notNull(),
   category: varchar().notNull(), // Indica el tipo de nomenclador(Cliente, Representante, Material, ....)
-  value: varchar().notNull()
+  value: varchar().notNull(),
+  isDecrease: boolean().notNull() // Indica si el los materiales de esa categoria son gastables o no
 });
 
 // export const clientNomenclators = pgTable("client_nomenclators", {
@@ -292,3 +293,4 @@ export const materialNomenclators = pgTable("material_nomenclators", {
 // ]);
 
 export type User = typeof users.$inferSelect;
+export type MaterialCategoryNomenclators = typeof materialCategoryNomenclators.$inferSelect;
