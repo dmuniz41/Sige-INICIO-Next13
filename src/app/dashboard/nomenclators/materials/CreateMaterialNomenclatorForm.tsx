@@ -1,29 +1,28 @@
 "use client";
 
-import { IMaterialNomenclator } from "@/models/nomenclators/materials";
-import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
-import { Checkbox, Form, Input, InputNumber, Modal } from "antd";
+import { MaterialCategoryNomenclators } from "@/db/migrations/schema";
+import { useMaterialCategoryNomenclator } from "@/hooks/nomenclators/materialCategory/useMaterialCategoryNomenclator";
+import { Checkbox, Form, Input, Modal } from "antd";
 import { useState } from "react";
 
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: IMaterialNomenclator) => void;
   onCancel: () => void;
 }
 
-export const CreateMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel
-}) => {
-  const [isDecrease, setIsDecrease] = useState<boolean>(false);
+export const CreateMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel }) => {
   const [form] = Form.useForm();
+
+  const { useCreateMaterialCategoryNomenclator } = useMaterialCategoryNomenclator();
+  const mutation = useCreateMaterialCategoryNomenclator();
+
+  const [isDecrease, setIsDecrease] = useState<boolean>(false);
   return (
     <Modal
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-semibold text-lg">Nuevo Nomenclador de Material</span>
+          <span className="font-semibold text-lg">Nueva Categoría de Material</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -36,7 +35,7 @@ export const CreateMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> 
       cancelText="Cancelar"
       width={"600px"}
       footer={[
-        <div key="footer" className="flex gap-2 w-full justify-end">
+        <div key="footer" className="flex gap-2 w-full ...values, justify-end">
           <button key="2" className="modal-btn-danger " onClick={onCancel}>
             Cancelar
           </button>
@@ -47,9 +46,15 @@ export const CreateMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> 
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate({ ...values, isDecrease: isDecrease });
+                  mutation.mutate({
+                    code: "",
+                    category: "N_MC",
+                    value: values.value,
+                    isDecrease: isDecrease
+                  });
                   setIsDecrease(false);
                   form.resetFields();
+                  onCancel();
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -62,11 +67,7 @@ export const CreateMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> 
       ]}
     >
       <Form form={form} layout="vertical" name="createMaterialNomenclator" size="middle">
-        <Form.Item
-          name="name"
-          label="Nombre"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="value" label="Nombre" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
         <Form.Item name="isDecrease">

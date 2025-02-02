@@ -1,24 +1,127 @@
-import { MaterialCategoryNomenclators } from "@/db/migrations/schema";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import Swal from "sweetalert2";
 
-const getMaterialCategoryNomenclatorsAPI = async () => {
+import { MaterialCategoryNomenclators } from "@/db/migrations/schema";
+
+const getMaterialCategoryNomenclatorsAPI = async (page: number = 1, limit: number = 10) => {
   const token = localStorage.getItem("accessToken");
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`, {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material?page=${page}&limit=${limit}`, {
     headers: { accessToken: token }
   });
   return response.data;
 };
 
-const useGetMaterialCategoryNomenclator = () => {
+const createMaterialCategoryNomenclatorsAPI = async (values: MaterialCategoryNomenclators) => {
+  const token = localStorage.getItem("accessToken");
+  const response = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`,
+    {
+      ...values
+    },
+    {
+      headers: { accessToken: token }
+    }
+  );
+  return response.data;
+};
+
+const updateMaterialCategoryNomenclatorsAPI = async (values: MaterialCategoryNomenclators) => {
+  const token = localStorage.getItem("accessToken");
+  const response = await axios.put(
+    `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`,
+    {
+      ...values
+    },
+    {
+      headers: { accessToken: token }
+    }
+  );
+  return response.data;
+};
+
+const deleteMaterialCategoryNomenclatorsAPI = async (code: string) => {
+  const token = localStorage.getItem("accessToken");
+  const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material/${code}`, {
+    headers: { accessToken: token }
+  });
+  return response.data;
+};
+
+const useGetMaterialCategoryNomenclator = (page: number, limit: number) => {
   const query = useQuery({
-    queryKey: ["getMaterialCategoryNomenclators"],
-    queryFn: getMaterialCategoryNomenclatorsAPI
+    queryKey: ["GetMaterialCategoryNomenclators"],
+    queryFn: () => getMaterialCategoryNomenclatorsAPI(page, limit)
+  });
+
+  return query;
+};
+
+const useCreateMaterialCategoryNomenclator = () => {
+  const queryClient = useQueryClient();
+  const query = useMutation({
+    mutationKey: ["CreateMaterialCategoryNomenclator"],
+    mutationFn: (values: MaterialCategoryNomenclators) => createMaterialCategoryNomenclatorsAPI(values),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["GetMaterialCategoryNomenclators"] });
+    },
+    onError: (error: AxiosError<{ok: boolean; message: string}>) => {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error?.response?.data?.message
+      });
+    }
+  });
+
+  return query;
+};
+
+const useUpdateMaterialCategoryNomenclator = (values: MaterialCategoryNomenclators) => {
+  const queryClient = useQueryClient();
+  const query = useMutation({
+    mutationKey: ["UpdateMaterialCategoryNomenclator"],
+    mutationFn: () => updateMaterialCategoryNomenclatorsAPI(values),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["GetMaterialCategoryNomenclators"] });
+    },
+    onError: () => {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ocurrió un error al actualizar el nomenclador de categoría de materiales"
+      });
+    }
+  });
+
+  return query;
+};
+
+const useDeleteMaterialCategoryNomenclator = (code: string) => {
+  const queryClient = useQueryClient();
+  const query = useMutation({
+    mutationKey: ["DeleteMaterialCategoryNomenclator"],
+    mutationFn: () => deleteMaterialCategoryNomenclatorsAPI(code),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["GetMaterialCategoryNomenclators"] });
+    },
+    onError: () => {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ocurrió un error al eliminar el nomenclador de categoría de materiales"
+      });
+    }
   });
 
   return query;
 };
 
 export const useMaterialCategoryNomenclator = () => {
-  return { useGetMaterialCategoryNomenclator };
+  return {
+    useGetMaterialCategoryNomenclator,
+    useCreateMaterialCategoryNomenclator,
+    useUpdateMaterialCategoryNomenclator,
+    useDeleteMaterialCategoryNomenclator
+  };
 };

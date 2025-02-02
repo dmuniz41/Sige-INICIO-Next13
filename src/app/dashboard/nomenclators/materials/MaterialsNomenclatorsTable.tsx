@@ -29,17 +29,22 @@ import { MaterialCategoryNomenclators } from "@/db/migrations/schema";
 type DataIndex = keyof MaterialCategoryNomenclators;
 
 const MaterialsNomenclatorsTable: React.FC = () => {
-  const [createNewModal, setCreateNewModal] = useState(false);
-  const [editModal, setEditModal] = useState(false);
-  const [searchedColumn, setSearchedColumn] = useState("");
-  const [searchText, setSearchText] = useState("");
-  const [selectedNomenclator, setSelectedNomenclator] = useState<MaterialCategoryNomenclators>();
   const { data: sessionData } = useSession();
   const dispatch = useAppDispatch();
   const searchInput = useRef<InputRef>(null);
 
+  const [createNewModal, setCreateNewModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
+
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const [searchText, setSearchText] = useState("");
+  const [selectedNomenclator, setSelectedNomenclator] = useState<MaterialCategoryNomenclators>();
+
   const { useGetMaterialCategoryNomenclator } = useMaterialCategoryNomenclator();
-  const { data: materialsCategoryNomenclatorsQuery, isLoading, isError } = useGetMaterialCategoryNomenclator();
+
+  const { data: materialsCategoryNomenclatorsQuery, isLoading, isError } = useGetMaterialCategoryNomenclator(page, limit);
 
   const canList = sessionData?.user.role.includes("Listar Nomencladores");
   const canCreate = sessionData?.user.role.includes("Crear Nomenclador");
@@ -50,11 +55,6 @@ const MaterialsNomenclatorsTable: React.FC = () => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
-  };
-
-  const onCreate = (values: MaterialCategoryNomenclators) => {
-    dispatch(startAddMaterialNomenclator(values));
-    setCreateNewModal(false);
   };
 
   const onEdit = (values: MaterialCategoryNomenclators) => {
@@ -181,7 +181,6 @@ const MaterialsNomenclatorsTable: React.FC = () => {
         </Tooltip>
       ),
       dataIndex: "isDecrease",
-      key: "isDecrease",
       width: "20%",
       render: (_, { ...record }) => (
         <div className="flex gap-1 ">
@@ -217,13 +216,14 @@ const MaterialsNomenclatorsTable: React.FC = () => {
   ];
 
   if (isLoading) return <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />;
+
   if (isError) {
     Swal.fire({
       icon: "error",
       title: "Error",
-      text: "Hubo un error al cargar los nomencladores de categorias de materiales"
+      text: "Ocurrió un error al crear el nomenclador de categoría de materiales"
     });
-  };
+  }
 
   return (
     <>
@@ -251,16 +251,19 @@ const MaterialsNomenclatorsTable: React.FC = () => {
         size="small"
         columns={columns}
         dataSource={materialsCategoryNomenclatorsQuery?.data}
-        pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
+        pagination={{ position: ["bottomCenter"], defaultPageSize: 10 }}
+        onChange={(pagination) => {
+          setPage(pagination?.current ?? 1);
+          setLimit(pagination?.pageSize ?? 10);
+        }}
         className="shadow-md"
         rowKey={(record) => record.code}
       />
-      {/* <CreateMaterialNomenclatorForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
-      <EditMaterialNomenclatorForm
+      <CreateMaterialNomenclatorForm open={createNewModal} onCancel={() => setCreateNewModal(false)} />
+      {/* <EditMaterialNomenclatorForm
         open={editModal}
         onCancel={() => {
           setEditModal(false);
-          form.resetFields();
         }}
         onCreate={onEdit}
         defaultValues={selectedNomenclator!}
