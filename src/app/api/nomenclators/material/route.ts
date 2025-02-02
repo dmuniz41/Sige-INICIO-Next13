@@ -133,7 +133,7 @@ export async function PUT(request: Request) {
       .from(materialCategoryNomenclators)
       .where(eq(materialCategoryNomenclators.value, requestData.value));
 
-    if (isNewNomenclatorExist.length === 0) {
+    if (isNewNomenclatorExist.length !== 0) {
       return NextResponse.json(
         {
           ok: false,

@@ -25,6 +25,7 @@ import { CreateMaterialNomenclatorForm } from "./CreateMaterialNomenclatorForm";
 import { EditMaterialNomenclatorForm } from "./EditMaterialNomenclatorForm";
 import { useMaterialCategoryNomenclator } from "@/hooks/nomenclators/materialCategory/useMaterialCategoryNomenclator";
 import { MaterialCategoryNomenclators } from "@/db/migrations/schema";
+import { set } from "mongoose";
 
 type DataIndex = keyof MaterialCategoryNomenclators;
 
@@ -260,14 +261,13 @@ const MaterialsNomenclatorsTable: React.FC = () => {
         rowKey={(record) => record.code}
       />
       <CreateMaterialNomenclatorForm open={createNewModal} onCancel={() => setCreateNewModal(false)} />
-      {/* <EditMaterialNomenclatorForm
+      <EditMaterialNomenclatorForm
         open={editModal}
         onCancel={() => {
           setEditModal(false);
         }}
-        onCreate={onEdit}
-        defaultValues={selectedNomenclator!}
-      /> */}
+        initialValues={selectedNomenclator!}
+      />
     </>
   );
 };

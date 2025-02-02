@@ -12,6 +12,14 @@ const getMaterialCategoryNomenclatorsAPI = async (page: number = 1, limit: numbe
   return response.data;
 };
 
+const getMaterialCategoryNomenclatorsPerCodeAPI = async (code:string) => {
+  const token = localStorage.getItem("accessToken");
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material/${code}`, {
+    headers: { accessToken: token }
+  });
+  return response.data;
+};
+
 const createMaterialCategoryNomenclatorsAPI = async (values: MaterialCategoryNomenclators) => {
   const token = localStorage.getItem("accessToken");
   const response = await axios.post(
@@ -27,6 +35,7 @@ const createMaterialCategoryNomenclatorsAPI = async (values: MaterialCategoryNom
 };
 
 const updateMaterialCategoryNomenclatorsAPI = async (values: MaterialCategoryNomenclators) => {
+  console.log("🚀 ~ updateMaterialCategoryNomenclatorsAPI ~ values:", values)
   const token = localStorage.getItem("accessToken");
   const response = await axios.put(
     `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`,
@@ -57,6 +66,15 @@ const useGetMaterialCategoryNomenclator = (page: number, limit: number) => {
   return query;
 };
 
+const useGetMaterialCategoryNomenclatorPerCode = (code:string) => {
+  const query = useQuery({
+    queryKey: ["GetMaterialCategoryNomenclatorsPerCode"],
+    queryFn: () => getMaterialCategoryNomenclatorsPerCodeAPI(code)
+  });
+
+  return query;
+};
+
 const useCreateMaterialCategoryNomenclator = () => {
   const queryClient = useQueryClient();
   const query = useMutation({
@@ -65,7 +83,7 @@ const useCreateMaterialCategoryNomenclator = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetMaterialCategoryNomenclators"] });
     },
-    onError: (error: AxiosError<{ok: boolean; message: string}>) => {
+    onError: (error: AxiosError<{ ok: boolean; message: string }>) => {
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -77,19 +95,19 @@ const useCreateMaterialCategoryNomenclator = () => {
   return query;
 };
 
-const useUpdateMaterialCategoryNomenclator = (values: MaterialCategoryNomenclators) => {
+const useUpdateMaterialCategoryNomenclator = () => {
   const queryClient = useQueryClient();
   const query = useMutation({
     mutationKey: ["UpdateMaterialCategoryNomenclator"],
-    mutationFn: () => updateMaterialCategoryNomenclatorsAPI(values),
+    mutationFn: (values: MaterialCategoryNomenclators) => updateMaterialCategoryNomenclatorsAPI(values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetMaterialCategoryNomenclators"] });
     },
-    onError: () => {
+    onError: (error: AxiosError<{ ok: boolean; message: string }>) => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Ocurrió un error al actualizar el nomenclador de categoría de materiales"
+        text: error?.response?.data?.message
       });
     }
   });
@@ -97,19 +115,19 @@ const useUpdateMaterialCategoryNomenclator = (values: MaterialCategoryNomenclato
   return query;
 };
 
-const useDeleteMaterialCategoryNomenclator = (code: string) => {
+const useDeleteMaterialCategoryNomenclator = () => {
   const queryClient = useQueryClient();
   const query = useMutation({
     mutationKey: ["DeleteMaterialCategoryNomenclator"],
-    mutationFn: () => deleteMaterialCategoryNomenclatorsAPI(code),
+    mutationFn: (code: string) => deleteMaterialCategoryNomenclatorsAPI(code),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetMaterialCategoryNomenclators"] });
     },
-    onError: () => {
+    onError: (error: AxiosError<{ ok: boolean; message: string }>) => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Ocurrió un error al eliminar el nomenclador de categoría de materiales"
+        text: error?.response?.data?.message
       });
     }
   });
@@ -120,6 +138,7 @@ const useDeleteMaterialCategoryNomenclator = (code: string) => {
 export const useMaterialCategoryNomenclator = () => {
   return {
     useGetMaterialCategoryNomenclator,
+    useGetMaterialCategoryNomenclatorPerCode,
     useCreateMaterialCategoryNomenclator,
     useUpdateMaterialCategoryNomenclator,
     useDeleteMaterialCategoryNomenclator

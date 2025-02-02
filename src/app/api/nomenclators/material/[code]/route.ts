@@ -70,3 +70,65 @@ export async function DELETE(request: NextRequest, { params }: { params: { code:
     }
   }
 }
+
+export async function GET(request: NextRequest, { params }: { params: { code: string } }) {
+  const code = params.code;
+  const accessToken = request.headers.get("accessToken");
+  try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
+        },
+        {
+          status: 401
+        }
+      );
+    }
+
+    const DBMaterialCategoryNomenclator = await db
+      .select()
+      .from(materialCategoryNomenclators)
+      .where(eq(materialCategoryNomenclators.code, code));
+
+    if (DBMaterialCategoryNomenclator.length === 0) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "No nomenclador de categoría de material no existe"
+        },
+        {
+          status: 404
+        }
+      );
+    }
+
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        data: DBMaterialCategoryNomenclator[0]
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        status: 200
+      }
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("🚀 ~ GET ~ error:", error);
+      return NextResponse.json(
+        {
+          ok: false,
+          message: error.message
+        },
+        {
+          status: 500
+        }
+      );
+    }
+  }
+}

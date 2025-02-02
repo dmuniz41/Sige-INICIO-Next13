@@ -2,39 +2,37 @@
 import { Checkbox, CheckboxProps, Form, Input, Modal } from "antd";
 import { useEffect, useState } from "react";
 
-import { IMaterialNomenclator } from "@/models/nomenclators/materials";
+import { useMaterialCategoryNomenclator } from "@/hooks/nomenclators/materialCategory/useMaterialCategoryNomenclator";
+import Swal from "sweetalert2";
+import { MaterialCategoryNomenclators } from "@/db/migrations/schema";
 
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: IMaterialNomenclator) => void;
   onCancel: () => void;
-  defaultValues: IMaterialNomenclator;
+  initialValues: MaterialCategoryNomenclators;
 }
-// ? INTERACCIÓN RARA CUANDO SE EDITAN A LA VEZ EL NOMBRE Y EL CAMPO BOLEANO ?//
 
-export const EditMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel,
-  defaultValues
-}) => {
+export const EditMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel, initialValues }) => {
+  const [form] = Form.useForm();
+  const { useUpdateMaterialCategoryNomenclator } = useMaterialCategoryNomenclator();
+
+  const mutation = useUpdateMaterialCategoryNomenclator();
   const [isDecrease, setIsDecrease] = useState<boolean>();
 
-  useEffect(() => {
-    setIsDecrease(defaultValues?.isDecrease);
-  }, [defaultValues]);
+  // useEffect(() => {
+  //   setIsDecrease(defaultValues?.isDecrease);
+  // }, [defaultValues]);
 
-  const onChange: CheckboxProps["onChange"] = (e) => {
-    setIsDecrease(e.target.checked);
-  };
+  // const onChange: CheckboxProps["onChange"] = (e) => {
+  //   setIsDecrease(e.target.checked);
+  // };
 
-  const [form] = Form.useForm();
   return (
     <Modal
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-semibold text-lg">Editar Nomenclador de Material</span>
+          <span className="font-semibold text-lg">Editar Categoría de Material</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -58,8 +56,14 @@ export const EditMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = 
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate({ ...values, isDecrease: isDecrease });
+                  mutation.mutate({
+                    code: initialValues.code,
+                    category: initialValues.category,
+                    value: values.value,
+                    isDecrease: values.isDecrease ?? false
+                  });
                   form.resetFields();
+                  onCancel();
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -76,24 +80,19 @@ export const EditMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = 
         layout="vertical"
         name="editMaterialNomenclator"
         size="middle"
-        fields={[
-          {
-            name: "name",
-            value: defaultValues?.name
-          }
-        ]}
+        initialValues={{
+          value: initialValues?.value,
+          isDecrease: initialValues?.isDecrease
+        }}
       >
-        <Form.Item
-          name="name"
-          label="Nombre"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="value" label="Nombre" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="isDecrease">
-          <Checkbox checked={isDecrease} onChange={onChange}>
-            Gastable
-          </Checkbox>
+        <Form.Item
+          name="isDecrease"
+          valuePropName="checked" // This is crucial
+        >
+          <Checkbox>Gastable</Checkbox>
         </Form.Item>
       </Form>
     </Modal>
