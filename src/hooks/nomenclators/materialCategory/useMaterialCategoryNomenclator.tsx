@@ -35,7 +35,6 @@ const createMaterialCategoryNomenclatorsAPI = async (values: MaterialCategoryNom
 };
 
 const updateMaterialCategoryNomenclatorsAPI = async (values: MaterialCategoryNomenclators) => {
-  console.log("🚀 ~ updateMaterialCategoryNomenclatorsAPI ~ values:", values)
   const token = localStorage.getItem("accessToken");
   const response = await axios.put(
     `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`,

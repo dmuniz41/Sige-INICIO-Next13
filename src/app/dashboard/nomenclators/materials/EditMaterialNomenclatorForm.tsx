@@ -17,15 +17,16 @@ export const EditMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = 
   const { useUpdateMaterialCategoryNomenclator } = useMaterialCategoryNomenclator();
 
   const mutation = useUpdateMaterialCategoryNomenclator();
-  const [isDecrease, setIsDecrease] = useState<boolean>();
 
-  // useEffect(() => {
-  //   setIsDecrease(defaultValues?.isDecrease);
-  // }, [defaultValues]);
-
-  // const onChange: CheckboxProps["onChange"] = (e) => {
-  //   setIsDecrease(e.target.checked);
-  // };
+  useEffect(() => {
+    if (open) {
+      form.resetFields();
+      form.setFieldsValue({
+        value: initialValues?.value,
+        isDecrease: initialValues?.isDecrease
+      });
+    }
+  }, [open, initialValues, form]);
 
   return (
     <Modal
@@ -75,16 +76,7 @@ export const EditMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = 
         </div>
       ]}
     >
-      <Form
-        form={form}
-        layout="vertical"
-        name="editMaterialNomenclator"
-        size="middle"
-        initialValues={{
-          value: initialValues?.value,
-          isDecrease: initialValues?.isDecrease
-        }}
-      >
+      <Form form={form} layout="vertical" name="editMaterialNomenclator" size="middle">
         <Form.Item name="value" label="Nombre" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>

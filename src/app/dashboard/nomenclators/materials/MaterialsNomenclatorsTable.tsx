@@ -216,7 +216,12 @@ const MaterialsNomenclatorsTable: React.FC = () => {
     }
   ];
 
-  if (isLoading) return <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />;
+  if (isLoading)
+    return (
+      <section className="flex h-full w-full items-center justify-center">
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+      </section>
+    );
 
   if (isError) {
     Swal.fire({

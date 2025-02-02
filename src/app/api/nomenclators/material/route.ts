@@ -128,22 +128,22 @@ export async function PUT(request: Request) {
     }
 
     //TODO: Revisar esta validacion para evitar que se cree un nuevo nomenclador con el mismo nombre de uno que ya existe
-    const isNewNomenclatorExist = await db
-      .select()
-      .from(materialCategoryNomenclators)
-      .where(eq(materialCategoryNomenclators.value, requestData.value));
+    // const isNewNomenclatorExist = await db
+    //   .select()
+    //   .from(materialCategoryNomenclators)
+    //   .where(eq(materialCategoryNomenclators.value, requestData.value));
 
-    if (isNewNomenclatorExist.length !== 0) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: `Ya existe un nomenclador de categoria de material con ese nombre: Nombre{${isNewNomenclatorExist[0].value}}`
-        },
-        {
-          status: 409
-        }
-      );
-    }
+    // if (isNewNomenclatorExist.length !== 0) {
+    //   return NextResponse.json(
+    //     {
+    //       ok: false,
+    //       message: `Ya existe un nomenclador de categoria de material con ese nombre: Nombre{${isNewNomenclatorExist[0].value}}`
+    //     },
+    //     {
+    //       status: 409
+    //     }
+    //   );
+    // }
 
     // const updatedNomenclator = await MaterialNomenclator.findByIdAndUpdate(
     //   materialNomenclator._id,
