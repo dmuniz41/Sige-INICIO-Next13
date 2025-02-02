@@ -19,13 +19,14 @@ export const materialCategoryNomenclators = pgTable("material_category_nomenclat
   isDecrease: boolean().notNull() // Indica si el los materiales de esa categoria son gastables o no
 });
 
-// export const clientNomenclators = pgTable("client_nomenclators", {
-//   id: serial().primaryKey().notNull(),
-//   key: varchar().notNull(),
-//   name: varchar().notNull(),
-//   idNumber: integer().notNull(),
-//   phoneNumber: numeric()
-// });
+export const clientNomenclators = pgTable("client_nomenclators", {
+  idNumber: serial().primaryKey().notNull(), // Numero de cliente
+  name: varchar().notNull(),
+  phoneNumber: numeric(),
+  contact: varchar(),
+  address: varchar(),
+  email: varchar()
+});
 
 // export const projects = pgTable("projects", {
 // 	id: serial().primaryKey().notNull(),
@@ -294,4 +295,5 @@ export const materialCategoryNomenclators = pgTable("material_category_nomenclat
 
 export type User = typeof users.$inferSelect;
 export type MaterialCategoryNomenclators = typeof materialCategoryNomenclators.$inferSelect;
+export type ClientNomenclator = typeof clientNomenclators.$inferSelect;
 
