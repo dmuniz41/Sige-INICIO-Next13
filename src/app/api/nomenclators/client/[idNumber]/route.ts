@@ -1,9 +1,10 @@
 import { db } from "@/db/drizzle";
+import { eq } from "drizzle-orm";
+import { NextRequest, NextResponse } from "next/server";
+
 import { clientNomenclators } from "@/db/migrations/schema";
 import { verifyJWT } from "@/libs/jwt";
 import { UpdateClientNomenclator } from "@/types/DTOs/nomenclators/clientNomenclator";
-import { eq } from "drizzle-orm";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(request: NextRequest, { params }: { params: { idNumber: number } }) {
   const idNumber = params.idNumber;
@@ -82,63 +83,65 @@ export async function PUT(request: NextRequest, { params }: { params: { idNumber
   }
 }
 
-// export async function DELETE(request: NextRequest) {
-//   const params = request.nextUrl.searchParams;
-//   const accessToken = request.headers.get("accessToken");
-//   try {
-//     if (!accessToken || !verifyJWT(accessToken)) {
-//       return NextResponse.json(
-//         {
-//           ok: false,
-//           message: "Su sesión ha expirado, por favor autentiquese nuevamente"
-//         },
-//         {
-//           status: 401
-//         }
-//       );
-//     }
-//     await connectDB();
-//     const nomenclatorToDelete = await ClientNomenclator.findById(params.get("id"));
+export async function DELETE(request: NextRequest, { params }: { params: { idNumber: number } }) {
+  const idNumber = params.idNumber;
+  const accessToken = request.headers.get("accessToken");
+  try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
+        },
+        {
+          status: 401
+        }
+      );
+    }
+    // await connectDB();
+    // const nomenclatorToDelete = await ClientNomenclator.findById(params.get("id"));
+    const nomenclatorToDelete = await db.select().from(clientNomenclators).where(eq(clientNomenclators.idNumber, idNumber));
 
-//     if (!nomenclatorToDelete) {
-//       return NextResponse.json(
-//         {
-//           ok: false,
-//           message: "El nomenclador a borrar no existe"
-//         },
-//         {
-//           status: 404
-//         }
-//       );
-//     }
+    if (nomenclatorToDelete.length === 0) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "El nomenclador de cliente a borrar no existe"
+        },
+        {
+          status: 404
+        }
+      );
+    }
 
-//     const deletedNomenclator = await ClientNomenclator.findByIdAndDelete(params.get("id"));
+    // const deletedNomenclator = await ClientNomenclator.findByIdAndDelete(params.get("id"));
+    const deletedNomenclator = await db.delete(clientNomenclators).where(eq(clientNomenclators.idNumber, idNumber));
 
-//     return new NextResponse(
-//       JSON.stringify({
-//         ok: true,
-//         deletedNomenclator
-//       }),
-//       {
-//         headers: {
-//           "Access-Control-Allow-Origin": "*",
-//           "Content-Type": "application/json"
-//         },
-//         status: 200
-//       }
-//     );
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       console.log("🚀 ~ DELETE ~ error:", error);
-//       return NextResponse.json(
-//         {
-//           ok: false,
-//           message: error.message
-//         },
-//         {
-//           status: 500
-//         }
-//       );
-//     }
-//   }
-// }
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        data: deletedNomenclator
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        status: 200
+      }
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("🚀 ~ DELETE ~ error:", error);
+      return NextResponse.json(
+        {
+          ok: false,
+          message: error.message
+        },
+        {
+          status: 500
+        }
+      );
+    }
+  }
+}
