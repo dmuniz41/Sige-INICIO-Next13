@@ -1,6 +1,7 @@
 "use client";
-import { Badge, Button, Form, Input, Space, Spin, Table, Tag, Tooltip } from "antd";
+import { Badge, Button, Input, Space, Spin, Table, Tooltip } from "antd";
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
+import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Highlighter from "react-highlight-words";
 import React, { useRef, useState } from "react";
@@ -9,42 +10,32 @@ import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import type { InputRef } from "antd";
 
+import { CreateMaterialNomenclatorForm } from "./CreateMaterialNomenclatorForm";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
+import { EditMaterialNomenclatorForm } from "./EditMaterialNomenclatorForm";
 import { EditSvg } from "@/app/global/EditSvg";
+import { InfoCircleSvg } from "@/app/global/InfoCircleSvg";
+import { MaterialCategoryNomenclators } from "@/db/migrations/schema";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
-import { useAppDispatch } from "@/hooks/hooks";
-import {
-  materialNomenclatorsStartLoading,
-  startAddMaterialNomenclator,
-  startDeleteMaterialNomenclator,
-  startUpdateMaterialNomenclator
-} from "@/actions/nomenclators/material";
-import { InfoCircleSvg } from "@/app/global/InfoCircleSvg";
-import { CreateMaterialNomenclatorForm } from "./CreateMaterialNomenclatorForm";
-import { EditMaterialNomenclatorForm } from "./EditMaterialNomenclatorForm";
 import { useMaterialCategoryNomenclator } from "@/hooks/nomenclators/materialCategory/useMaterialCategoryNomenclator";
-import { MaterialCategoryNomenclators } from "@/db/migrations/schema";
-import { set } from "mongoose";
 
 type DataIndex = keyof MaterialCategoryNomenclators;
 
 const MaterialsNomenclatorsTable: React.FC = () => {
   const { data: sessionData } = useSession();
-  const dispatch = useAppDispatch();
   const searchInput = useRef<InputRef>(null);
-
+  const queryClient = useQueryClient();
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
-
   const [searchedColumn, setSearchedColumn] = useState("");
   const [searchText, setSearchText] = useState("");
   const [selectedNomenclator, setSelectedNomenclator] = useState<MaterialCategoryNomenclators>();
-
-  const { useGetMaterialCategoryNomenclator } = useMaterialCategoryNomenclator();
-
+  
+  const { useGetMaterialCategoryNomenclator, useDeleteMaterialCategoryNomenclator } = useMaterialCategoryNomenclator();
+  const deleteMutation = useDeleteMaterialCategoryNomenclator();
   const { data: materialsCategoryNomenclatorsQuery, isLoading, isError } = useGetMaterialCategoryNomenclator(page, limit);
 
   const canList = sessionData?.user.role.includes("Listar Nomencladores");
@@ -58,12 +49,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
     setSearchedColumn(dataIndex);
   };
 
-  const onEdit = (values: MaterialCategoryNomenclators) => {
-    dispatch(startUpdateMaterialNomenclator({ ...values, code: selectedNomenclator?.code }));
-    setEditModal(false);
-  };
-
-  const handleDelete = (id: string) => {
+  const handleDelete = (code: string) => {
     Swal.fire({
       title: "Eliminar Nomenclador de Material",
       text: "El nomenclador seleccionado se borrará de forma permanente",
@@ -75,9 +61,13 @@ const MaterialsNomenclatorsTable: React.FC = () => {
       confirmButtonText: "Eliminar"
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(startDeleteMaterialNomenclator(id));
+        deleteMutation.mutate(code);
       }
     });
+  };
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({queryKey: ["GetMaterialCategoryNomenclators"]});
   };
 
   const handleReset = (clearFilters: () => void) => {
@@ -166,7 +156,6 @@ const MaterialsNomenclatorsTable: React.FC = () => {
       title: <span className="font-bold">Nombre</span>,
       dataIndex: "value",
       width: "30%",
-      sorter: (a: any, b: any) => a.value.localeCompare(b.value),
       ...getColumnSearchProps("value")
     },
     {
@@ -191,7 +180,6 @@ const MaterialsNomenclatorsTable: React.FC = () => {
     },
     {
       title: <span className="font-bold">Acciones</span>,
-      key: "actions",
       width: "5%",
       align: "center",
       render: (_, { ...record }) => (
@@ -246,7 +234,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
               className={`${
                 canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={() => dispatch(materialNomenclatorsStartLoading())}
+              onClick={handleRefresh}
             >
               <RefreshSvg />
             </button>

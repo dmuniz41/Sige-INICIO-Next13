@@ -3,6 +3,7 @@ import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
 
 import { MaterialCategoryNomenclators } from "@/db/migrations/schema";
+import { Toast } from "@/helpers/customAlert";
 
 const getMaterialCategoryNomenclatorsAPI = async (page: number = 1, limit: number = 10) => {
   const token = localStorage.getItem("accessToken");
@@ -12,7 +13,7 @@ const getMaterialCategoryNomenclatorsAPI = async (page: number = 1, limit: numbe
   return response.data;
 };
 
-const getMaterialCategoryNomenclatorsPerCodeAPI = async (code:string) => {
+const getMaterialCategoryNomenclatorsPerCodeAPI = async (code: string) => {
   const token = localStorage.getItem("accessToken");
   const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material/${code}`, {
     headers: { accessToken: token }
@@ -65,7 +66,7 @@ const useGetMaterialCategoryNomenclator = (page: number, limit: number) => {
   return query;
 };
 
-const useGetMaterialCategoryNomenclatorPerCode = (code:string) => {
+const useGetMaterialCategoryNomenclatorPerCode = (code: string) => {
   const query = useQuery({
     queryKey: ["GetMaterialCategoryNomenclatorsPerCode"],
     queryFn: () => getMaterialCategoryNomenclatorsPerCodeAPI(code)
@@ -81,6 +82,10 @@ const useCreateMaterialCategoryNomenclator = () => {
     mutationFn: (values: MaterialCategoryNomenclators) => createMaterialCategoryNomenclatorsAPI(values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetMaterialCategoryNomenclators"] });
+      Toast.fire({
+        icon: "success",
+        title: "Categoría de Material Creada"
+      });
     },
     onError: (error: AxiosError<{ ok: boolean; message: string }>) => {
       Swal.fire({
@@ -101,6 +106,10 @@ const useUpdateMaterialCategoryNomenclator = () => {
     mutationFn: (values: MaterialCategoryNomenclators) => updateMaterialCategoryNomenclatorsAPI(values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetMaterialCategoryNomenclators"] });
+      Toast.fire({
+        icon: "success",
+        title: "Categoría de Material Actualizada"
+      });
     },
     onError: (error: AxiosError<{ ok: boolean; message: string }>) => {
       Swal.fire({
@@ -121,6 +130,10 @@ const useDeleteMaterialCategoryNomenclator = () => {
     mutationFn: (code: string) => deleteMaterialCategoryNomenclatorsAPI(code),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetMaterialCategoryNomenclators"] });
+      Toast.fire({
+        icon: "success",
+        title: "Categoría de Material Eliminada"
+      });
     },
     onError: (error: AxiosError<{ ok: boolean; message: string }>) => {
       Swal.fire({

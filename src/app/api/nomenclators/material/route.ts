@@ -220,7 +220,12 @@ export async function GET(request: NextRequest) {
     }
 
     const offset = (page - 1) * limit;
-    const paginatedData = await db.select().from(materialCategoryNomenclators).limit(limit).offset(offset);
+    const paginatedData = await db
+      .select()
+      .from(materialCategoryNomenclators)
+      .orderBy(materialCategoryNomenclators.value)
+      .limit(limit)
+      .offset(offset);
     const totalCount = await db.$count(materialCategoryNomenclators);
 
     // await connectDB();

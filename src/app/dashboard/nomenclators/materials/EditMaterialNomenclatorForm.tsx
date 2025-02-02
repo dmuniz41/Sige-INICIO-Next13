@@ -1,9 +1,8 @@
 "use client";
-import { Checkbox, CheckboxProps, Form, Input, Modal } from "antd";
-import { useEffect, useState } from "react";
+import { Checkbox, Form, Input, Modal } from "antd";
+import { useEffect } from "react";
 
 import { useMaterialCategoryNomenclator } from "@/hooks/nomenclators/materialCategory/useMaterialCategoryNomenclator";
-import Swal from "sweetalert2";
 import { MaterialCategoryNomenclators } from "@/db/migrations/schema";
 
 interface CollectionCreateFormProps {
@@ -82,7 +81,7 @@ export const EditMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = 
         </Form.Item>
         <Form.Item
           name="isDecrease"
-          valuePropName="checked" // This is crucial
+          valuePropName="checked"
         >
           <Checkbox>Gastable</Checkbox>
         </Form.Item>
