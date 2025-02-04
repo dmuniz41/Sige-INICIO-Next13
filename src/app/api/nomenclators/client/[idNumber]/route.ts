@@ -161,8 +161,6 @@ export async function GET(request: NextRequest, { params }: { params: { idNumber
         }
       );
     }
-    // await connectDB();
-    // const listOfClientNomenclators = (await ClientNomenclator.find()).reverse();
 
     const DBClientNomenclator = await db.select().from(clientNomenclators).where(eq(clientNomenclators.idNumber, idNumber));
 
