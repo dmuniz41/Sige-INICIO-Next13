@@ -145,3 +145,52 @@ export async function DELETE(request: NextRequest, { params }: { params: { idNum
     }
   }
 }
+
+export async function GET(request: NextRequest, { params }: { params: { idNumber: number } }) {
+  const idNumber = params.idNumber;
+  const accessToken = request.headers.get("accessToken");
+  try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
+        },
+        {
+          status: 401
+        }
+      );
+    }
+    // await connectDB();
+    // const listOfClientNomenclators = (await ClientNomenclator.find()).reverse();
+
+    const DBClientNomenclator = await db.select().from(clientNomenclators).where(eq(clientNomenclators.idNumber, idNumber));
+
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        data: DBClientNomenclator
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        status: 200
+      }
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("🚀 ~ GET ~ error:", error);
+      return NextResponse.json(
+        {
+          ok: false,
+          message: error.message
+        },
+        {
+          status: 500
+        }
+      );
+    }
+  }
+}
