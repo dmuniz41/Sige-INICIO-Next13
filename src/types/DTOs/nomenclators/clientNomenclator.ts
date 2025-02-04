@@ -7,6 +7,7 @@ export type InsertClientNomenclator = {
 };
 
 export type UpdateClientNomenclator = {
+  idnumber: number;
   name: string;
   address: string | null;
   email: string | null;

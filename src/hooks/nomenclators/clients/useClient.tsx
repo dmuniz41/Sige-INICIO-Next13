@@ -1,8 +1,9 @@
-import { Toast } from "@/helpers/customAlert";
-import { InsertClientNomenclator, UpdateClientNomenclator } from "@/types/DTOs/nomenclators/clientNomenclator";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
+
+import { InsertClientNomenclator, UpdateClientNomenclator } from "@/types/DTOs/nomenclators/clientNomenclator";
+import { Toast } from "@/helpers/customAlert";
 
 const getClientsAPI = async (page: number = 1, limit: number = 10) => {
   const token = localStorage.getItem("accessToken");
@@ -33,7 +34,7 @@ const createClientAPI = async (values: InsertClientNomenclator) => {
 const updateClientAPI = async (values: UpdateClientNomenclator) => {
   const token = localStorage.getItem("accessToken");
   const response = await axios.put(
-    `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/client`,
+    `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/client/${values.idnumber}`,
     { ...values },
     { headers: { accessToken: token } }
   );

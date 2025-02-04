@@ -215,7 +215,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
     Swal.fire({
       icon: "error",
       title: "Error",
-      text: "Ocurrió un error al crear el nomenclador de categoría de materiales"
+      text: "Ocurrió un error al obtener las categorías de materiales" 
     });
   }
 

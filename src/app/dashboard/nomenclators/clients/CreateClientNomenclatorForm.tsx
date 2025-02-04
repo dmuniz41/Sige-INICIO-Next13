@@ -1,20 +1,18 @@
 "use client";
-
-import { IClientNomenclator } from "@/models/nomenclators/client";
-import { Form, Input, Modal } from "antd";
+import { useClient } from "@/hooks/nomenclators/clients/useClient";
+import { Form, Input, InputNumber, Modal } from "antd";
 
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: IClientNomenclator) => void;
   onCancel: () => void;
 }
 
-export const CreateClientNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel
-}) => {
+export const CreateClientNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel }) => {
   const [form] = Form.useForm();
+
+  const { useCreateClient } = useClient();
+  const mutation = useCreateClient();
+
   return (
     <Modal
       className="flex flex-col"
@@ -43,8 +41,9 @@ export const CreateClientNomenclatorForm: React.FC<CollectionCreateFormProps> = 
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate(values);
+                  mutation.mutate(values);
                   form.resetFields();
+                  onCancel();
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -57,18 +56,10 @@ export const CreateClientNomenclatorForm: React.FC<CollectionCreateFormProps> = 
       ]}
     >
       <Form form={form} layout="vertical" name="createClientNomenclator" size="middle">
-        <Form.Item
-          name="name"
-          label="Nombre"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="name" label="Nombre" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item
-          name="contactPerson"
-          label="Persona de contacto"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="contact" label="Persona de contacto" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
         <Form.Item name="address" label="Domicilio Legal" rules={[{ required: false }]}>
@@ -78,7 +69,7 @@ export const CreateClientNomenclatorForm: React.FC<CollectionCreateFormProps> = 
           <Input />
         </Form.Item>
         <Form.Item name="phoneNumber" label="Teléfono" rules={[{ required: false }]}>
-          <Input />
+          <InputNumber min={0} className="w-[50%]" />
         </Form.Item>
       </Form>
     </Modal>

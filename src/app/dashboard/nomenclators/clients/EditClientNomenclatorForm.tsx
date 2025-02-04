@@ -1,27 +1,35 @@
 "use client";
-
-import { IClientNomenclator } from "@/models/nomenclators/client";
-import { Form, Input, Modal } from "antd";
+import { ClientNomenclator } from "@/db/migrations/schema";
+import { useClient } from "@/hooks/nomenclators/clients/useClient";
+import { Form, Input, InputNumber, Modal } from "antd";
+import { useEffect } from "react";
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: IClientNomenclator) => void;
   onCancel: () => void;
-  defaultValues: IClientNomenclator;
+  initialValues: ClientNomenclator;
 }
 
-export const EditClientNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel,
-  defaultValues
-}) => {
+export const EditClientNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel, initialValues }) => {
   const [form] = Form.useForm();
+
+  const { useUpdateClient } = useClient();
+  const mutation = useUpdateClient();
+
+  useEffect(() => {
+    if (open) {
+      form.resetFields();
+      form.setFieldsValue({
+        ...initialValues
+      });
+    }
+  }, [open, initialValues, form]);
+
   return (
     <Modal
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-semibold text-lg">Nuevo Cliente</span>
+          <span className="font-semibold text-lg">Editar Cliente</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -44,8 +52,9 @@ export const EditClientNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate(values);
+                  mutation.mutate({ ...values, idnumber: initialValues.idNumber });
                   form.resetFields();
+                  onCancel();
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -57,35 +66,11 @@ export const EditClientNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
         </div>
       ]}
     >
-      <Form
-        form={form}
-        layout="vertical"
-        name="editClientNomenclator"
-        size="middle"
-        fields={[
-          {
-            name: "name",
-            value: defaultValues?.name
-          },
-          {
-            name: "address",
-            value: defaultValues?.address
-          },
-          {
-            name: "email",
-            value: defaultValues?.email
-          },
-          {
-            name: "phoneNumber",
-            value: defaultValues?.phoneNumber
-          }
-        ]}
-      >
-        <Form.Item
-          name="name"
-          label="Nombre del Cliente"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+      <Form form={form} layout="vertical" name="editClientNomenclator" size="middle">
+        <Form.Item name="name" label="Nombre" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Input />
+        </Form.Item>
+        <Form.Item name="contact" label="Persona de contacto" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
         <Form.Item name="address" label="Domicilio Legal" rules={[{ required: false }]}>
@@ -95,7 +80,7 @@ export const EditClientNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
           <Input />
         </Form.Item>
         <Form.Item name="phoneNumber" label="Teléfono" rules={[{ required: false }]}>
-          <Input />
+          <InputNumber min={0} className="w-[50%]" />
         </Form.Item>
       </Form>
     </Modal>

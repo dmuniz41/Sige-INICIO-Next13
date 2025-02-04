@@ -13,8 +13,8 @@ interface CollectionCreateFormProps {
 
 export const EditMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel, initialValues }) => {
   const [form] = Form.useForm();
-  const { useUpdateMaterialCategoryNomenclator } = useMaterialCategoryNomenclator();
 
+  const { useUpdateMaterialCategoryNomenclator } = useMaterialCategoryNomenclator();
   const mutation = useUpdateMaterialCategoryNomenclator();
 
   useEffect(() => {
