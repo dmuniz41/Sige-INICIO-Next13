@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
 
-import { InsertClientNomenclator, UpdateClientNomenclator } from "@/types/DTOs/nomenclators/clientNomenclator";
+import { InsertClientNomenclator, UpdateClientNomenclator } from "@/types/DTOs/nomenclators/client";
 import { Toast } from "@/helpers/customAlert";
 
 const getClientsAPI = async (page: number = 1, limit: number = 10) => {

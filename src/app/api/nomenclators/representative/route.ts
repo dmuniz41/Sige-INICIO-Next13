@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+import { eq } from "drizzle-orm";
 
-import { connectDB } from "@/libs/mongodb";
-import { generateRandomString } from "@/helpers/randomStrings";
+import { db } from "@/db/drizzle";
+import { InsertRepresentativeNomenclator } from "@/types/DTOs/nomenclators/representative";
+import { representativeNomenclators } from "@/db/migrations/schema";
 import { verifyJWT } from "@/libs/jwt";
-import RepresentativeNomenclator, {
-  IRepresentativeNomenclator
-} from "@/models/nomenclators/representative";
 
-export async function POST(request: Request) {
-  const { ...representativeNomenclator }: IRepresentativeNomenclator = await request.json();
+export async function POST(request: NextRequest) {
+  const { ...representativeNomenclator }: InsertRepresentativeNomenclator = await request.json();
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -22,26 +21,31 @@ export async function POST(request: Request) {
         }
       );
     }
-    await connectDB();
-    const DBNomenclator = await RepresentativeNomenclator.findOne({
-      name: representativeNomenclator.name
-    });
+    // await connectDB();
+    // const DBNomenclator = await RepresentativeNomenclator.findOne({
+    //   name: representativeNomenclator.name
+    // });
 
-    // ? LOS NUMEROS DE LOS REPRESENTANTES SE CREAN DE FORMA CONSECUTIVA, DE NO EXISTIR REPRESENTANTES EL PRIMER NUMERO SERÁ 1 //
-    const representatives =
-      (await RepresentativeNomenclator.find()) as IRepresentativeNomenclator[];
-    let newId = 0;
-    if (representatives.length == 0) {
-      newId = 1;
-    } else {
-      newId = representatives.at(-1)?.idNumber! + 1;
-    }
+    // // ? LOS NUMEROS DE LOS REPRESENTANTES SE CREAN DE FORMA CONSECUTIVA, DE NO EXISTIR REPRESENTANTES EL PRIMER NUMERO SERÁ 1 //
+    // const representatives =
+    //   (await RepresentativeNomenclator.find()) as IRepresentativeNomenclator[];
+    // let newId = 0;
+    // if (representatives.length == 0) {
+    //   newId = 1;
+    // } else {
+    //   newId = representatives.at(-1)?.idNumber! + 1;
+    // }
 
-    if (DBNomenclator) {
+    const DBNomenclator = await db
+      .select()
+      .from(representativeNomenclators)
+      .where(eq(representativeNomenclators.name, representativeNomenclator.name));
+
+    if (DBNomenclator.length > 0) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Ya existe un nomenclador de representante con ese nombre"
+          message: "Ya existe un representante con ese nombre"
         },
         {
           status: 409
@@ -49,20 +53,25 @@ export async function POST(request: Request) {
       );
     }
 
-    let newKey = generateRandomString(26);
+    // const newRepresentativeNomenclator = new RepresentativeNomenclator({
+    //   ...representativeNomenclator,
+    //   idNumber: newId,
+    //   key: newKey
+    // });
 
-    const newRepresentativeNomenclator = new RepresentativeNomenclator({
-      ...representativeNomenclator,
-      idNumber: newId,
-      key: newKey
-    });
+    // await newRepresentativeNomenclator.save();
 
-    await newRepresentativeNomenclator.save();
+    const newRepresentativeNomenclator = await db
+      .insert(representativeNomenclators)
+      .values({
+        ...representativeNomenclator
+      })
+      .returning();
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        newRepresentativeNomenclator
+        data: newRepresentativeNomenclator
       }),
       {
         headers: {
@@ -88,7 +97,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -102,16 +111,42 @@ export async function GET(request: Request) {
         }
       );
     }
-    await connectDB();
-    const listOfRepresentativeNomenclators = (
-      await RepresentativeNomenclator.find()
-    ).reverse() as IRepresentativeNomenclator[];
+    // await connectDB();
+    // const listOfRepresentativeNomenclators = (await RepresentativeNomenclator.find()).reverse() as IRepresentativeNomenclator[];
+
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get("page") || "1", 10); // Default to page 1
+    const limit = parseInt(searchParams.get("limit") || "10", 10); // Default to 10 items per page
+
+    if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Parámetros de paginacion inválidos. 'page' y 'limit' deben ser mayor a 0."
+        },
+        {
+          status: 400
+        }
+      );
+    }
+
+    const offset = (page - 1) * limit;
+    const paginatedData = await db
+      .select()
+      .from(representativeNomenclators)
+      .orderBy(representativeNomenclators.name)
+      .limit(limit)
+      .offset(offset);
+    const totalCount = await db.$count(representativeNomenclators);
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        counter: listOfRepresentativeNomenclators.length,
-        listOfRepresentativeNomenclators
+        counter: paginatedData.length,
+        total: totalCount,
+        page,
+        limit,
+        data: paginatedData
       }),
       {
         headers: {
@@ -124,137 +159,6 @@ export async function GET(request: Request) {
   } catch (error) {
     if (error instanceof Error) {
       console.log("🚀 ~ GET ~ error:", error);
-      return NextResponse.json(
-        {
-          ok: false,
-          message: error.message
-        },
-        {
-          status: 500
-        }
-      );
-    }
-  }
-}
-
-export async function PUT(request: Request) {
-  const { ...representativeNomenclator }: IRepresentativeNomenclator = await request.json();
-  const accessToken = request.headers.get("accessToken");
-
-  try {
-    if (!accessToken || !verifyJWT(accessToken)) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-    await connectDB();
-    const nomenclatorToUpdate = await RepresentativeNomenclator.findById(
-      representativeNomenclator._id
-    );
-
-    if (!nomenclatorToUpdate) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "El nomenclador de representante a actualizar no existe"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    const updatedNomenclator = await RepresentativeNomenclator.findByIdAndUpdate(
-      representativeNomenclator._id,
-      {
-        ...representativeNomenclator
-      },
-      { new: true }
-    );
-
-    return new NextResponse(
-      JSON.stringify({
-        ok: true,
-        updatedNomenclator
-      }),
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        status: 200
-      }
-    );
-  } catch (error) {
-    if (error instanceof Error) {
-      console.log("🚀 ~ PUT ~ error:", error);
-      return NextResponse.json(
-        {
-          ok: false,
-          message: error.message
-        },
-        {
-          status: 500
-        }
-      );
-    }
-  }
-}
-
-export async function DELETE(request: NextRequest) {
-  const params = request.nextUrl.searchParams;
-  const accessToken = request.headers.get("accessToken");
-  try {
-    if (!accessToken || !verifyJWT(accessToken)) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-    await connectDB();
-    const nomenclatorToDelete = await RepresentativeNomenclator.findById(params.get("id"));
-
-    if (!nomenclatorToDelete) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "El nomenclador a borrar no existe"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    const deletedNomenclator = await RepresentativeNomenclator.findByIdAndDelete(params.get("id"));
-
-    return new NextResponse(
-      JSON.stringify({
-        ok: true,
-        deletedNomenclator
-      }),
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        status: 200
-      }
-    );
-  } catch (error) {
-    if (error instanceof Error) {
-      console.log("🚀 ~ DELETE ~ error:", error);
       return NextResponse.json(
         {
           ok: false,

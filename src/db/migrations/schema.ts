@@ -1,5 +1,6 @@
 import { pgTable, uuid, varchar, integer, numeric, serial, boolean, foreignKey, bigint, date, text } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
+import RepresentativeNomenclator from '@/models/nomenclators/representative';
 
 export const users = pgTable("users", {
   id: serial().primaryKey().notNull(),
@@ -21,11 +22,21 @@ export const materialCategoryNomenclators = pgTable("material_category_nomenclat
 
 export const clientNomenclators = pgTable("client_nomenclators", {
   idNumber: serial().primaryKey().notNull(), // Numero de cliente
-  name: varchar().notNull(),
+  name: varchar({ length: 255 }).notNull(),
   phoneNumber: numeric(),
-  contact: varchar(),
-  address: varchar(),
-  email: varchar()
+  contact: varchar({ length: 255 }),
+  address: varchar({ length: 255 }),
+  email: varchar({ length: 255 })
+});
+
+export const representativeNomenclators = pgTable("representative_nomenclators", {
+  idNumber: serial().primaryKey().notNull(), // Numero de representante
+  name: varchar({ length: 255 }).notNull(),
+  phoneNumber: varchar({ length: 255 }).notNull(),
+  percentage: integer().notNull(), // Porcentaje de representacion
+  contact: varchar({ length: 255 }),
+  address: varchar({ length: 255 }),
+  email: varchar({ length: 255 })
 });
 
 // export const projects = pgTable("projects", {
@@ -240,18 +251,7 @@ export const clientNomenclators = pgTable("client_nomenclators", {
 // 		}).onDelete("cascade"),
 // ]);
 
-// export const representativeNomenclators = pgTable("representative_nomenclators", {
-// 	id: serial().primaryKey().notNull(),
-// 	key: varchar({ length: 255 }).notNull(),
-// 	name: varchar({ length: 255 }).notNull(),
-// 	phonenumber: bigint({ mode: "number" }).notNull(),
-// 	idnumber: integer().notNull(),
-// 	percentage: integer().notNull(),
-// 	contactperson: varchar({ length: 255 }).notNull(),
-// 	address: varchar({ length: 255 }).notNull(),
-// 	email: varchar({ length: 255 }).notNull(),
-// 	version: integer().default(0),
-// });
+
 
 // export const materialNomenclators = pgTable("material_nomenclators", {
 // 	id: serial().primaryKey().notNull(),
@@ -296,4 +296,5 @@ export const clientNomenclators = pgTable("client_nomenclators", {
 export type User = typeof users.$inferSelect;
 export type MaterialCategoryNomenclators = typeof materialCategoryNomenclators.$inferSelect;
 export type ClientNomenclator = typeof clientNomenclators.$inferSelect;
+export type RepresentativeNomenclator = typeof representativeNomenclators.$inferSelect;
 

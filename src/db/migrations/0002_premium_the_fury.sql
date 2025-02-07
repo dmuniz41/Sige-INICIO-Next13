@@ -1,0 +1,1 @@
+ALTER TABLE "representative_nomenclators" ALTER COLUMN "phoneNumber" SET DATA TYPE varchar(255);

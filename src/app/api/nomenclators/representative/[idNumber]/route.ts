@@ -2,13 +2,13 @@ import { db } from "@/db/drizzle";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
-import { clientNomenclators } from "@/db/migrations/schema";
+import { representativeNomenclators } from "@/db/migrations/schema";
+import { UpdateRepresentativeNomenclator } from "@/types/DTOs/nomenclators/representative";
 import { verifyJWT } from "@/libs/jwt";
-import { UpdateClientNomenclator } from "@/types/DTOs/nomenclators/client";
 
 export async function PUT(request: NextRequest, { params }: { params: { idNumber: number } }) {
   const idNumber = params.idNumber;
-  const { ...clientNomenclator }: UpdateClientNomenclator = await request.json();
+  const { ...representativeNomenclator }: UpdateRepresentativeNomenclator = await request.json();
   const accessToken = request.headers.get("accessToken");
 
   try {
@@ -24,15 +24,15 @@ export async function PUT(request: NextRequest, { params }: { params: { idNumber
       );
     }
     // await connectDB();
-    // const nomenclatorToUpdate = await ClientNomenclator.findById(clientNomenclator._id);
+    // const nomenclatorToUpdate = await RepresentativeNomenclator.findById(representativeNomenclator._id);
 
-    const nomenclatorToUpdate = await db.select().from(clientNomenclators).where(eq(clientNomenclators.idNumber, idNumber));
+    const nomenclatorToUpdate = await db.select().from(representativeNomenclators).where(eq(representativeNomenclators.idNumber, idNumber));
 
     if (nomenclatorToUpdate.length === 0) {
       return NextResponse.json(
         {
           ok: false,
-          message: "El nomenclador de cliente a actualizar no existe"
+          message: "El representante a actualizar no existe"
         },
         {
           status: 404
@@ -40,18 +40,18 @@ export async function PUT(request: NextRequest, { params }: { params: { idNumber
       );
     }
 
-    // const updatedNomenclator = await ClientNomenclator.findByIdAndUpdate(
-    //   clientNomenclator._id,
+    // const updatedNomenclator = await RepresentativeNomenclator.findByIdAndUpdate(
+    //   representativeNomenclator._id,
     //   {
-    //     ...clientNomenclator
+    //     ...representativeNomenclator
     //   },
     //   { new: true }
     // );
 
     const updatedNomenclator = await db
-      .update(clientNomenclators)
-      .set(clientNomenclator)
-      .where(eq(clientNomenclators.idNumber, idNumber))
+      .update(representativeNomenclators)
+      .set(representativeNomenclator)
+      .where(eq(representativeNomenclators.idNumber, idNumber))
       .returning();
 
     return new NextResponse(
@@ -99,14 +99,15 @@ export async function DELETE(request: NextRequest, { params }: { params: { idNum
       );
     }
     // await connectDB();
-    // const nomenclatorToDelete = await ClientNomenclator.findById(params.get("id"));
-    const nomenclatorToDelete = await db.select().from(clientNomenclators).where(eq(clientNomenclators.idNumber, idNumber));
+    // const nomenclatorToDelete = await RepresentativeNomenclator.findById(params.get("id"));
 
-    if (nomenclatorToDelete.length === 0) {
+    const nomenclatorToUpdate = await db.select().from(representativeNomenclators).where(eq(representativeNomenclators.idNumber, idNumber));
+
+    if (nomenclatorToUpdate.length === 0) {
       return NextResponse.json(
         {
           ok: false,
-          message: "El nomenclador de cliente a borrar no existe"
+          message: "El representante a eliminar no existe"
         },
         {
           status: 404
@@ -114,8 +115,9 @@ export async function DELETE(request: NextRequest, { params }: { params: { idNum
       );
     }
 
-    // const deletedNomenclator = await ClientNomenclator.findByIdAndDelete(params.get("id"));
-    const deletedNomenclator = await db.delete(clientNomenclators).where(eq(clientNomenclators.idNumber, idNumber));
+    // const deletedNomenclator = await RepresentativeNomenclator.findByIdAndDelete(params.get("id"));
+
+    const deletedNomenclator = await db.delete(representativeNomenclators).where(eq(representativeNomenclators.idNumber, idNumber));
 
     return new NextResponse(
       JSON.stringify({
@@ -162,13 +164,13 @@ export async function GET(request: NextRequest, { params }: { params: { idNumber
       );
     }
 
-    const DBClientNomenclator = await db.select().from(clientNomenclators).where(eq(clientNomenclators.idNumber, idNumber));
+    const DBClientNomenclator = await db.select().from(representativeNomenclators).where(eq(representativeNomenclators.idNumber, idNumber));
 
     if (DBClientNomenclator.length === 0) {
       return NextResponse.json(
         {
           ok: false,
-          message: `No existe el cliente con el numero de cliente: ${idNumber}`
+          message: `No existe el representante con el número de representante: ${idNumber}`
         },
         {
           status: 404
@@ -204,3 +206,4 @@ export async function GET(request: NextRequest, { params }: { params: { idNumber
     }
   }
 }
+

@@ -4,7 +4,7 @@ import { db } from "@/db/drizzle";
 
 import { verifyJWT } from "@/libs/jwt";
 import { clientNomenclators } from "@/db/migrations/schema";
-import { InsertClientNomenclator } from "@/types/DTOs/nomenclators/clientNomenclator";
+import { InsertClientNomenclator } from "@/types/DTOs/nomenclators/client";
 
 export async function POST(request: NextRequest) {
   const { ...clientNomenclator }: InsertClientNomenclator = await request.json();
