@@ -5,8 +5,11 @@ import { db } from "@/db/drizzle";
 import { InsertRepresentativeNomenclator } from "@/types/DTOs/nomenclators/representative";
 import { representativeNomenclators } from "@/db/migrations/schema";
 import { verifyJWT } from "@/libs/jwt";
+import logger from "@/utils/logger";
 
 export async function POST(request: NextRequest) {
+  logger.info("Listar Representantes", { method: request.method, url: request.url });
+  
   const { ...representativeNomenclator }: InsertRepresentativeNomenclator = await request.json();
   const accessToken = request.headers.get("accessToken");
   try {
@@ -83,7 +86,12 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ POST ~ error:", error);
+      logger.error("Error al crear representante", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api",
+        method: "GET"
+      });
       return NextResponse.json(
         {
           ok: false,
@@ -98,6 +106,8 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  logger.info("Listar Representantes", { method: request.method, url: request.url });
+
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -158,7 +168,12 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ GET ~ error:", error);
+      logger.error("Error al obtener representantes", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api",
+        method: "GET"
+      });
       return NextResponse.json(
         {
           ok: false,

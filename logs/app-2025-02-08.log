@@ -1,0 +1,7 @@
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-02-08 09:07:35","url":"http://localhost:3000/api/nomenclators/representative?page=1&limit=10"}
+undefined
+info: Request received {"method":"GET","timestamp":"2025-02-08 09:11:36","url":"http://localhost:3000/api/nomenclators/representative?page=1&limit=10"}
+2025-02-08 09:13:48 info: Request received 
+2025-02-08 09:22:57 [INFO] Listar Representantes {"method":"GET","url":"http://localhost:3000/api/nomenclators/representative?page=1&limit=10"}
+2025-02-08 09:28:56 [INFO] Listar Representantes {"method":"GET","url":"http://localhost:3000/api/nomenclators/representative?page=1&limit=10"}
+2025-02-08 09:28:56 [ERROR] An error occurred in the API route {"error":"error.message","stack":"error.stack","route":"/api","method":"GET"}
