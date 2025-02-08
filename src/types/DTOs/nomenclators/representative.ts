@@ -8,10 +8,11 @@ export type InsertRepresentativeNomenclator = {
 };
 
 export type UpdateRepresentativeNomenclator = {
+  idNumber: number;
   name: string;
   address: string | null;
   email: string | null;
-  phoneNumber: string
+  phoneNumber: string;
   contact: string | null;
   percentage: number;
 };
