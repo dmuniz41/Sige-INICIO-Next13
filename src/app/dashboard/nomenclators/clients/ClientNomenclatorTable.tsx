@@ -219,7 +219,7 @@ const ClientNomenclatorsTable: React.FC = () => {
   if (isLoading)
     return (
       <section className="flex h-full w-full items-center justify-center">
-        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 70, color: "#ff8533" }} spin />}/>
       </section>
     );
 

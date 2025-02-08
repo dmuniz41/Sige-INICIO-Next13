@@ -51,8 +51,8 @@ const RepresentativeNomenclatorsTable: React.FC = () => {
 
   const handleDelete = (idNumber: number) => {
     Swal.fire({
-      title: "Eliminar Nomenclador",
-      text: "El nomenclador seleccionado se borrará de forma permanente",
+      title: "Eliminar Representante",
+      text: "El representante seleccionado se borrará de forma permanente",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -223,7 +223,7 @@ const RepresentativeNomenclatorsTable: React.FC = () => {
   if (isLoading)
     return (
       <section className="flex h-full w-full items-center justify-center">
-        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 70, color: "#ff8533" }} spin />}/>
       </section>
     );
 
