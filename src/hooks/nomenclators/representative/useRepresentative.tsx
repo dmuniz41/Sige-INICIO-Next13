@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 
 const getRepresentativesAPI = async (page: number = 1, limit: number = 10) => {
   const token = localStorage.getItem("accessToken");
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/Representative?page=${page}&limit=${limit}`, {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/representative?page=${page}&limit=${limit}`, {
     headers: { accessToken: token }
   });
   return response.data;
@@ -15,7 +15,7 @@ const getRepresentativesAPI = async (page: number = 1, limit: number = 10) => {
 
 const getRepresentativePerIdNumberAPI = async (idNumber: number) => {
   const token = localStorage.getItem("accessToken");
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/Representative/${idNumber}`, {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/representative/${idNumber}`, {
     headers: { accessToken: token }
   });
   return response.data;
@@ -24,7 +24,7 @@ const getRepresentativePerIdNumberAPI = async (idNumber: number) => {
 const createRepresentativeAPI = async (values: InsertRepresentativeNomenclator) => {
   const token = localStorage.getItem("accessToken");
   const response = await axios.post(
-    `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/Representative`,
+    `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/representative`,
     { ...values },
     { headers: { accessToken: token } }
   );
@@ -34,7 +34,7 @@ const createRepresentativeAPI = async (values: InsertRepresentativeNomenclator) 
 const updateRepresentativeAPI = async (values: UpdateRepresentativeNomenclator) => {
   const token = localStorage.getItem("accessToken");
   const response = await axios.put(
-    `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/Representative/${values.idNumber}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/representative/${values.idNumber}`,
     { ...values },
     { headers: { accessToken: token } }
   );
@@ -43,7 +43,7 @@ const updateRepresentativeAPI = async (values: UpdateRepresentativeNomenclator) 
 
 const deleteRepresentativeAPI = async (idNumber: number) => {
   const token = localStorage.getItem("accessToken");
-  const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/Representative/${idNumber}`, {
+  const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/representative/${idNumber}`, {
     headers: { accessToken: token }
   });
   return response.data;

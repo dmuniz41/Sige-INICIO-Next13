@@ -22,6 +22,10 @@ import { useQueryClient } from "@tanstack/react-query";
 type DataIndex = keyof ClientNomenclator;
 
 const ClientNomenclatorsTable: React.FC = () => {
+  const { data: sessionData } = useSession();
+  const queryClient = useQueryClient();
+  const searchInput = useRef<InputRef>(null);
+  
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -29,9 +33,6 @@ const ClientNomenclatorsTable: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const [selectedNomenclator, setSelectedNomenclator] = useState<ClientNomenclator>();
-  const { data: sessionData } = useSession();
-  const queryClient = useQueryClient();
-  const searchInput = useRef<InputRef>(null);
 
   const { useGetClients, useDeleteClient } = useClient();
   const deleteMutation = useDeleteClient();
@@ -256,7 +257,11 @@ const ClientNomenclatorsTable: React.FC = () => {
         size="small"
         columns={columns}
         dataSource={clientsQuery.data}
-        pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
+        pagination={{ position: ["bottomCenter"], defaultPageSize: 10 }}
+        onChange={(pagination) => {
+          setPage(pagination?.current ?? 1);
+          setLimit(pagination?.pageSize ?? 10);
+        }}
         className="shadow-md"
         rowKey={(record) => record.idNumber}
       />

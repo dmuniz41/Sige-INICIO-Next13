@@ -1,20 +1,19 @@
 "use client";
+import { Form, Input, InputNumber, Modal, Tooltip } from "antd";
 
-import { IRepresentativeNomenclator } from "@/models/nomenclators/representative";
-import { Form, Input, InputNumber, Modal } from "antd";
+import { InfoCircleSvg } from "@/app/global/InfoCircleSvg";
+import { useRepresentative } from "@/hooks/nomenclators/representative/useRepresentative";
 
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: IRepresentativeNomenclator) => void;
   onCancel: () => void;
 }
 
-export const CreateRepresentativeNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel
-}) => {
+export const CreateRepresentativeNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel }) => {
   const [form] = Form.useForm();
+
+  const { useCreateRepresentative } = useRepresentative();
+  const mutation = useCreateRepresentative();
   return (
     <Modal
       className="flex flex-col"
@@ -44,8 +43,9 @@ export const CreateRepresentativeNomenclatorForm: React.FC<CollectionCreateFormP
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate(values);
+                  mutation.mutate(values);
                   form.resetFields();
+                  onCancel();
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -58,29 +58,30 @@ export const CreateRepresentativeNomenclatorForm: React.FC<CollectionCreateFormP
       ]}
     >
       <Form form={form} layout="vertical" name="createRepresentativeNomenclator" size="middle">
-        <Form.Item
-          name="name"
-          label="Nombre"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="name" label="Nombre" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item
-          name="contactPerson"
-          label="Persona de Contacto"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="contact" label="Persona de Contacto" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item
-          name="percentage"
-          label="Representación (%)"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
-          <InputNumber min={0} className="w-full" />
+        <Form.Item name="percentage" label="Representación (%)" rules={[{ required: true, message: "Campo requerido" }]}>
+          <InputNumber min={0} />
         </Form.Item>
-        <Form.Item name="phoneNumber" label=" Teléfono">
-          <InputNumber min={0} className="w-full" />
+        <Form.Item
+          name="phoneNumber"
+          label={
+            <Tooltip
+              placement="top"
+              title={"Si hay mas de un teléfono introducirlos separados por comas"}
+            >
+              <div className="flex w-fit gap-2 items-center">
+                <span>Teléfono</span>
+                <InfoCircleSvg width={20} height={20} />
+              </div>
+            </Tooltip>
+          }
+        >
+          <Input className="w-full" />
         </Form.Item>
         <Form.Item name="address" label="Domicilio Legal" rules={[{ required: false }]}>
           <Input />
