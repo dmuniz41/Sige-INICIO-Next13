@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { db } from "@/db/drizzle";
 import { eq } from "drizzle-orm";
 import { materialCategoryNomenclators } from "@/db/migrations/schema";
 import { verifyJWT } from "@/libs/jwt";
+import logger from "@/utils/logger";
 
 export async function DELETE(request: NextRequest, { params }: { params: { code: string } }) {
   const code = params.code;
@@ -20,6 +22,10 @@ export async function DELETE(request: NextRequest, { params }: { params: { code:
         }
       );
     }
+
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Eliminar Categoria de Material", { method: request.method, url: request.url, user: decoded.userName });
+    
     // await connectDB();
     // const nomenclatorToDelete = await MaterialNomenclator.findById(params.get("id"));
 
@@ -57,7 +63,12 @@ export async function DELETE(request: NextRequest, { params }: { params: { code:
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ DELETE ~ error:", error);
+      logger.error("Error al eliminar categoria de material", { 
+        error: error.message,
+        stack: error.stack,
+        route: "/api/nomenclators/material/[code]",
+        method: "DELETE"
+      });
       return NextResponse.json(
         {
           ok: false,
@@ -86,6 +97,9 @@ export async function GET(request: NextRequest, { params }: { params: { code: st
         }
       );
     }
+
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Obtener Categoria de Material por Code", { method: request.method, url: request.url, user: decoded.userName });
 
     const DBMaterialCategoryNomenclator = await db
       .select()
@@ -119,7 +133,12 @@ export async function GET(request: NextRequest, { params }: { params: { code: st
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ GET ~ error:", error);
+      logger.error("Error al obtener categoria de material", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/nomenclators/material/[code]",
+        method: "GET"
+      });
       return NextResponse.json(
         {
           ok: false,

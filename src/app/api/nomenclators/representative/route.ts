@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { db } from "@/db/drizzle";
 import { InsertRepresentativeNomenclator } from "@/types/DTOs/nomenclators/representative";
@@ -8,8 +9,6 @@ import { verifyJWT } from "@/libs/jwt";
 import logger from "@/utils/logger";
 
 export async function POST(request: NextRequest) {
-  logger.info("Listar Representantes", { method: request.method, url: request.url });
-  
   const { ...representativeNomenclator }: InsertRepresentativeNomenclator = await request.json();
   const accessToken = request.headers.get("accessToken");
   try {
@@ -24,6 +23,9 @@ export async function POST(request: NextRequest) {
         }
       );
     }
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Crear Representante", { method: request.method, url: request.url, user: decoded.userName });
+  
     // await connectDB();
     // const DBNomenclator = await RepresentativeNomenclator.findOne({
     //   name: representativeNomenclator.name
@@ -89,8 +91,8 @@ export async function POST(request: NextRequest) {
       logger.error("Error al crear representante", {
         error: error.message,
         stack: error.stack,
-        route: "/api",
-        method: "GET"
+        route: "/api/nomenclators/representative",
+        method: "POST"
       });
       return NextResponse.json(
         {
@@ -106,8 +108,6 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  logger.info("Listar Representantes", { method: request.method, url: request.url });
-
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -121,6 +121,9 @@ export async function GET(request: NextRequest) {
         }
       );
     }
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Listar Representantes", { method: request.method, url: request.url, user:decoded.userName });
+
     // await connectDB();
     // const listOfRepresentativeNomenclators = (await RepresentativeNomenclator.find()).reverse() as IRepresentativeNomenclator[];
 
@@ -171,7 +174,7 @@ export async function GET(request: NextRequest) {
       logger.error("Error al obtener representantes", {
         error: error.message,
         stack: error.stack,
-        route: "/api",
+        route: "/api/nomenclators/representative",
         method: "GET"
       });
       return NextResponse.json(

@@ -1,10 +1,12 @@
 import { db } from "@/db/drizzle";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { representativeNomenclators } from "@/db/migrations/schema";
 import { UpdateRepresentativeNomenclator } from "@/types/DTOs/nomenclators/representative";
 import { verifyJWT } from "@/libs/jwt";
+import logger from "@/utils/logger";
 
 export async function PUT(request: NextRequest, { params }: { params: { idNumber: number } }) {
   const idNumber = params.idNumber;
@@ -23,6 +25,9 @@ export async function PUT(request: NextRequest, { params }: { params: { idNumber
         }
       );
     }
+
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Actualizar Representante", { method: request.method, url: request.url, user: decoded.userName });
     // await connectDB();
     // const nomenclatorToUpdate = await RepresentativeNomenclator.findById(representativeNomenclator._id);
 
@@ -69,7 +74,12 @@ export async function PUT(request: NextRequest, { params }: { params: { idNumber
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ PUT ~ error:", error);
+      logger.error("Error al actualizar representante", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/nomenclators/representative/[idNumber]",
+        method: "PUT"
+      });
       return NextResponse.json(
         {
           ok: false,
@@ -98,6 +108,9 @@ export async function DELETE(request: NextRequest, { params }: { params: { idNum
         }
       );
     }
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Eliminar Representante", { method: request.method, url: request.url, user: decoded.userName });
+    
     // await connectDB();
     // const nomenclatorToDelete = await RepresentativeNomenclator.findById(params.get("id"));
 
@@ -134,7 +147,12 @@ export async function DELETE(request: NextRequest, { params }: { params: { idNum
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ DELETE ~ error:", error);
+      logger.error("Error al eliminar representante", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/nomenclators/representative/[idNumber]",
+        method: "DELETE"
+      });
       return NextResponse.json(
         {
           ok: false,
@@ -163,6 +181,8 @@ export async function GET(request: NextRequest, { params }: { params: { idNumber
         }
       );
     }
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Obtener Representante por IdNumber", { method: request.method, url: request.url, user: decoded.userName });
 
     const DBClientNomenclator = await db.select().from(representativeNomenclators).where(eq(representativeNomenclators.idNumber, idNumber));
 
@@ -193,7 +213,12 @@ export async function GET(request: NextRequest, { params }: { params: { idNumber
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ GET ~ error:", error);
+      logger.error("Error al obtener representante", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/nomenclators/representative/[idNumber]",
+        method: "GET"
+      });
       return NextResponse.json(
         {
           ok: false,
@@ -206,4 +231,3 @@ export async function GET(request: NextRequest, { params }: { params: { idNumber
     }
   }
 }
-

@@ -1,10 +1,12 @@
 import { db } from "@/db/drizzle";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { clientNomenclators } from "@/db/migrations/schema";
-import { verifyJWT } from "@/libs/jwt";
 import { UpdateClientNomenclator } from "@/types/DTOs/nomenclators/client";
+import { verifyJWT } from "@/libs/jwt";
+import logger from "@/utils/logger";
 
 export async function PUT(request: NextRequest, { params }: { params: { idNumber: number } }) {
   const idNumber = params.idNumber;
@@ -23,6 +25,9 @@ export async function PUT(request: NextRequest, { params }: { params: { idNumber
         }
       );
     }
+
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Actualizar Cliente", { method: request.method, url: request.url, user: decoded.userName });
     // await connectDB();
     // const nomenclatorToUpdate = await ClientNomenclator.findById(clientNomenclator._id);
 
@@ -69,7 +74,12 @@ export async function PUT(request: NextRequest, { params }: { params: { idNumber
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ PUT ~ error:", error);
+      logger.error("Error al actualizar cliente", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/nomenclators/client/[idNumber]",
+        method: "PUT"
+      });
       return NextResponse.json(
         {
           ok: false,
@@ -98,6 +108,10 @@ export async function DELETE(request: NextRequest, { params }: { params: { idNum
         }
       );
     }
+
+
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Eliminar Cliente", { method: request.method, url: request.url, user: decoded.userName });
     // await connectDB();
     // const nomenclatorToDelete = await ClientNomenclator.findById(params.get("id"));
     const nomenclatorToDelete = await db.select().from(clientNomenclators).where(eq(clientNomenclators.idNumber, idNumber));
@@ -132,7 +146,12 @@ export async function DELETE(request: NextRequest, { params }: { params: { idNum
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ DELETE ~ error:", error);
+      logger.error("Error al eliminar cliente", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/nomenclators/client/[idNumber]",
+        method: "DELETE"
+      });
       return NextResponse.json(
         {
           ok: false,
@@ -161,6 +180,9 @@ export async function GET(request: NextRequest, { params }: { params: { idNumber
         }
       );
     }
+
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Obtener Cliente por IdNumber", { method: request.method, url: request.url, user: decoded.userName });
 
     const DBClientNomenclator = await db.select().from(clientNomenclators).where(eq(clientNomenclators.idNumber, idNumber));
 
@@ -191,7 +213,12 @@ export async function GET(request: NextRequest, { params }: { params: { idNumber
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ GET ~ error:", error);
+      logger.error("Error al obtener cliente", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/nomenclators/client/[idNumber]",
+        method: "GET"
+      });
       return NextResponse.json(
         {
           ok: false,

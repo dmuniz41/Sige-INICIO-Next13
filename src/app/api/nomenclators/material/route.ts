@@ -1,10 +1,12 @@
 import { db } from "@/db/drizzle";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
+import { generateAlphanumericCode } from "@/helpers/generateAlphanumericCode";
 import { materialCategoryNomenclators, MaterialCategoryNomenclators } from "@/db/migrations/schema";
 import { verifyJWT } from "@/libs/jwt";
-import { generateAlphanumericCode } from "@/helpers/generateAlphanumericCode";
+import logger from "@/utils/logger";
 
 export async function POST(request: NextRequest) {
   const { ...requestData }: MaterialCategoryNomenclators = await request.json();
@@ -21,6 +23,9 @@ export async function POST(request: NextRequest) {
         }
       );
     }
+
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Crear Categoria de Material", { method: request.method, url: request.url, user: decoded.userName });
     // await connectDB();
     // const DBNomenclator = await MaterialNomenclator.findOne({
     //   name: materialNomenclator.name
@@ -77,7 +82,12 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ POST ~ error:", error);
+      logger.error("Error al listar categorias de material", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/nomenclators/material",
+        method: "POST"
+      });
       return NextResponse.json(
         {
           ok: false,
@@ -107,6 +117,9 @@ export async function PUT(request: Request) {
         }
       );
     }
+
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Actualizar Categoria de Material", { method: request.method, url: request.url, user: decoded.userName });
     // await connectDB();
     // const nomenclatorToUpdate = await MaterialNomenclator.findById(materialNomenclator._id);
 
@@ -174,7 +187,12 @@ export async function PUT(request: Request) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ PUT ~ error:", error);
+      logger.error("Error al listar categorias de material", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/nomenclators/material",
+        method: "PUT"
+      });
       return NextResponse.json(
         {
           ok: false,
@@ -202,6 +220,9 @@ export async function GET(request: NextRequest) {
         }
       );
     }
+
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Listar Categorias de Material", { method: request.method, url: request.url, user: decoded.userName });
 
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1", 10); // Default to page 1
@@ -250,7 +271,12 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ GET ~ error:", error);
+      logger.error("Error al listar categorias de material", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/nomenclators/material",
+        method: "GET"
+      });
       return NextResponse.json(
         {
           ok: false,

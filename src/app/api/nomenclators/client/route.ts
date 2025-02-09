@@ -1,10 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
 import { db } from "@/db/drizzle";
+import { eq } from "drizzle-orm";
+import { NextRequest, NextResponse } from "next/server";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { verifyJWT } from "@/libs/jwt";
 import { clientNomenclators } from "@/db/migrations/schema";
 import { InsertClientNomenclator } from "@/types/DTOs/nomenclators/client";
+import logger from "@/utils/logger";
 
 export async function POST(request: NextRequest) {
   const { ...clientNomenclator }: InsertClientNomenclator = await request.json();
@@ -21,6 +23,9 @@ export async function POST(request: NextRequest) {
         }
       );
     }
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Crear Cliente", { method: request.method, url: request.url, user: decoded.userName });
+
     // await connectDB();
     // const DBNomenclator = await ClientNomenclator.findOne({
     //   name: clientNomenclator.name
@@ -79,7 +84,12 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ POST ~ error:", error);
+      logger.error("Error al crear cliente", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/nomenclators/client",
+        method: "POST"
+      });
       return NextResponse.json(
         {
           ok: false,
@@ -107,6 +117,8 @@ export async function GET(request: NextRequest) {
         }
       );
     }
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Listar Clientes", { method: request.method, url: request.url, user: decoded.userName });
 
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1", 10); // Default to page 1
@@ -149,7 +161,12 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ GET ~ error:", error);
+      logger.error("Error al listar clientes", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/nomenclators/client",
+        method: "GET"
+      });
       return NextResponse.json(
         {
           ok: false,
@@ -162,4 +179,3 @@ export async function GET(request: NextRequest) {
     }
   }
 }
-
