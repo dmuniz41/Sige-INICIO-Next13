@@ -1,8 +1,11 @@
+import { eq } from "drizzle-orm";
+import { NextRequest, NextResponse } from "next/server";
+import jwt, { JwtPayload } from "jsonwebtoken";
+
 import { db } from "@/db/drizzle";
 import { users } from "@/db/migrations/schema";
 import { verifyJWT } from "@/libs/jwt";
-import { eq } from "drizzle-orm";
-import { NextRequest, NextResponse } from "next/server";
+import logger from "@/utils/logger";
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: number } }) {
   const id = params.id;
@@ -20,13 +23,13 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: n
         }
       );
     }
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Eliminar Usuario", { method: request.method, url: request.url, user: decoded.userName });
+
     // await connectDB();
     // const userToDelete = await User.findById(params.get("id"));
 
-    const userToDelete = await db
-      .select()
-      .from(users)
-      .where(eq(users.id, id));
+    const userToDelete = await db.select().from(users).where(eq(users.id, id));
 
     if (userToDelete.length === 0) {
       return NextResponse.json(
@@ -57,7 +60,12 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: n
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ DELETE ~ error:", error);
+      logger.error("Error al eliminar usuario", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/user/[id]",
+        method: "DELETE"
+      });
       return NextResponse.json(
         {
           ok: false,

@@ -1,13 +1,14 @@
+import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
-import { IUser } from "@/models/user";
-// import { connectDB } from "@/libs/mongodb";
-import { verifyJWT } from "@/libs/jwt";
-import { generateRandomString } from "@/helpers/randomStrings";
 import { db } from "@/db/drizzle";
+import { generateRandomString } from "@/helpers/randomStrings";
+import { IUser } from "@/models/user";
 import { User, users } from "@/db/migrations/schema";
-import { eq } from "drizzle-orm";
+import { verifyJWT } from "@/libs/jwt";
+import logger from "@/utils/logger";
 
 export async function POST(request: NextRequest) {
   const { ...user }: IUser = await request.json();
@@ -24,6 +25,9 @@ export async function POST(request: NextRequest) {
         }
       );
     }
+
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Crear Usuario", { method: request.method, url: request.url, user: decoded.userName });
 
     if (!user.password || user.password.length < 6) {
       return NextResponse.json(
@@ -99,7 +103,12 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ POST ~ error:", error);
+      logger.error("Error al crear usuario", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/user",
+        method: "POST"
+      });
       return NextResponse.json(
         {
           ok: false,
@@ -128,6 +137,9 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Listar Usuarios", { method: request.method, url: request.url, user: decoded.userName });
+
     // await connectDB();
     // const listOfUsers = (await User.find()).reverse();
 
@@ -147,7 +159,12 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ GET ~ error:", error);
+      logger.error("Error al listar usuarios", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/user",
+        method: "GET"
+      });
       return NextResponse.json(
         {
           ok: false,
@@ -177,6 +194,10 @@ export async function PUT(request: NextRequest) {
         }
       );
     }
+
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Actualizar Usuario", { method: request.method, url: request.url, user: decoded.userName });
+
     // await connectDB();
     // const userToUpdate = await User.findById(user._id);
 
@@ -212,7 +233,12 @@ export async function PUT(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      console.log("🚀 ~ PUT ~ error:", error);
+      logger.error("Error al actualizar usuario", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/user",
+        method: "PUT"
+      });
       return NextResponse.json(
         {
           ok: false,
