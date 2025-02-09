@@ -1,16 +1,18 @@
-import { and, eq } from "drizzle-orm";
+import {eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-import { CreateNomenclator } from "@/types/DTOs/nomenclators/nomenclators";
 import { db } from "@/db/drizzle";
 import { nomenclators } from "@/db/migrations/schema";
+import { UpdateNomenclator } from "@/types/DTOs/nomenclators/nomenclators";
 import { verifyJWT } from "@/libs/jwt";
 import logger from "@/utils/logger";
 
-export async function POST(request: NextRequest) {
-  const { ...nomenclator }: CreateNomenclator = await request.json();
+export async function PUT(request: NextRequest, { params }: { params: { id: number } }) {
+  const id = params.id;
+  const { ...nomenclator }: UpdateNomenclator = await request.json();
   const accessToken = request.headers.get("accessToken");
+
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(
@@ -25,124 +27,32 @@ export async function POST(request: NextRequest) {
     }
 
     const decoded = jwt.decode(accessToken) as JwtPayload;
-    logger.info("Crear Nomenclador", { method: request.method, url: request.url, user: decoded.userName });
-
+    logger.info("Actualizar Nomenclador", { method: request.method, url: request.url, user: decoded.userName });
     // await connectDB();
-    // let DBNomenclator = await Nomenclator.findOne({ category, code });
+    // const nomenclatorToUpdate = await Nomenclator.findById(id);
 
-    const DBNomenclator = await db
-      .select()
-      .from(nomenclators)
-      .where(and(eq(nomenclators.category, nomenclator.category), eq(nomenclators.value, nomenclator.value)));
+    const nomenclatorToUpdate = await db.select().from(nomenclators).where(eq(nomenclators.id, id));
 
-    if (DBNomenclator.length > 0) {
+    if (nomenclatorToUpdate.length === 0) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Ya existe un nomenclador en esa categoría con ese código"
+          message: "El nomenclador a actualizar no existe"
         },
         {
-          status: 409
+          status: 404
         }
       );
     }
 
-    // const newNomenclator = new Nomenclator({
-    //   key: newKey,
-    //   code,
-    //   category
-    // });
+    // const updatedNomenclator = await Nomenclator.findByIdAndUpdate(id, { code, category }, { new: true });
 
-    // await newNomenclator.save();
-
-    const newNomenclator = await db
-      .insert(nomenclators)
-      .values({ ...nomenclator })
-      .returning();
+    const updatedNomenclator = await db.update(nomenclators).set(nomenclator).where(eq(nomenclators.id, id)).returning();
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        data: newNomenclator
-      }),
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        status: 200
-      }
-    );
-  } catch (error) {
-    if (error instanceof Error) {
-      logger.error("Error al crear nomenclador", {
-        error: error.message,
-        stack: error.stack,
-        route: "/api/nomenclators",
-        method: "POST"
-      });
-      return NextResponse.json(
-        {
-          ok: false,
-          message: error.message
-        },
-        {
-          status: 500
-        }
-      );
-    }
-  }
-}
-
-export async function GET(request: NextRequest) {
-  const accessToken = request.headers.get("accessToken");
-  try {
-    if (!accessToken || !verifyJWT(accessToken)) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    const decoded = jwt.decode(accessToken) as JwtPayload;
-    logger.info("Listar Nomencladores", { method: request.method, url: request.url, user: decoded.userName });
-
-    // await connectDB();
-    // const listOfNomenclators = (await Nomenclator.find()).reverse();
-
-    const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get("page") || "1", 10); // Default to page 1
-    const limit = parseInt(searchParams.get("limit") || "10", 10); // Default to 10 items per page
-
-    if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "Parámetros de paginacion inválidos. 'page' y 'limit' deben ser mayor a 0."
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const offset = (page - 1) * limit;
-    const paginatedData = await db.select().from(nomenclators).orderBy(nomenclators.category).limit(limit).offset(offset);
-    const totalCount = await db.$count(nomenclators);
-
-    return new NextResponse(
-      JSON.stringify({
-        ok: true,
-        counter: paginatedData.length,
-        total: totalCount,
-        page,
-        limit,
-        data: paginatedData
+        data: updatedNomenclator
       }),
       {
         headers: {
@@ -157,8 +67,81 @@ export async function GET(request: NextRequest) {
       logger.error("Error al listar nomencladores", {
         error: error.message,
         stack: error.stack,
-        route: "/api/nomenclators",
-        method: "GET"
+        route: "/api/nomenclators/[id]",
+        method: "PUT"
+      });
+      return NextResponse.json(
+        {
+          ok: false,
+          message: error.message
+        },
+        {
+          status: 500
+        }
+      );
+    }
+  }
+}
+
+export async function DELETE(request: NextRequest, { params }: { params: { id: number } }) {
+  const id = params.id;
+  const accessToken = request.headers.get("accessToken");
+  try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
+        },
+        {
+          status: 401
+        }
+      );
+    }
+
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Eliminar Nomenclador", { method: request.method, url: request.url, user: decoded.userName });
+
+    // await connectDB();
+    // const nomenclatorToDelete = await Nomenclator.findById(params.get("id"));
+
+    const nomenclatorToDelete = await db.select().from(nomenclators).where(eq(nomenclators.id, id));
+
+    if (nomenclatorToDelete.length === 0) {
+      return NextResponse.json(
+        {
+          ok: true,
+          message: "El nomenclador a borrar no existe"
+        },
+        {
+          status: 404
+        }
+      );
+    }
+
+    // const deletedNomenclator = await Nomenclator.findByIdAndDelete(params.get("id"));
+    const deletedNomenclator = await db.delete(nomenclators).where(eq(nomenclators.id, id));
+
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        data: deletedNomenclator
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        status: 200
+      }
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      logger.error("Error al eliminar nomenclador", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/nomenclators/[id]",
+        method: "DELETE"
       });
       return NextResponse.json(
         {

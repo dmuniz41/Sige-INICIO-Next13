@@ -1,0 +1,1 @@
+ALTER TABLE "nomenclators" ADD COLUMN "categoryCode" varchar NOT NULL;

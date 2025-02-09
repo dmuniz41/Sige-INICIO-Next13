@@ -1,6 +1,4 @@
-import { pgTable, uuid, varchar, integer, numeric, serial, boolean, foreignKey, bigint, date, text } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
-import RepresentativeNomenclator from '@/models/nomenclators/representative';
+import { pgTable, varchar, integer, numeric, serial, boolean } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: serial().primaryKey().notNull(),
@@ -15,9 +13,16 @@ export const users = pgTable("users", {
 
 export const materialCategoryNomenclators = pgTable("material_category_nomenclators", {
   code: varchar().primaryKey().notNull(),
-  category: varchar().notNull(), // Indica el tipo de nomenclador(Cliente, Representante, Material, ....)
+  category: varchar().notNull(), // Indica el tipo de nomenclador(Unidad de Medida(N_UM), Moneda(N_MO), ....)
   value: varchar().notNull(),
   isDecrease: boolean().notNull() // Indica si el los materiales de esa categoria son gastables o no
+});
+
+export const nomenclators = pgTable("nomenclators", {
+  id: serial().primaryKey().notNull(),
+  category: varchar().notNull(), // Indica el tipo de nomenclador(Unidad de Medida, Moneda, ....)
+  categoryCode: varchar().notNull(), // Identificador de la categoria del nomenclador(Unidad de Medida(N_UM), Moneda(N_MO), ....)
+  value: varchar().notNull()
 });
 
 export const clientNomenclators = pgTable("client_nomenclators", {
@@ -251,8 +256,6 @@ export const representativeNomenclators = pgTable("representative_nomenclators",
 // 		}).onDelete("cascade"),
 // ]);
 
-
-
 // export const materialNomenclators = pgTable("material_nomenclators", {
 // 	id: serial().primaryKey().notNull(),
 // 	key: varchar({ length: 255 }).notNull(),
@@ -293,8 +296,8 @@ export const representativeNomenclators = pgTable("representative_nomenclators",
 // 		}).onDelete("cascade"),
 // ]);
 
-export type User = typeof users.$inferSelect;
-export type MaterialCategoryNomenclators = typeof materialCategoryNomenclators.$inferSelect;
 export type ClientNomenclator = typeof clientNomenclators.$inferSelect;
+export type MaterialCategoryNomenclators = typeof materialCategoryNomenclators.$inferSelect;
+export type Nomenclator = typeof nomenclators.$inferSelect;
 export type RepresentativeNomenclator = typeof representativeNomenclators.$inferSelect;
-
+export type User = typeof users.$inferSelect;
