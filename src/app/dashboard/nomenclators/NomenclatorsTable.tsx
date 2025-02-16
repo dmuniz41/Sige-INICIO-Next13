@@ -1,11 +1,13 @@
 "use client";
 
-import { Button, Input, Space, Table, Tooltip } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Button, Input, Space, Spin, Table, Tooltip } from "antd";
+import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
+import Swal from "sweetalert2";
+import { useQueryClient } from "@tanstack/react-query";
 import type { InputRef } from "antd";
 
 import { CreateNomenclatorForm } from "./CreateNomenclatorForm";
@@ -13,62 +15,44 @@ import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { EditNomenclatorForm } from "./EditNomenclatorForm";
 import { EditSvg } from "@/app/global/EditSvg";
 import { nomenclatorsStartLoading, startAddNomenclator, startDeleteNomenclator, startUpdateNomenclator } from "@/actions/nomenclator";
-import { INomenclator } from "../../../models/nomenclator";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
-import { RootState, useAppSelector } from "@/store/store";
-import { useAppDispatch } from "@/hooks/hooks";
 import { useSession } from "next-auth/react";
-import Swal from "sweetalert2";
+import { Nomenclator } from "@/db/migrations/schema";
+import { useNomenclator } from "@/hooks/nomenclators/useNomenclator";
 
-// TODO: asdasd
-
-type DataIndex = keyof INomenclator;
+type DataIndex = keyof Nomenclator;
 
 const NomenclatorsTable: React.FC = () => {
+  const { data: sessionData } = useSession();
+  const searchInput = useRef<InputRef>(null);
+  const queryClient = useQueryClient();
+
+  const [limit, setLimit] = useState<number>(10);
+  const [page, setPage] = useState<number>(1);
+
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [searchedColumn, setSearchedColumn] = useState("");
   const [searchText, setSearchText] = useState("");
-  const [selectedNomenclator, setSelectedNomenclator] = useState<INomenclator>();
-  const { data: sessionData } = useSession();
-  const dispatch = useAppDispatch();
-  const searchInput = useRef<InputRef>(null);
+  const [selectedNomenclator, setSelectedNomenclator] = useState<Nomenclator>();
+
+  const { useGetNomenclators, useDeleteNomenclator } = useNomenclator();
+  const deleteMutation = useDeleteNomenclator();
+  const { data: nomenclatorsQuery, isLoading, isError } = useGetNomenclators(page, limit);
 
   const canList = sessionData?.user.role.includes("Listar Nomencladores");
   const canCreate = sessionData?.user.role.includes("Crear Nomenclador");
   const canEdit = sessionData?.user.role.includes("Editar Nomenclador");
   const canDelete = sessionData?.user.role.includes("Eliminar Nomenclador");
 
-  useEffect(() => {
-    dispatch(nomenclatorsStartLoading());
-  }, [dispatch]);
-
-  const { nomenclators }: { nomenclators: INomenclator[] } = useAppSelector((state: RootState) => state?.nomenclator);
-  let data: INomenclator[] = useMemo(
-    () =>
-      nomenclators.filter(
-        (nomenclator) =>
-          nomenclator.category !== "Tarifa de Servicio" && nomenclator.category !== "Material" && nomenclator.category !== "Ficha de costo"
-      ),
-    [nomenclators]
-  );
-  if (!canList) {
-    data = [];
-  }
-  const handleEdit = (record: INomenclator): void => {
+  const handleEdit = (record: Nomenclator): void => {
     setSelectedNomenclator(record);
     setEditModal(true);
   };
 
-  const onCreate = (values: any): void => {
-    dispatch(startAddNomenclator(values.category, values.code));
-    setCreateNewModal(false);
-  };
-
-  const onEdit = (values: any): void => {
-    dispatch(startUpdateNomenclator(selectedNomenclator?._id!, values.code, values.category));
-    setEditModal(false);
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["GetNomenclators"] });
   };
 
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
@@ -77,7 +61,7 @@ const NomenclatorsTable: React.FC = () => {
     setSearchedColumn(dataIndex);
   };
 
-  const handleDelete = (record: INomenclator) => {
+  const handleDelete = (record: Nomenclator) => {
     Swal.fire({
       title: "Eliminar Nomenclador",
       text: "El nomenclador seleccionado se borrará de forma permanente",
@@ -89,7 +73,7 @@ const NomenclatorsTable: React.FC = () => {
       confirmButtonText: "Eliminar"
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(startDeleteNomenclator(record?._id));
+        deleteMutation.mutate(record?.id);
       }
     });
   };
@@ -99,7 +83,7 @@ const NomenclatorsTable: React.FC = () => {
     setSearchText("");
   };
 
-  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<INomenclator> => ({
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<Nomenclator> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
@@ -171,7 +155,7 @@ const NomenclatorsTable: React.FC = () => {
       )
   });
 
-  const columns: ColumnsType<INomenclator> = [
+  const columns: ColumnsType<Nomenclator> = [
     {
       title: <span className="font-bold">Categoría</span>,
       dataIndex: "category",
@@ -215,22 +199,12 @@ const NomenclatorsTable: React.FC = () => {
       width: "50%"
     },
     {
-      title: <span className="font-bold">Código</span>,
-      dataIndex: "code",
-      key: "code",
-      width: "40%",
-      ...getColumnSearchProps("code")
-    },
-    {
       title: <span className="font-bold">Valor</span>,
       dataIndex: "value",
-      key: "value",
       width: "35%",
-      render: (text) => text && <span>$ {parseFloat(text).toFixed(2)}</span>
     },
     {
       title: <span className="font-bold">Acciones</span>,
-      key: "actions",
       width: "5%",
       render: (_, { ...record }) => (
         <div className="flex gap-1 justify-center">
@@ -259,6 +233,22 @@ const NomenclatorsTable: React.FC = () => {
     }
   ];
 
+
+  if (isLoading)
+    return (
+      <section className="flex h-full w-full items-center justify-center">
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 70, color: "#ff8533" }} spin />} /> 
+      </section>
+    );
+
+  if (isError) {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Ocurrió un error al obtener los representantes"
+    });
+  }
+
   return (
     <>
       <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
@@ -281,7 +271,7 @@ const NomenclatorsTable: React.FC = () => {
               className={`${
                 canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={() => dispatch(nomenclatorsStartLoading())}
+              onClick={handleRefresh}
             >
               <RefreshSvg />
             </button>
@@ -289,16 +279,21 @@ const NomenclatorsTable: React.FC = () => {
         </div>
       </div>
 
-      <CreateNomenclatorForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
-      <EditNomenclatorForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedNomenclator} />
+      <CreateNomenclatorForm open={createNewModal} onCancel={() => setCreateNewModal(false)} />
+      <EditNomenclatorForm open={editModal} onCancel={() => setEditModal(false)} initialValues={selectedNomenclator!} />
 
       <Table
         size="small"
         columns={columns}
-        dataSource={data}
-        pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
+        dataSource={nomenclatorsQuery?.data}
+        pagination={{ position: ["bottomCenter"], defaultPageSize: 10 }}
+        onChange={(pagination) => {
+          setPage(pagination?.current ?? 1);
+          setLimit(pagination?.pageSize ?? 10);
+        }}
         className="shadow-md"
         sortDirections={["ascend"]}
+        rowKey={(record) => record.id}
       />
     </>
   );

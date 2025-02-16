@@ -1,41 +1,31 @@
 "use client";
 
-import { INomenclator } from "@/models/nomenclator";
-import { Form, Input, Modal, Select, SelectProps } from "antd";
+import { useNomenclator } from "@/hooks/nomenclators/useNomenclator";
+import { UpdateNomenclator } from "@/types/DTOs/nomenclators/nomenclators";
+import { Form, Input, Modal } from "antd";
+import { useEffect } from "react";
 
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: INomenclator) => void;
   onCancel: () => void;
-  defaultValues?: INomenclator;
+  initialValues: UpdateNomenclator;
 }
 
-const category: SelectProps["options"] = [
-  {
-    label: "Area de usuario",
-    value: "Area de usuario"
-  },
-  {
-    label: "Cargo de trabajador",
-    value: "Cargo de trabajador"
-  },
-  {
-    label: "Categoría de material",
-    value: "Categoría de material"
-  },
-  {
-    label: "Unidad de medida",
-    value: "Unidad de medida"
-  }
-];
-
-export const EditNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel,
-  defaultValues
-}) => {
+export const EditNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel, initialValues }) => {
   const [form] = Form.useForm();
+
+  const { useUpdateNomenclator } = useNomenclator();
+  const mutation = useUpdateNomenclator();
+
+  useEffect(() => {
+    if (open) {
+      form.resetFields();
+      form.setFieldsValue({
+        ...initialValues
+      });
+    }
+  }, [open, initialValues, form]);
+
   return (
     <Modal
       className="flex flex-col"
@@ -68,8 +58,14 @@ export const EditNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate(values);
+                  mutation.mutate({
+                    ...values,
+                    id: initialValues.id,
+                    category: initialValues.category,
+                    categoryCode: initialValues.categoryCode
+                  });
                   form.resetFields();
+                  onCancel();
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -81,34 +77,11 @@ export const EditNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
         </div>
       ]}
     >
-      <Form
-        form={form}
-        layout="vertical"
-        name="editWarehouseForm"
-        size="middle"
-        fields={[
-          {
-            name: "category",
-            value: defaultValues?.category
-          },
-          {
-            name: "code",
-            value: defaultValues?.code
-          }
-        ]}
-      >
-        <Form.Item
-          name="category"
-          label="Categoría"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+      <Form form={form} layout="vertical" name="editNomenclatorForm" size="middle">
+        {/* <Form.Item name="category" label="Categoría" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select disabled allowClear style={{ width: "100%" }} options={category} />
-        </Form.Item>
-        <Form.Item
-          name="code"
-          label="Código"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        </Form.Item> */}
+        <Form.Item name="value" label="Valor" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
       </Form>

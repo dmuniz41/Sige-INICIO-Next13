@@ -5,6 +5,7 @@ export type CreateNomenclator = {
 };
 
 export type UpdateNomenclator = {
+  id:number
   category: string;
   categoryCode: string;
   value: string;

@@ -1,52 +1,49 @@
 "use client";
 
-import { Button, Form, Input, Modal, Select, SelectProps } from "antd";
-interface Values {
-  code: string;
-  category: string;
-}
+import { useNomenclator } from "@/hooks/nomenclators/useNomenclator";
+import { Form, Input, Modal, Select, SelectProps } from "antd";
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: Values) => void;
   onCancel: () => void;
 }
 
 const category: SelectProps["options"] = [
   {
     label: "Area de usuario",
-    value: "Area de usuario"
+    value: "N_AU"
   },
   {
     label: "Cargo de trabajador",
-    value: "Cargo de trabajador"
+    value: "N_CT"
   },
   {
     label: "Unidad de medida",
-    value: "Unidad de medida"
+    value: "N_UM"
   },
   {
     label: "Proveedor",
-    value: "Proveedor"
+    value: "N_PRO"
   },
   {
     label: "Categoría de tarifas",
-    value: "Categoría de tarifas"
+    value: "N_CTA"
   },
   {
     label: "Categoría de tareas",
-    value: "Categoría de tareas"
+    value: "N_CTE"
   },
   {
     label: "Moneda",
-    value: "Moneda"
+    value: "N_MO"
   }
 ];
-export const CreateNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel
-}) => {
+
+export const CreateNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel }) => {
   const [form] = Form.useForm();
+
+  const { useCreateNomenclator } = useNomenclator();
+  const mutation = useCreateNomenclator();
+
   return (
     <Modal
       className="flex flex-col"
@@ -75,8 +72,16 @@ export const CreateNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate(values);
+                  const selectedCategory = category.find((item) => item.value === values.category);
+                  const payload = {
+                    ...values,
+                    categoryCode: values.category,
+                    category: selectedCategory?.label || ""
+                  };
+
+                  mutation.mutate(payload);
                   form.resetFields();
+                  onCancel();
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -89,18 +94,10 @@ export const CreateNomenclatorForm: React.FC<CollectionCreateFormProps> = ({
       ]}
     >
       <Form form={form} layout="vertical" name="createNomenclatorForm" size="middle">
-        <Form.Item
-          name="category"
-          label="Categoría"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="category" label="Categoría" rules={[{ required: true, message: "Campo requerido" }]}>
           <Select allowClear style={{ width: "100%" }} options={category} />
         </Form.Item>
-        <Form.Item
-          name="code"
-          label="Código"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="value" label="Valor" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
       </Form>
