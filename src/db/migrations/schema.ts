@@ -1,4 +1,5 @@
-import { pgTable, varchar, integer, numeric, serial, boolean } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
+import { pgTable, varchar, integer, numeric, serial, boolean, decimal, text, date, timestamp, doublePrecision } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: serial().primaryKey().notNull(),
@@ -44,10 +45,67 @@ export const representativeNomenclators = pgTable("representative_nomenclators",
   email: varchar({ length: 255 })
 });
 
+export const warehouse = pgTable("warehouse", {
+  id: serial().primaryKey().notNull(),
+  name: text("name").notNull(),
+  totalValue: doublePrecision("totalValue").notNull()
+});
+
+export const materials = pgTable("materials", {
+  id: serial("id").primaryKey().notNull(),
+  code: serial().notNull(),
+  name: text("name").notNull(),
+  category: text("category").notNull(),
+  description: text("description"),
+  enterDate: date("enterDate").notNull(),
+  modifyDate: date("modifyDate"),
+  unitMeasure: text("unitMeasure").notNull(),
+  costPerUnit: numeric("costPerUnit").notNull(),
+  stock: numeric("stock").notNull(),
+  minimumExistence: numeric("minimumExistence").notNull(),
+  provider: text("provider").notNull(),
+  warehouseId: integer("warehouse_id")
+    .references(() => warehouse.id)
+    .notNull()
+});
+
+export const stockMovements = pgTable("stock_movements", {
+  id: serial("id").primaryKey().notNull(),
+  materialId: integer("material_id")
+    .references(() => materials.id)
+    .notNull(),
+  quantityChange: numeric("quantity_change").notNull(),
+  movementType: text("movement_type").notNull(), // "ADDED", "REMOVED"
+  movementDate: timestamp("movement_date").defaultNow(),
+  notes: text("notes"),
+  userId: numeric("user_id")
+});
+
+// Define relationships
+export const warehouseRelations = relations(warehouse, ({ many }) => ({
+  materials: many(materials) // A warehouse can have many materials
+}));
+
+export const materialsRelations = relations(materials, ({ one }) => ({
+  warehouse: one(warehouse, {
+    // A material belongs to one warehouse
+    fields: [materials.warehouseId],
+    references: [warehouse.id]
+  })
+}));
+
+export const stockMovementsRelations = relations(stockMovements, ({ one }) => ({
+  material: one(materials, {
+    // A stock movement belongs to one material
+    fields: [stockMovements.materialId],
+    references: [materials.id]
+  })
+}));
+
 // export const projects = pgTable("projects", {
 // 	id: serial().primaryKey().notNull(),
-// 	key: varchar({ length: 255 }).notNull(),
-// 	projectname: varchar({ length: 255 }).notNull(),
+// 	key: text({ length: 255 }).notNull(),
+// 	projectname: text({ length: 255 }).notNull(),
 // 	projectid: varchar({ length: 255 }).notNull(),
 // 	representativename: varchar({ length: 255 }).notNull(),
 // 	value: numeric({ precision: 10, scale:  2 }).notNull(),
@@ -301,3 +359,6 @@ export type MaterialCategoryNomenclators = typeof materialCategoryNomenclators.$
 export type Nomenclator = typeof nomenclators.$inferSelect;
 export type RepresentativeNomenclator = typeof representativeNomenclators.$inferSelect;
 export type User = typeof users.$inferSelect;
+export type Warehouse = typeof warehouse.$inferSelect;
+export type Material = typeof materials.$inferSelect;
+// export type StockMovement = typeof stockMovements.$inferSelect;
