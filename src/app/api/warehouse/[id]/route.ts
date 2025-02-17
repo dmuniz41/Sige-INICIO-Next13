@@ -1,164 +1,213 @@
-// export async function GET(request: NextRequest) {
-//   const accessToken = request.headers.get("accessToken");
-//   try {
-//     if (!accessToken || !verifyJWT(accessToken)) {
-//       return NextResponse.json(
-//         {
-//           ok: false,
-//           message: "Su sesión ha expirado, por favor autentiquese nuevamente"
-//         },
-//         {
-//           status: 401
-//         }
-//       );
-//     }
-//     await connectDB();
-//     const listOfWarehouses = (await Warehouse.find()).reverse();
-//     return new NextResponse(
-//       JSON.stringify({
-//         ok: true,
-//         listOfWarehouses
-//       }),
-//       {
-//         headers: {
-//           "Access-Control-Allow-Origin": "*",
-//           "Content-Type": "application/json"
-//         }
-//       }
-//     );
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       console.log("🚀 ~ GET ~ error:", error);
-//       return NextResponse.json(
-//         {
-//           ok: false,
-//           message: error.message
-//         },
-//         {
-//           status: 500
-//         }
-//       );
-//     }
-//   }
-// }
+import { db } from "@/db/drizzle";
+import { eq } from "drizzle-orm";
+import { NextRequest, NextResponse } from "next/server";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
-// export async function PUT(request: NextRequest) {
-//   const { _id, name } = await request.json();
-//   const accessToken = request.headers.get("accessToken");
+import { verifyJWT } from "@/libs/jwt";
+import { warehouse } from "@/db/migrations/schema";
+import logger from "@/utils/logger";
+import { UpdateWarehouse } from "@/types/DTOs/warehouse/warehouse";
 
-//   try {
-//     if (!accessToken || !verifyJWT(accessToken)) {
-//       return NextResponse.json(
-//         {
-//           ok: false,
-//           message: "Su sesión ha expirado, por favor autentiquese nuevamente"
-//         },
-//         {
-//           status: 401
-//         }
-//       );
-//     }
-//     await connectDB();
-//     const warehouseToUpdate = await Warehouse.findById({ _id });
+export async function GET(request: NextRequest, { params }: { params: { id: number } }) {
+  const id = params.id;
+  const accessToken = request.headers.get("accessToken");
+  try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
+        },
+        {
+          status: 401
+        }
+      );
+    }
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Obtener almacen por id", { method: request.method, url: request.url, user: decoded.userName });
 
-//     if (!warehouseToUpdate) {
-//       return NextResponse.json(
-//         {
-//           ok: false,
-//           message: "El almacen a actualizar no existe"
-//         },
-//         {
-//           status: 404
-//         }
-//       );
-//     }
+    const DBWarehouse = await db.select().from(warehouse).where(eq(warehouse.id, id));
 
-//     const updatedWarehouse = await Warehouse.findByIdAndUpdate({ _id }, { name }, { new: true });
+    if (DBWarehouse.length === 0) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: `No existe el almacén con el id: ${id}`
+        },
+        {
+          status: 404
+        }
+      );
+    }
+    // await connectDB();
+    // const listOfWarehouses = (await Warehouse.find()).reverse();
 
-//     return new NextResponse(
-//       JSON.stringify({
-//         ok: true,
-//         updatedWarehouse
-//       }),
-//       {
-//         headers: {
-//           "Access-Control-Allow-Origin": "*",
-//           "Content-Type": "application/json"
-//         }
-//       }
-//     );
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       return NextResponse.json(
-//         {
-//           ok: false,
-//           message: error.message
-//         },
-//         {
-//           status: 500
-//         }
-//       );
-//     }
-//   }
-// }
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        data: DBWarehouse
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+      }
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      logger.error("Error al obtener almacen", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/warehouse/[id]",
+        method: "GET"
+      });
+      return NextResponse.json(
+        {
+          ok: false,
+          message: error.message
+        },
+        {
+          status: 500
+        }
+      );
+    }
+  }
+}
 
-// export async function DELETE(request: NextRequest) {
-//   const params = request.nextUrl.searchParams;
-//   const accessToken = request.headers.get("accessToken");
+export async function PUT(request: NextRequest, { params }: { params: { id: number } }) {
+  const id = params.id;
+  const { ...warehouseToUpdate }: UpdateWarehouse = await request.json();
+  const accessToken = request.headers.get("accessToken");
 
-//   try {
-//     if (!accessToken || !verifyJWT(accessToken)) {
-//       return NextResponse.json(
-//         {
-//           ok: false,
-//           message: "Su sesión ha expirado, por favor autentiquese nuevamente"
-//         },
-//         {
-//           status: 401
-//         }
-//       );
-//     }
-//     await connectDB();
-//     const warehouseToDelete = await Warehouse.findById(params.get("id"));
+  try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
+        },
+        {
+          status: 401
+        }
+      );
+    }
 
-//     if (!warehouseToDelete) {
-//       return NextResponse.json(
-//         {
-//           ok: true,
-//           message: "El almacén a borrar no existe"
-//         },
-//         {
-//           status: 404
-//         }
-//       );
-//     }
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Actualizar Almacen", { method: request.method, url: request.url, user: decoded.userName });
 
-//     const deletedWarehouse = await Warehouse.findByIdAndDelete(params.get("id"));
+    const warehouseToUpdateExist = await db.select().from(warehouse).where(eq(warehouse.id, id));
 
-//     return new NextResponse(
-//       JSON.stringify({
-//         ok: true,
-//         deletedWarehouse
-//       }),
-//       {
-//         headers: {
-//           "Access-Control-Allow-Origin": "*",
-//           "Content-Type": "application/json"
-//         }
-//       }
-//     );
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       console.log("🚀 ~ DELETE ~ error:", error);
-//       return NextResponse.json(
-//         {
-//           ok: false,
-//           message: error.message
-//         },
-//         {
-//           status: 500
-//         }
-//       );
-//     }
-//   }
-// }
+    if (warehouseToUpdateExist.length === 0) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "El almacen a actualizar no existe"
+        },
+        {
+          status: 404
+        }
+      );
+    }
+
+    const updatedWarehouse = await db.update(warehouse).set(warehouseToUpdate).where(eq(warehouse.id, id)).returning();
+
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        data: updatedWarehouse
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+      }
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      logger.error("Error al eliminar almacen", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/warehouse/[id]",
+        method: "DELETE"
+      });
+      return NextResponse.json(
+        {
+          ok: false,
+          message: error.message
+        },
+        {
+          status: 500
+        }
+      );
+    }
+  }
+}
+
+export async function DELETE(request: NextRequest, { params }: { params: { id: number } }) {
+  const id = params.id;
+  const accessToken = request.headers.get("accessToken");
+  try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
+        },
+        {
+          status: 401
+        }
+      );
+    }
+
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Eliminar Almacen", { method: request.method, url: request.url, user: decoded.userName });
+
+    const warehouseToDelete = await db.select().from(warehouse).where(eq(warehouse.id, id));
+    if (warehouseToDelete.length === 0) {
+      return NextResponse.json(
+        {
+          ok: true,
+          message: "El almacén a borrar no existe"
+        },
+        {
+          status: 404
+        }
+      );
+    }
+
+    const deletedWarehouse = await db.delete(warehouse).where(eq(warehouse.id, id));
+
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        data: deletedWarehouse
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+      }
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      logger.error("Error al eliminar almacen", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/warehouse/[id]",
+        method: "DELETE"
+      });
+      return NextResponse.json(
+        {
+          ok: false,
+          message: error.message
+        },
+        {
+          status: 500
+        }
+      );
+    }
+  }
+}
