@@ -92,12 +92,12 @@ const useCreateRepresentative = () => {
 };
 
 const useUpdateRepresentative = () => {
-  const queryRepresentative = useQueryClient();
+  const queryClient = useQueryClient();
   const query = useMutation({
     mutationKey: ["UpdateRepresentative"],
     mutationFn: (values: UpdateRepresentativeNomenclator) => updateRepresentativeAPI(values),
     onSuccess: () => {
-      queryRepresentative.invalidateQueries({ queryKey: ["GetRepresentatives"] });
+      queryClient.invalidateQueries({ queryKey: ["GetRepresentatives"] });
       Toast.fire({
         icon: "success",
         title: "Representante actualizado"
@@ -116,12 +116,12 @@ const useUpdateRepresentative = () => {
 };
 
 const useDeleteRepresentative = () => {
-  const queryRepresentative = useQueryClient();
+  const queryClient = useQueryClient();
   const query = useMutation({
     mutationKey: ["DeleteRepresentative"],
     mutationFn: (idNumber: number) => deleteRepresentativeAPI(idNumber),
     onSuccess: () => {
-      queryRepresentative.invalidateQueries({ queryKey: ["GetRepresentatives"] });
+      queryClient.invalidateQueries({ queryKey: ["GetRepresentatives"] });
       Toast.fire({
         icon: "success",
         title: "Representante eliminado"
