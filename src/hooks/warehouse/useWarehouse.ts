@@ -138,3 +138,13 @@ const useDeleteWarehouse = () => {
 
   return query;
 };
+
+export const useWarehouse = () => {
+  return {
+    useGetWarehouses,
+    useGetWarehousePerId,
+    useCreateWarehouse,
+    useUpdateWarehouse,
+    useDeleteWarehouse
+  };
+};

@@ -1,95 +1,82 @@
 "use client";
-import { Button, Input, Space, Table, Tooltip } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Button, Input, Space, Spin, Table, Tooltip } from "antd";
+import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import Swal from "sweetalert2";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import type { InputRef } from "antd";
 
-import { useAppDispatch } from "@/hooks/hooks";
-import { RootState, useAppSelector } from "@/store/store";
-import {
-  startAddWarehouse,
-  startDeleteWarehouse,
-  startUpdateWarehouse,
-  warehousesStartLoading
-} from "@/actions/warehouse";
 import { CreateWarehouseForm } from "./CreateWarehouseForm";
 import { DeleteSvg } from "../../global/DeleteSvg";
 import { EditSvg } from "../../global/EditSvg";
 import { EditWarehouseForm } from "./EditWarehouseForm";
-import { IWarehouse } from "@/models/warehouse";
 import { materialsStartLoading } from "@/actions/material";
 import { PlusSvg } from "../../global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { SeeSvg } from "../../global/SeeSvg";
+import { useAppDispatch } from "@/hooks/hooks";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import Swal from "sweetalert2";
+import { useWarehouse } from "@/hooks/warehouse/useWarehouse";
+import { Warehouse } from "@/db/migrations/schema";
 
-type DataIndex = keyof IWarehouse;
+type DataIndex = keyof Warehouse;
 
 const WarehousesTable: React.FC = () => {
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [searchedColumn, setSearchedColumn] = useState("");
   const [searchText, setSearchText] = useState("");
-  const [selectedWarehouse, setSelectedWarehouse] = useState<IWarehouse>();
+  const [selectedWarehouse, setSelectedWarehouse] = useState<Warehouse>();
   const { data: sessionData } = useSession();
-  const dispatch = useAppDispatch();
   const router = useRouter();
   const searchInput = useRef<InputRef>(null);
+  const queryClient = useQueryClient();
+
+  const [limit, setLimit] = useState<number>(10);
+  const [page, setPage] = useState<number>(1);
 
   const canList = sessionData?.user.role.includes("Listar Almacén");
   const canCreate = sessionData?.user.role.includes("Crear Almacén");
   const canEdit = sessionData?.user.role.includes("Editar Almacén");
   const canDelete = sessionData?.user.role.includes("Eliminar Almacén");
 
-  useEffect(() => {
-    dispatch(warehousesStartLoading());
-  }, [dispatch]);
+  const { useGetWarehouses, useDeleteWarehouse } = useWarehouse();
+  const deleteMutation = useDeleteWarehouse();
+  const { data: warehouseQuery, isLoading, isError } = useGetWarehouses(page, limit);
 
-  const { warehouses } = useAppSelector((state: RootState) => state?.warehouse);
-  let data: IWarehouse[] = useMemo(() => warehouses, [warehouses]);
-  if (!canList) {
-    data = [];
-  }
   const handleNew = (): void => {
     setCreateNewModal(true);
   };
 
-  const handleEdit = (record: IWarehouse): void => {
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["GetWarehouses"] });
+  };
+
+  const handleEdit = (record: Warehouse): void => {
     setSelectedWarehouse(record);
     setEditModal(true);
   };
 
-  const onCreate = (values: any): void => {
-    dispatch(startAddWarehouse(values.name));
-    setCreateNewModal(false);
-  };
+  // const onEdit = (values: any): void => {
+  //   dispatch(startUpdateWarehouse(selectedWarehouse?._id!, values.name));
+  //   setEditModal(false);
+  // };
 
-  const onEdit = (values: any): void => {
-    dispatch(startUpdateWarehouse(selectedWarehouse?._id!, values.name));
-    setEditModal(false);
-  };
-
-  const handleSearch = (
-    selectedKeys: string[],
-    confirm: (param?: FilterConfirmProps) => void,
-    dataIndex: DataIndex
-  ) => {
+  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
 
-  const handleView = async (record: IWarehouse) => {
-    await dispatch(materialsStartLoading(record?._id!));
-    router.push(`/dashboard/warehouse/${record === undefined ? " " : record?._id}`);
+  const handleView = async (record: Warehouse) => {
+    router.push(`/dashboard/warehouse/${record === undefined ? " " : record?.id}`);
   };
 
-  const handleDelete = (record: IWarehouse) => {
+  const handleDelete = (record: Warehouse) => {
     Swal.fire({
       title: "Eliminar Almacén",
       text: "El almacén seleccionado se borrará de forma permanente",
@@ -101,7 +88,7 @@ const WarehousesTable: React.FC = () => {
       confirmButtonText: "Eliminar"
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(startDeleteWarehouse(record?._id));
+        deleteMutation.mutate(record.id);
       }
     });
   };
@@ -111,7 +98,7 @@ const WarehousesTable: React.FC = () => {
     setSearchText("");
   };
 
-  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<IWarehouse> => ({
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<Warehouse> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
@@ -133,11 +120,7 @@ const WarehousesTable: React.FC = () => {
           >
             Search
           </Button>
-          <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{ width: 90 }}
-          >
+          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
             Reset
           </Button>
           <Button
@@ -163,9 +146,7 @@ const WarehousesTable: React.FC = () => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
-    ),
+    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
     onFilter: (value, record) =>
       record[dataIndex]!.toString()
         .toLowerCase()
@@ -188,18 +169,16 @@ const WarehousesTable: React.FC = () => {
       )
   });
 
-  const columns: ColumnsType<IWarehouse> = [
+  const columns: ColumnsType<Warehouse> = [
     {
       title: <span className="font-bold">Nombre</span>,
       dataIndex: "name",
-      key: "name",
       width: "75%",
       ...getColumnSearchProps("name")
     },
     {
       title: <span className="font-bold">Valor Total</span>,
       dataIndex: "totalValue",
-      key: "totalValue",
       width: "25%",
       render: (value) => (
         <span>
@@ -221,11 +200,7 @@ const WarehousesTable: React.FC = () => {
             <></>
           ) : (
             <Tooltip placement="top" title={"Ver Almacén"} arrow={{ pointAtCenter: true }}>
-              <button
-                disabled={!canList}
-                onClick={() => handleView(record)}
-                className="table-see-action-btn"
-              >
+              <button disabled={!canList} onClick={() => handleView(record)} className="table-see-offer-action-btn">
                 <SeeSvg width={20} height={20} />
               </button>
             </Tooltip>
@@ -233,7 +208,7 @@ const WarehousesTable: React.FC = () => {
           {canEdit ? (
             <>
               <Tooltip placement="top" title={"Editar Almacén"} arrow={{ pointAtCenter: true }}>
-                <button onClick={() => handleEdit(record)} className="table-see-offer-action-btn">
+                <button onClick={() => handleEdit(record)} className="table-see-action-btn">
                   <EditSvg width={20} height={20} />
                 </button>
               </Tooltip>
@@ -255,6 +230,21 @@ const WarehousesTable: React.FC = () => {
     }
   ];
 
+  if (isLoading)
+    return (
+      <section className="flex h-full w-full items-center justify-center">
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 70, color: "#ff8533" }} spin />} />
+      </section>
+    );
+
+  if (isError) {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Ocurrió un error al obtener los representantes"
+    });
+  }
+
   return (
     <>
       <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
@@ -269,11 +259,9 @@ const WarehousesTable: React.FC = () => {
             <button
               disabled={!canList}
               className={`${
-                canList
-                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                  : "opacity-20 pt-2 pl-2"
+                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={() => dispatch(warehousesStartLoading())}
+              onClick={handleRefresh}
             >
               <RefreshSvg />
             </button>
@@ -281,23 +269,18 @@ const WarehousesTable: React.FC = () => {
         </div>
       </div>
 
-      <CreateWarehouseForm
-        open={createNewModal}
-        onCancel={() => setCreateNewModal(false)}
-        onCreate={onCreate}
-      />
-      <EditWarehouseForm
-        open={editModal}
-        onCancel={() => setEditModal(false)}
-        onCreate={onEdit}
-        defaultValues={selectedWarehouse}
-      />
+      <CreateWarehouseForm open={createNewModal} onCancel={() => setCreateNewModal(false)} />
+      <EditWarehouseForm open={editModal} onCancel={() => setEditModal(false)} initialValues={selectedWarehouse!} />
 
       <Table
         size="middle"
         columns={columns}
-        dataSource={data}
-        pagination={{ position: ["bottomCenter"], pageSize: 10 }}
+        dataSource={warehouseQuery?.data}
+        pagination={{ position: ["bottomCenter"], defaultPageSize: 10 }}
+        onChange={(pagination) => {
+          setPage(pagination?.current ?? 1);
+          setLimit(pagination?.pageSize ?? 10);
+        }}
         className="shadow-md"
       />
     </>

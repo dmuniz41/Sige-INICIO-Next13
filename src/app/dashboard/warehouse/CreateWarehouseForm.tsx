@@ -1,20 +1,16 @@
 "use client";
-
+import { useWarehouse } from "@/hooks/warehouse/useWarehouse";
 import { Form, Input, Modal } from "antd";
-interface Values {
-  name: string;
-}
+
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: Values) => void;
   onCancel: () => void;
 }
-export const CreateWarehouseForm: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel
-}) => {
+export const CreateWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel }) => {
   const [form] = Form.useForm();
+
+  const { useCreateWarehouse } = useWarehouse();
+  const mutation = useCreateWarehouse();
   return (
     <Modal
       className="flex flex-col"
@@ -43,8 +39,9 @@ export const CreateWarehouseForm: React.FC<CollectionCreateFormProps> = ({
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate(values);
+                  mutation.mutate(values);
                   form.resetFields();
+                  onCancel();
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -57,11 +54,7 @@ export const CreateWarehouseForm: React.FC<CollectionCreateFormProps> = ({
       ]}
     >
       <Form form={form} layout="vertical" name="createUserForm" size="middle">
-        <Form.Item
-          name="name"
-          label="Nombre de Almacén"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="name" label="Nombre de Almacén" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
       </Form>

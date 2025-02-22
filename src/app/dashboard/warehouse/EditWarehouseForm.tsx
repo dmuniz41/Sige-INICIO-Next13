@@ -1,30 +1,37 @@
 "use client";
-
 import { Form, Input, Modal } from "antd";
+import { useEffect } from "react";
 
-interface Values {
-  name: string;
-}
+import { useWarehouse } from "@/hooks/warehouse/useWarehouse";
+import { Warehouse } from "@/db/migrations/schema";
+
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: Values) => void;
   onCancel: () => void;
-  defaultValues?: Values;
+  initialValues: Warehouse;
 }
 
-export const EditWarehouseForm: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel,
-  defaultValues
-}) => {
+export const EditWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel, initialValues }) => {
   const [form] = Form.useForm();
+
+  const { useUpdateWarehouse } = useWarehouse();
+  const mutation = useUpdateWarehouse();
+
+  useEffect(() => {
+    if (open) {
+      form.resetFields();
+      form.setFieldsValue({
+        ...initialValues
+      });
+    }
+  }, [open, initialValues, form]);
+
   return (
     <Modal
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-semibold text-lg">Editar Almacén</span>
+          <span className="font-semibold text-lg">Actualizar Almacén</span>
         </div>
       }
       centered
@@ -47,8 +54,9 @@ export const EditWarehouseForm: React.FC<CollectionCreateFormProps> = ({
               form
                 .validateFields()
                 .then((values) => {
-                  onCreate(values);
+                  mutation.mutate({ values: values, id: initialValues.id });
                   form.resetFields();
+                  onCancel();
                 })
                 .catch((error) => {
                   console.log("Validate Failed:", error);
@@ -60,23 +68,8 @@ export const EditWarehouseForm: React.FC<CollectionCreateFormProps> = ({
         </div>
       ]}
     >
-      <Form
-        form={form}
-        layout="vertical"
-        name="editWarehouseForm"
-        size="middle"
-        fields={[
-          {
-            name: "name",
-            value: defaultValues?.name
-          }
-        ]}
-      >
-        <Form.Item
-          name="name"
-          label="Nombre de Almacén"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+      <Form form={form} layout="vertical" name="editWarehouseForm" size="middle">
+        <Form.Item name="name" label="Nombre de Almacén" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
       </Form>
