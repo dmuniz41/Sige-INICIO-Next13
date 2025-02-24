@@ -1,0 +1,1 @@
+ALTER TABLE "service_fee_material_nomenclators" ADD COLUMN "display_name" varchar(100);

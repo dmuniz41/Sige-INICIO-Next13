@@ -1,0 +1,1 @@
+ALTER TABLE "materials" ALTER COLUMN "description" SET NOT NULL;

@@ -1,0 +1,1 @@
+ALTER TABLE "stock_movements" ALTER COLUMN "userId" SET DATA TYPE varchar(50);

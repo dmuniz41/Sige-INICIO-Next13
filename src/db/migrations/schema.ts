@@ -53,20 +53,31 @@ export const warehouse = pgTable("warehouse", {
 
 export const materials = pgTable("materials", {
   id: serial("id").primaryKey().notNull(),
-  code: serial().notNull(),
-  name: text("name").notNull(),
-  category: text("category").notNull(),
-  description: text("description"),
-  enterDate: date("enterDate").notNull(),
-  modifyDate: date("modifyDate"),
+  name: varchar({ length: 50 }).notNull(),
+  category: varchar({ length: 25 }).notNull(),
+  description: varchar({ length: 25 }).notNull(),
+  enterDate: timestamp("enterDate").defaultNow(),
+  modifyDate: timestamp("modifyDate").defaultNow(),
   unitMeasure: text("unitMeasure").notNull(),
-  costPerUnit: numeric("costPerUnit").notNull(),
-  stock: numeric("stock").notNull(),
-  minimumExistence: numeric("minimumExistence").notNull(),
-  provider: text("provider").notNull(),
+  costPerUnit: doublePrecision("costPerUnit").notNull(),
+  stock: doublePrecision("stock").notNull(),
+  minimumExistence: doublePrecision("minimumExistence").notNull(),
+  totalValue: doublePrecision("totalValue").notNull(),
+  provider: varchar({ length: 25 }).notNull(),
   warehouseId: integer("warehouse_id")
     .references(() => warehouse.id)
+    .notNull(),
+  serviceFeeMaterialNomenclatorId: integer("service_fee_material_nomenclator_id")
+    .references(() => serviceFeeMaterialNomenclators.id)
     .notNull()
+});
+
+export const serviceFeeMaterialNomenclators = pgTable("service_fee_material_nomenclators", {
+  id: serial("id").primaryKey().notNull(),
+  code: varchar("name", { length: 100 }).notNull(),
+  displayName: varchar("display_name", { length: 100 }),
+  costPerUnit: doublePrecision("costPerUnit").notNull(),
+  unitMeasure: varchar("unit_measure", { length: 25 }).notNull()
 });
 
 export const stockMovements = pgTable("stock_movements", {
@@ -74,11 +85,11 @@ export const stockMovements = pgTable("stock_movements", {
   materialId: integer("material_id")
     .references(() => materials.id)
     .notNull(),
-  quantityChange: numeric("quantity_change").notNull(),
-  movementType: text("movement_type").notNull(), // "ADDED", "REMOVED"
+  quantityChange: doublePrecision("quantity_change").notNull(),
+  movementType: varchar("movement_type", { length: 25 }).notNull(), // "ADDED", "REMOVED"
   movementDate: timestamp("movement_date").defaultNow(),
   notes: text("notes"),
-  userId: numeric("user_id")
+  userId: varchar({ length: 50 }).notNull()
 });
 
 // Define relationships
@@ -86,11 +97,20 @@ export const warehouseRelations = relations(warehouse, ({ many }) => ({
   materials: many(materials) // A warehouse can have many materials
 }));
 
+export const serviceFeeMaterialNomenclatorRelations = relations(serviceFeeMaterialNomenclators, ({ many }) => ({
+  materials: many(materials)
+}));
+
 export const materialsRelations = relations(materials, ({ one }) => ({
   warehouse: one(warehouse, {
     // A material belongs to one warehouse
     fields: [materials.warehouseId],
     references: [warehouse.id]
+  }),
+  // A material have one service fee material nomenclator
+  serviceFeeMaterialNomenclator: one(serviceFeeMaterialNomenclators, {
+    fields: [materials.serviceFeeMaterialNomenclatorId],
+    references: [serviceFeeMaterialNomenclators.id]
   })
 }));
 
@@ -322,38 +342,6 @@ export const stockMovementsRelations = relations(stockMovements, ({ one }) => ({
 // 	version: integer().default(0),
 // });
 
-// export const materials = pgTable("materials", {
-// 	id: serial().primaryKey().notNull(),
-// 	code: integer().notNull(),
-// 	key: varchar({ length: 255 }).notNull(),
-// 	materialname: varchar({ length: 255 }).notNull(),
-// 	category: varchar({ length: 255 }).notNull(),
-// 	enterdate: date().notNull(),
-// 	unitmeasure: varchar({ length: 255 }).notNull(),
-// 	costperunit: numeric({ precision: 10, scale:  2 }).notNull(),
-// 	unitstotal: integer().notNull(),
-// 	minimumexistence: integer().notNull(),
-// 	materialtotalvalue: numeric({ precision: 10, scale:  2 }).notNull(),
-// 	provider: varchar({ length: 255 }).notNull(),
-// 	warehouse: varchar({ length: 255 }).notNull(),
-// 	version: integer().default(0),
-// 	description: text(),
-// });
-
-// export const operations = pgTable("operations", {
-// 	id: serial().primaryKey().notNull(),
-// 	materialId: integer("material_id").notNull(),
-// 	date: date().notNull(),
-// 	tipo: varchar({ length: 255 }).notNull(),
-// 	amount: integer().notNull(),
-// }, (table) => [
-// 	foreignKey({
-// 			columns: [table.materialId],
-// 			foreignColumns: [materials.id],
-// 			name: "operations_material_id_fkey"
-// 		}).onDelete("cascade"),
-// ]);
-
 export type ClientNomenclator = typeof clientNomenclators.$inferSelect;
 export type MaterialCategoryNomenclators = typeof materialCategoryNomenclators.$inferSelect;
 export type Nomenclator = typeof nomenclators.$inferSelect;
@@ -361,4 +349,5 @@ export type RepresentativeNomenclator = typeof representativeNomenclators.$infer
 export type User = typeof users.$inferSelect;
 export type Warehouse = typeof warehouse.$inferSelect;
 export type Material = typeof materials.$inferSelect;
-// export type StockMovement = typeof stockMovements.$inferSelect;
+export type StockMovement = typeof stockMovements.$inferSelect;
+export type serviceFeeMaterialNomenclators = typeof serviceFeeMaterialNomenclators.$inferSelect;

@@ -1,0 +1,1 @@
+ALTER TABLE "materials" ALTER COLUMN "service_fee_material_nomenclator_id" DROP NOT NULL;
