@@ -112,9 +112,6 @@ export async function GET(request: NextRequest) {
     const decoded = jwt.decode(accessToken) as JwtPayload;
     logger.info("Listar Nomencladores", { method: request.method, url: request.url, user: decoded.userName });
 
-    // await connectDB();
-    // const listOfNomenclators = (await Nomenclator.find()).reverse();
-
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1", 10); // Default to page 1
     const limit = parseInt(searchParams.get("limit") || "10", 10); // Default to 10 items per page
