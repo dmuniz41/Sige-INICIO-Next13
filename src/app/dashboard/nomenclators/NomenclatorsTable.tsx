@@ -1,25 +1,23 @@
 "use client";
-
 import { Button, Input, Space, Spin, Table, Tooltip } from "antd";
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
+import { useQueryClient } from "@tanstack/react-query";
 import Highlighter from "react-highlight-words";
 import React, { useRef, useState } from "react";
+import Swal from "sweetalert2";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
-import Swal from "sweetalert2";
-import { useQueryClient } from "@tanstack/react-query";
 import type { InputRef } from "antd";
 
 import { CreateNomenclatorForm } from "./CreateNomenclatorForm";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { EditNomenclatorForm } from "./EditNomenclatorForm";
 import { EditSvg } from "@/app/global/EditSvg";
-import { nomenclatorsStartLoading, startAddNomenclator, startDeleteNomenclator, startUpdateNomenclator } from "@/actions/nomenclator";
+import { Nomenclator } from "@/db/migrations/schema";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
-import { useSession } from "next-auth/react";
-import { Nomenclator } from "@/db/migrations/schema";
 import { useNomenclator } from "@/hooks/nomenclators/useNomenclator";
+import { useSession } from "next-auth/react";
 
 type DataIndex = keyof Nomenclator;
 
@@ -51,8 +49,8 @@ const NomenclatorsTable: React.FC = () => {
     setEditModal(true);
   };
 
-  const handleRefresh = () => {
-    queryClient.invalidateQueries({ queryKey: ["GetNomenclators"] });
+  const handleRefresh = async() => {
+    await queryClient.invalidateQueries({ queryKey: ["GetNomenclators"] });
   };
 
   const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
@@ -245,7 +243,7 @@ const NomenclatorsTable: React.FC = () => {
     Swal.fire({
       icon: "error",
       title: "Error",
-      text: "Ocurrió un error al obtener los representantes"
+      text: "Ocurrió un error al obtener los nomencladores"
     });
   }
 

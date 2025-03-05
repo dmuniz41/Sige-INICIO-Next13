@@ -1,7 +1,7 @@
 "use client";
 
-import { Button, Input, Space, Table, Tooltip } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Button, Input, Space, Spin, Table, Tooltip } from "antd";
+import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
@@ -15,12 +15,7 @@ import type { InputRef } from "antd";
 
 import { AddMaterialForm } from "./AddMaterialForm";
 import { DeleteSvg } from "../../../global/DeleteSvg";
-import {
-  editMaterial,
-  materialsStartLoading,
-  startAddMaterial,
-  startDeleteMaterial
-} from "@/actions/material";
+import { editMaterial, materialsStartLoading, startAddMaterial, startDeleteMaterial } from "@/actions/material";
 import { EditMaterialForm } from "./EditMaterialForm";
 import { EditSvg } from "../../../global/EditSvg";
 import { INomenclator } from "@/models/nomenclator";
@@ -40,37 +35,24 @@ import { useAppDispatch } from "@/hooks/hooks";
 import PDFReport from "@/helpers/PDFReport";
 import { materialNomenclatorsStartLoading } from "@/actions/nomenclators/material";
 import { IMaterialNomenclator } from "@/models/nomenclators/materials";
+import { Material } from "@/db/migrations/schema";
+import { useMaterials } from "@/hooks/materials/useMaterials";
+import { useQueryClient } from "@tanstack/react-query";
+import { FileSvg } from "@/app/global/FileSvg";
 
-const PDFDownloadLink = dynamic(
-  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
-  {
-    ssr: false,
-    loading: () => <p>Loading...</p>
-  }
-);
-interface DataType {
-  _id: string;
-  category: string;
-  code: string;
-  costPerUnit: number;
-  description: string;
-  enterDate: string;
-  key: string;
-  materialName: string;
-  minimumExistence: number;
-  operations: [IOperation];
-  provider: string;
-  unitMeasure: string;
-  unitsTotal: number;
-}
+const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
+  ssr: false,
+  loading: () => <p>Loading...</p>
+});
 
-type DataIndex = keyof DataType;
+type DataIndex = keyof Material;
 
 let date = moment();
 let currentDate = date.format("L");
 
 const MaterialsTable: React.FC = () => {
   const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [createNewModal, setCreateNewModal] = useState(false);
@@ -78,14 +60,17 @@ const MaterialsTable: React.FC = () => {
   const [addModal, setAddModal] = useState(false);
   const [minusModal, setMinusModal] = useState(false);
   const [showOperationsModal, setShowOperationModal] = useState(false);
-  const [selectedRow, setSelectedRow] = useState<DataType>();
-  const [filteredData, setFilteredData] = useState<DataType[]>();
+  const [selectedRow, setSelectedRow] = useState<Material>();
+  const [filteredData, setFilteredData] = useState<Material[]>();
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
 
+  const [limit, setLimit] = useState<number>(10);
+  const [page, setPage] = useState<number>(1);
+
   const canList = sessionData?.user.role.includes("Listar Materiales");
   const canCreate = sessionData?.user.role.includes("Nuevo Material");
-  const canEditMaterial = sessionData?.user.role.includes("Editar Material");
+  const canEdit = sessionData?.user.role.includes("Editar Material");
   const canDelete = sessionData?.user.role.includes("Eliminar Material");
   const canAdd = sessionData?.user.role.includes("Añadir Material");
   const canMinus = sessionData?.user.role.includes("Sustraer Material");
@@ -99,6 +84,7 @@ const MaterialsTable: React.FC = () => {
     dispatch(materialNomenclatorsStartLoading());
   }, [dispatch, selectedWarehouse]);
 
+  // PARA REPORTE EN PDF
   const fields = [
     {
       title: "Categoría",
@@ -152,16 +138,10 @@ const MaterialsTable: React.FC = () => {
     }
   ];
 
-  const { materials } = useAppSelector((state: RootState) => state?.material);
-  let data: DataType[] = useMemo(() => materials, [materials]);
-  if (!canList) {
-    data = [];
-  }
+  const { useGetMaterials } = useMaterials();
+  const { data: materialsQuery, isLoading, isError } = useGetMaterials(page, limit, Number(selectedWarehouse));
 
-  const {
-    nomenclators,
-    materialsNomenclators
-  }: { nomenclators: INomenclator[]; materialsNomenclators: IMaterialNomenclator[] } =
+  const { nomenclators, materialsNomenclators }: { nomenclators: INomenclator[]; materialsNomenclators: IMaterialNomenclator[] } =
     useAppSelector((state: RootState) => state?.nomenclator);
 
   const categoryFilter: any[] = [];
@@ -172,13 +152,13 @@ const MaterialsTable: React.FC = () => {
     });
   });
 
-  let PDFReportData: DataType[] = [];
+  // let PDFReportData: DataType[] = [];
 
-  if (filteredData) {
-    PDFReportData = filteredData;
-  } else {
-    PDFReportData = data;
-  }
+  // if (filteredData) {
+  //   PDFReportData = filteredData;
+  // } else {
+  //   PDFReportData = data;
+  // }
 
   const handleNew = (): void => {
     setCreateNewModal(true);
@@ -228,15 +208,11 @@ const MaterialsTable: React.FC = () => {
     }
   };
 
-  const handleRefresh = (): void => {
-    dispatch(materialsStartLoading(selectedWarehouse));
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["GetMaterials"] });
   };
 
-  const handleSearch = (
-    selectedKeys: string[],
-    confirm: (param?: FilterConfirmProps) => void,
-    dataIndex: DataIndex
-  ) => {
+  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -255,7 +231,7 @@ const MaterialsTable: React.FC = () => {
         confirmButtonText: "Eliminar"
       }).then((result) => {
         if (result.isConfirmed) {
-          dispatch(startDeleteMaterial(selectedRow?.code, selectedWarehouse));
+          // dispatch(startDeleteMaterial(selectedRow?.code, selectedWarehouse));
         }
       });
     } else {
@@ -343,29 +319,22 @@ const MaterialsTable: React.FC = () => {
 
   const onEditMaterial = (values: any): void => {
     dispatch(
-      editMaterial(
-        selectedRow?.category!,
-        values.code,
-        values.description,
-        values.materialName,
-        values.minimumExistence,
-        selectedWarehouse
-      )
+      editMaterial(selectedRow?.category!, values.code, values.description, values.materialName, values.minimumExistence, selectedWarehouse)
     );
     setEditMaterialModal(false);
   };
 
-  const onChange: TableProps<DataType>["onChange"] = (pagination, filters, sorter, extra) => {
+  const onChange: TableProps<Material>["onChange"] = (pagination, filters, sorter, extra) => {
     setFilteredData(extra.currentDataSource);
   };
 
-  const rowSelection: TableRowSelection<DataType> = {
-    onChange: async (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+  const rowSelection: TableRowSelection<Material> = {
+    onChange: async (selectedRowKeys: React.Key[], selectedRows: Material[]) => {
       setSelectedRow(selectedRows[0]);
     }
   };
 
-  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<Material> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
@@ -387,11 +356,7 @@ const MaterialsTable: React.FC = () => {
           >
             Search
           </Button>
-          <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{ width: 90 }}
-          >
+          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
             Reset
           </Button>
           <Button
@@ -417,12 +382,9 @@ const MaterialsTable: React.FC = () => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
-    ),
+    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
     onFilter: (value, record) =>
-      record[dataIndex]
-        .toString()
+      record[dataIndex]!.toString()
         .toLowerCase()
         .includes((value as string).toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
@@ -443,39 +405,34 @@ const MaterialsTable: React.FC = () => {
       )
   });
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<Material> = [
     {
       title: <span className="font-bold">Código</span>,
-      dataIndex: "code",
-      key: "code",
+      dataIndex: "id",
       width: "5%"
     },
     {
       title: <span className="font-bold">Categoría</span>,
       dataIndex: "category",
-      key: "category",
-      filters: categoryFilter,
-      onFilter: (value: any, record: any) => record.category.startsWith(value),
-      filterSearch: true,
+      // filters: categoryFilter,
+      // onFilter: (value: any, record: any) => record.category.startsWith(value),
+      // filterSearch: true,
       width: "15%"
     },
     {
       title: <span className="font-bold">Nombre</span>,
-      dataIndex: "materialName",
-      key: "materialName",
+      dataIndex: "name",
       width: "15%",
-      ...getColumnSearchProps("materialName")
+      ...getColumnSearchProps("name")
     },
     {
       title: <span className="font-bold">Descripción</span>,
       dataIndex: "description",
-      key: "description",
       width: "15%"
     },
     {
       title: <span className="font-bold">Coste Unitario</span>,
       dataIndex: "costPerUnit",
-      key: "costPerUnit",
       width: "10%",
       sorter: {
         compare: (a, b) => a.costPerUnit - b.costPerUnit
@@ -492,8 +449,7 @@ const MaterialsTable: React.FC = () => {
     },
     {
       title: <span className="font-bold">Existencias</span>,
-      dataIndex: "unitsTotal",
-      key: "unitsTotal",
+      dataIndex: "stock",
       width: "5%",
       render: (value) => (
         <span>
@@ -504,19 +460,17 @@ const MaterialsTable: React.FC = () => {
         </span>
       ),
       sorter: {
-        compare: (a, b) => a.unitsTotal - b.unitsTotal
+        compare: (a, b) => a.stock - b.stock
       }
     },
     {
       title: <span className="font-bold">Unidad de Medida</span>,
       dataIndex: "unitMeasure",
-      key: "unitMeasure",
       width: "10%"
     },
     {
       title: <span className="font-bold">Existencias Mínimas</span>,
       dataIndex: "minimumExistence",
-      key: "minimumExistence",
       width: "5%",
       render: (value) => (
         <span>
@@ -530,7 +484,6 @@ const MaterialsTable: React.FC = () => {
     {
       title: <span className="font-bold">Proveedor</span>,
       dataIndex: "provider",
-      key: "provider",
       width: "10%",
       sorter: (a: any, b: any) => a.provider.localeCompare(b.provider),
       ...getColumnSearchProps("provider")
@@ -538,11 +491,64 @@ const MaterialsTable: React.FC = () => {
     {
       title: <span className="font-bold">Fecha de Entrada</span>,
       dataIndex: "enterDate",
-      key: "enterDate",
       width: "8%",
       ...getColumnSearchProps("enterDate")
+    },
+    {
+      title: <span className="font-bold">Fecha de Edición</span>,
+      dataIndex: "modifyDate",
+      width: "8%",
+      ...getColumnSearchProps("modifyDate")
+    },
+    {
+      title: <span className="font-bold">Acciones</span>,
+      width: "5%",
+      render: (_, { ...record }) => (
+        <div className="flex gap-1 justify-center">
+          {canEdit ? (
+            <>
+              <Tooltip placement="top" title={"Movimiento de Inventario"} arrow={{ pointAtCenter: true }}>
+                <button className="table-stock-movement-action-btn">
+                  <FileSvg width={20} height={20} />
+                </button>
+              </Tooltip>
+              <Tooltip placement="top" title={"Editar Material"} arrow={{ pointAtCenter: true }}>
+                <button className="table-see-action-btn">
+                  <EditSvg width={20} height={20} />
+                </button>
+              </Tooltip>
+            </>
+          ) : (
+            <></>
+          )}
+          {canDelete ? (
+            <Tooltip placement="top" title={"Eliminar Material"} arrow={{ pointAtCenter: true }}>
+              <button className="table-delete-action-btn">
+                <DeleteSvg width={20} height={20} />
+              </button>
+            </Tooltip>
+          ) : (
+            <></>
+          )}
+        </div>
+      )
     }
   ];
+
+  if (isLoading)
+    return (
+      <section className="flex h-full w-full items-center justify-center">
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 70, color: "#ff8533" }} spin />} />
+      </section>
+    );
+
+  if (isError) {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Ocurrió un error al obtener los materiales"
+    });
+  }
 
   return (
     <>
@@ -550,89 +556,24 @@ const MaterialsTable: React.FC = () => {
         <div className="flex gap-2">
           <button disabled={!canAdd} onClick={handleAdd} className="toolbar-primary-icon-btn ">
             <PlusSvg />
-            Añadir
-          </button>
-          <button disabled={!canMinus} onClick={handleMinus} className="toolbar-danger-icon-btn ">
-            <MinusSvg />
-            Sustraer
+            Nuevo
           </button>
         </div>
         <div className="flex">
-          <Tooltip placement="top" title={"Nuevo Material"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canCreate}
-              className={`${
-                canCreate
-                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                  : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={handleNew}
-            >
-              <PlusSvg />
-            </button>
-          </Tooltip>
-          <Tooltip placement="top" title={"Editar Material"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canEditMaterial}
-              className={`${
-                canEditMaterial
-                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                  : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={handleEditMaterial}
-            >
-              <EditSvg />
-            </button>
-          </Tooltip>
-
-          <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canDelete}
-              className={`${
-                canDelete
-                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                  : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={handleDelete}
-            >
-              <DeleteSvg />
-            </button>
-          </Tooltip>
           <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
             <button
               disabled={!canList}
               className={`${
-                canList
-                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                  : "opacity-20 pt-2 pl-2"
+                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
               } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
               onClick={handleRefresh}
             >
               <RefreshSvg />
             </button>
           </Tooltip>
-          <Tooltip
-            placement="top"
-            title={"Historial de Operaciones"}
-            arrow={{ pointAtCenter: true }}
-          >
-            <button
-              disabled={!canList}
-              className={`${
-                canList
-                  ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                  : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={handleShowOperations}
-            >
-              <ListSvg />
-            </button>
-          </Tooltip>
-          <Tooltip placement="top" title={"Generar Reporte"} arrow={{ pointAtCenter: true }}>
+          {/* <Tooltip placement="top" title={"Generar Reporte"} arrow={{ pointAtCenter: true }}>
             <PDFDownloadLink
-              document={
-                <PDFReport fields={fields} data={PDFReportData} title={"REPORTE DE ALMACÉN "} />
-              }
+              document={<PDFReport fields={fields} data={PDFReportData} title={"REPORTE DE ALMACÉN "} />}
               fileName={`Reporte de almacén (${currentDate})`}
             >
               {({ blob, url, loading, error }) =>
@@ -647,9 +588,7 @@ const MaterialsTable: React.FC = () => {
                   <button
                     disabled={!canList}
                     className={`${
-                      canList
-                        ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300"
-                        : "opacity-20 pt-2 pl-2"
+                      canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
                     } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
                   >
                     <PDFSvg />
@@ -657,27 +596,13 @@ const MaterialsTable: React.FC = () => {
                 )
               }
             </PDFDownloadLink>
-          </Tooltip>
+          </Tooltip> */}
         </div>
       </div>
 
-      <NewMaterialForm
-        open={createNewModal}
-        onCancel={() => setCreateNewModal(false)}
-        onCreate={onCreate}
-      />
-      <AddMaterialForm
-        open={addModal}
-        onCancel={() => setAddModal(false)}
-        onCreate={onAdd}
-        defaultValues={selectedRow}
-      />
-      <MinusMaterialForm
-        open={minusModal}
-        onCancel={() => setMinusModal(false)}
-        onCreate={onMinus}
-        defaultValues={selectedRow}
-      />
+      {/* <NewMaterialForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
+      <AddMaterialForm open={addModal} onCancel={() => setAddModal(false)} onCreate={onAdd} defaultValues={selectedRow} />
+      <MinusMaterialForm open={minusModal} onCancel={() => setMinusModal(false)} onCreate={onMinus} defaultValues={selectedRow} />
       <EditMaterialForm
         open={editMaterialModal}
         onCancel={() => setEditMaterialModal(false)}
@@ -689,19 +614,20 @@ const MaterialsTable: React.FC = () => {
         onCancel={() => setShowOperationModal(false)}
         onCreate={onMinus}
         defaultValues={selectedRow}
-      />
+      /> */}
 
       <Table
         size="small"
         columns={columns}
-        dataSource={data}
-        pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
-        onChange={onChange}
-        rowSelection={{
-          type: "radio",
-          ...rowSelection
+        dataSource={materialsQuery?.data}
+        pagination={{ position: ["bottomCenter"], defaultPageSize: 10 }}
+        onChange={(pagination) => {
+          setPage(pagination?.current ?? 1);
+          setLimit(pagination?.pageSize ?? 10);
         }}
         className="shadow-md"
+        sortDirections={["ascend"]}
+        rowKey={(record) => record.id}
       />
     </>
   );

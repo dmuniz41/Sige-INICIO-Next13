@@ -150,6 +150,8 @@ export async function PUT(request: NextRequest, { params }: { params: { warehous
     isMaterialExist[0].minimumExistence = materialToUpdate.minimumExistence;
     isMaterialExist[0].provider = materialToUpdate.provider;
 
+    // TODO: VERIFICAR QUE EL MATERIAL MODIFICADO COINCIDE CON OTRO EXISTENTE, ACTUALIZAR EL NOMENCLADOR DE FICHAS DE MATERIALES
+
     const updatedMaterial = await db.update(materials).set(isMaterialExist[0]).where(eq(materials.id, materialId)).returning();
 
     return new NextResponse(
