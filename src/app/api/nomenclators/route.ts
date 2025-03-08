@@ -113,8 +113,30 @@ export async function GET(request: NextRequest) {
     logger.info("Listar Nomencladores", { method: request.method, url: request.url, user: decoded.userName });
 
     const { searchParams } = new URL(request.url);
+    const categoryCode = searchParams.get("categoryCode");
     const page = parseInt(searchParams.get("page") || "1", 10); // Default to page 1
     const limit = parseInt(searchParams.get("limit") || "10", 10); // Default to 10 items per page
+
+    //? SI EL PARAMETO CATEGORY ES VALIDO, RETORNAR LOS NOMENCLATORES DE ESE CATEGORIA
+    if (categoryCode) {
+      const DBNomenclators = await db.select().from(nomenclators).where(eq(nomenclators.categoryCode, categoryCode)).orderBy(nomenclators.id);
+      return new NextResponse(
+        JSON.stringify({
+          ok: true,
+          total: DBNomenclators.length,
+          page,
+          limit,
+          data: DBNomenclators
+        }),
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          },
+          status: 200
+        }
+      );
+    }
 
     if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
       return NextResponse.json(

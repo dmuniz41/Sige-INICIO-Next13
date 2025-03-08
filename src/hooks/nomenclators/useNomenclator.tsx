@@ -13,9 +13,9 @@ const getNomenclatorsAPI = async (page: number = 1, limit: number = 10) => {
   return response.data;
 };
 
-const getNomenclatorsPerCategoryCode = async (categoryCode: string) => {
+const getNomenclatorsByCategoryCodeAPI = async (categoryCode: string) => {
   const token = localStorage.getItem("accessToken");
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/${categoryCode}`, {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators?categoryCode=${categoryCode}`, {
     headers: { accessToken: token }
   });
   return response.data;
@@ -54,10 +54,10 @@ const useGetNomenclators = (page: number, limit: number) => {
   return query;
 };
 
-const useGetNomenclatorsPerCategoryCode = (categoryCode: string) => {
+const useGetNomenclatorsByCategoryCode = (categoryCode: string) => {
   const query = useQuery({
     queryKey: ["GetNomenclatorsPerCategoryCode"],
-    queryFn: () => getNomenclatorsPerCategoryCode(categoryCode)
+    queryFn: () => getNomenclatorsByCategoryCodeAPI(categoryCode)
   });
 
   return query;
@@ -138,7 +138,7 @@ const useDeleteNomenclator = () => {
 export const useNomenclator = () => {
   return {
     useGetNomenclators,
-    useGetNomenclatorsPerCategoryCode,
+    useGetNomenclatorsByCategoryCode,
     useCreateNomenclator,
     useUpdateNomenclator,
     useDeleteNomenclator

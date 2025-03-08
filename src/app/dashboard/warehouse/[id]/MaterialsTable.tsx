@@ -2,7 +2,7 @@
 
 import { Button, Input, Space, Spin, Table, Tooltip } from "antd";
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Highlighter from "react-highlight-words";
@@ -50,7 +50,7 @@ type DataIndex = keyof Material;
 let date = moment();
 let currentDate = date.format("L");
 
-const MaterialsTable: React.FC = () => {
+const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
   const [searchText, setSearchText] = useState("");
@@ -64,6 +64,7 @@ const MaterialsTable: React.FC = () => {
   const [filteredData, setFilteredData] = useState<Material[]>();
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
+  const router = useRouter();
 
   const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
@@ -75,14 +76,11 @@ const MaterialsTable: React.FC = () => {
   const canAdd = sessionData?.user.role.includes("Añadir Material");
   const canMinus = sessionData?.user.role.includes("Sustraer Material");
 
-  const url = usePathname().split("/");
-  const selectedWarehouse: string = url[3];
-
   useEffect(() => {
-    dispatch(materialsStartLoading(selectedWarehouse));
+    dispatch(materialsStartLoading(warehouseId));
     dispatch(nomenclatorsStartLoading());
     dispatch(materialNomenclatorsStartLoading());
-  }, [dispatch, selectedWarehouse]);
+  }, [dispatch, warehouseId]);
 
   // PARA REPORTE EN PDF
   const fields = [
@@ -139,7 +137,7 @@ const MaterialsTable: React.FC = () => {
   ];
 
   const { useGetMaterials } = useMaterials();
-  const { data: materialsQuery, isLoading, isError } = useGetMaterials(page, limit, Number(selectedWarehouse));
+  const { data: materialsQuery, isLoading, isError } = useGetMaterials(page, limit, Number(warehouseId));
 
   const { nomenclators, materialsNomenclators }: { nomenclators: INomenclator[]; materialsNomenclators: IMaterialNomenclator[] } =
     useAppSelector((state: RootState) => state?.nomenclator);
@@ -165,14 +163,7 @@ const MaterialsTable: React.FC = () => {
   };
 
   const handleAdd = (): void => {
-    if (selectedRow) {
-      setAddModal(true);
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un material para añadir"
-      });
-    }
+    router.push(`/dashboard/warehouse/${warehouseId}/newMaterial`);
   };
 
   const handleMinus = (): void => {
@@ -247,82 +238,82 @@ const MaterialsTable: React.FC = () => {
     setSearchText("");
   };
 
-  const onCreate = (values: any): void => {
-    let operation: IOperation = {
-      date: currentDate,
-      tipo: "Añadir",
-      amount: values.unitsTotal
-    };
+  // const onCreate = (values: any): void => {
+  //   let operation: IOperation = {
+  //     date: currentDate,
+  //     tipo: "Añadir",
+  //     amount: values.unitsTotal
+  //   };
 
-    dispatch(
-      startAddMaterial({
-        category: values.category,
-        costPerUnit: values.costPerUnit,
-        description: values.description,
-        enterDate: values.enterDate.format("MM/DD/YYYY"),
-        materialName: values.materialName,
-        minimumExistence: values.minimumExistence,
-        operation: operation,
-        provider: values.provider,
-        unitMeasure: values.unitMeasure,
-        warehouse: selectedWarehouse
-      })
-    );
-    setCreateNewModal(false);
-  };
+  //   dispatch(
+  //     startAddMaterial({
+  //       category: values.category,
+  //       costPerUnit: values.costPerUnit,
+  //       description: values.description,
+  //       enterDate: values.enterDate.format("MM/DD/YYYY"),
+  //       materialName: values.materialName,
+  //       minimumExistence: values.minimumExistence,
+  //       operation: operation,
+  //       provider: values.provider,
+  //       unitMeasure: values.unitMeasure,
+  //       warehouse: selectedWarehouse
+  //     })
+  //   );
+  //   setCreateNewModal(false);
+  // };
 
-  const onAdd = (values: any): void => {
-    let operation: IOperation = {
-      date: currentDate,
-      tipo: "Añadir",
-      amount: values.unitsTotal
-    };
-    dispatch(
-      startAddMaterial({
-        category: values.category,
-        costPerUnit: values.costPerUnit,
-        description: values.description,
-        currentDate: currentDate,
-        materialName: values.materialName,
-        minimumExistence: values.minimumExistence,
-        operation: operation,
-        provider: values.provider,
-        unitMeasure: values.unitMeasure,
-        warehouse: selectedWarehouse
-      })
-    );
-    setAddModal(false);
-  };
+  // const onAdd = (values: any): void => {
+  //   let operation: IOperation = {
+  //     date: currentDate,
+  //     tipo: "Añadir",
+  //     amount: values.unitsTotal
+  //   };
+  //   dispatch(
+  //     startAddMaterial({
+  //       category: values.category,
+  //       costPerUnit: values.costPerUnit,
+  //       description: values.description,
+  //       currentDate: currentDate,
+  //       materialName: values.materialName,
+  //       minimumExistence: values.minimumExistence,
+  //       operation: operation,
+  //       provider: values.provider,
+  //       unitMeasure: values.unitMeasure,
+  //       warehouse: selectedWarehouse
+  //     })
+  //   );
+  //   setAddModal(false);
+  // };
 
-  const onMinus = (values: any): void => {
-    let operation: IOperation = {
-      date: currentDate,
-      tipo: "Sustraer",
-      amount: values.unitsTotal
-    };
-    dispatch(
-      startAddMaterial({
-        category: values.category,
-        costPerUnit: values.costPerUnit,
-        description: values.description,
-        currentDate: currentDate,
-        materialName: values.materialName,
-        minimumExistence: values.minimumExistence,
-        operation: operation,
-        provider: values.provider,
-        unitMeasure: values.unitMeasure,
-        warehouse: selectedWarehouse
-      })
-    );
-    setMinusModal(false);
-  };
+  // const onMinus = (values: any): void => {
+  //   let operation: IOperation = {
+  //     date: currentDate,
+  //     tipo: "Sustraer",
+  //     amount: values.unitsTotal
+  //   };
+  //   dispatch(
+  //     startAddMaterial({
+  //       category: values.category,
+  //       costPerUnit: values.costPerUnit,
+  //       description: values.description,
+  //       currentDate: currentDate,
+  //       materialName: values.materialName,
+  //       minimumExistence: values.minimumExistence,
+  //       operation: operation,
+  //       provider: values.provider,
+  //       unitMeasure: values.unitMeasure,
+  //       warehouse: selectedWarehouse
+  //     })
+  //   );
+  //   setMinusModal(false);
+  // };
 
-  const onEditMaterial = (values: any): void => {
-    dispatch(
-      editMaterial(selectedRow?.category!, values.code, values.description, values.materialName, values.minimumExistence, selectedWarehouse)
-    );
-    setEditMaterialModal(false);
-  };
+  // const onEditMaterial = (values: any): void => {
+  //   dispatch(
+  //     editMaterial(selectedRow?.category!, values.code, values.description, values.materialName, values.minimumExistence, selectedWarehouse)
+  //   );
+  //   setEditMaterialModal(false);
+  // };
 
   const onChange: TableProps<Material>["onChange"] = (pagination, filters, sorter, extra) => {
     setFilteredData(extra.currentDataSource);
@@ -503,7 +494,7 @@ const MaterialsTable: React.FC = () => {
     {
       title: <span className="font-bold">Acciones</span>,
       width: "5%",
-      render: (_, { ...record }) => (
+      render: (_, record) => (
         <div className="flex gap-1 justify-center">
           {canEdit ? (
             <>
