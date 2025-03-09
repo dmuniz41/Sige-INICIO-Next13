@@ -39,6 +39,7 @@ import { Material } from "@/db/migrations/schema";
 import { useMaterials } from "@/hooks/materials/useMaterials";
 import { useQueryClient } from "@tanstack/react-query";
 import { FileSvg } from "@/app/global/FileSvg";
+import { formatDate } from "@/helpers/formatDate";
 
 const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
   ssr: false,
@@ -483,13 +484,15 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
       title: <span className="font-bold">Fecha de Entrada</span>,
       dataIndex: "enterDate",
       width: "8%",
-      ...getColumnSearchProps("enterDate")
+      ...getColumnSearchProps("enterDate"),
+      render: (value: string) => formatDate(value)
     },
     {
       title: <span className="font-bold">Fecha de Edición</span>,
       dataIndex: "modifyDate",
       width: "8%",
-      ...getColumnSearchProps("modifyDate")
+      ...getColumnSearchProps("modifyDate"),
+      render: (value: string) => formatDate(value)
     },
     {
       title: <span className="font-bold">Acciones</span>,

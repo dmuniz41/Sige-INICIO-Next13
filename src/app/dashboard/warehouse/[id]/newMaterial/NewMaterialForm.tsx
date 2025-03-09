@@ -1,17 +1,26 @@
-import { Button, Col, DatePicker, Form, Input, InputNumber, Row, Select, SelectProps } from "antd";
+import { Col, Form, Input, InputNumber, Row, Select, SelectProps, Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
+import { useRouter } from "next/navigation";
+import Title from "antd/es/typography/Title";
 
+import { InsertMaterial } from "@/types/DTOs/materials/materials";
 import { MaterialCategoryNomenclators, Nomenclator } from "../../../../../db/migrations/schema";
 import { useMaterialCategoryNomenclator } from "@/hooks/nomenclators/materialCategory/useMaterialCategoryNomenclator";
+import { useMaterials } from "@/hooks/materials/useMaterials";
 import { useNomenclator } from "@/hooks/nomenclators/useNomenclator";
-import Title from "antd/es/typography/Title";
+import Swal from "sweetalert2";
 
 export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
   const [form] = Form.useForm();
+  const router = useRouter();
   const { useGetNomenclatorsByCategoryCode } = useNomenclator();
   const { useGetMaterialCategoryNomenclator } = useMaterialCategoryNomenclator();
   const { data: materialCategory } = useGetMaterialCategoryNomenclator(1, 100);
   const { data: unitMeasures } = useGetNomenclatorsByCategoryCode("N_UM");
   const { data: providers } = useGetNomenclatorsByCategoryCode("N_PRO");
+
+  const { useAddMaterial } = useMaterials();
+  const { mutateAsync: addMaterialMutation, isPending: isAddMaterialPending } = useAddMaterial();
 
   const category: SelectProps["options"] = materialCategory?.data?.map((materialCategoryNomenclator: MaterialCategoryNomenclators) => {
     return {
@@ -30,20 +39,62 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
   const provider: SelectProps["options"] = providers?.data?.map((provider: Nomenclator) => {
     return {
       label: `${provider.value}`,
-      value: `${provider.category}`
+      value: `${provider.value}`
     };
   });
+
+  const handleAddMaterial = () => {
+    form
+      .validateFields()
+      .then(async (values: InsertMaterial) => {
+        await addMaterialMutation({
+          warehouseId: Number(warehouseId),
+          category: values.category,
+          costPerUnit: values.costPerUnit,
+          description: values.description,
+          name: values.name,
+          minimumExistence: values.minimumExistence,
+          provider: values.provider,
+          unitMeasure: values.unitMeasure,
+          stock: values.stock
+        })
+          .then(() => {
+            router.push(`/dashboard/warehouse/${warehouseId}`);
+            form.resetFields();
+          })
+          .catch((error) => {
+            console.log("Error al guardar el nuevo material:", error);
+            Swal.fire("Error", "Error al guardar el nuevo material", "error");
+          });
+      })
+      .catch((error) => {
+        console.log("Validate Failed:", error);
+      });
+  };
+  const handleCancel = () => {
+    router.push(`/dashboard/warehouse/${warehouseId}`);
+    form.resetFields();
+  };
+
+  if (isAddMaterialPending)
+    return (
+      <section className="flex h-full w-full items-center justify-center">
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 70, color: "#ff8533" }} spin />} />
+      </section>
+    );
 
   return (
     <>
       <Row className="py-4">
         <Col span={12}>
-          <Title level={3}>Nuevo Material</Title>
+          <span className="flex text-2xl font-bold">Nuevo Material</span>
         </Col>
         <Col span={12}>
           <Row justify={"end"} gutter={16} className="flex gap-2 ">
-            <button className="toolbar-danger-icon-btn">Cancelar</button>
-            <button className="toolbar-primary-icon-btn" type="submit">
+            <button onClick={handleCancel} className="toolbar-danger-icon-btn">
+              Cancelar
+            </button>
+            <button onClick={handleAddMaterial} className="toolbar-primary-icon-btn" type="submit">
               Guardar Material
             </button>
           </Row>
@@ -69,7 +120,7 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
               />
             </Form.Item>
             <Form.Item
-              name="materialName"
+              name="name"
               label={<Title level={5}>Nombre del material</Title>}
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -85,6 +136,11 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
             >
               <InputNumber min={0} className="w-full" />
             </Form.Item>
+          </Col>
+          <Col span={12} className="border-light border rounded-md py-4 px-2">
+            <div className="flex font-bold text-2xl mb-4 ml-2">
+              <span>Detalles</span>
+            </div>
             <Form.Item
               name="unitMeasure"
               label={<Title level={5}>Unidad de medida</Title>}
@@ -102,13 +158,8 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
                 }
               />
             </Form.Item>
-          </Col>
-          <Col span={12} className="border-light border rounded-md py-4 px-2">
-            <div className="flex font-bold text-2xl mb-4 ml-2">
-              <span>Detalles</span>
-            </div>
             <Form.Item
-              name="unitsTotal"
+              name="stock"
               label={<Title level={5}>Cantidad a añadir</Title>}
               rules={[{ required: true, message: "Campo requerido" }]}
             >
@@ -134,13 +185,13 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
                 }
               />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               name="enterDate"
               label={<Title level={5}>Fecha de entrada</Title>}
               rules={[{ required: true, message: "Campo requerido" }]}
             >
               <DatePicker format={"MM/DD/YYYY"} />
-            </Form.Item>
+            </Form.Item> */}
           </Col>
         </Row>
       </Form>

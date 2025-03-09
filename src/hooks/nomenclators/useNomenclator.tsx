@@ -56,7 +56,7 @@ const useGetNomenclators = (page: number, limit: number) => {
 
 const useGetNomenclatorsByCategoryCode = (categoryCode: string) => {
   const query = useQuery({
-    queryKey: ["GetNomenclatorsPerCategoryCode"],
+    queryKey: ["GetNomenclatorsPerCategoryCode", {categoryCode}],
     queryFn: () => getNomenclatorsByCategoryCodeAPI(categoryCode)
   });
 

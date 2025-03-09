@@ -8,7 +8,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
   return (
     <div
       id="dashboard_layout"
-      className="h-screen w-full animate-fade animate-once animate-duration-150 grid-cols-2 "
+      className="h-screen w-full animate-fade animate-once animate-duration-150 grid-cols-2"
     >
       <div
         id="sidebar_wrapper"

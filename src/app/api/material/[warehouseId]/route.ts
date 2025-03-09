@@ -1,14 +1,13 @@
-import { eq, and } from 'drizzle-orm';
+import { eq, and, desc } from 'drizzle-orm';
 import { JwtPayload } from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
 import { db } from "@/db/drizzle";
 import { materials } from "@/db/migrations/schema";
+import { UpdateMaterial } from "@/types/DTOs/materials/materials";
 import { verifyJWT } from "@/libs/jwt";
 import logger from "@/utils/logger";
-import { UpdateMaterial } from "@/types/DTOs/materials/materials";
-import moment from 'moment';
 
 export async function GET(request: NextRequest, { params }: { params: { warehouseId: number } }) {
   const warehouseId = params.warehouseId; // Id del almacen
@@ -49,7 +48,7 @@ export async function GET(request: NextRequest, { params }: { params: { warehous
       .select()
       .from(materials)
       .where(eq(materials.warehouseId, warehouseId))
-      .orderBy(materials.id)
+      .orderBy(desc(materials.id))
       .limit(limit)
       .offset(offset);
     const totalCount = await db.$count(materials);
