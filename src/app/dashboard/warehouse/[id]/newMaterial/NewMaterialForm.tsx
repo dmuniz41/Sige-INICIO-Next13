@@ -85,12 +85,13 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
 
   return (
     <>
-      <Row className="py-4">
+      {/* ENCABEZADO */}
+      <Row className="py-4 px-8">
         <Col span={12}>
-          <span className="flex text-2xl font-bold">Nuevo Material</span>
+          <span className="flex text-3xl font-bold">Nuevo Material</span>
         </Col>
         <Col span={12}>
-          <Row justify={"end"} gutter={16} className="flex gap-2 ">
+          <Row justify={"end"} gutter={16} className="flex gap-2">
             <button onClick={handleCancel} className="toolbar-danger-icon-btn">
               Cancelar
             </button>
@@ -102,7 +103,8 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
       </Row>
       <Form form={form} layout="vertical" name="newMaterialForm" size="large">
         <Row justify={"space-between"}>
-          <Col span={12} className="border-light border rounded-md py-4 px-2">
+          {/* SECCION DE DATOS GENERALES */}
+          <Col span={12} className="border-light shadow-md border rounded-md p-8">
             <div className="flex font-bold text-2xl mb-4 ml-2">
               <span>General</span>
             </div>
@@ -137,7 +139,8 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
               <InputNumber min={0} className="w-full" />
             </Form.Item>
           </Col>
-          <Col span={12} className="border-light border rounded-md py-4 px-2">
+          {/* SECCION DE DETALLES */}
+          <Col span={12} className="border-light shadow-md border rounded-md p-8">
             <div className="flex font-bold text-2xl mb-4 ml-2">
               <span>Detalles</span>
             </div>

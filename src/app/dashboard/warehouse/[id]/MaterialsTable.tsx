@@ -13,7 +13,6 @@ import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
 import type { InputRef } from "antd";
 
-import { AddMaterialForm } from "./AddMaterialForm";
 import { DeleteSvg } from "../../../global/DeleteSvg";
 import { editMaterial, materialsStartLoading, startAddMaterial, startDeleteMaterial } from "@/actions/material";
 import { EditMaterialForm } from "./EditMaterialForm";
