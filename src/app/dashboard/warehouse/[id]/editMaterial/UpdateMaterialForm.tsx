@@ -1,17 +1,19 @@
 import { Col, Form, Input, InputNumber, Row, Select, SelectProps, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Swal from "sweetalert2";
 import Title from "antd/es/typography/Title";
 
-import { InsertMaterial } from "@/types/DTOs/materials/materials";
-import { MaterialCategoryNomenclators, Nomenclator } from "../../../../../db/migrations/schema";
-import { useMaterialCategoryNomenclator } from "@/hooks/nomenclators/materialCategory/useMaterialCategoryNomenclator";
 import { useMaterials } from "@/hooks/materials/useMaterials";
 import { useNomenclator } from "@/hooks/nomenclators/useNomenclator";
+import { useMaterialCategoryNomenclator } from "@/hooks/nomenclators/materialCategory/useMaterialCategoryNomenclator";
+import { MaterialCategoryNomenclators, Nomenclator } from "@/db/migrations/schema";
+import { UpdateMaterial } from "@/types/DTOs/materials/materials";
 
-export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
+export const UpdateMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
   const [form] = Form.useForm();
+  const searchParams = useSearchParams();
+  const params = Object.fromEntries(searchParams.entries());
   const router = useRouter();
   const { useGetNomenclatorsByCategoryCode } = useNomenclator();
   const { useGetMaterialCategoryNomenclator } = useMaterialCategoryNomenclator();
@@ -19,8 +21,10 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
   const { data: unitMeasures } = useGetNomenclatorsByCategoryCode("N_UM");
   const { data: providers } = useGetNomenclatorsByCategoryCode("N_PRO");
 
-  const { useAddMaterial } = useMaterials();
-  const { mutateAsync: addMaterialMutation, isPending: isAddMaterialPending } = useAddMaterial();
+  // TODO: HACER ENDPOINT PARA OBTENER UN MATERIAL POR SU ID
+
+  const { useUpdateMaterial } = useMaterials();
+  const { mutateAsync: updateMaterialMutation, isPending: isUpdateMaterialPending } = useUpdateMaterial();
 
   const category: SelectProps["options"] = materialCategory?.data?.map((materialCategoryNomenclator: MaterialCategoryNomenclators) => {
     return {
@@ -46,25 +50,28 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
   const handleAddMaterial = () => {
     form
       .validateFields()
-      .then(async (values: InsertMaterial) => {
-        await addMaterialMutation({
+      .then(async (values: UpdateMaterial) => {
+        await updateMaterialMutation({
+          materialId: Number(params.materialId),
           warehouseId: Number(warehouseId),
-          category: values.category,
-          costPerUnit: values.costPerUnit,
-          description: values.description,
-          name: values.name,
-          minimumExistence: values.minimumExistence,
-          provider: values.provider,
-          unitMeasure: values.unitMeasure,
-          stock: values.stock
+          values: {
+            category: values.category,
+            costPerUnit: values.costPerUnit,
+            description: values.description,
+            name: values.name,
+            minimumExistence: values.minimumExistence,
+            provider: values.provider,
+            unitMeasure: values.unitMeasure,
+            stock: values.stock
+          }
         })
           .then(() => {
             router.push(`/dashboard/warehouse/${warehouseId}`);
             form.resetFields();
           })
           .catch((error) => {
-            console.log("Error al guardar el nuevo material:", error);
-            Swal.fire("Error", "Error al guardar el nuevo material", "error");
+            console.log("Error al editar material:", error);
+            Swal.fire("Error", "Error al editar material", "error");
           });
       })
       .catch((error) => {
@@ -82,7 +89,7 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
       {/* ENCABEZADO */}
       <Row className="py-4 px-8">
         <Col span={12}>
-          <span className="flex text-3xl font-bold">Nuevo Material</span>
+          <span className="flex text-3xl font-bold">Editar Material</span>
         </Col>
         <Col span={12}>
           <Row justify={"end"} gutter={16} className="flex gap-2">
@@ -90,8 +97,8 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
               Cancelar
             </button>
             <button onClick={handleAddMaterial} className="toolbar-primary-icon-btn" type="submit">
-              {isAddMaterialPending ? (
-                <Spin spinning={isAddMaterialPending} indicator={<LoadingOutlined style={{ color: "white" }} spin />} />
+              {isUpdateMaterialPending ? (
+                <Spin spinning={isUpdateMaterialPending} indicator={<LoadingOutlined style={{ color: "white" }} spin />} />
               ) : (
                 <span>Guardar Material</span>
               )}

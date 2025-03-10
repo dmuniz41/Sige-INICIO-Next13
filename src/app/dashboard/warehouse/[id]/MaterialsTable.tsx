@@ -188,15 +188,8 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
     }
   };
 
-  const handleEditMaterial = (): void => {
-    if (selectedRow) {
-      setEditMaterialModal(true);
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un material a editar"
-      });
-    }
+  const handleEditMaterial = (materialId: number): void => {
+    router.push(`/dashboard/warehouse/${warehouseId}/editMaterial?materialId=${materialId}`);
   };
 
   const handleRefresh = async () => {
@@ -506,7 +499,7 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
                 </button>
               </Tooltip>
               <Tooltip placement="top" title={"Editar Material"} arrow={{ pointAtCenter: true }}>
-                <button className="table-see-action-btn">
+                <button onClick={() => handleEditMaterial(record.id)} className="table-see-action-btn">
                   <EditSvg width={20} height={20} />
                 </button>
               </Tooltip>
