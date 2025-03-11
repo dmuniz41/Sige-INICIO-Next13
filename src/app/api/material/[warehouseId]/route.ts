@@ -1,16 +1,16 @@
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, and, desc, sum } from "drizzle-orm";
 import { JwtPayload } from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
 import { db } from "@/db/drizzle";
-import { materials } from "@/db/migrations/schema";
+import { materials, warehouse } from "@/db/migrations/schema";
 import { UpdateMaterial } from "@/types/DTOs/materials/materials";
 import { verifyJWT } from "@/libs/jwt";
 import logger from "@/utils/logger";
 
 export async function GET(request: NextRequest, { params }: { params: { warehouseId: number } }) {
-  const warehouseId = params.warehouseId; // Id del almacen
+  const warehouseId = params.warehouseId;
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -28,8 +28,39 @@ export async function GET(request: NextRequest, { params }: { params: { warehous
     logger.info("Listar Materiales", { method: request.method, url: request.url, user: decoded.userName });
 
     const { searchParams } = new URL(request.url);
+    const materialId = parseInt(searchParams.get("materialId")!);
     const page = parseInt(searchParams.get("page") || "1", 10); // Default to page 1
     const limit = parseInt(searchParams.get("limit") || "10", 10); // Default to 10 items per page
+
+    // ? SI VIENE EL PARAMETRO MATERIALID BUSCA EL MATERIAL EN LA BASE DE DATOS
+    if (materialId) {
+      const material = await db.select().from(materials).where(eq(materials.id, materialId));
+      if (material.length === 0) {
+        return NextResponse.json(
+          {
+            ok: false,
+            message: `El material con id:${materialId} no existe`
+          },
+          {
+            status: 404
+          }
+        );
+      } else {
+        return new NextResponse(
+          JSON.stringify({
+            ok: true,
+            data: material[0]
+          }),
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json"
+            },
+            status: 200
+          }
+        );
+      }
+    }
 
     if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
       return NextResponse.json(
@@ -125,7 +156,10 @@ export async function PUT(request: NextRequest, { params }: { params: { warehous
       );
     }
 
-    const isMaterialExist = await db.select().from(materials).where(and(eq(materials.id, materialId), eq(materials.warehouseId, warehouseId)));
+    const isMaterialExist = await db
+      .select()
+      .from(materials)
+      .where(and(eq(materials.id, materialId), eq(materials.warehouseId, warehouseId)));
     if (isMaterialExist.length === 0) {
       return NextResponse.json(
         {
@@ -138,7 +172,6 @@ export async function PUT(request: NextRequest, { params }: { params: { warehous
       );
     }
 
-
     // ? PARA ACTUALIZAR EL STOCK UTILIZE LAS FUNCIONES DE MOVER INVENTARIO
     isMaterialExist[0].name = materialToUpdate.name;
     isMaterialExist[0].category = materialToUpdate.category;
@@ -148,10 +181,22 @@ export async function PUT(request: NextRequest, { params }: { params: { warehous
     isMaterialExist[0].costPerUnit = materialToUpdate.costPerUnit;
     isMaterialExist[0].minimumExistence = materialToUpdate.minimumExistence;
     isMaterialExist[0].provider = materialToUpdate.provider;
+    isMaterialExist[0].totalValue = materialToUpdate.costPerUnit * materialToUpdate.stock;
 
-    // TODO: VERIFICAR QUE EL MATERIAL MODIFICADO COINCIDE CON OTRO EXISTENTE, ACTUALIZAR EL NOMENCLADOR DE FICHAS DE MATERIALES
+    // TODO: VERIFICAR QUE SI EL MATERIAL MODIFICADO COINCIDE CON OTRO EXISTENTE, ACTUALIZAR EL NOMENCLADOR DE FICHAS DE MATERIALES
 
     const updatedMaterial = await db.update(materials).set(isMaterialExist[0]).where(eq(materials.id, materialId)).returning();
+
+    // ? ACTUALIZA EL VALOR TOTAL DEL ALMACEN //
+    const newWarehouseValue = await db
+      .select({ totalAmount: sum(materials.totalValue) })
+      .from(materials)
+      .where(eq(materials.warehouseId, updatedMaterial[0].warehouseId));
+
+    await db
+      .update(warehouse)
+      .set({ totalValue: Number(newWarehouseValue[0].totalAmount) })
+      .where(eq(warehouse.id, updatedMaterial[0].warehouseId));
 
     return new NextResponse(
       JSON.stringify({

@@ -9,22 +9,26 @@ import { useNomenclator } from "@/hooks/nomenclators/useNomenclator";
 import { useMaterialCategoryNomenclator } from "@/hooks/nomenclators/materialCategory/useMaterialCategoryNomenclator";
 import { MaterialCategoryNomenclators, Nomenclator } from "@/db/migrations/schema";
 import { UpdateMaterial } from "@/types/DTOs/materials/materials";
+import { useEffect } from "react";
 
 export const UpdateMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
   const [form] = Form.useForm();
   const searchParams = useSearchParams();
   const params = Object.fromEntries(searchParams.entries());
   const router = useRouter();
+
   const { useGetNomenclatorsByCategoryCode } = useNomenclator();
   const { useGetMaterialCategoryNomenclator } = useMaterialCategoryNomenclator();
+  const { useUpdateMaterial, useGetMaterialById } = useMaterials();
   const { data: materialCategory } = useGetMaterialCategoryNomenclator(1, 100);
   const { data: unitMeasures } = useGetNomenclatorsByCategoryCode("N_UM");
   const { data: providers } = useGetNomenclatorsByCategoryCode("N_PRO");
-
-  // TODO: HACER ENDPOINT PARA OBTENER UN MATERIAL POR SU ID
-
-  const { useUpdateMaterial } = useMaterials();
+  const {data: material} = useGetMaterialById(Number(params.materialId), Number(warehouseId));
   const { mutateAsync: updateMaterialMutation, isPending: isUpdateMaterialPending } = useUpdateMaterial();
+
+  useEffect(() => {
+    form.setFieldsValue(material?.data);
+  }, [material, form]);
 
   const category: SelectProps["options"] = materialCategory?.data?.map((materialCategoryNomenclator: MaterialCategoryNomenclators) => {
     return {
@@ -100,13 +104,13 @@ export const UpdateMaterialForm = ({ warehouseId }: { warehouseId: string }) => 
               {isUpdateMaterialPending ? (
                 <Spin spinning={isUpdateMaterialPending} indicator={<LoadingOutlined style={{ color: "white" }} spin />} />
               ) : (
-                <span>Guardar Material</span>
+                <span>Editar Material</span>
               )}
             </button>
           </Row>
         </Col>
       </Row>
-      <Form form={form} layout="vertical" name="newMaterialForm" size="large">
+      <Form form={form} layout="vertical" name="newMaterialForm" size="large" initialValues={material?.data}>
         <Row justify={"space-between"}>
           {/* SECCION DE DATOS GENERALES */}
           <Col span={12} className="border-light shadow-md border rounded-md p-8">
