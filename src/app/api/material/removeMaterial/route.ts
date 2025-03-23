@@ -127,10 +127,12 @@ const updateExistingMaterial = async (materialToUpdate: Material, amountToRemove
   // ? REGISRA UN MOVIMIENTO DE INVENTARIO //
   await db.insert(stockMovements).values({
     materialId: materialToUpdate.id,
+    warehouseId: updatedMaterial[0].warehouseId,
     quantityChange: amountToRemove,
     movementType: "REMOVED",
+    unitMeasure: updatedMaterial[0].unitMeasure,
     notes: `Se han removido ${amountToRemove} unidades de ${materialToUpdate?.category} ${materialToUpdate?.name}`,
-    userId: userName
+    userName: userName
   });
 
   // ? ACTUALIZA EL VALOR TOTAL DEL ALMACEN //

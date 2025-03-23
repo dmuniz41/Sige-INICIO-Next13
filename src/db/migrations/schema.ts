@@ -91,6 +91,7 @@ export const stockMovements = pgTable("stock_movements", {
   quantityChange: doublePrecision("quantity_change").notNull(),
   movementType: varchar("movement_type", { length: 25 }).notNull(), // "ADDED", "REMOVED"
   movementDate: timestamp("movement_date").defaultNow(),
+  unitMeasure: varchar("unit_measure", { length: 25 }),
   notes: text("notes"),
   userName: varchar({ length: 50 }).notNull()
 

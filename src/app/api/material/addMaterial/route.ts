@@ -195,6 +195,7 @@ const addNewMaterial = async (materialToInsert: InsertMaterial, userName: string
     materialId: newMaterial[0].id,
     warehouseId: newMaterial[0].warehouseId,
     quantityChange: newMaterial[0].stock,
+    unitMeasure: newMaterial[0].unitMeasure,
     movementType: "ADDED",
     notes: `Se ha añadido un nuevo material :${newMaterial[0]?.category} ${newMaterial[0]?.name}`,
     userName: userName

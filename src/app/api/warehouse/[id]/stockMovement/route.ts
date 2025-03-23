@@ -8,8 +8,8 @@ import { stockMovements } from "@/db/migrations/schema";
 import { verifyJWT } from "@/libs/jwt";
 import logger from "@/utils/logger";
 
-export async function GET(request: NextRequest, { params }: { params: { warehouseId: number } }) {
-  const warehouseId = params.warehouseId;
+export async function GET(request: NextRequest, { params }: { params: { id: number } }) {
+  const warehouseId = params.id;
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest, { params }: { params: { warehous
     const page = parseInt(searchParams.get("page") || "1", 10); // Default to page 1
     const limit = parseInt(searchParams.get("limit") || "10", 10); // Default to 10 items per page
 
-    // ? SI VIENE EL PARAMETRO MATERIALID BUSCA EL MATERIAL EN LA BASE DE DATOS
+    // ? SI VIENE EL PARAMETRO stockMovementId BUSCA EL MOVIMIENTO EN LA BASE DE DATOS
     if (stockMovementId) {
       const DBStockMovement = await db.select().from(stockMovements).where(eq(stockMovements.id, stockMovementId));
       if (DBStockMovement.length === 0) {
@@ -60,7 +60,6 @@ export async function GET(request: NextRequest, { params }: { params: { warehous
         );
       }
     }
-
     if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
       return NextResponse.json(
         {

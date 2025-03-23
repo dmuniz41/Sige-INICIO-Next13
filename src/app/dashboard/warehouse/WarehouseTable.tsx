@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useWarehouse } from "@/hooks/warehouse/useWarehouse";
 import { Warehouse } from "@/db/migrations/schema";
+import { ListSvg } from "@/app/global/ListSvg";
 
 type DataIndex = keyof Warehouse;
 
@@ -169,6 +170,10 @@ const WarehousesTable: React.FC = () => {
       )
   });
 
+  const handleViewStockMovements = (record: Warehouse) => {
+    router.push(`/dashboard/warehouse/${record?.id}/stockMovement`);
+  };
+
   const columns: ColumnsType<Warehouse> = [
     {
       title: <span className="font-bold">Nombre</span>,
@@ -199,11 +204,18 @@ const WarehousesTable: React.FC = () => {
           {!canList ? (
             <></>
           ) : (
-            <Tooltip placement="top" title={"Ver Almacén"} arrow={{ pointAtCenter: true }}>
-              <button disabled={!canList} onClick={() => handleView(record)} className="table-see-offer-action-btn">
-                <SeeSvg width={20} height={20} />
-              </button>
-            </Tooltip>
+            <div className="flex gap-1">
+              <Tooltip placement="top" title={"Ver Almacén"} arrow={{ pointAtCenter: true }}>
+                <button disabled={!canList} onClick={() => handleView(record)} className="table-see-offer-action-btn">
+                  <SeeSvg width={20} height={20} />
+                </button>
+              </Tooltip>
+              <Tooltip placement="top" title={"Ver Movimientos de Inventario"} arrow={{ pointAtCenter: true }}>
+                <button disabled={!canList} onClick={() => handleViewStockMovements(record)} className="table-stock-movement-action-btn">
+                  <ListSvg width={20} height={20} />
+                </button>
+              </Tooltip>
+            </div>
           )}
           {canEdit ? (
             <>
@@ -241,7 +253,7 @@ const WarehousesTable: React.FC = () => {
     Swal.fire({
       icon: "error",
       title: "Error",
-      text: "Ocurrió un error al obtener los representantes"
+      text: "Ocurrió un error al obtener los alamcenes"
     });
   }
 
