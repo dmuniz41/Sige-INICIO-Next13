@@ -231,82 +231,9 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
     setSearchText("");
   };
 
-  // const onCreate = (values: any): void => {
-  //   let operation: IOperation = {
-  //     date: currentDate,
-  //     tipo: "Añadir",
-  //     amount: values.unitsTotal
-  //   };
-
-  //   dispatch(
-  //     startAddMaterial({
-  //       category: values.category,
-  //       costPerUnit: values.costPerUnit,
-  //       description: values.description,
-  //       enterDate: values.enterDate.format("MM/DD/YYYY"),
-  //       materialName: values.materialName,
-  //       minimumExistence: values.minimumExistence,
-  //       operation: operation,
-  //       provider: values.provider,
-  //       unitMeasure: values.unitMeasure,
-  //       warehouse: selectedWarehouse
-  //     })
-  //   );
-  //   setCreateNewModal(false);
-  // };
-
-  // const onAdd = (values: any): void => {
-  //   let operation: IOperation = {
-  //     date: currentDate,
-  //     tipo: "Añadir",
-  //     amount: values.unitsTotal
-  //   };
-  //   dispatch(
-  //     startAddMaterial({
-  //       category: values.category,
-  //       costPerUnit: values.costPerUnit,
-  //       description: values.description,
-  //       currentDate: currentDate,
-  //       materialName: values.materialName,
-  //       minimumExistence: values.minimumExistence,
-  //       operation: operation,
-  //       provider: values.provider,
-  //       unitMeasure: values.unitMeasure,
-  //       warehouse: selectedWarehouse
-  //     })
-  //   );
-  //   setAddModal(false);
-  // };
-
-  // const onMinus = (values: any): void => {
-  //   let operation: IOperation = {
-  //     date: currentDate,
-  //     tipo: "Sustraer",
-  //     amount: values.unitsTotal
-  //   };
-  //   dispatch(
-  //     startAddMaterial({
-  //       category: values.category,
-  //       costPerUnit: values.costPerUnit,
-  //       description: values.description,
-  //       currentDate: currentDate,
-  //       materialName: values.materialName,
-  //       minimumExistence: values.minimumExistence,
-  //       operation: operation,
-  //       provider: values.provider,
-  //       unitMeasure: values.unitMeasure,
-  //       warehouse: selectedWarehouse
-  //     })
-  //   );
-  //   setMinusModal(false);
-  // };
-
-  // const onEditMaterial = (values: any): void => {
-  //   dispatch(
-  //     editMaterial(selectedRow?.category!, values.code, values.description, values.materialName, values.minimumExistence, selectedWarehouse)
-  //   );
-  //   setEditMaterialModal(false);
-  // };
+  const handleStockMovement = (materialId: number) => {
+    router.push(`/dashboard/warehouse/${warehouseId}/stockMovement?materialId=${materialId}`);
+  };
 
   const onChange: TableProps<Material>["onChange"] = (pagination, filters, sorter, extra) => {
     setFilteredData(extra.currentDataSource);
@@ -494,7 +421,7 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
           {canEdit ? (
             <>
               <Tooltip placement="top" title={"Movimiento de Inventario"} arrow={{ pointAtCenter: true }}>
-                <button className="table-stock-movement-action-btn">
+                <button onClick={() => handleStockMovement(record?.id)} className="table-stock-movement-action-btn">
                   <FileSvg width={20} height={20} />
                 </button>
               </Tooltip>
