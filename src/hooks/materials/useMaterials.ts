@@ -86,7 +86,7 @@ const useAddMaterial = () => {
       queryWarehouse.invalidateQueries({ queryKey: ["GetMaterials"] });
       Toast.fire({
         icon: "success",
-        title: "Material anadido"
+        title: "Material añadido"
       });
     },
     onError: (error: AxiosError<{ ok: boolean; message: string }>) => {

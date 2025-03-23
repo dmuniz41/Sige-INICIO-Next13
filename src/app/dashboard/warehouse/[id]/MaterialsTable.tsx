@@ -158,35 +158,35 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
   //   PDFReportData = data;
   // }
 
-  const handleNew = (): void => {
-    setCreateNewModal(true);
-  };
+  // const handleNew = (): void => {
+  //   setCreateNewModal(true);
+  // };
 
   const handleAdd = (): void => {
     router.push(`/dashboard/warehouse/${warehouseId}/newMaterial`);
   };
 
-  const handleMinus = (): void => {
-    if (selectedRow) {
-      setMinusModal(true);
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un material para sustraer"
-      });
-    }
-  };
+  // const handleMinus = (): void => {
+  //   if (selectedRow) {
+  //     setMinusModal(true);
+  //   } else {
+  //     Toast.fire({
+  //       icon: "error",
+  //       title: "Seleccione un material para sustraer"
+  //     });
+  //   }
+  // };
 
-  const handleShowOperations = (): void => {
-    if (selectedRow) {
-      setShowOperationModal(true);
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione el material que desea ver sus operaciones"
-      });
-    }
-  };
+  // const handleShowOperations = (): void => {
+  //   if (selectedRow) {
+  //     setShowOperationModal(true);
+  //   } else {
+  //     Toast.fire({
+  //       icon: "error",
+  //       title: "Seleccione el material que desea ver sus operaciones"
+  //     });
+  //   }
+  // };
 
   const handleEditMaterial = (materialId: number): void => {
     router.push(`/dashboard/warehouse/${warehouseId}/editMaterial?materialId=${materialId}`);

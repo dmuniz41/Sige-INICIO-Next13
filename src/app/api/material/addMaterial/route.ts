@@ -107,11 +107,12 @@ const updateExistingMaterial = async (materialToUpdate: Material, materialToInse
 
   // ? REGISRA UN MOVIMIENTO DE INVENTARIO //
   await db.insert(stockMovements).values({
-    materialId: materialToUpdate.id,
+    materialId: updatedMaterial[0].id,
+    warehouseId: materialToInsert.warehouseId,
     quantityChange: quantityChange,
     movementType: "ADDED",
     notes: `Se ha añadido ${materialToInsert?.stock} unidades de ${materialToUpdate?.category} ${materialToUpdate?.name}`,
-    userId: userName
+    userName: userName
   });
 
   // ? ACTUALIZA EL VALOR TOTAL DEL ALMACEN //
@@ -192,10 +193,11 @@ const addNewMaterial = async (materialToInsert: InsertMaterial, userName: string
   // ? REGISRA UN MOVIMIENTO DE INVENTARIO //
   await db.insert(stockMovements).values({
     materialId: newMaterial[0].id,
+    warehouseId: newMaterial[0].warehouseId,
     quantityChange: newMaterial[0].stock,
     movementType: "ADDED",
     notes: `Se ha añadido un nuevo material :${newMaterial[0]?.category} ${newMaterial[0]?.name}`,
-    userId: userName
+    userName: userName
   });
 
   // ? ACTUALIZA EL VALOR TOTAL DEL ALMACEN //

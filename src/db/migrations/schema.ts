@@ -51,6 +51,14 @@ export const warehouse = pgTable("warehouse", {
   totalValue: doublePrecision("totalValue").notNull()
 });
 
+export const serviceFeeMaterialNomenclators = pgTable("service_fee_material_nomenclators", {
+  id: serial("id").primaryKey().notNull(),
+  code: varchar("name", { length: 100 }).notNull(),
+  displayName: varchar("display_name", { length: 100 }),
+  costPerUnit: doublePrecision("costPerUnit").notNull(),
+  unitMeasure: varchar("unit_measure", { length: 25 }).notNull()
+});
+
 export const materials = pgTable("materials", {
   id: serial("id").primaryKey().notNull(),
   name: varchar({ length: 50 }).notNull(),
@@ -72,29 +80,26 @@ export const materials = pgTable("materials", {
     .notNull()
 });
 
-export const serviceFeeMaterialNomenclators = pgTable("service_fee_material_nomenclators", {
-  id: serial("id").primaryKey().notNull(),
-  code: varchar("name", { length: 100 }).notNull(),
-  displayName: varchar("display_name", { length: 100 }),
-  costPerUnit: doublePrecision("costPerUnit").notNull(),
-  unitMeasure: varchar("unit_measure", { length: 25 }).notNull()
-});
-
 export const stockMovements = pgTable("stock_movements", {
   id: serial("id").primaryKey().notNull(),
   materialId: integer("material_id")
     .references(() => materials.id)
     .notNull(),
+  warehouseId: integer("warehouse_id")
+    .references(() => warehouse.id)
+    .notNull(),
   quantityChange: doublePrecision("quantity_change").notNull(),
   movementType: varchar("movement_type", { length: 25 }).notNull(), // "ADDED", "REMOVED"
   movementDate: timestamp("movement_date").defaultNow(),
   notes: text("notes"),
-  userId: varchar({ length: 50 }).notNull()
+  userName: varchar({ length: 50 }).notNull()
+
 });
 
 // Define relationships
 export const warehouseRelations = relations(warehouse, ({ many }) => ({
-  materials: many(materials) // A warehouse can have many materials
+  materials: many(materials), // A warehouse can have many materials
+  stockMovements: many(stockMovements) // A warehouse can have many stock movements
 }));
 
 export const serviceFeeMaterialNomenclatorRelations = relations(serviceFeeMaterialNomenclators, ({ many }) => ({
@@ -119,6 +124,11 @@ export const stockMovementsRelations = relations(stockMovements, ({ one }) => ({
     // A stock movement belongs to one material
     fields: [stockMovements.materialId],
     references: [materials.id]
+  }),
+  warehouse: one(warehouse, {
+    // A stock movement belongs to one warehouse
+    fields: [stockMovements.warehouseId],
+    references: [warehouse.id]
   })
 }));
 
