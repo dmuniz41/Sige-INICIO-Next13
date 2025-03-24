@@ -1,0 +1,1 @@
+ALTER TABLE "stock_movements" RENAME COLUMN "userName" TO "user_name";--> statement-breakpoint

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
 import { db } from "@/db/drizzle";
-import { stockMovements } from "@/db/migrations/schema";
+import { materialStockMovementsView, stockMovements } from "@/db/migrations/schema";
 import { verifyJWT } from "@/libs/jwt";
 import logger from "@/utils/logger";
 
@@ -33,7 +33,10 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
 
     // ? SI VIENE EL PARAMETRO stockMovementId BUSCA EL MOVIMIENTO EN LA BASE DE DATOS
     if (stockMovementId) {
-      const DBStockMovement = await db.select().from(stockMovements).where(eq(stockMovements.id, stockMovementId));
+      const DBStockMovement = await db
+        .select()
+        .from(materialStockMovementsView)
+        .where(eq(materialStockMovementsView.movementId, stockMovementId));
       if (DBStockMovement.length === 0) {
         return NextResponse.json(
           {
@@ -75,12 +78,12 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
     const offset = (page - 1) * limit;
     const paginatedData = await db
       .select()
-      .from(stockMovements)
-      .where(eq(stockMovements.warehouseId, warehouseId))
-      .orderBy(desc(stockMovements.id))
+      .from(materialStockMovementsView)
+      .where(eq(materialStockMovementsView.warehouseId, warehouseId))
+      .orderBy(desc(materialStockMovementsView.movementDate))
       .limit(limit)
       .offset(offset);
-    const totalCount = await db.$count(stockMovements);
+    const totalCount = await db.$count(materialStockMovementsView);
 
     return new NextResponse(
       JSON.stringify({

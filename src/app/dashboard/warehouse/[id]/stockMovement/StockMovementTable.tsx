@@ -12,10 +12,10 @@ import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { StockMovement } from "@/db/migrations/schema";
+import { MaterialStockMovementsView } from "@/db/migrations/schema";
 import { useStockMovements } from "@/hooks/warehouse/useStockMovements";
 
-type DataIndex = keyof StockMovement;
+type DataIndex = keyof MaterialStockMovementsView;
 
 const StockMovementsTable = ({ warehouseId }: { warehouseId: string }) => {
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -44,8 +44,8 @@ const StockMovementsTable = ({ warehouseId }: { warehouseId: string }) => {
     setSearchedColumn(dataIndex);
   };
 
-  const handleView = async (record: StockMovement) => {
-    router.push(`/dashboard/warehouse/${record === undefined ? " " : record?.id}`);
+  const handleView = async (record: MaterialStockMovementsView) => {
+    router.push(`/dashboard/warehouse/${record === undefined ? " " : record?.materialId}`);
   };
 
   const handleReset = (clearFilters: () => void) => {
@@ -53,7 +53,7 @@ const StockMovementsTable = ({ warehouseId }: { warehouseId: string }) => {
     setSearchText("");
   };
 
-  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<StockMovement> => ({
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<MaterialStockMovementsView> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
@@ -124,11 +124,17 @@ const StockMovementsTable = ({ warehouseId }: { warehouseId: string }) => {
       )
   });
 
-  const columns: ColumnsType<StockMovement> = [
+  const columns: ColumnsType<MaterialStockMovementsView> = [
     {
       title: <span className="font-bold">Id de Material</span>,
       dataIndex: "materialId",
+      width: "8%",
       ...getColumnSearchProps("materialId")
+    },
+    {
+      title: <span className="font-bold">Nombre del Material</span>,
+      dataIndex: "materialId",
+      render: (value: number, record: MaterialStockMovementsView) => <span>{record?.materialCategory + " - " + record?.materialName}</span>
     },
     {
       title: <span className="font-bold">Fecha de Movimiento</span>,
@@ -138,10 +144,12 @@ const StockMovementsTable = ({ warehouseId }: { warehouseId: string }) => {
     {
       title: <span className="font-bold">Tipo de Movimiento</span>,
       dataIndex: "movementType",
+      width: "8%",
       render: (value: string) => <Tag color={value === "ADDED" ? "green" : "red"}>{value === "ADDED" ? "ENTRADA" : "SALIDA"}</Tag>
     },
     {
       title: <span className="font-bold">Cantidad</span>,
+      width: "8%",
       dataIndex: "quantityChange"
     },
     {

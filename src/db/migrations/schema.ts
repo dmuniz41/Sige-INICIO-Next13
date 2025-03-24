@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
-import { pgTable, varchar, integer, numeric, serial, boolean, decimal, text, date, timestamp, doublePrecision } from "drizzle-orm/pg-core";
+import { pgTable, varchar, integer, numeric, serial, boolean, decimal, text, date, timestamp, doublePrecision, pgView } from "drizzle-orm/pg-core";
 
+//* TABLAS *//
 export const users = pgTable("users", {
   id: serial().primaryKey().notNull(),
   name: varchar().notNull(),
@@ -93,11 +94,11 @@ export const stockMovements = pgTable("stock_movements", {
   movementDate: timestamp("movement_date").defaultNow(),
   unitMeasure: varchar("unit_measure", { length: 25 }),
   notes: text("notes"),
-  userName: varchar({ length: 50 }).notNull()
+  userName: varchar("user_name",{ length: 50 }).notNull()
 
 });
 
-// Define relationships
+//* RELACIONES *//
 export const warehouseRelations = relations(warehouse, ({ many }) => ({
   materials: many(materials), // A warehouse can have many materials
   stockMovements: many(stockMovements) // A warehouse can have many stock movements
@@ -132,6 +133,24 @@ export const stockMovementsRelations = relations(stockMovements, ({ one }) => ({
     references: [warehouse.id]
   })
 }));
+
+//* VISTAS *//
+export const materialStockMovementsView = pgView("material_stock_movements", {
+  // Material columns
+  materialId: integer("material_id").references(() => materials.id),
+  materialName: varchar("material_name", { length: 50 }),
+  materialCategory: varchar("material_category", { length: 25 }),
+  currentStock: doublePrecision("current_stock"),
+
+  // Stock Movement columns
+  movementId: integer("movement_id").references(() => stockMovements.id),
+  quantityChange: doublePrecision("quantity_change"),
+  movementType: varchar("movement_type", { length: 25 }),
+  movementDate: timestamp("movement_date"),
+  warehouseId: integer("warehouse_id").references(() => warehouse.id),
+  unitMeasure: text("unit_measure"),
+  userName: varchar("user_name", { length: 255 }) // Ad
+}).existing();
 
 // export const projects = pgTable("projects", {
 // 	id: serial().primaryKey().notNull(),
@@ -362,3 +381,4 @@ export type Warehouse = typeof warehouse.$inferSelect;
 export type Material = typeof materials.$inferSelect;
 export type StockMovement = typeof stockMovements.$inferSelect;
 export type serviceFeeMaterialNomenclators = typeof serviceFeeMaterialNomenclators.$inferSelect;
+export type MaterialStockMovementsView = typeof materialStockMovementsView.$inferSelect;

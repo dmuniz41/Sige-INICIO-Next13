@@ -148,6 +148,13 @@
       "when": 1742738315957,
       "tag": "0029_fixed_swarm",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1742750752304,
+      "tag": "0030_classy_sphinx",
+      "breakpoints": true
     }
   ]
 }
