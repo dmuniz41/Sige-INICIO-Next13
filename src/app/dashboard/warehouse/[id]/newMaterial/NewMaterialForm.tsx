@@ -82,7 +82,7 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
       {/* ENCABEZADO */}
       <Row className="py-4 px-8">
         <Col span={12}>
-          <span className="flex text-3xl font-bold">Nuevo Material</span>
+          <span className="flex text-2xl font-bold">Nuevo Material</span>
         </Col>
         <Col span={12}>
           <Row justify={"end"} gutter={16} className="flex gap-2">
@@ -100,7 +100,7 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
         </Col>
       </Row>
       <Form form={form} layout="vertical" name="newMaterialForm" size="large">
-        <Row justify={"space-between"}>
+        <Row justify={"space-between"} className="mx-8">
           <Col span={12} className="border-light shadow-md border rounded-md p-8">
             <Form.Item name="category" label={<Title level={4}>Categoría</Title>} rules={[{ required: true, message: "Campo requerido" }]}>
               <Select

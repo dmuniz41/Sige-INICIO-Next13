@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Highlighter from "react-highlight-words";
-import moment from "moment";
 import React, { useRef, useState } from "react";
 import Swal from "sweetalert2";
 import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
@@ -32,9 +31,6 @@ const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) =
 });
 
 type DataIndex = keyof Material;
-
-let date = moment();
-let currentDate = date.format("L");
 
 const useStyles = createStyles(({ css }) => ({
   customTable: css`
@@ -178,7 +174,6 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
     router.push(`/dashboard/warehouse/${warehouseId}/newMaterial`);
   };
 
-
   const handleEditMaterial = (materialId: number): void => {
     router.push(`/dashboard/warehouse/${warehouseId}/editMaterial?materialId=${materialId}`);
   };
@@ -199,7 +194,7 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
   };
 
   const handleStockMovement = (materialId: number) => {
-    router.push(`/dashboard/warehouse/${warehouseId}/stockMovement?materialId=${materialId}`);
+    router.push(`/dashboard/warehouse/${warehouseId}/stockMovement/movementForm?materialId=${materialId}`);
   };
 
   const onChange: TableProps<Material>["onChange"] = (pagination, filters, sorter, extra) => {
