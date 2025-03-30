@@ -4,7 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
 import { db } from "@/db/drizzle";
-import { materialStockMovementsView } from "@/db/migrations/schema";
+import { InsertStockMovement } from "@/types/DTOs/stockMovements/stockMovement";
+import { materials, materialStockMovementsView, stockMovements, warehouse } from "@/db/migrations/schema";
 import { verifyJWT } from "@/libs/jwt";
 import logger from "@/utils/logger";
 
@@ -109,6 +110,149 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
         stack: error.stack,
         route: "/api/material/[warehouseId]",
         method: "GET"
+      });
+      return NextResponse.json(
+        {
+          ok: false,
+          message: error.message
+        },
+        {
+          status: 500
+        }
+      );
+    }
+  }
+}
+
+export async function POST(request: NextRequest) {
+  const { ...stockMovementToCreate }: InsertStockMovement = await request.json();
+  const accessToken = request.headers.get("accessToken");
+
+  try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
+        },
+        {
+          status: 401
+        }
+      );
+    }
+
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Crear Movimiento de Inventario", { method: request.method, url: request.url, user: decoded.userName });
+
+    // * VALIDA QUE LA CANTIDAD A AÑADIR NO SEA NEGATIVA * //
+    if (stockMovementToCreate.quantityChange < 0) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: `La cantidad a añadir debe ser mayor a 0`
+        },
+        {
+          status: 400
+        }
+      );
+    }
+
+    // * BUSCA EL MATERIAL AL QUE SE LE VA A HACER EL MOVIMIENTO DE INVENTARIO * //
+    const DBmaterial = await db.select().from(materials).where(eq(materials.id, stockMovementToCreate.materialId));
+    if (DBmaterial.length === 0) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: `No existe material con id:${stockMovementToCreate.materialId}`
+        },
+        {
+          status: 404
+        }
+      );
+    }
+
+    // * BUSCA EL ALMACEN AL QUE SE LE VA A HACER EL MOVIMIENTO DE INVENTARIO * //
+    const DBWarehouse = await db.select().from(warehouse).where(eq(warehouse.id, stockMovementToCreate.warehouseId));
+    if (DBWarehouse.length === 0) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: `No existe almacén con id:${stockMovementToCreate.warehouseId}`
+        },
+        {
+          status: 404
+        }
+      );
+    }
+
+    // * EJECUTA EL MOVIMIENTO EN DEPENDENCIA DE SU TIPO * //
+    if (stockMovementToCreate.movementType === "ADDED") {
+      await db
+        .update(materials)
+        .set({ ...DBmaterial[0], stock: DBmaterial[0].stock + stockMovementToCreate.quantityChange })
+        .where(eq(materials.id, stockMovementToCreate.materialId));
+
+      // * ACTUALIZA EL VALOR DEL ALMACEN * //
+      await db
+        .update(warehouse)
+        .set({
+          ...DBWarehouse[0],
+          totalValue: DBWarehouse[0].totalValue + stockMovementToCreate.quantityChange * DBmaterial[0].costPerUnit
+        })
+        .where(eq(warehouse.id, stockMovementToCreate.warehouseId));
+    } else if (stockMovementToCreate.movementType === "REMOVED") {
+      if (DBmaterial[0].stock < stockMovementToCreate.quantityChange) {
+        return NextResponse.json(
+          {
+            ok: false,
+            message: `No hay suficiente inventario para realizar el movimiento`
+          },
+          {
+            status: 400
+          }
+        );
+      } else {
+        await db
+          .update(materials)
+          .set({ ...DBmaterial[0], stock: DBmaterial[0].stock - stockMovementToCreate.quantityChange })
+          .where(eq(materials.id, stockMovementToCreate.materialId));
+
+        // * ACTUALIZA EL VALOR DEL ALMACEN * //
+        await db
+          .update(warehouse)
+          .set({
+            ...DBWarehouse[0],
+            totalValue: DBWarehouse[0].totalValue - stockMovementToCreate.quantityChange * DBmaterial[0].costPerUnit
+          })
+          .where(eq(warehouse.id, stockMovementToCreate.warehouseId));
+      }
+    }
+
+    // * REGISTRA EL MOVIMIENTO DE INVENTARIO * //
+    const newStockMovement = await db
+      .insert(stockMovements)
+      .values({ ...stockMovementToCreate, movementDate: new Date(), userName: decoded.userName, unitMeasure: DBmaterial[0].unitMeasure })
+      .returning();
+
+    return new NextResponse(
+      JSON.stringify({
+        ok: true,
+        data: newStockMovement
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+      }
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      logger.error("Error al crear el movimiento de inventario", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/warehouse/[id]/stockMovement",
+        method: "POST"
       });
       return NextResponse.json(
         {
