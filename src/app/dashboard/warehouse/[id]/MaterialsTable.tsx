@@ -12,6 +12,7 @@ import Swal from "sweetalert2";
 import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
 import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
 import type { InputRef } from "antd";
+import { createStyles } from "antd-style";
 
 import { DeleteSvg } from "../../../global/DeleteSvg";
 import { editMaterial, materialsStartLoading, startAddMaterial, startDeleteMaterial } from "@/actions/material";
@@ -39,6 +40,7 @@ import { useMaterials } from "@/hooks/materials/useMaterials";
 import { useQueryClient } from "@tanstack/react-query";
 import { FileSvg } from "@/app/global/FileSvg";
 import { formatDate } from "@/helpers/formatDate";
+import { ArrowsTransferSvg } from "@/app/global/ArrowsTransferSvg";
 
 const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
   ssr: false,
@@ -49,6 +51,43 @@ type DataIndex = keyof Material;
 
 let date = moment();
 let currentDate = date.format("L");
+
+const useStyles = createStyles(({ css }) => ({
+  customTable: css`
+    .ant-table {
+      .ant-table-container {
+        .ant-table-body,
+        .ant-table-content {
+          scrollbar-width: thin;
+          scrollbar-color: #eaeaea transparent;
+          scrollbar-gutter: stable;
+          overflow-x: auto;
+
+          &::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+          }
+
+          &::-webkit-scrollbar-track {
+            background: transparent;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background-color: #eaeaea;
+            border-radius: 4px;
+          }
+        }
+
+        td.ant-table-cell {
+          white-space: normal;
+          word-break: break-word;
+          max-width: 300px; /* Maximum width for cells */
+          overflow-wrap: break-word;
+        }
+      }
+    }
+  `
+}));
 
 const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
   const dispatch = useAppDispatch();
@@ -65,6 +104,7 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
   const router = useRouter();
+  const { styles } = useStyles();
 
   const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
@@ -75,12 +115,6 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
   const canDelete = sessionData?.user.role.includes("Eliminar Material");
   const canAdd = sessionData?.user.role.includes("Añadir Material");
   const canMinus = sessionData?.user.role.includes("Sustraer Material");
-
-  useEffect(() => {
-    dispatch(materialsStartLoading(warehouseId));
-    dispatch(nomenclatorsStartLoading());
-    dispatch(materialNomenclatorsStartLoading());
-  }, [dispatch, warehouseId]);
 
   // PARA REPORTE EN PDF
   const fields = [
@@ -202,29 +236,29 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
     setSearchedColumn(dataIndex);
   };
 
-  const handleDelete = (): void => {
-    if (selectedRow) {
-      Swal.fire({
-        title: "Eliminar Material",
-        text: "El material seleccionado se borrará de forma permanente",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Eliminar"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // dispatch(startDeleteMaterial(selectedRow?.code, selectedWarehouse));
-        }
-      });
-    } else {
-      Toast.fire({
-        icon: "error",
-        title: "Seleccione un material a eliminar"
-      });
-    }
-  };
+  // const handleDelete = (): void => {
+  //   if (selectedRow) {
+  //     Swal.fire({
+  //       title: "Eliminar Material",
+  //       text: "El material seleccionado se borrará de forma permanente",
+  //       icon: "warning",
+  //       showCancelButton: true,
+  //       confirmButtonColor: "#3085d6",
+  //       cancelButtonColor: "#d33",
+  //       cancelButtonText: "Cancelar",
+  //       confirmButtonText: "Eliminar"
+  //     }).then((result) => {
+  //       if (result.isConfirmed) {
+  //         // dispatch(startDeleteMaterial(selectedRow?.code, selectedWarehouse));
+  //       }
+  //     });
+  //   } else {
+  //     Toast.fire({
+  //       icon: "error",
+  //       title: "Seleccione un material a eliminar"
+  //     });
+  //   }
+  // };
 
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
@@ -239,11 +273,11 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
     setFilteredData(extra.currentDataSource);
   };
 
-  const rowSelection: TableRowSelection<Material> = {
-    onChange: async (selectedRowKeys: React.Key[], selectedRows: Material[]) => {
-      setSelectedRow(selectedRows[0]);
-    }
-  };
+  // const rowSelection: TableRowSelection<Material> = {
+  //   onChange: async (selectedRowKeys: React.Key[], selectedRows: Material[]) => {
+  //     setSelectedRow(selectedRows[0]);
+  //   }
+  // };
 
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<Material> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
@@ -320,55 +354,92 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
     {
       title: <span className="font-bold">Código</span>,
       dataIndex: "id",
-      width: "5%"
+      width: "80px",
     },
     {
       title: <span className="font-bold">Categoría</span>,
       dataIndex: "category",
-      // filters: categoryFilter,
-      // onFilter: (value: any, record: any) => record.category.startsWith(value),
-      // filterSearch: true,
-      width: "15%"
+      width: "150px",
+      ellipsis: {
+        showTitle: false
+      },
+      render: (category) => (
+        <Tooltip placement="topLeft" title={category}>
+          {category}
+        </Tooltip>
+      )
     },
     {
       title: <span className="font-bold">Nombre</span>,
       dataIndex: "name",
-      width: "15%",
-      ...getColumnSearchProps("name")
+      width: "200px",
+      ...getColumnSearchProps("name"),
+      ellipsis: {
+        showTitle: false
+      },
+      render: (name) => (
+        <Tooltip placement="topLeft" title={name}>
+          {name}
+        </Tooltip>
+      )
     },
     {
       title: <span className="font-bold">Descripción</span>,
       dataIndex: "description",
-      width: "15%"
+      width: "250px",
+      ellipsis: {
+        showTitle: false
+      },
+      render: (description) => (
+        <Tooltip placement="topLeft" title={description}>
+          {description}
+        </Tooltip>
+      )
     },
     {
       title: <span className="font-bold">Coste Unitario</span>,
       dataIndex: "costPerUnit",
-      width: "10%",
+      width: "120px",
       sorter: {
         compare: (a, b) => a.costPerUnit - b.costPerUnit
       },
       render: (value) => (
-        <span>
-          ${" "}
-          {value.toLocaleString("DE", {
+        <Tooltip
+          placement="topLeft"
+          title={`$ ${value.toLocaleString("DE", {
             maximumFractionDigits: 2,
             minimumFractionDigits: 2
-          })}
-        </span>
+          })}`}
+        >
+          <span>
+            ${" "}
+            {value.toLocaleString("DE", {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2
+            })}
+          </span>
+        </Tooltip>
       )
     },
     {
       title: <span className="font-bold">Existencias</span>,
       dataIndex: "stock",
-      width: "5%",
+      width: "100px",
       render: (value) => (
-        <span>
-          {value.toLocaleString("DE", {
+        <Tooltip
+          placement="topLeft"
+          title={value.toLocaleString("DE", {
             maximumFractionDigits: 2,
             minimumFractionDigits: 2
           })}
-        </span>
+        >
+          <span>
+            {value.toLocaleString("DE", {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2
+            })}
+          </span>
+        </Tooltip>
       ),
       sorter: {
         compare: (a, b) => a.stock - b.stock
@@ -377,64 +448,97 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
     {
       title: <span className="font-bold">Unidad de Medida</span>,
       dataIndex: "unitMeasure",
-      width: "10%"
+      width: "120px",
+      ellipsis: {
+        showTitle: false
+      },
+      render: (unitMeasure) => (
+        <Tooltip placement="topLeft" title={unitMeasure}>
+          {unitMeasure}
+        </Tooltip>
+      )
     },
     {
       title: <span className="font-bold">Existencias Mínimas</span>,
       dataIndex: "minimumExistence",
-      width: "5%",
+      width: "150px",
       render: (value) => (
-        <span>
-          {value.toLocaleString("DE", {
+        <Tooltip
+          placement="topLeft"
+          title={value.toLocaleString("DE", {
             maximumFractionDigits: 2,
             minimumFractionDigits: 2
           })}
-        </span>
+        >
+          <span>
+            {value.toLocaleString("DE", {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2
+            })}
+          </span>
+        </Tooltip>
       )
     },
     {
       title: <span className="font-bold">Proveedor</span>,
       dataIndex: "provider",
-      width: "10%",
+      width: "150px",
       sorter: (a: any, b: any) => a.provider.localeCompare(b.provider),
-      ...getColumnSearchProps("provider")
+      ...getColumnSearchProps("provider"),
+      ellipsis: {
+        showTitle: false
+      },
+      render: (provider) => (
+        <Tooltip placement="topLeft" title={provider}>
+          {provider}
+        </Tooltip>
+      )
     },
     {
-      title: <span className="font-bold">Fecha de Entrada</span>,
+      title: <span className="font-bold">Fecha de Creación</span>,
       dataIndex: "enterDate",
-      width: "8%",
+      width: "150px",
       ...getColumnSearchProps("enterDate"),
-      render: (value: string) => formatDate(value)
+      render: (value: string) => (
+        <Tooltip placement="topLeft" title={formatDate(value)}>
+          {formatDate(value)}
+        </Tooltip>
+      )
     },
     {
       title: <span className="font-bold">Fecha de Edición</span>,
       dataIndex: "modifyDate",
-      width: "8%",
+      width: "150px",
       ...getColumnSearchProps("modifyDate"),
-      render: (value: string) => formatDate(value)
+      render: (value: string) => (
+        <Tooltip placement="topLeft" title={formatDate(value)}>
+          {formatDate(value)}
+        </Tooltip>
+      )
     },
     {
       title: <span className="font-bold">Acciones</span>,
-      width: "5%",
+      width: "100px",
+      fixed: "right",
       render: (_, record) => (
         <div className="flex gap-1 justify-center">
           {canEdit ? (
             <>
               <Tooltip placement="top" title={"Movimiento de Inventario"} arrow={{ pointAtCenter: true }}>
                 <button onClick={() => handleStockMovement(record?.id)} className="table-stock-movement-action-btn">
-                  <FileSvg width={20} height={20} />
+                  <ArrowsTransferSvg width={25} height={25} />
                 </button>
               </Tooltip>
               <Tooltip placement="top" title={"Editar Material"} arrow={{ pointAtCenter: true }}>
                 <button onClick={() => handleEditMaterial(record.id)} className="table-see-action-btn">
-                  <EditSvg width={20} height={20} />
+                  <EditSvg width={25} height={25} />
                 </button>
               </Tooltip>
             </>
           ) : (
             <></>
           )}
-          {canDelete ? (
+          {/* {canDelete ? (
             <Tooltip placement="top" title={"Eliminar Material"} arrow={{ pointAtCenter: true }}>
               <button className="table-delete-action-btn">
                 <DeleteSvg width={20} height={20} />
@@ -442,7 +546,7 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
             </Tooltip>
           ) : (
             <></>
-          )}
+          )} */}
         </div>
       )
     }
@@ -538,9 +642,10 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
           setPage(pagination?.current ?? 1);
           setLimit(pagination?.pageSize ?? 10);
         }}
-        className="shadow-md"
+        className={`shadow-md ${styles.customTable}`}
         sortDirections={["ascend"]}
         rowKey={(record) => record.id}
+        scroll={{ x: 1500 }}
       />
     </>
   );

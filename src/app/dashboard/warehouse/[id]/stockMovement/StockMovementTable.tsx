@@ -32,7 +32,6 @@ const StockMovementsTable = ({ warehouseId }: { warehouseId: string }) => {
 
   const { useGetStockMovements } = useStockMovements();
   const { data: stockMovementsQuery, isLoading, isError } = useGetStockMovements(Number(warehouseId), page, limit);
-  console.log("🚀 ~ StockMovementsTable ~ stockMovementsQuery:", stockMovementsQuery?.data);
 
   const handleRefresh = () => {
     queryClient.invalidateQueries({ queryKey: ["GetStockMovements"] });

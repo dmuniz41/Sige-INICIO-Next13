@@ -56,7 +56,7 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
           minimumExistence: values.minimumExistence,
           provider: values.provider,
           unitMeasure: values.unitMeasure,
-          stock: values.stock
+          stock: 0 // * POR DEFECTO EL STOCK INICIAL ES 0
         })
           .then(() => {
             router.push(`/dashboard/warehouse/${warehouseId}`);
@@ -101,11 +101,7 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
       </Row>
       <Form form={form} layout="vertical" name="newMaterialForm" size="large">
         <Row justify={"space-between"}>
-          {/* SECCION DE DATOS GENERALES */}
           <Col span={12} className="border-light shadow-md border rounded-md p-8">
-            <div className="flex font-bold text-2xl mb-8 ml-2">
-              <span>General</span>
-            </div>
             <Form.Item name="category" label={<Title level={4}>Categoría</Title>} rules={[{ required: true, message: "Campo requerido" }]}>
               <Select
                 allowClear
@@ -136,12 +132,6 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
             >
               <InputNumber min={0} className="w-full" />
             </Form.Item>
-          </Col>
-          {/* SECCION DE DETALLES */}
-          <Col span={12} className="border-light shadow-md border rounded-md p-8">
-            <div className="flex font-bold text-2xl mb-8 ml-2">
-              <span>Detalles</span>
-            </div>
             <Form.Item
               name="unitMeasure"
               label={<Title level={4}>Unidad de medida</Title>}
@@ -159,13 +149,13 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
                 }
               />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               name="stock"
               label={<Title level={4}>Cantidad a añadir</Title>}
               rules={[{ required: true, message: "Campo requerido" }]}
             >
               <InputNumber min={0} className="w-full" />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
               name="minimumExistence"
               label={<Title level={4}>Existencias mínimas</Title>}
@@ -186,13 +176,6 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
                 }
               />
             </Form.Item>
-            {/* <Form.Item
-              name="enterDate"
-              label={<Title level={5}>Fecha de entrada</Title>}
-              rules={[{ required: true, message: "Campo requerido" }]}
-            >
-              <DatePicker format={"MM/DD/YYYY"} />
-            </Form.Item> */}
           </Col>
         </Row>
       </Form>

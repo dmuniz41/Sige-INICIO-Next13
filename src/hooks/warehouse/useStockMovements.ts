@@ -1,9 +1,6 @@
-import { Toast } from "@/helpers/customAlert";
-import { InsertWarehouse, UpdateWarehouse } from "@/types/DTOs/warehouse/warehouse";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
-import axios, { AxiosError } from "axios";
-import Swal from "sweetalert2";
+import axios from "axios";
 
 const getStockMovementsAPI = async (warehouseId: number, page: number = 1, limit: number = 10) => {
   const token = localStorage.getItem("accessToken");
@@ -20,6 +17,7 @@ const useGetStockMovements = (warehouseId: number, page: number, limit: number) 
   const query = useQuery({
     queryKey: ["GetStockMovements"],
     queryFn: () => getStockMovementsAPI(warehouseId, page, limit),
+    enabled: !!warehouseId
   });
 
   return query;

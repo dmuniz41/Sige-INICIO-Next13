@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
 import { db } from "@/db/drizzle";
-import { materialStockMovementsView, stockMovements } from "@/db/migrations/schema";
+import { materialStockMovementsView } from "@/db/migrations/schema";
 import { verifyJWT } from "@/libs/jwt";
 import logger from "@/utils/logger";
 
