@@ -1,46 +1,30 @@
 "use client";
-
 import { Button, Input, Space, Spin, Table, Tooltip } from "antd";
+import { createStyles } from "antd-style";
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Highlighter from "react-highlight-words";
 import moment from "moment";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Swal from "sweetalert2";
 import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
-import type { FilterConfirmProps, TableRowSelection } from "antd/es/table/interface";
+import type { FilterConfirmProps } from "antd/es/table/interface";
 import type { InputRef } from "antd";
-import { createStyles } from "antd-style";
 
-import { DeleteSvg } from "../../../global/DeleteSvg";
-import { editMaterial, materialsStartLoading, startAddMaterial, startDeleteMaterial } from "@/actions/material";
-import { EditMaterialForm } from "./EditMaterialForm";
+import { ArrowsTransferSvg } from "@/app/global/ArrowsTransferSvg";
 import { EditSvg } from "../../../global/EditSvg";
+import { formatDate } from "@/helpers/formatDate";
+import { IMaterialNomenclator } from "@/models/nomenclators/materials";
 import { INomenclator } from "@/models/nomenclator";
-import { IOperation } from "@/models/operation";
-import { ListSvg } from "../../../global/ListSvg";
-import { MinusMaterialForm } from "./MinusMaterialForm";
-import { MinusSvg } from "../../../global/MinusSvg";
-import { NewMaterialForm } from "./NewMaterialForm";
-import { nomenclatorsStartLoading } from "@/actions/nomenclator";
-import { OperationsList } from "./OperationsListModal";
-import { PDFSvg } from "@/app/global/PDFSvg";
+import { Material } from "@/db/migrations/schema";
 import { PlusSvg } from "../../../global/PlusSvg";
 import { RefreshSvg } from "../../../global/RefreshSvg";
 import { RootState, useAppSelector } from "@/store/store";
-import { Toast } from "@/helpers/customAlert";
 import { useAppDispatch } from "@/hooks/hooks";
-import PDFReport from "@/helpers/PDFReport";
-import { materialNomenclatorsStartLoading } from "@/actions/nomenclators/material";
-import { IMaterialNomenclator } from "@/models/nomenclators/materials";
-import { Material } from "@/db/migrations/schema";
 import { useMaterials } from "@/hooks/materials/useMaterials";
 import { useQueryClient } from "@tanstack/react-query";
-import { FileSvg } from "@/app/global/FileSvg";
-import { formatDate } from "@/helpers/formatDate";
-import { ArrowsTransferSvg } from "@/app/global/ArrowsTransferSvg";
 
 const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
   ssr: false,
@@ -94,12 +78,6 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
   const queryClient = useQueryClient();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [createNewModal, setCreateNewModal] = useState(false);
-  const [editMaterialModal, setEditMaterialModal] = useState(false);
-  const [addModal, setAddModal] = useState(false);
-  const [minusModal, setMinusModal] = useState(false);
-  const [showOperationsModal, setShowOperationModal] = useState(false);
-  const [selectedRow, setSelectedRow] = useState<Material>();
   const [filteredData, setFilteredData] = useState<Material[]>();
   const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
@@ -200,27 +178,6 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
     router.push(`/dashboard/warehouse/${warehouseId}/newMaterial`);
   };
 
-  // const handleMinus = (): void => {
-  //   if (selectedRow) {
-  //     setMinusModal(true);
-  //   } else {
-  //     Toast.fire({
-  //       icon: "error",
-  //       title: "Seleccione un material para sustraer"
-  //     });
-  //   }
-  // };
-
-  // const handleShowOperations = (): void => {
-  //   if (selectedRow) {
-  //     setShowOperationModal(true);
-  //   } else {
-  //     Toast.fire({
-  //       icon: "error",
-  //       title: "Seleccione el material que desea ver sus operaciones"
-  //     });
-  //   }
-  // };
 
   const handleEditMaterial = (materialId: number): void => {
     router.push(`/dashboard/warehouse/${warehouseId}/editMaterial?materialId=${materialId}`);
@@ -236,30 +193,6 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
     setSearchedColumn(dataIndex);
   };
 
-  // const handleDelete = (): void => {
-  //   if (selectedRow) {
-  //     Swal.fire({
-  //       title: "Eliminar Material",
-  //       text: "El material seleccionado se borrará de forma permanente",
-  //       icon: "warning",
-  //       showCancelButton: true,
-  //       confirmButtonColor: "#3085d6",
-  //       cancelButtonColor: "#d33",
-  //       cancelButtonText: "Cancelar",
-  //       confirmButtonText: "Eliminar"
-  //     }).then((result) => {
-  //       if (result.isConfirmed) {
-  //         // dispatch(startDeleteMaterial(selectedRow?.code, selectedWarehouse));
-  //       }
-  //     });
-  //   } else {
-  //     Toast.fire({
-  //       icon: "error",
-  //       title: "Seleccione un material a eliminar"
-  //     });
-  //   }
-  // };
-
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText("");
@@ -272,12 +205,6 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
   const onChange: TableProps<Material>["onChange"] = (pagination, filters, sorter, extra) => {
     setFilteredData(extra.currentDataSource);
   };
-
-  // const rowSelection: TableRowSelection<Material> = {
-  //   onChange: async (selectedRowKeys: React.Key[], selectedRows: Material[]) => {
-  //     setSelectedRow(selectedRows[0]);
-  //   }
-  // };
 
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<Material> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
@@ -354,7 +281,7 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
     {
       title: <span className="font-bold">Código</span>,
       dataIndex: "id",
-      width: "80px",
+      width: "80px"
     },
     {
       title: <span className="font-bold">Categoría</span>,
@@ -538,15 +465,6 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
           ) : (
             <></>
           )}
-          {/* {canDelete ? (
-            <Tooltip placement="top" title={"Eliminar Material"} arrow={{ pointAtCenter: true }}>
-              <button className="table-delete-action-btn">
-                <DeleteSvg width={20} height={20} />
-              </button>
-            </Tooltip>
-          ) : (
-            <></>
-          )} */}
         </div>
       )
     }
@@ -616,22 +534,6 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
           </Tooltip> */}
         </div>
       </div>
-
-      {/* <NewMaterialForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
-      <AddMaterialForm open={addModal} onCancel={() => setAddModal(false)} onCreate={onAdd} defaultValues={selectedRow} />
-      <MinusMaterialForm open={minusModal} onCancel={() => setMinusModal(false)} onCreate={onMinus} defaultValues={selectedRow} />
-      <EditMaterialForm
-        open={editMaterialModal}
-        onCancel={() => setEditMaterialModal(false)}
-        onCreate={onEditMaterial}
-        defaultValues={selectedRow}
-      />
-      <OperationsList
-        open={showOperationsModal}
-        onCancel={() => setShowOperationModal(false)}
-        onCreate={onMinus}
-        defaultValues={selectedRow}
-      /> */}
 
       <Table
         size="small"
