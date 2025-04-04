@@ -15,12 +15,12 @@ import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { EditMaterialNomenclatorForm } from "./EditMaterialNomenclatorForm";
 import { EditSvg } from "@/app/global/EditSvg";
 import { InfoCircleSvg } from "@/app/global/InfoCircleSvg";
-import { MaterialCategoryNomenclators } from "@/db/migrations/schema";
+import { MaterialNomenclators } from "@/db/migrations/schema";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { useMaterialCategoryNomenclator } from "@/hooks/nomenclators/materialCategory/useMaterialCategoryNomenclator";
 
-type DataIndex = keyof MaterialCategoryNomenclators;
+type DataIndex = keyof MaterialNomenclators;
 
 const MaterialsNomenclatorsTable: React.FC = () => {
   const { data: sessionData } = useSession();
@@ -32,8 +32,8 @@ const MaterialsNomenclatorsTable: React.FC = () => {
   const [limit, setLimit] = useState<number>(10);
   const [searchedColumn, setSearchedColumn] = useState("");
   const [searchText, setSearchText] = useState("");
-  const [selectedNomenclator, setSelectedNomenclator] = useState<MaterialCategoryNomenclators>();
-  
+  const [selectedNomenclator, setSelectedNomenclator] = useState<MaterialNomenclators>();
+
   const { useGetMaterialCategoryNomenclator, useDeleteMaterialCategoryNomenclator } = useMaterialCategoryNomenclator();
   const deleteMutation = useDeleteMaterialCategoryNomenclator();
   const { data: materialsCategoryNomenclatorsQuery, isLoading, isError } = useGetMaterialCategoryNomenclator(page, limit);
@@ -49,7 +49,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
     setSearchedColumn(dataIndex);
   };
 
-  const handleDelete = (code: string) => {
+  const handleDelete = (code: number) => {
     Swal.fire({
       title: "Eliminar Nomenclador de Material",
       text: "El nomenclador seleccionado se borrará de forma permanente",
@@ -67,7 +67,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
   };
 
   const handleRefresh = () => {
-    queryClient.invalidateQueries({queryKey: ["GetMaterialCategoryNomenclators"]});
+    queryClient.invalidateQueries({ queryKey: ["GetMaterialCategoryNomenclators"] });
   };
 
   const handleReset = (clearFilters: () => void) => {
@@ -75,12 +75,12 @@ const MaterialsNomenclatorsTable: React.FC = () => {
     setSearchText("");
   };
 
-  const handleEdit = (record: MaterialCategoryNomenclators) => {
+  const handleEdit = (record: MaterialNomenclators) => {
     setSelectedNomenclator(record);
     setEditModal(true);
   };
 
-  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<MaterialCategoryNomenclators> => ({
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<MaterialNomenclators> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
@@ -151,12 +151,32 @@ const MaterialsNomenclatorsTable: React.FC = () => {
       )
   });
 
-  const columns: ColumnsType<MaterialCategoryNomenclators> = [
+  const columns: ColumnsType<MaterialNomenclators> = [
     {
-      title: <span className="font-bold">Nombre</span>,
-      dataIndex: "value",
+      title: (
+        <Tooltip placement="top" title={"Identifica la categoría del material (Ej: PVC, Acrilico, Lona, etc...)"}>
+          <div className="flex w-fit gap-2 items-center">
+            <span className="font-bold">Categoría</span>
+            <InfoCircleSvg width={20} height={20} />
+          </div>
+        </Tooltip>
+      ),
+      dataIndex: "material_category",
       width: "30%",
-      ...getColumnSearchProps("value")
+      ...getColumnSearchProps("material_category")
+    },
+    {
+      title: (
+        <Tooltip placement="top" title={"Identifica la variante de la categoría seleccionada (Ej: 3mm, 6mm, Transparente, Mate, etc...)"}>
+          <div className="flex w-fit gap-2 items-center">
+            <span className="font-bold">Nombre</span>
+            <InfoCircleSvg width={20} height={20} />
+          </div>
+        </Tooltip>
+      ),
+      dataIndex: "material_name",
+      width: "30%",
+      ...getColumnSearchProps("material_name")
     },
     {
       title: (
@@ -207,7 +227,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
   if (isLoading)
     return (
       <section className="flex h-full w-full items-center justify-center">
-        <Spin indicator={<LoadingOutlined style={{ fontSize: 70, color: "#ff8533" }} spin />}/>
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 70, color: "#ff8533" }} spin />} />
       </section>
     );
 
@@ -215,7 +235,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
     Swal.fire({
       icon: "error",
       title: "Error",
-      text: "Ocurrió un error al obtener las categorías de materiales" 
+      text: "Ocurrió un error al obtener las categorías de materiales"
     });
   }
 

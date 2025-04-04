@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
 
-import { MaterialCategoryNomenclators } from "@/db/migrations/schema";
+import { MaterialNomenclators } from "@/db/migrations/schema";
 import { Toast } from "@/helpers/customAlert";
 
 const getMaterialCategoryNomenclatorsAPI = async (page: number = 1, limit: number = 10) => {
@@ -13,7 +13,7 @@ const getMaterialCategoryNomenclatorsAPI = async (page: number = 1, limit: numbe
   return response.data;
 };
 
-const getMaterialCategoryNomenclatorsPerCodeAPI = async (code: string) => {
+const getMaterialCategoryNomenclatorsPerCodeAPI = async (code: number) => {
   const token = localStorage.getItem("accessToken");
   const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material/${code}`, {
     headers: { accessToken: token }
@@ -21,7 +21,7 @@ const getMaterialCategoryNomenclatorsPerCodeAPI = async (code: string) => {
   return response.data;
 };
 
-const createMaterialCategoryNomenclatorsAPI = async (values: MaterialCategoryNomenclators) => {
+const createMaterialCategoryNomenclatorsAPI = async (values: MaterialNomenclators) => {
   const token = localStorage.getItem("accessToken");
   const response = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`,
@@ -35,7 +35,7 @@ const createMaterialCategoryNomenclatorsAPI = async (values: MaterialCategoryNom
   return response.data;
 };
 
-const updateMaterialCategoryNomenclatorsAPI = async (values: MaterialCategoryNomenclators) => {
+const updateMaterialCategoryNomenclatorsAPI = async (values: MaterialNomenclators) => {
   const token = localStorage.getItem("accessToken");
   const response = await axios.put(
     `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`,
@@ -49,7 +49,7 @@ const updateMaterialCategoryNomenclatorsAPI = async (values: MaterialCategoryNom
   return response.data;
 };
 
-const deleteMaterialCategoryNomenclatorsAPI = async (code: string) => {
+const deleteMaterialCategoryNomenclatorsAPI = async (code: number) => {
   const token = localStorage.getItem("accessToken");
   const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material/${code}`, {
     headers: { accessToken: token }
@@ -66,7 +66,7 @@ const useGetMaterialCategoryNomenclator = (page: number, limit: number) => {
   return query;
 };
 
-const useGetMaterialCategoryNomenclatorPerCode = (code: string) => {
+const useGetMaterialCategoryNomenclatorPerCode = (code: number) => {
   const query = useQuery({
     queryKey: ["GetMaterialCategoryNomenclatorsPerCode"],
     queryFn: () => getMaterialCategoryNomenclatorsPerCodeAPI(code)
@@ -79,7 +79,7 @@ const useCreateMaterialCategoryNomenclator = () => {
   const queryClient = useQueryClient();
   const query = useMutation({
     mutationKey: ["CreateMaterialCategoryNomenclator"],
-    mutationFn: (values: MaterialCategoryNomenclators) => createMaterialCategoryNomenclatorsAPI(values),
+    mutationFn: (values: MaterialNomenclators) => createMaterialCategoryNomenclatorsAPI(values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetMaterialCategoryNomenclators"] });
       Toast.fire({
@@ -103,7 +103,7 @@ const useUpdateMaterialCategoryNomenclator = () => {
   const queryClient = useQueryClient();
   const query = useMutation({
     mutationKey: ["UpdateMaterialCategoryNomenclator"],
-    mutationFn: (values: MaterialCategoryNomenclators) => updateMaterialCategoryNomenclatorsAPI(values),
+    mutationFn: (values: MaterialNomenclators) => updateMaterialCategoryNomenclatorsAPI(values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetMaterialCategoryNomenclators"] });
       Toast.fire({
@@ -127,7 +127,7 @@ const useDeleteMaterialCategoryNomenclator = () => {
   const queryClient = useQueryClient();
   const query = useMutation({
     mutationKey: ["DeleteMaterialCategoryNomenclator"],
-    mutationFn: (code: string) => deleteMaterialCategoryNomenclatorsAPI(code),
+    mutationFn: (code: number) => deleteMaterialCategoryNomenclatorsAPI(code),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetMaterialCategoryNomenclators"] });
       Toast.fire({

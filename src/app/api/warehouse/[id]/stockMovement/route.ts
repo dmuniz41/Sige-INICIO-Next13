@@ -142,7 +142,7 @@ export async function POST(request: NextRequest) {
     }
 
     const decoded = jwt.decode(accessToken) as JwtPayload;
-    logger.info("Crear Movimiento de Inventario", { method: request.method, url: request.url, user: decoded.userName });
+    logger.info("Crear Movimiento de Inventario", { method: request.method, url: request.url, user: decoded.userName, requestBody: request.body });
 
     // * VALIDA QUE LA CANTIDAD A AÑADIR NO SEA NEGATIVA * //
     if (stockMovementToCreate.quantityChange < 0) {

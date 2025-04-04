@@ -3,11 +3,11 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { db } from "@/db/drizzle";
 import { eq } from "drizzle-orm";
-import { materialCategoryNomenclators } from "@/db/migrations/schema";
+import { materialNomenclators } from "@/db/migrations/schema";
 import { verifyJWT } from "@/libs/jwt";
 import logger from "@/utils/logger";
 
-export async function DELETE(request: NextRequest, { params }: { params: { code: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: { code: number } }) {
   const code = params.code;
   const accessToken = request.headers.get("accessToken");
   try {
@@ -24,18 +24,15 @@ export async function DELETE(request: NextRequest, { params }: { params: { code:
     }
 
     const decoded = jwt.decode(accessToken) as JwtPayload;
-    logger.info("Eliminar Categoria de Material", { method: request.method, url: request.url, user: decoded.userName });
-    
-    // await connectDB();
-    // const nomenclatorToDelete = await MaterialNomenclator.findById(params.get("id"));
+    logger.info("Eliminar Categoria de Material", { method: request.method, url: request.url, body: request.body, user: decoded.userName });
 
-    const nomenclatorToDelete = await db.select().from(materialCategoryNomenclators).where(eq(materialCategoryNomenclators.code, code));
+    const nomenclatorToDelete = await db.select().from(materialNomenclators).where(eq(materialNomenclators.code, code));
 
     if (nomenclatorToDelete.length === 0) {
       return NextResponse.json(
         {
           ok: false,
-          message: "El nomenclador de categoría de material a borrar no existe"
+          message: "El nomenclador de material a borrar no existe"
         },
         {
           status: 404
@@ -43,15 +40,11 @@ export async function DELETE(request: NextRequest, { params }: { params: { code:
       );
     }
 
-    // const deletedNomenclator = await MaterialNomenclator.findByIdAndDelete(params.get("id"));
-    const deletedMaterialCategoryNomenclator = await db
-      .delete(materialCategoryNomenclators)
-      .where(eq(materialCategoryNomenclators.code, code));
+    await db.delete(materialNomenclators).where(eq(materialNomenclators.code, code));
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        data: deletedMaterialCategoryNomenclator
       }),
       {
         headers: {
@@ -63,7 +56,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { code:
     );
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("Error al eliminar categoria de material", { 
+      logger.error("Error al eliminar nomenclador de material", {
         error: error.message,
         stack: error.stack,
         route: "/api/nomenclators/material/[code]",
@@ -82,7 +75,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { code:
   }
 }
 
-export async function GET(request: NextRequest, { params }: { params: { code: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { code: number } }) {
   const code = params.code;
   const accessToken = request.headers.get("accessToken");
   try {
@@ -101,16 +94,13 @@ export async function GET(request: NextRequest, { params }: { params: { code: st
     const decoded = jwt.decode(accessToken) as JwtPayload;
     logger.info("Obtener Categoria de Material por Code", { method: request.method, url: request.url, user: decoded.userName });
 
-    const DBMaterialCategoryNomenclator = await db
-      .select()
-      .from(materialCategoryNomenclators)
-      .where(eq(materialCategoryNomenclators.code, code));
+    const DBMaterialNomenclator = await db.select().from(materialNomenclators).where(eq(materialNomenclators.code, code));
 
-    if (DBMaterialCategoryNomenclator.length === 0) {
+    if (DBMaterialNomenclator.length === 0) {
       return NextResponse.json(
         {
           ok: false,
-          message: "No nomenclador de categoría de material no existe"
+          message: "El nomenclador de material no existe"
         },
         {
           status: 404
@@ -121,7 +111,7 @@ export async function GET(request: NextRequest, { params }: { params: { code: st
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        data: DBMaterialCategoryNomenclator[0]
+        data: DBMaterialNomenclator[0]
       }),
       {
         headers: {
@@ -133,7 +123,7 @@ export async function GET(request: NextRequest, { params }: { params: { code: st
     );
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("Error al obtener categoria de material", {
+      logger.error("Error al obtener nomenclador de material", {
         error: error.message,
         stack: error.stack,
         route: "/api/nomenclators/material/[code]",

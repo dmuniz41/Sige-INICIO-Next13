@@ -13,10 +13,12 @@ export const users = pgTable("users", {
   password: varchar().notNull()
 });
 
-export const materialCategoryNomenclators = pgTable("material_category_nomenclators", {
-  code: varchar().primaryKey().notNull(),
-  category: varchar().notNull(), // Indica el tipo de nomenclador(Unidad de Medida(N_UM), Moneda(N_MO), ....)
-  value: varchar().notNull(),
+export const materialNomenclators = pgTable("material_nomenclators", {
+  code: serial().primaryKey().notNull(),
+  material_category: varchar({ length: 100 }).notNull(), // Categoria del material (Ej: PVC, Acrilico, Lona, etc..)
+  material_name: varchar({ length: 100 }).notNull(), // Nombre de la variante de la catergoria selceccionada (3mm, Rojo mate, mech, etc..)
+  created_at: timestamp().notNull(),
+  updated_at: timestamp().defaultNow().notNull(),
   isDecrease: boolean().notNull() // Indica si el los materiales de esa categoria son gastables o no
 });
 
@@ -373,7 +375,7 @@ export const materialStockMovementsView = pgView("material_stock_movements", {
 // });
 
 export type ClientNomenclator = typeof clientNomenclators.$inferSelect;
-export type MaterialCategoryNomenclators = typeof materialCategoryNomenclators.$inferSelect;
+export type MaterialNomenclators = typeof materialNomenclators.$inferSelect;
 export type Nomenclator = typeof nomenclators.$inferSelect;
 export type RepresentativeNomenclator = typeof representativeNomenclators.$inferSelect;
 export type User = typeof users.$inferSelect;
