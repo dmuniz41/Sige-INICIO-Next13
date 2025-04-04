@@ -18,7 +18,7 @@ import { InfoCircleSvg } from "@/app/global/InfoCircleSvg";
 import { MaterialNomenclators } from "@/db/migrations/schema";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
-import { useMaterialCategoryNomenclator } from "@/hooks/nomenclators/materialCategory/useMaterialCategoryNomenclator";
+import { useMaterialNomenclator } from "@/hooks/nomenclators/material/useMaterialNomenclator";
 
 type DataIndex = keyof MaterialNomenclators;
 
@@ -34,9 +34,9 @@ const MaterialsNomenclatorsTable: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [selectedNomenclator, setSelectedNomenclator] = useState<MaterialNomenclators>();
 
-  const { useGetMaterialCategoryNomenclator, useDeleteMaterialCategoryNomenclator } = useMaterialCategoryNomenclator();
-  const deleteMutation = useDeleteMaterialCategoryNomenclator();
-  const { data: materialsCategoryNomenclatorsQuery, isLoading, isError } = useGetMaterialCategoryNomenclator(page, limit);
+  const { useGetMaterialNomenclator, useDeleteMaterialNomenclator } = useMaterialNomenclator();
+  const deleteMutation = useDeleteMaterialNomenclator();
+  const { data: materialsNomenclators, isLoading, isError } = useGetMaterialNomenclator(page, limit);
 
   const canList = sessionData?.user.role.includes("Listar Nomencladores");
   const canCreate = sessionData?.user.role.includes("Crear Nomenclador");
@@ -67,7 +67,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
   };
 
   const handleRefresh = () => {
-    queryClient.invalidateQueries({ queryKey: ["GetMaterialCategoryNomenclators"] });
+    queryClient.invalidateQueries({ queryKey: ["GetMaterialNomenclators"] });
   };
 
   const handleReset = (clearFilters: () => void) => {
@@ -264,7 +264,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
       <Table
         size="small"
         columns={columns}
-        dataSource={materialsCategoryNomenclatorsQuery?.data}
+        dataSource={materialsNomenclators?.data}
         pagination={{ position: ["bottomCenter"], defaultPageSize: 10 }}
         onChange={(pagination) => {
           setPage(pagination?.current ?? 1);

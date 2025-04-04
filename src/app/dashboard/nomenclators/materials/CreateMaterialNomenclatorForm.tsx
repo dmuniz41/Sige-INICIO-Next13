@@ -1,7 +1,7 @@
 "use client";
 
-import { MaterialCategoryNomenclators } from "@/db/migrations/schema";
-import { useMaterialCategoryNomenclator } from "@/hooks/nomenclators/materialCategory/useMaterialCategoryNomenclator";
+import { MaterialNomenclators } from "@/db/migrations/schema";
+import { useMaterialNomenclator } from "@/hooks/nomenclators/material/useMaterialNomenclator";
 import { Checkbox, Form, Input, Modal } from "antd";
 import { useState } from "react";
 
@@ -12,17 +12,18 @@ interface CollectionCreateFormProps {
 
 export const CreateMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel }) => {
   const [form] = Form.useForm();
-
-  const { useCreateMaterialCategoryNomenclator } = useMaterialCategoryNomenclator();
-  const mutation = useCreateMaterialCategoryNomenclator();
-
   const [isDecrease, setIsDecrease] = useState<boolean>(false);
+
+  const { useCreateMaterialNomenclator } = useMaterialNomenclator();
+  const mutation = useCreateMaterialNomenclator();
+
+
   return (
     <Modal
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-semibold text-lg">Nueva Categoría de Material</span>
+          <span className="font-semibold text-lg">Nuevo Nomenclador de Material</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -47,9 +48,8 @@ export const CreateMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> 
                 .validateFields()
                 .then((values) => {
                   mutation.mutate({
-                    code: "",
-                    category: "N_MC",
-                    value: values.value,
+                    material_category: values.material_category,
+                    material_name: values.material_name,
                     isDecrease: isDecrease
                   });
                   setIsDecrease(false);
@@ -67,7 +67,10 @@ export const CreateMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> 
       ]}
     >
       <Form form={form} layout="vertical" name="createMaterialNomenclator" size="middle">
-        <Form.Item name="value" label="Nombre" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item name="material_category" label="Categoría de material" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Input />
+        </Form.Item>
+        <Form.Item name="material_name" label="Nombre de material" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
         <Form.Item name="isDecrease">

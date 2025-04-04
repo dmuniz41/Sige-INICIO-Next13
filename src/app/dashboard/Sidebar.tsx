@@ -290,7 +290,7 @@ const items: MenuProps["items"] = [
       {
         label: (
           <Link prefetch href="/dashboard/nomenclators/materials">
-            Categorías de materiales
+            Materiales
           </Link>
         ),
         key: "materials"

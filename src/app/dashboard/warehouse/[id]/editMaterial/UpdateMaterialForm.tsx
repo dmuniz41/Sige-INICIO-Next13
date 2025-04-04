@@ -6,7 +6,7 @@ import Title from "antd/es/typography/Title";
 
 import { useMaterials } from "@/hooks/materials/useMaterials";
 import { useNomenclator } from "@/hooks/nomenclators/useNomenclator";
-import { useMaterialCategoryNomenclator } from "@/hooks/nomenclators/materialCategory/useMaterialCategoryNomenclator";
+import { useMaterialCategoryNomenclator } from "@/hooks/nomenclators/material/useMaterialNomenclator";
 import { MaterialCategoryNomenclators, Nomenclator } from "@/db/migrations/schema";
 import { UpdateMaterial } from "@/types/DTOs/materials/materials";
 import { useEffect } from "react";

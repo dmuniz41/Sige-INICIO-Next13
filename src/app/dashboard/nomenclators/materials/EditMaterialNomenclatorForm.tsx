@@ -2,26 +2,27 @@
 import { Checkbox, Form, Input, Modal } from "antd";
 import { useEffect } from "react";
 
-import { useMaterialCategoryNomenclator } from "@/hooks/nomenclators/materialCategory/useMaterialCategoryNomenclator";
-import { MaterialCategoryNomenclators } from "@/db/migrations/schema";
+import { useMaterialNomenclator } from "@/hooks/nomenclators/material/useMaterialNomenclator";
+import { MaterialNomenclators } from "@/db/migrations/schema";
 
 interface CollectionCreateFormProps {
   open: boolean;
   onCancel: () => void;
-  initialValues: MaterialCategoryNomenclators;
+  initialValues: MaterialNomenclators;
 }
 
 export const EditMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel, initialValues }) => {
   const [form] = Form.useForm();
 
-  const { useUpdateMaterialCategoryNomenclator } = useMaterialCategoryNomenclator();
-  const mutation = useUpdateMaterialCategoryNomenclator();
+  const { useUpdateMaterialNomenclator } = useMaterialNomenclator();
+  const mutation = useUpdateMaterialNomenclator();
 
   useEffect(() => {
     if (open) {
       form.resetFields();
       form.setFieldsValue({
-        value: initialValues?.value,
+        material_category: initialValues?.material_category,
+        material_name: initialValues?.material_name,
         isDecrease: initialValues?.isDecrease
       });
     }
@@ -32,7 +33,7 @@ export const EditMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = 
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-semibold text-lg">Editar Categoría de Material</span>
+          <span className="font-semibold text-lg">Editar Nomenclador de Material</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -58,8 +59,8 @@ export const EditMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = 
                 .then((values) => {
                   mutation.mutate({
                     code: initialValues.code,
-                    category: initialValues.category,
-                    value: values.value,
+                    material_category: initialValues.material_category,
+                    material_name: values.material_name,
                     isDecrease: values.isDecrease ?? false
                   });
                   form.resetFields();
@@ -76,13 +77,13 @@ export const EditMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = 
       ]}
     >
       <Form form={form} layout="vertical" name="editMaterialNomenclator" size="middle">
-        <Form.Item name="value" label="Nombre" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item name="material_category" label="Categoría de material" rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item
-          name="isDecrease"
-          valuePropName="checked"
-        >
+        <Form.Item name="material_name" label="Nombre de material" rules={[{ required: true, message: "Campo requerido" }]}>
+          <Input />
+        </Form.Item>
+        <Form.Item name="isDecrease" valuePropName="checked">
           <Checkbox>Gastable</Checkbox>
         </Form.Item>
       </Form>
