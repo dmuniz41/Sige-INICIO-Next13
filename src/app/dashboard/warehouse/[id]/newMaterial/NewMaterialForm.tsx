@@ -5,8 +5,8 @@ import Swal from "sweetalert2";
 import Title from "antd/es/typography/Title";
 
 import { InsertMaterial } from "@/types/DTOs/materials/materials";
-import { MaterialCategoryNomenclators, Nomenclator } from "../../../../../db/migrations/schema";
-import { useMaterialCategoryNomenclator } from "@/hooks/nomenclators/material/useMaterialNomenclator";
+import {  Nomenclator } from "../../../../../db/migrations/schema";
+import { useMaterialNomenclator } from "@/hooks/nomenclators/material/useMaterialNomenclator";
 import { useMaterials } from "@/hooks/materials/useMaterials";
 import { useNomenclator } from "@/hooks/nomenclators/useNomenclator";
 
@@ -14,8 +14,8 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
   const [form] = Form.useForm();
   const router = useRouter();
   const { useGetNomenclatorsByCategoryCode } = useNomenclator();
-  const { useGetMaterialCategoryNomenclator } = useMaterialCategoryNomenclator();
-  const { data: materialCategory } = useGetMaterialCategoryNomenclator(1, 100);
+  const { useGetMaterialNomenclator } = useMaterialNomenclator();
+  const { data: materialCategory } = useGetMaterialNomenclator(1, 100);
   const { data: unitMeasures } = useGetNomenclatorsByCategoryCode("N_UM");
   const { data: providers } = useGetNomenclatorsByCategoryCode("N_PRO");
 

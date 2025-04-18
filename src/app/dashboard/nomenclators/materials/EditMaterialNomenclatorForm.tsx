@@ -52,7 +52,7 @@ export const EditMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> = 
           </button>
           <button
             key="1"
-            className="modal-btn-primary  "
+            className="modal-btn-primary"
             onClick={() => {
               form
                 .validateFields()

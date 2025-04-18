@@ -5,10 +5,19 @@ import Swal from "sweetalert2";
 import { MaterialNomenclators } from "@/db/migrations/schema";
 import { Toast } from "@/helpers/customAlert";
 import { InsertMaterialNomenclator, UpdateMaterialNomenclator } from "@/types/DTOs/nomenclators/materials";
+import { MaterialsNomenclatorsFilters } from "@/app/dashboard/nomenclators/materials/MaterialsNomenclatorsFilters";
 
-const getMaterialNomenclatorsAPI = async (page: number = 1, limit: number = 10) => {
+const getMaterialNomenclatorsAPI = async (page: number = 1, limit: number = 10, filters: MaterialsNomenclatorsFilters) => {
   const token = localStorage.getItem("accessToken");
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material?page=${page}&limit=${limit}`, {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`, {
+    params: {
+      page,
+      limit,
+      material_category: filters.material_category,
+      material_name: filters.material_name,
+      isDecrease: filters.isDecrease,
+      isNotDecrease: filters.isNotDecrease
+    },
     headers: { accessToken: token }
   });
   return response.data;
@@ -58,10 +67,10 @@ const deleteMaterialNomenclatorsAPI = async (code: number) => {
   return response.data;
 };
 
-const useGetMaterialNomenclator = (page: number, limit: number) => {
+const   useGetMaterialNomenclator = (page: number, limit: number, filters: MaterialsNomenclatorsFilters) => {
   const query = useQuery({
-    queryKey: ["GetMaterialNomenclators"],
-    queryFn: () => getMaterialNomenclatorsAPI(page, limit)
+    queryKey: ["GetMaterialNomenclators", page, limit, filters],
+    queryFn: () => getMaterialNomenclatorsAPI(page, limit, filters)
   });
 
   return query;

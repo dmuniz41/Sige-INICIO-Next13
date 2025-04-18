@@ -1,5 +1,5 @@
 "use client";
-import { Badge, Button, Input, Space, Spin, Table, Tooltip } from "antd";
+import { Badge, Button, Input, Space, Spin, Table, Tag, Tooltip } from "antd";
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -19,35 +19,30 @@ import { MaterialNomenclators } from "@/db/migrations/schema";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { useMaterialNomenclator } from "@/hooks/nomenclators/material/useMaterialNomenclator";
+import { MaterialsNomenclatorsFilters } from "./MaterialsNomenclatorsFilters";
+import { FilterSvg } from "@/app/global/FilterSvg";
 
 type DataIndex = keyof MaterialNomenclators;
 
 const MaterialsNomenclatorsTable: React.FC = () => {
   const { data: sessionData } = useSession();
-  const searchInput = useRef<InputRef>(null);
   const queryClient = useQueryClient();
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(10);
-  const [searchedColumn, setSearchedColumn] = useState("");
-  const [searchText, setSearchText] = useState("");
+  const [limit, setLimit] = useState<number>(15);
+  const [filters, setFilters] = useState<MaterialsNomenclatorsFilters>({});
+  const [showFilters, setShowFilters] = useState(false);
   const [selectedNomenclator, setSelectedNomenclator] = useState<MaterialNomenclators>();
 
   const { useGetMaterialNomenclator, useDeleteMaterialNomenclator } = useMaterialNomenclator();
   const deleteMutation = useDeleteMaterialNomenclator();
-  const { data: materialsNomenclators, isLoading, isError } = useGetMaterialNomenclator(page, limit);
+  const { data: materialsNomenclators, isLoading, isError } = useGetMaterialNomenclator(page, limit, filters);
 
   const canList = sessionData?.user.role.includes("Listar Nomencladores");
   const canCreate = sessionData?.user.role.includes("Crear Nomenclador");
   const canEdit = sessionData?.user.role.includes("Editar Nomenclador");
   const canDelete = sessionData?.user.role.includes("Eliminar Nomenclador");
-
-  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
 
   const handleDelete = (code: number) => {
     Swal.fire({
@@ -67,12 +62,11 @@ const MaterialsNomenclatorsTable: React.FC = () => {
   };
 
   const handleRefresh = () => {
-    queryClient.invalidateQueries({ queryKey: ["GetMaterialNomenclators"] });
+    queryClient.invalidateQueries({ queryKey: ["GetMaterialNomenclators", page, limit] });
   };
 
-  const handleReset = (clearFilters: () => void) => {
-    clearFilters();
-    setSearchText("");
+  const handleOpenFilters = () => {
+    setShowFilters(!showFilters);
   };
 
   const handleEdit = (record: MaterialNomenclators) => {
@@ -80,76 +74,12 @@ const MaterialsNomenclatorsTable: React.FC = () => {
     setEditModal(true);
   };
 
-  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<MaterialNomenclators> => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
-      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-          style={{ marginBottom: 8, display: "block" }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90 }}
-            className="bg-blue-500 items-center flex"
-          >
-            Search
-          </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({ closeDropdown: false });
-              setSearchText((selectedKeys as string[])[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            Filter
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
-    onFilter: (value, record) =>
-      record[dataIndex]!.toString()
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ""}
-        />
-      ) : (
-        text
-      )
-  });
+  const handleFilter = (filters: MaterialsNomenclatorsFilters) => {
+    console.log("🚀 ~ handleFilter ~ filters:", filters);
+    setFilters(filters);
+    queryClient.invalidateQueries({ queryKey: ["GetMaterialNomenclators", page, limit, filters] });
+    setShowFilters(false);
+  };
 
   const columns: ColumnsType<MaterialNomenclators> = [
     {
@@ -162,8 +92,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
         </Tooltip>
       ),
       dataIndex: "material_category",
-      width: "30%",
-      ...getColumnSearchProps("material_category")
+      width: "30%"
     },
     {
       title: (
@@ -175,8 +104,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
         </Tooltip>
       ),
       dataIndex: "material_name",
-      width: "30%",
-      ...getColumnSearchProps("material_name")
+      width: "30%"
     },
     {
       title: (
@@ -191,10 +119,18 @@ const MaterialsNomenclatorsTable: React.FC = () => {
         </Tooltip>
       ),
       dataIndex: "isDecrease",
-      width: "20%",
+      width: "5%",
       render: (_, { ...record }) => (
         <div className="flex gap-1 ">
-          {record.isDecrease ? <Badge status="warning" text="Gastable" /> : <Badge status="success" text="No Gastable" />}
+          {record.isDecrease ? (
+            <Tag color="#ffa426" className="text-lg font-semibold">
+              Gastable
+            </Tag>
+          ) : (
+            <Tag color="#34b042" className="text-lg font-semibold">
+              No Gastable
+            </Tag>
+          )}
         </div>
       )
     },
@@ -226,7 +162,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
 
   if (isLoading)
     return (
-      <section className="flex h-full w-full items-center justify-center">
+      <section className="flex h-full w-full items-center justify-center animater-fade-in">
         <Spin indicator={<LoadingOutlined style={{ fontSize: 70, color: "#ff8533" }} spin />} />
       </section>
     );
@@ -241,7 +177,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
 
   return (
     <>
-      <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
+      <section className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4 animater-fade-in">
         <div className="flex gap-2">
           <button onClick={() => setCreateNewModal(true)} className={`${canCreate ? "toolbar-primary-icon-btn" : "bg-success-200"} `}>
             <PlusSvg />
@@ -259,16 +195,31 @@ const MaterialsNomenclatorsTable: React.FC = () => {
               <RefreshSvg />
             </button>
           </Tooltip>
+          <Tooltip placement="top" title={"Filtrar"} arrow={{ pointAtCenter: true }}>
+            <button
+              className={`${
+                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
+              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+              onClick={handleOpenFilters}
+            >
+              <FilterSvg />
+            </button>
+          </Tooltip>
         </div>
-      </div>
+      </section>
+      <MaterialsNomenclatorsFilters open={showFilters} onCancel={() => setShowFilters(false)} onFilter={handleFilter} />
       <Table
         size="small"
         columns={columns}
         dataSource={materialsNomenclators?.data}
-        pagination={{ position: ["bottomCenter"], defaultPageSize: 10 }}
-        onChange={(pagination) => {
-          setPage(pagination?.current ?? 1);
-          setLimit(pagination?.pageSize ?? 10);
+        pagination={{
+          position: ["bottomCenter"],
+          defaultPageSize: 15,
+          total: materialsNomenclators?.total,
+          onChange: (page, limit) => {
+            setPage(page);
+            setLimit(limit);
+          }
         }}
         className="shadow-md"
         rowKey={(record) => record.code}

@@ -128,28 +128,6 @@ export async function PUT(request: Request) {
       );
     }
 
-    const isNomenclatorExist = await db
-      .select()
-      .from(materialNomenclators)
-      .where(
-        and(
-          eq(materialNomenclators.material_category, requestData.material_category),
-          eq(materialNomenclators.material_name, requestData.material_name)
-        )
-      );
-
-    if (isNomenclatorExist.length > 0) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: `Ya existe un nomenclador de material con nombre: ${requestData.material_category} ${requestData.material_name}`
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
     await db
       .update(materialNomenclators)
       .set({ ...requestData, updated_at: new Date() })
@@ -214,6 +192,10 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1", 10); // Default to page 1
     const limit = parseInt(searchParams.get("limit") || "10", 10); // Default to 10 items per page
+    const material_category = searchParams.get("material_category") ?? "";
+    const material_name = searchParams.get("material_name") ?? null;
+    const isDecreaseParam = searchParams.get("isDecrease") ?? null;
+    const isNotDecreaseParam = searchParams.get("isNotDecrease") ?? null;
 
     if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
       return NextResponse.json(
@@ -228,9 +210,32 @@ export async function GET(request: NextRequest) {
     }
 
     const offset = (page - 1) * limit;
+
+        // Build dynamic where conditions
+    const conditions = [];
+
+    if (material_category) {
+      conditions.push(eq(materialNomenclators.material_category, material_category));
+    }
+
+    if (material_name) {
+      conditions.push(eq(materialNomenclators.material_name, material_name));
+    }
+
+    if (isDecreaseParam !== null) {
+      const isDecrease = isDecreaseParam === 'true';
+      conditions.push(eq(materialNomenclators.isDecrease, isDecrease));
+    } else if (isNotDecreaseParam !== null) {
+      const isNotDecrease = isNotDecreaseParam === 'true';
+      conditions.push(eq(materialNomenclators.isDecrease, !isNotDecrease));
+    }
+
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
     const paginatedData = await db
       .select()
       .from(materialNomenclators)
+      .where(whereClause)
       .orderBy(desc(materialNomenclators.created_at))
       .limit(limit)
       .offset(offset);
@@ -239,8 +244,8 @@ export async function GET(request: NextRequest) {
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        counter: paginatedData.length,
         total: totalCount,
+        totalPages: Math.ceil(totalCount / limit),
         page,
         limit,
         data: paginatedData

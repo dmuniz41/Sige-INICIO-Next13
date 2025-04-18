@@ -10,12 +10,40 @@
   background-color: #0958d9;
 }
 
+/* Scale the checkbox */
+.custom-checkbox .ant-checkbox-inner {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+}
+
+/* Adjust the checkmark size/position */
+.custom-checkbox .ant-checkbox-inner::after {
+  inset-inline-start: 30%; /* Horizontal position */
+  top: 45%; /* Vertical position */
+  width: 6px; /* Checkmark width */
+  height: 12px; /* Checkmark height */
+  border-width: 3px; /* Thickness of the checkmark */
+}
+
+/* Optional: Adjust spacing between checkbox and label */
+.custom-checkbox .ant-checkbox + span {
+  padding-inline-start: 8px;
+  font-size: 16px; /* Label font size */
+}
+
 @layer components {
   .modal-btn-primary {
     @apply mt-4 select-none rounded-lg bg-success-500 py-2 px-6 text-center align-middle text-xs font-semibold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
   }
   .modal-btn-danger {
     @apply mt-4 select-none rounded-lg bg-danger-500 py-2 px-4 text-center align-middle text-xs font-semibold uppercase text-white-100 shadow-md shadow-danger-500/20 transition-all hover:shadow-lg hover:shadow-danger-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+  }
+  .filter-modal-btn-primary {
+    @apply  mb-2 flex gap-1 select-none rounded-lg bg-success-500 py-2 px-6 text-center align-middle text-base font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+  }
+  .filter-modal-btn-danger {
+    @apply  mb-2 flex gap-1 select-none rounded-lg bg-danger-500 py-2 px-4 text-center align-middle text-base font-bold uppercase text-white-100 shadow-md shadow-danger-500/20 transition-all hover:shadow-lg hover:shadow-danger-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
   }
   .toolbar-primary-icon-btn {
     @apply gap-2 flex select-none rounded-lg bg-success-500 py-2.5 px-4 justify-center text-center items-center align-middle text-base font-semibold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
