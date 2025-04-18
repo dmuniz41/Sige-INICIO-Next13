@@ -84,25 +84,31 @@ const MaterialsNomenclatorsTable: React.FC = () => {
       title: (
         <Tooltip placement="top" title={"Identifica la categoría del material (Ej: PVC, Acrilico, Lona, etc...)"}>
           <div className="flex w-fit gap-2 items-center">
-            <span className="font-bold">Categoría</span>
+            <span className="text-base font-bold">Categoría</span>
             <InfoCircleSvg width={20} height={20} />
           </div>
         </Tooltip>
       ),
       dataIndex: "material_category",
-      width: "30%"
+      width: "30%",
+      render(value) {
+        return <span className="text-base">{value}</span>;
+      }
     },
     {
       title: (
         <Tooltip placement="top" title={"Identifica la variante de la categoría seleccionada (Ej: 3mm, 6mm, Transparente, Mate, etc...)"}>
           <div className="flex w-fit gap-2 items-center">
-            <span className="font-bold">Nombre</span>
+            <span className="text-base font-bold">Nombre</span>
             <InfoCircleSvg width={20} height={20} />
           </div>
         </Tooltip>
       ),
       dataIndex: "material_name",
-      width: "30%"
+      width: "30%",
+      render(value) {
+        return <span className="text-base">{value}</span>;
+      }
     },
     {
       title: (
@@ -111,7 +117,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
           title={"Si el material es gastable se le aplica un coeficiente de merma durante el calculo de la ficha de costo"}
         >
           <div className="flex w-fit gap-2 items-center">
-            <span className="font-bold">Gastable</span>
+            <span className="text-base font-bold">Gastable</span>
             <InfoCircleSvg width={20} height={20} />
           </div>
         </Tooltip>
@@ -133,7 +139,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
       )
     },
     {
-      title: <span className="font-bold">Acciones</span>,
+      title: <span className="text-base font-bold">Acciones</span>,
       width: "5%",
       align: "center",
       render: (_, { ...record }) => (

@@ -1,5 +1,7 @@
 "use client";
 
+import { CancelSvg } from "@/app/global/CancelSvg";
+import { PlusSvg } from "@/app/global/PlusSvg";
 import { MaterialNomenclators } from "@/db/migrations/schema";
 import { useMaterialNomenclator } from "@/hooks/nomenclators/material/useMaterialNomenclator";
 import { Checkbox, Form, Input, Modal } from "antd";
@@ -23,7 +25,7 @@ export const CreateMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> 
       className="flex flex-col"
       title={
         <div className="flex w-full justify-center">
-          <span className="font-semibold text-lg">Nuevo Nomenclador de Material</span>
+          <span className="text-xl font-bold">Nuevo Nomenclador de Material</span>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -37,12 +39,12 @@ export const CreateMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> 
       width={"600px"}
       footer={[
         <div key="footer" className="flex gap-2 w-full ...values, justify-end">
-          <button key="2" className="modal-btn-danger " onClick={onCancel}>
-            Cancelar
+          <button key="2" className="filter-modal-btn-danger" onClick={onCancel}>
+            <CancelSvg /> Cancelar
           </button>
           <button
             key="1"
-            className="modal-btn-primary  "
+            className="filter-modal-btn-primary"
             onClick={() => {
               form
                 .validateFields()
@@ -61,21 +63,30 @@ export const CreateMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> 
                 });
             }}
           >
+            <PlusSvg />
             Crear
           </button>
         </div>
       ]}
     >
-      <Form form={form} layout="vertical" name="createMaterialNomenclator" size="middle">
-        <Form.Item name="material_category" label="Categoría de material" rules={[{ required: true, message: "Campo requerido" }]}>
+      <Form form={form} layout="vertical" name="createMaterialNomenclator" size="large">
+        <Form.Item
+          name="material_category"
+          label={<span className="text-lg font-bold">Categoría: </span>}
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Input />
         </Form.Item>
-        <Form.Item name="material_name" label="Nombre de material" rules={[{ required: true, message: "Campo requerido" }]}>
+        <Form.Item
+          name="material_name"
+          label={<span className="text-lg font-bold">Nombre: </span>}
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
           <Input />
         </Form.Item>
         <Form.Item name="isDecrease">
-          <Checkbox checked={isDecrease} onChange={(e) => setIsDecrease(e.target.checked)}>
-            Gastable
+          <Checkbox className="custom-checkbox" checked={isDecrease} onChange={(e) => setIsDecrease(e.target.checked)}>
+            <span className="text-lg font-bold">Gastable</span>
           </Checkbox>
         </Form.Item>
       </Form>
