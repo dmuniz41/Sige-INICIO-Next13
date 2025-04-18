@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
 
-import { MaterialNomenclators } from "@/db/migrations/schema";
 import { Toast } from "@/helpers/customAlert";
 import { InsertMaterialNomenclator, UpdateMaterialNomenclator } from "@/types/DTOs/nomenclators/materials";
 import { MaterialsNomenclatorsFilters } from "@/app/dashboard/nomenclators/materials/MaterialsNomenclatorsFilters";

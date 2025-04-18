@@ -1,23 +1,28 @@
 "use client";
 
-import React from "react";
+import { Layout } from "antd";
 import { Sidebar } from "./Sidebar";
 import { Navbar } from "./Navbar";
 
-export default function layout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      id="dashboard_layout"
-      className="h-screen w-full animate-fade animate-once animate-duration-150 grid-cols-2"
-    >
-      <div
-        id="sidebar_wrapper"
-        className="h-full font-segoe bg-background_light font-semibold text-base absolute pt-[5rem] flex"
-      >
-        <Sidebar />
-      </div>
-      <Navbar />
-      {children}
-    </div>
+    <Layout style={{ minHeight: "100vh" }}>
+      <Sidebar />
+      <Layout>
+        <Navbar />
+        <Layout.Content style={{ margin: "24px 16px 0" }}>
+          <div
+            style={{
+              padding: 24,
+              minHeight: 360,
+              background: "#fff",
+              borderRadius: 8
+            }}
+          >
+            {children}
+          </div>
+        </Layout.Content>
+      </Layout>
+    </Layout>
   );
 }

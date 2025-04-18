@@ -1,77 +1,93 @@
 "use client";
+
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Form, Input, Layout, Row, Typography, notification } from "antd";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import React, { FormEvent, useState } from "react";
+import React from "react";
 
-import { Toast } from "@/helpers/customAlert";
 import logo from "../../../assets/inicio.svg";
 
-export default function Login() {
-  const [error, setError] = useState("");
+const { Content, Footer } = Layout;
+const { Title } = Typography;
 
+export default function LoginPage() {
   const router = useRouter();
+  const [form] = Form.useForm();
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    const formData = new FormData(e.currentTarget);
-    e.preventDefault();
-
-    const res = await signIn("credentials", {
-      user: formData.get("user"),
-      password: formData.get("password"),
-      redirect: false,
-      callbackUrl: "/dashboard"
-    });
-
-    if (res?.error) {
-      Toast.fire({
-        icon: "error",
-        title: "Usuario o contraseña incorrecto"
+  const handleSubmit = async (values: { username: string; password: string }) => {
+    try {
+      const res = await signIn("credentials", {
+        username: values.username,
+        password: values.password,
+        redirect: false
       });
 
-      return setError(res.error as string);
-    }
-    if (res?.ok) {
-      return router.push("/dashboard");
+      if (res?.error) {
+        notification.error({
+          message: "Error de autenticación",
+          description: "Usuario o contraseña incorrectos"
+        });
+        return;
+      }
+
+      if (res?.ok) {
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      notification.error({
+        message: "Error",
+        description: "Ocurrió un error durante el inicio de sesión"
+      });
     }
   };
+
   return (
-    <div className=" flex flex-col bg-background_light items-center justify-center w-screen h-screen font-segoe animate-fade animate-once animate-duration-150">
-      <div className="mb-[3rem] w-[15rem]">
-        <Image src={logo} width={500} height={300} alt="Inicio logo" priority={true} />
-      </div>
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-4 w-[25%] px-8 py-10 border-t-[4px] border-solid border-t-primary-500 font-semibold bg-white-100 rounded-[5px] shadow-md"
+    <Layout style={{ minHeight: "100vh" }}>
+      <Content
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)"
+        }}
       >
-        <div className="grid">
-          <h5 className="mb-0 font-bold">Usuario</h5>
-          <input
-            className="w-full h-[50px] font-medium pl-[10px] outline-none border-solid border-[1px] rounded-md border-border_input  focus:border-primary-500 "
-            autoFocus
-            type="text"
-            name="user"
-            id="input_user"
-            autoComplete="user"
-          />
+        <div
+          style={{
+            width: "100%",
+            maxWidth: 400,
+            padding: 40,
+            background: "#ffffff",
+            borderRadius: 8,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+          }}
+        >
+          <Row justify={"center"} align={"middle"}>
+            <Image src={logo} width={180} height={80} alt="Inicio logo" style={{ marginBottom: 24 }} />
+            <Title level={3} style={{ marginBottom: 0 }}>
+              Bienvenido a SIGE-INICIO
+            </Title>
+            <p style={{ color: "#666" }}>Por favor inicie sesión</p>
+          </Row>
+
+          <Form form={form} name="login" initialValues={{ remember: true }} onFinish={handleSubmit} layout="vertical">
+            <Form.Item name="username" rules={[{ required: true, message: "Por favor ingrese su usuario" }]}>
+              <Input prefix={<UserOutlined />} placeholder="Usuario" size="large" />
+            </Form.Item>
+
+            <Form.Item name="password" rules={[{ required: true, message: "Por favor ingrese su contraseña" }]}>
+              <Input.Password prefix={<LockOutlined />} placeholder="Contraseña" size="large" />
+            </Form.Item>
+
+            <Form.Item>
+              <button className="login-btn" type="submit">
+                Entrar
+              </button>
+            </Form.Item>
+          </Form>
         </div>
-        <div className="grid">
-          <h5 className="mb-0 font-bold">Contraseña</h5>
-          <input
-            className="w-full h-[50px] font-medium pl-[10px] outline-none border-solid border-[1px] rounded-md border-border_input focus:border-primary-500"
-            type="password"
-            name="password"
-            id="input_password"
-            autoComplete="current-password"
-          />
-        </div>
-        <button type="submit">
-          <a className="cursor-pointer text-xl mt-4 justify-center items-center uppercase flex bg-primary-500 rounded-md w-full h-[50px] border-none transition ease-in delay-50 hover:bg-primary-600 shadow-md">
-            <span className="text-white-100 font-semibold">Entrar</span>
-          </a>
-        </button>
-      </form>
-      <p className="font-semibold mt-10 text-border_input">Copyright © INICIO-TEAM {new Date().getFullYear()}</p>
-    </div>
+      </Content>
+    </Layout>
   );
 }
