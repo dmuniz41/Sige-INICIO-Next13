@@ -75,10 +75,8 @@ const MaterialsNomenclatorsTable: React.FC = () => {
   };
 
   const handleFilter = (filters: MaterialsNomenclatorsFilters) => {
-    console.log("🚀 ~ handleFilter ~ filters:", filters);
     setFilters(filters);
     queryClient.invalidateQueries({ queryKey: ["GetMaterialNomenclators", page, limit, filters] });
-    setShowFilters(false);
   };
 
   const columns: ColumnsType<MaterialNomenclators> = [
@@ -160,18 +158,11 @@ const MaterialsNomenclatorsTable: React.FC = () => {
     }
   ];
 
-  if (isLoading)
-    return (
-      <section className="flex h-full w-full items-center justify-center animater-fade-in">
-        <Spin indicator={<LoadingOutlined style={{ fontSize: 70, color: "#ff8533" }} spin />} />
-      </section>
-    );
-
   if (isError) {
     Swal.fire({
       icon: "error",
       title: "Error",
-      text: "Ocurrió un error al obtener las categorías de materiales"
+      text: "Ocurrió un error al obtener los nomencladores de materiales"
     });
   }
 
@@ -212,6 +203,10 @@ const MaterialsNomenclatorsTable: React.FC = () => {
         size="small"
         columns={columns}
         dataSource={materialsNomenclators?.data}
+        loading={{
+          spinning: isLoading,
+          indicator: <Spin indicator={<LoadingOutlined style={{ fontSize: 50, color: "#ff8533" }} spin />} />
+        }}
         pagination={{
           position: ["bottomCenter"],
           defaultPageSize: 15,

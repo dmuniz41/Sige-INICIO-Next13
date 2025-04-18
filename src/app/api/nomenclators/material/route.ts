@@ -1,5 +1,5 @@
 import { db } from "@/db/drizzle";
-import { and, eq, desc } from "drizzle-orm";
+import { and, eq, desc, ilike } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
@@ -215,11 +215,11 @@ export async function GET(request: NextRequest) {
     const conditions = [];
 
     if (material_category) {
-      conditions.push(eq(materialNomenclators.material_category, material_category));
+      conditions.push(ilike(materialNomenclators.material_category, `%${material_category}%`));
     }
 
     if (material_name) {
-      conditions.push(eq(materialNomenclators.material_name, material_name));
+      conditions.push(ilike(materialNomenclators.material_name, `%${material_name}%`));
     }
 
     if (isDecreaseParam !== null) {
