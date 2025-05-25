@@ -1,11 +1,11 @@
 "use client";
 
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Layout, Row, Typography, notification } from "antd";
+import { Form, Input, Layout, Row, Typography, notification } from "antd";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 
 import logo from "../../../assets/inicio.svg";
 
@@ -15,32 +15,28 @@ const { Title } = Typography;
 export default function LoginPage() {
   const router = useRouter();
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false); 
 
   const handleSubmit = async (values: { username: string; password: string }) => {
-    try {
-      const res = await signIn("credentials", {
-        username: values.username,
-        password: values.password,
-        redirect: false
-      });
+    setLoading(true); 
+    const result = await signIn("credentials", {
+      redirect: false,
+      username: values.username,
+      password: values.password
+    });
+    setLoading(false); 
 
-      if (res?.error) {
-        notification.error({
-          message: "Error de autenticación",
-          description: "Usuario o contraseña incorrectos"
-        });
-        return;
-      }
-
-      if (res?.ok) {
-        router.push("/dashboard");
-      }
-    } catch (error) {
+    if (result?.error) {
+      console.error("Login failed:", result.error);
       notification.error({
-        message: "Error",
-        description: "Ocurrió un error durante el inicio de sesión"
+        message: "Error de inicio de sesión",
+        description: "Credenciales inválidas. Por favor, intente de nuevo."
       });
+      return;
     }
+
+    // Use router.push for navigation
+    router.push("/dashboard");
   };
 
   return (
@@ -81,8 +77,9 @@ export default function LoginPage() {
             </Form.Item>
 
             <Form.Item>
-              <button className="login-btn" type="submit">
-                Entrar
+              {/* Disable button and show loading state */}
+              <button className="login-btn" type="submit" disabled={loading}>
+                {loading ? "Iniciando sesión..." : "Entrar"}
               </button>
             </Form.Item>
           </Form>

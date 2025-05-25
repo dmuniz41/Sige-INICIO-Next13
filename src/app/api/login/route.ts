@@ -1,17 +1,17 @@
+import { db } from "@/db/drizzle";
+import { users } from "@/db/migrations/schema";
+import { signJwtAccessToken } from "@/libs/jwt";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 
-import { db } from "@/db/drizzle";
-import { signJwtAccessToken } from "@/libs/jwt";
-import { users } from "@/db/migrations/schema";
-
 export async function POST(request: Request) {
   const { user, password } = await request.json();
+
   try {
     const DBUser = await db.select().from(users).where(eq(users.userName, user));
 
-    if(DBUser.length === 0) {
+    if (DBUser.length === 0) {
       return new NextResponse(
         JSON.stringify({
           ok: false,
@@ -24,23 +24,29 @@ export async function POST(request: Request) {
     }
 
     if (DBUser && (await bcrypt.compare(password, DBUser[0].password))) {
-      const accessToken = signJwtAccessToken(DBUser[0]);
       const DBUserJSON = DBUser[0];
-      const result = {
-        ...DBUserJSON,
-        accessToken
-      };
+      const accessToken = signJwtAccessToken({ id: DBUserJSON.id, user: DBUserJSON.userName });
 
-      return new NextResponse(JSON.stringify(result), {
+      return new NextResponse(JSON.stringify({ id: DBUserJSON.id, user: DBUserJSON.userName, accessToken }), {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
         }
       });
+    } else {
+      console.log("🚀 ~ POST ~ Incorrect password"); // Add log for incorrect password
+      return new NextResponse(
+        JSON.stringify({
+          ok: false,
+          message: "Credenciales inválidas"
+        }),
+        {
+          status: 401 // Return 401 for invalid credentials
+        }
+      );
     }
   } catch (error) {
-    console.log(error);
-
-    return new Response(JSON.stringify(error));
+    console.error("🚀 ~ POST ~ Error in login endpoint:", error);
+    return new NextResponse(JSON.stringify({ message: "Internal server error" }), { status: 500 });
   }
 }

@@ -29,6 +29,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
+    "**/*.d.ts",
     "src/helpers/toCamelCase.js",
     "src/app/reports/WarehouseReport.ts",
     "src/helpers/PDFReport.js"

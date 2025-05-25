@@ -13,13 +13,7 @@ interface CollectionCreateFormProps {
 }
 
 export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCreate, onCancel, defaultValues }) => {
-  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
   const userArea: string[] | undefined = [];
-  nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Area de usuario") {
-      userArea.push(nomenclator.code);
-    }
-  });
   const privileges: SelectProps["options"] = [
     {
       label: "ADMINISTRADOR",

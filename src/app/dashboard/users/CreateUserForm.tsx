@@ -22,13 +22,7 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({
   onCreate,
   onCancel
 }) => {
-  const { nomenclators }: any = useAppSelector((state: RootState) => state?.nomenclator);
-  const userArea: string[] | undefined = [];
-  nomenclators.map((nomenclator: INomenclator) => {
-    if (nomenclator.category === "Area de usuario") {
-      userArea.push(nomenclator.code);
-    }
-  });
+  
   const privileges: SelectProps["options"] = [
     {
       label: "ADMINISTRADOR",
@@ -144,12 +138,6 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({
     }
   ];
 
-  const areas: SelectProps["options"] = userArea.map((area) => {
-    return {
-      label: `${area}`,
-      value: `${area}`
-    };
-  });
 
   const [form] = Form.useForm();
   return (
@@ -266,7 +254,7 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({
           label="Área"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <Select mode="multiple" allowClear style={{ width: "100%" }} options={areas} />
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={[]} />
         </Form.Item>
       </Form>
     </Modal>

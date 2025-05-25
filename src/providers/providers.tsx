@@ -12,7 +12,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
+      {/* <Provider store={store}> */}
         <SessionProvider>
           <ConfigProvider
             theme={{
@@ -26,7 +26,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             <ReactQueryDevtools initialIsOpen={false} />
           </ConfigProvider>
         </SessionProvider>
-      </Provider>
+      {/* </Provider> */}
     </QueryClientProvider>
   );
 }

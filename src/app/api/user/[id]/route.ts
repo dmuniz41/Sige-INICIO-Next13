@@ -10,6 +10,7 @@ import logger from "@/utils/logger";
 export async function DELETE(request: NextRequest, { params }: { params: { id: number } }) {
   const id = params.id;
   const accessToken = request.headers.get("accessToken");
+  console.log("🚀 ~ DELETE ~ accessToken:", accessToken)
 
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -24,10 +25,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: n
       );
     }
     const decoded = jwt.decode(accessToken) as JwtPayload;
-    logger.info("Eliminar Usuario", { method: request.method, url: request.url, user: decoded.userName });
-
-    // await connectDB();
-    // const userToDelete = await User.findById(params.get("id"));
+    logger.info("Eliminar Usuario", { method: request.method, url: request.url, user: decoded.user });
 
     const userToDelete = await db.select().from(users).where(eq(users.id, id));
 
@@ -43,7 +41,6 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: n
       );
     }
 
-    // const deletedUser = await User.findByIdAndDelete(params.get("id"));
     const deletedUser = await db.delete(users).where(eq(users.id, id));
 
     return new NextResponse(

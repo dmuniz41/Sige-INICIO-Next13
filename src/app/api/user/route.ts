@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     }
 
     const decoded = jwt.decode(accessToken) as JwtPayload;
-    logger.info("Crear Usuario", { method: request.method, url: request.url, user: decoded.userName });
+    logger.info("Crear Usuario", { method: request.method, url: request.url, user: decoded.user });
 
     if (!user.password || user.password.length < 6) {
       return NextResponse.json(
@@ -40,21 +40,6 @@ export async function POST(request: NextRequest) {
         }
       );
     }
-
-    // await connectDB();
-    // const BDuser = await User.findOne({ user: user.user });
-
-    // if (BDuser) {
-    //   return NextResponse.json(
-    //     {
-    //       ok: false,
-    //       message: "El usuario ya existe en la base de datos"
-    //     },
-    //     {
-    //       status: 409
-    //     }
-    //   );
-    // }
 
     const existingUser = await db.select().from(users).where(eq(users.userName, user.userName));
 
@@ -85,9 +70,6 @@ export async function POST(request: NextRequest) {
         password: hashedPassword
       })
       .returning();
-
-    // const newUser = new User({ ...user, password: hashedPassword, key: newKey });
-    // await newUser.save();
 
     return new NextResponse(
       JSON.stringify({
@@ -138,10 +120,7 @@ export async function GET(request: NextRequest) {
     }
 
     const decoded = jwt.decode(accessToken) as JwtPayload;
-    logger.info("Listar Usuarios", { method: request.method, url: request.url, user: decoded.userName });
-
-    // await connectDB();
-    // const listOfUsers = (await User.find()).reverse();
+    logger.info("Listar Usuarios", { method: request.method, url: request.url, user: decoded.user });
 
     const listOfUsers = await db.select().from(users);
 
@@ -196,10 +175,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const decoded = jwt.decode(accessToken) as JwtPayload;
-    logger.info("Actualizar Usuario", { method: request.method, url: request.url, user: decoded.userName });
-
-    // await connectDB();
-    // const userToUpdate = await User.findById(user._id);
+    logger.info("Actualizar Usuario", { method: request.method, url: request.url, user: decoded.user });
 
     const userToUpdate = await db.select().from(users).where(eq(users.id, user.id));
 
@@ -214,8 +190,6 @@ export async function PUT(request: NextRequest) {
         }
       );
     }
-
-    // const updatedUser = await User.findByIdAndUpdate(user._id, { ...user }, { new: true });
 
     const updatedUser = await db.update(users).set(user).where(eq(users.id, user.id)).returning();
 
