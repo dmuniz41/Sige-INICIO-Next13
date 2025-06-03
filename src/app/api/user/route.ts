@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          message: "El usuario ya existe en la base de datos"
+          message: "Ya existe un usuario con ese nombre"
         },
         {
           status: 409
@@ -157,71 +157,4 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function PUT(request: NextRequest) {
-  const { ...user }: User = await request.json();
-  const accessToken = request.headers.get("accessToken");
 
-  try {
-    if (!accessToken || !verifyJWT(accessToken)) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    const decoded = jwt.decode(accessToken) as JwtPayload;
-    logger.info("Actualizar Usuario", { method: request.method, url: request.url, user: decoded.user });
-
-    const userToUpdate = await db.select().from(users).where(eq(users.id, user.id));
-
-    if (userToUpdate.length === 0) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "El usuario a actualizar no existe"
-        },
-        {
-          status: 409
-        }
-      );
-    }
-
-    const updatedUser = await db.update(users).set(user).where(eq(users.id, user.id)).returning();
-
-    return new NextResponse(
-      JSON.stringify({
-        ok: true,
-        data: updatedUser
-      }),
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        }
-      }
-    );
-  } catch (error) {
-    if (error instanceof Error) {
-      logger.error("Error al actualizar usuario", {
-        error: error.message,
-        stack: error.stack,
-        route: "/api/user",
-        method: "PUT"
-      });
-      return NextResponse.json(
-        {
-          ok: false,
-          message: error.message
-        },
-        {
-          status: 500
-        }
-      );
-    }
-  }
-}

@@ -32,8 +32,12 @@
   font-size: 16px; /* Label font size */
 }
 
-@layer components {
+:root {
+  --ant-font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
 
+@layer components {
   .login-btn {
     @apply w-full flex bg-primary-500 text-lg rounded-md text-center justify-center py-2 text-white-100 font-bold hover:bg-primary-600 ease-in-out duration-300 focus:outline-none hover:shadow-md hover:shadow-primary-500/20;
   }
@@ -44,13 +48,13 @@
     @apply mt-4 select-none rounded-lg bg-danger-500 py-2 px-4 text-center align-middle text-xs font-semibold uppercase text-white-100 shadow-md shadow-danger-500/20 transition-all hover:shadow-lg hover:shadow-danger-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
   }
   .filter-modal-btn-primary {
-    @apply  mb-2 flex gap-1 select-none rounded-lg bg-success-500 py-2 px-6 text-center align-middle text-base font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+    @apply mb-2 flex gap-1 select-none rounded-lg bg-success-500 py-2 px-6 text-center align-middle text-base font-bold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
   }
   .filter-modal-btn-danger {
-    @apply  mb-2 flex gap-1 select-none rounded-lg bg-danger-500 py-2 px-4 text-center align-middle text-base font-bold uppercase text-white-100 shadow-md shadow-danger-500/20 transition-all hover:shadow-lg hover:shadow-danger-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+    @apply mb-2 flex gap-1 select-none rounded-lg bg-danger-500 py-2 px-4 text-center align-middle text-base font-bold uppercase text-white-100 shadow-md shadow-danger-500/20 transition-all hover:shadow-lg hover:shadow-danger-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
   }
   .filter-modal-btn-orange {
-    @apply  mb-2 flex gap-1 select-none rounded-lg bg-secondary-500 py-2 px-4 text-center align-middle text-base font-bold uppercase text-white-100 shadow-md shadow-secondary-500/20 transition-all hover:shadow-lg hover:shadow-secondary-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+    @apply mb-2 flex gap-1 select-none rounded-lg bg-secondary-500 py-2 px-4 text-center align-middle text-base font-bold uppercase text-white-100 shadow-md shadow-secondary-500/20 transition-all hover:shadow-lg hover:shadow-secondary-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
   }
   .toolbar-primary-icon-btn {
     @apply gap-2 flex select-none rounded-lg bg-success-500 py-2.5 px-4 justify-center text-center items-center align-middle text-base font-semibold uppercase text-white-100 shadow-md shadow-success-500/20 transition-all hover:shadow-lg hover:shadow-success-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
@@ -81,5 +85,13 @@
   }
   .add-item-form-btn {
     @apply gap-2 flex select-none rounded-lg bg-white-500 py-2 px-4 justify-center text-center items-center align-middle text-sm uppercase border border-dashed border-white-900 text-white-900 transition-all hover:text-blue-400 hover:border-blue-400 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+  }
+
+  .save-action-modal-btn {
+    @apply flex text-lg font-bold px-4 gap-2 hover:shadow-md shadow-sm shadow-success-500 justify-center items-center p-2 rounded-md bg-success-500 text-white-100 cursor-pointer hover:bg-success-500/80 ease-in-out duration-300;
+  }
+
+  .cancel-action-modal-btn {
+    @apply flex text-lg font-bold px-4 gap-2 hover:shadow-md shadow-sm shadow-danger-500 justify-center items-center p-2 rounded-md bg-danger-500 text-white-100 cursor-pointer hover:bg-danger-500/80 ease-in-out duration-300;
   }
 }

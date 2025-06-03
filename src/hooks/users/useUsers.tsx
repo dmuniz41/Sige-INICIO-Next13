@@ -1,9 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import Swal from "sweetalert2";
 
 import { InsertUser, UpdateUser } from "@/types/DTOs/users/users";
-import { Toast } from "@/helpers/customAlert";
 import { useSession } from "next-auth/react";
 import { notification } from "antd";
 
@@ -33,7 +31,6 @@ const updateUserAPI = async (id: number, values: UpdateUser, accessToken?: strin
 };
 
 const deleteUserAPI = async (id: number, accessToken?: string) => {
-  console.log("🚀 ~ deleteUserAPI ~ accessToken:", accessToken)
   const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/user/${id}`, { headers: { accessToken } });
   return response.data.data;
 };
@@ -44,7 +41,7 @@ const useGetUsers = (page: number, limit: number) => {
   const query = useQuery({
     queryKey: ["GetUsers", page, limit],
     queryFn: () => getUsersAPI(page, limit, accessToken),
-    enabled: status === "authenticated"
+    enabled: status === "authenticated",
   });
 
   return query;
@@ -69,8 +66,9 @@ const useCreateUser = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetUsers"] });
       notification.success({
-        message: "Success",
-        description: "Nuevo usuario creado"
+        message: "Nuevo usuario creado",
+        showProgress: true,
+        pauseOnHover: true,
       });
     },
     onError: (error: AxiosError<{ ok: boolean; message: string }>) => {
@@ -95,8 +93,9 @@ const useUpdateUser = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetUsers"] });
       notification.success({
-        message: "Success",
-        description: "Usuario actualizado"
+        message: "Usuario actualizado",
+        showProgress: true,
+        pauseOnHover: true
       });
     },
     onError: (error: AxiosError<{ ok: boolean; message: string }>) => {
@@ -119,10 +118,11 @@ const useDeleteUser = () => {
     mutationKey: ["DeleteClient"],
     mutationFn: (id: number) => deleteUserAPI(id, accessToken),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["GetUsers"] });
+      queryClient.invalidateQueries({ queryKey: ["GetUsers", 1, 10] });
       notification.success({
-        message: "Success",
-        description: "Usuario eliminado"
+        message: "Usuario eliminado",
+        showProgress: true,
+        pauseOnHover: true
       });
     },
     onError: (error: AxiosError<{ ok: boolean; message: string }>) => {

@@ -1,11 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
-  content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}"
-  ],
+  content: ["./src/pages/**/*.{js,ts,jsx,tsx,mdx}", "./src/components/**/*.{js,ts,jsx,tsx,mdx}", "./src/app/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     fontFamily: {
       segoe: ["Segoe UI"]
@@ -79,6 +75,28 @@ module.exports = {
         800: "#660000",
         900: "#330000"
       },
+      black: {
+        100: "#000000",
+        200: "#000000",
+        300: "#000000",
+        400: "#000000",
+        500: "#000000",
+        600: "#000000",
+        700: "#000000",
+        800: "#000000",
+        900: "#000000"
+      },
+      gray: {
+        100: "#f0f0f0",
+        200: "#e3eaef",
+        300: "#d6d7df",
+        400: "#c0c2c7",
+        500: "#b1b4bd",
+        600: "#9e9fa5",
+        700: "#8a8c93",
+        800: "#6f7177",
+        900: "#52545b"
+      },
       light: "#e3eaef",
       dark: "#191d21",
       border_light: "#f0f0f0",
@@ -86,7 +104,7 @@ module.exports = {
       icon_color: " rgba(0, 0, 0, 0.54)",
       icon_disabled: "rgb(221, 216, 216)",
       box_shadow: "rgb(226, 223, 223)",
-      border_input: "rgb(129, 127, 127)"
+      border_input: "rgb(129, 127, 127)",
     }
   },
   plugins: [require("tailwindcss-animated")],

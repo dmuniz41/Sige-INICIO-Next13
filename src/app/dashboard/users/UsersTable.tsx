@@ -1,6 +1,7 @@
 "use client";
 
 import { Table, Tag, Tooltip } from "antd";
+import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import type { ColumnsType } from "antd/es/table";
@@ -17,6 +18,7 @@ import { User } from "@/db/migrations/schema";
 import { useUser } from "@/hooks/users/useUsers";
 
 const UserTable: React.FC = () => {
+  const queryClient = useQueryClient();
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [privilegesModal, setPrivilegesModal] = useState(false);
@@ -40,10 +42,6 @@ const UserTable: React.FC = () => {
   const handleEditPrivileges = (record: User) => {
     setSelectedUser(record);
     setPrivilegesModal(true);
-  };
-
-  const onCreate = (values: any) => {
-    setCreateNewModal(false);
   };
 
   const onEdit = (values: any) => {
@@ -78,6 +76,10 @@ const UserTable: React.FC = () => {
         deleteUser(record.id);
       }
     });
+  };
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["GetUsers", page, limit] });
   };
 
   const columns: ColumnsType<User> = [
@@ -158,16 +160,17 @@ const UserTable: React.FC = () => {
         <div className="flex">
           <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
             <button
-              className={`${"cursor-pointer hover:bg-white-600 ease-in-out duration-300 opacity-20 pt-2 pl-2"} flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
+              className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 p-2 flex justify-center items-center text-xl rounded-full"
+              onClick={handleRefresh}
             >
-              <RefreshSvg />
+              <RefreshSvg width={25} height={25} />
             </button>
           </Tooltip>
         </div>
       </div>
 
-      <CreateUserForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={onCreate} />
-      <EditUserForm open={editModal} onCancel={() => setEditModal(false)} onCreate={onEdit} defaultValues={selectedUser!} />
+      <CreateUserForm open={createNewModal} onCancel={() => setCreateNewModal(false)} />
+      <EditUserForm open={editModal} onCancel={() => setEditModal(false)} defaultValues={selectedUser!} />
       <PrivilegesForm
         open={privilegesModal}
         onCancel={() => setPrivilegesModal(false)}
@@ -177,9 +180,20 @@ const UserTable: React.FC = () => {
 
       <Table
         size="middle"
+        loading={isUsersLoading}
         columns={columns}
         dataSource={users}
-        pagination={{ position: ["bottomCenter"], defaultPageSize: 20 }}
+        pagination={{
+          showSizeChanger: true,
+          showQuickJumper: true,
+          onChange(page, pageSize) {
+            setPage(page);
+            setLimit(pageSize);
+          },
+          position: ["bottomCenter"],
+          defaultPageSize: 10,
+          pageSizeOptions: ["10", "15", "20", "25"]
+        }}
         className="shadow-md"
         rowKey={"id"}
       />

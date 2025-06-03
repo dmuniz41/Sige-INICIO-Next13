@@ -1,28 +1,38 @@
 "use client";
 
-import { INomenclator } from "@/models/nomenclator";
-import { RootState, useAppSelector } from "@/store/store";
-import { Form, Input, Modal, Select, SelectProps } from "antd";
-interface Values {
-  user: string;
-  userName: string;
-  lastName: string;
-  password: string;
-  privileges: string[];
-  area: string;
-}
+import { CancelActionModalBtn } from "@/app/global/CancelActionModalBtn";
+import { SaveActionModalBtn } from "@/app/global/SaveActionModalBtn";
+import { useUser } from "@/hooks/users/useUsers";
+import { EyeInvisibleOutlined, EyeTwoTone, LoadingOutlined } from "@ant-design/icons";
+import { Form, Input, Modal, Select, SelectProps, Spin } from "antd";
+import Title from "antd/es/typography/Title";
+
 interface CollectionCreateFormProps {
   open: boolean;
-  onCreate: (values: Values) => void;
   onCancel: () => void;
 }
 
-export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({
-  open,
-  onCreate,
-  onCancel
-}) => {
-  
+export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel }) => {
+  const [form] = Form.useForm();
+  const { useCreateUser } = useUser();
+  const { mutateAsync: createUser, isPending } = useCreateUser();
+
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      await createUser(values);
+      onCancel();
+    } catch (error: any) {
+      console.log("Validate Failed:", error);
+    }
+  };
+
+  const handleCancel = () => {
+    console.log("Cancelar");
+    form.resetFields();
+    onCancel();
+  };
+
   const privileges: SelectProps["options"] = [
     {
       label: "ADMINISTRADOR",
@@ -138,14 +148,13 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({
     }
   ];
 
-
-  const [form] = Form.useForm();
   return (
     <Modal
       className="flex flex-col"
       title={
-        <div className="flex w-full justify-center">
-          <span className="font-semibold text-lg">Nuevo Usuario</span>
+        <div className="grid w-full">
+          <Title level={4}>Nuevo Usuario</Title>
+          <div className="flex h-[1px] bg-gray-500 my-2"></div>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -153,39 +162,25 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({
       open={open}
       destroyOnClose
       onCancel={onCancel}
-      okType="default"
-      okText="Crear"
-      cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button key="2" className="modal-btn-danger" onClick={onCancel}>
-            Cancelar
-          </button>
-          <button
-            key="1"
-            className="modal-btn-primary"
-            onClick={() => {
-              form
-                .validateFields()
-                .then((values) => {
-                  onCreate(values);
-                  form.resetFields();
-                })
-                .catch((error) => {
-                  console.log("Validate Failed:", error);
-                });
-            }}
-          >
-            Crear
-          </button>
+          <CancelActionModalBtn onClick={handleCancel} />
+          <SaveActionModalBtn onClick={handleSubmit} />
         </div>
       ]}
     >
+      <Spin
+        spinning={isPending}
+        indicator={<LoadingOutlined style={{ fontSize: 80 }} spin />}
+        size="large"
+        fullscreen
+        tip={<span className="text-xl font-bold">Cargando ...</span>}
+      />
       <Form
         form={form}
         layout="vertical"
         name="createUserForm"
-        size="middle"
+        size="large"
         fields={[
           {
             name: "privileges",
@@ -193,38 +188,26 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({
           }
         ]}
       >
-        <Form.Item
-          name="user"
-          label="Usuario"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="name" label={<Title level={5}>Nombre</Title>} rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item
-          name="userName"
-          label="Nombre"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="lastName" label={<Title level={5}>Apellidos</Title>} rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
-        <Form.Item
-          name="lastName"
-          label="Apellidos"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="userName" label={<Title level={5}>Usuario</Title>} rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
         <Form.Item
           name="password"
-          label="Contraseña"
+          label={<Title level={5}>Contraseña</Title>}
           hasFeedback
           rules={[{ required: true, min: 7, message: "Campo requerido" }]}
         >
-          <Input type="password" />
+          <Input.Password iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} />
         </Form.Item>
         <Form.Item
           name="Contraseña"
-          label="Confirmar Contraseña"
+          label={<Title level={5}>Confirmar Contraseña</Title>}
           dependencies={["password"]}
           hasFeedback
           rules={[
@@ -239,21 +222,17 @@ export const CreateUserForm: React.FC<CollectionCreateFormProps> = ({
             })
           ]}
         >
-          <Input type="password" />
+          <Input.Password iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} />
         </Form.Item>
         <Form.Item
           className="hidden"
           name="privileges"
-          label="Privilegios"
+          label={<Title level={5}>Roles</Title>}
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <Select mode="multiple" allowClear style={{ width: "100%" }} options={privileges} />
+          <Select mode="multiple" allowClear style={{ width: "100%" }} options={[privileges]} />
         </Form.Item>
-        <Form.Item
-          name="area"
-          label="Área"
-          rules={[{ required: true, message: "Campo requerido" }]}
-        >
+        <Form.Item name="area" label={<Title level={5}>Área</Title>} rules={[{ required: false, message: "Campo requerido" }]}>
           <Select mode="multiple" allowClear style={{ width: "100%" }} options={[]} />
         </Form.Item>
       </Form>
