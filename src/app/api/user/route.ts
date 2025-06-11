@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq, like, sql } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt, { JwtPayload } from "jsonwebtoken";
@@ -122,12 +122,62 @@ export async function GET(request: NextRequest) {
     const decoded = jwt.decode(accessToken) as JwtPayload;
     logger.info("Listar Usuarios", { method: request.method, url: request.url, user: decoded.user });
 
-    const listOfUsers = await db.select().from(users);
+    // Get query params for filtering
+    const { searchParams } = new URL(request.url);
+    const filters = Object.fromEntries(searchParams.entries());
+
+    // Pagination parameters
+    const page = parseInt(filters.page || "1");
+    const pageSize = parseInt(filters.pageSize || "10");
+    const offset = (page - 1) * pageSize;
+
+    // Build the query dynamically based on filters
+    const conditions = [];
+
+    if (filters.name) {
+      conditions.push(like(users.name, `%${filters.name}%`));
+    }
+
+    if (filters.lastName) {
+      conditions.push(like(users.lastName, `%${filters.lastName}%`));
+    }
+
+    if (filters.userName) {
+      conditions.push(like(users.userName, `%${filters.userName}%`));
+    }
+    
+    // Execute count query
+    const countQuery = db
+      .select({ count: sql<number>`COUNT(*)` })
+      .from(users)
+      .where(conditions.length > 0 ? and(...conditions) : undefined);
+
+    // Execute data query
+    const dataQuery = db
+      .select()
+      .from(users)
+      .where(conditions.length > 0 ? and(...conditions) : undefined)
+      .limit(pageSize)
+      .offset(offset);
+
+    // Run queries in parallel
+    const [countResult, listOfUsers] = await Promise.all([countQuery, dataQuery]);
+
+    const totalCount = countResult[0]?.count || 0;
+    const totalPages = Math.ceil(totalCount / pageSize);
 
     return new NextResponse(
       JSON.stringify({
         ok: true,
-        data: listOfUsers
+        data: listOfUsers,
+        pagination: {
+          total: totalCount,
+          totalPages,
+          currentPage: page,
+          pageSize,
+          hasNextPage: page < totalPages,
+          hasPrevPage: page > 1
+        }
       }),
       {
         headers: {
@@ -156,5 +206,3 @@ export async function GET(request: NextRequest) {
     }
   }
 }
-
-

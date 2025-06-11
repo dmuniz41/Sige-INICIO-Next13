@@ -1,15 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 
-import { InsertUser, UpdateUser } from "@/types/DTOs/users/users";
+import { InsertUser, UpdateUser, UserFilters } from "@/types/DTOs/users/users";
 import { useSession } from "next-auth/react";
 import { notification } from "antd";
 
-const getUsersAPI = async (page: number = 1, limit: number = 10, accessToken?: string) => {
+const getUsersAPI = async (page: number = 1, limit: number = 10, filters: UserFilters, accessToken?: string) => {
   const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user?page=${page}&limit=${limit}`, {
+    params: filters,
     headers: { accessToken }
   });
 
+  console.log("🚀 ~ getUsersAPI ~ response:", response)
   return response.data.data;
 };
 
@@ -35,13 +37,13 @@ const deleteUserAPI = async (id: number, accessToken?: string) => {
   return response.data.data;
 };
 
-const useGetUsers = (page: number, limit: number) => {
+const useGetUsers = (currentPage: number, pageSize: number, filters: UserFilters) => {
   const { data: session, status } = useSession();
   const accessToken = (session?.user as any)?.accessToken;
   const query = useQuery({
-    queryKey: ["GetUsers", page, limit],
-    queryFn: () => getUsersAPI(page, limit, accessToken),
-    enabled: status === "authenticated",
+    queryKey: ["GetUsers", currentPage, pageSize, filters],
+    queryFn: () => getUsersAPI(currentPage, pageSize, filters, accessToken),
+    enabled: status === "authenticated"
   });
 
   return query;

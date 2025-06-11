@@ -16,19 +16,39 @@ import { RefreshSvg } from "../../global/RefreshSvg";
 import { ShieldSvg } from "@/app/global/ShieldSvg";
 import { User } from "@/db/migrations/schema";
 import { useUser } from "@/hooks/users/useUsers";
+import { UserFilters } from "@/types/DTOs/users/users";
+import FilterDrawer from "./FiltersDrawer";
+import { FilterSvg } from "@/app/global/FilterSvg";
 
 const UserTable: React.FC = () => {
   const queryClient = useQueryClient();
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [privilegesModal, setPrivilegesModal] = useState(false);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
   const [selectedUser, setSelectedUser] = useState<User>();
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState<UserFilters>({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   const { useGetUsers, useDeleteUser } = useUser();
   const { mutateAsync: deleteUser } = useDeleteUser();
-  const { data: users, isLoading: isUsersLoading } = useGetUsers(page, limit);
+  const { data: users, isLoading: isUsersLoading } = useGetUsers(currentPage,pageSize, filters);
+  console.log("🚀 ~ users:", users)
+
+  const handleFilterSubmit = (filters: any) => {
+    setCurrentPage(1); // Reset to first page when filters change
+    setFilters(filters);
+  };
+
+  const handleFilterReset = () => {
+    setCurrentPage(1);
+    setFilters({});
+  };
+
+  const handleShowFilters = () => {
+    setShowFilters(true);
+  };
 
   const handleNew = () => {
     setCreateNewModal(true);
@@ -42,10 +62,6 @@ const UserTable: React.FC = () => {
   const handleEditPrivileges = (record: User) => {
     setSelectedUser(record);
     setPrivilegesModal(true);
-  };
-
-  const onEdit = (values: any) => {
-    setEditModal(false);
   };
 
   const onEditPrivileges = (values: any) => {
@@ -79,7 +95,7 @@ const UserTable: React.FC = () => {
   };
 
   const handleRefresh = () => {
-    queryClient.invalidateQueries({ queryKey: ["GetUsers", page, limit] });
+    queryClient.invalidateQueries({ queryKey: ["GetUsers", currentPage, pageSize] }); 
   };
 
   const columns: ColumnsType<User> = [
@@ -158,6 +174,14 @@ const UserTable: React.FC = () => {
           Nuevo
         </button>
         <div className="flex">
+          <Tooltip placement="top" title={"Filtrar"} arrow={{ pointAtCenter: true }}>
+            <button
+              className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 p-2 flex justify-center items-center text-xl rounded-full"
+              onClick={handleShowFilters}
+            >
+              <FilterSvg width={25} height={25} />
+            </button>
+          </Tooltip>
           <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
             <button
               className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 p-2 flex justify-center items-center text-xl rounded-full"
@@ -184,19 +208,23 @@ const UserTable: React.FC = () => {
         columns={columns}
         dataSource={users}
         pagination={{
+          defaultCurrent: 1,
+          defaultPageSize: 10,
           showSizeChanger: true,
           showQuickJumper: true,
           onChange(page, pageSize) {
-            setPage(page);
-            setLimit(pageSize);
+            setCurrentPage(page);
+            setPageSize(pageSize);
           },
           position: ["bottomCenter"],
-          defaultPageSize: 10,
-          pageSizeOptions: ["10", "15", "20", "25"]
+          pageSizeOptions: ["10", "15", "20", "25"],
+          showTotal: (total, range) => `${range[0]}-${range[1]} of ${total}`,
         }}
+        
         className="shadow-md"
         rowKey={"id"}
       />
+      <FilterDrawer open={showFilters} onCancel={() => setShowFilters(false)} onFilter={handleFilterSubmit} onReset={handleFilterReset} />
     </>
   );
 };
