@@ -34,10 +34,9 @@ const UserTable: React.FC = () => {
   const { useGetUsers, useDeleteUser } = useUser();
   const { mutateAsync: deleteUser } = useDeleteUser();
   const { data: users, isLoading: isUsersLoading } = useGetUsers(currentPage,pageSize, filters);
-  console.log("🚀 ~ users:", users)
 
   const handleFilterSubmit = (filters: any) => {
-    setCurrentPage(1); // Reset to first page when filters change
+    setCurrentPage(1);
     setFilters(filters);
   };
 
@@ -211,7 +210,6 @@ const UserTable: React.FC = () => {
           defaultCurrent: 1,
           defaultPageSize: 10,
           showSizeChanger: true,
-          showQuickJumper: true,
           onChange(page, pageSize) {
             setCurrentPage(page);
             setPageSize(pageSize);
@@ -220,7 +218,6 @@ const UserTable: React.FC = () => {
           pageSizeOptions: ["10", "15", "20", "25"],
           showTotal: (total, range) => `${range[0]}-${range[1]} of ${total}`,
         }}
-        
         className="shadow-md"
         rowKey={"id"}
       />
