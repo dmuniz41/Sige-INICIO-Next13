@@ -15,7 +15,6 @@ interface CollectionCreateFormProps {
 }
 
 export const EditUserForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel, defaultValues }) => {
-  console.log("🚀 ~ defaultValues:", defaultValues);
   const [form] = Form.useForm();
   const { useUpdateUser } = useUser();
   const { mutateAsync: updateUser, isPending } = useUpdateUser();

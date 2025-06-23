@@ -11,7 +11,6 @@ const getUsersAPI = async (page: number = 1, limit: number = 10, filters: UserFi
     headers: { accessToken }
   });
 
-  console.log("🚀 ~ getUsersAPI ~ response:", response)
   return response.data.data;
 };
 

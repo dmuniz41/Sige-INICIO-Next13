@@ -1,14 +1,10 @@
 "use client";
-import { Badge, Button, Input, Space, Spin, Table, Tag, Tooltip } from "antd";
-import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Spin, Table, Tag, Tooltip } from "antd";
 import { useQueryClient } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
-import Highlighter from "react-highlight-words";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import Swal from "sweetalert2";
-import type { ColumnType, ColumnsType } from "antd/es/table";
-import type { FilterConfirmProps } from "antd/es/table/interface";
-import type { InputRef } from "antd";
+import type { ColumnsType } from "antd/es/table";
 
 import { CreateMaterialNomenclatorForm } from "./CreateMaterialNomenclatorForm";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
@@ -19,30 +15,33 @@ import { MaterialNomenclators } from "@/db/migrations/schema";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { useMaterialNomenclator } from "@/hooks/nomenclators/material/useMaterialNomenclator";
-import { MaterialsNomenclatorsFilters } from "./MaterialsNomenclatorsFilters";
 import { FilterSvg } from "@/app/global/FilterSvg";
-
-type DataIndex = keyof MaterialNomenclators;
+import { MaterialNomenclatorsFilters } from "@/types/DTOs/nomenclators/materials";
+import FilterDrawer from "./FiltersDrawer";
 
 const MaterialsNomenclatorsTable: React.FC = () => {
-  const { data: sessionData } = useSession();
   const queryClient = useQueryClient();
   const [createNewModal, setCreateNewModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const [page, setPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(15);
-  const [filters, setFilters] = useState<MaterialsNomenclatorsFilters>({});
+  const [filters, setFilters] = useState<MaterialNomenclatorsFilters>({});
   const [showFilters, setShowFilters] = useState(false);
   const [selectedNomenclator, setSelectedNomenclator] = useState<MaterialNomenclators>();
 
   const { useGetMaterialNomenclator, useDeleteMaterialNomenclator } = useMaterialNomenclator();
-  const deleteMutation = useDeleteMaterialNomenclator();
-  const { data: materialsNomenclators, isLoading, isError } = useGetMaterialNomenclator(page, limit, filters);
+  const { mutateAsync: deleteMaterialNomenclator } = useDeleteMaterialNomenclator();
+  const { data: materialsNomenclators, isLoading, isError } = useGetMaterialNomenclator(currentPage, limit, filters);
 
-  const canList = sessionData?.user.role.includes("Listar Nomencladores");
-  const canCreate = sessionData?.user.role.includes("Crear Nomenclador");
-  const canEdit = sessionData?.user.role.includes("Editar Nomenclador");
-  const canDelete = sessionData?.user.role.includes("Eliminar Nomenclador");
+  const handleFilterSubmit = (filters: any) => {
+    setCurrentPage(1);
+    setFilters(filters);
+  };
+
+  const handleFilterReset = () => {
+    setCurrentPage(1);
+    setFilters({});
+  };
 
   const handleDelete = (code: number) => {
     Swal.fire({
@@ -56,27 +55,26 @@ const MaterialsNomenclatorsTable: React.FC = () => {
       confirmButtonText: "Eliminar"
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteMutation.mutate(code);
+        deleteMaterialNomenclator(code);
       }
     });
   };
 
   const handleRefresh = () => {
-    queryClient.invalidateQueries({ queryKey: ["GetMaterialNomenclators", page, limit] });
+    queryClient.invalidateQueries({ queryKey: ["GetMaterialNomenclators", currentPage, limit, filters] });
   };
 
-  const handleOpenFilters = () => {
+  const handleNew = () => {
+    setCreateNewModal(true);
+  };
+
+  const handleShowFilters = () => {
     setShowFilters(!showFilters);
   };
 
   const handleEdit = (record: MaterialNomenclators) => {
     setSelectedNomenclator(record);
     setEditModal(true);
-  };
-
-  const handleFilter = (filters: MaterialsNomenclatorsFilters) => {
-    setFilters(filters);
-    queryClient.invalidateQueries({ queryKey: ["GetMaterialNomenclators", page, limit, filters] });
   };
 
   const columns: ColumnsType<MaterialNomenclators> = [
@@ -144,18 +142,14 @@ const MaterialsNomenclatorsTable: React.FC = () => {
       align: "center",
       render: (_, { ...record }) => (
         <div className="flex gap-1 justify-center">
-          {canEdit ? (
-            <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
-              <button disabled={!canList} onClick={() => handleEdit(record)} className="table-see-action-btn">
-                <EditSvg width={20} height={20} />
-              </button>
-            </Tooltip>
-          ) : (
-            <></>
-          )}
+          <Tooltip placement="top" title={"Editar"} arrow={{ pointAtCenter: true }}>
+            <button onClick={() => handleEdit(record)} className="table-see-action-btn">
+              <EditSvg width={20} height={20} />
+            </button>
+          </Tooltip>
 
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-            <button disabled={!canDelete} onClick={() => handleDelete(record.code)} className="table-delete-action-btn">
+            <button onClick={() => handleDelete(record.code)} className="table-delete-action-btn">
               <DeleteSvg width={20} height={20} />
             </button>
           </Tooltip>
@@ -174,37 +168,30 @@ const MaterialsNomenclatorsTable: React.FC = () => {
 
   return (
     <>
-      <section className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4 animater-fade-in">
-        <div className="flex gap-2">
-          <button onClick={() => setCreateNewModal(true)} className={`${canCreate ? "toolbar-primary-icon-btn" : "bg-success-200"} `}>
-            <PlusSvg />
-            Nuevo
-          </button>
-        </div>
+      <section className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
+        <button className={"toolbar-primary-icon-btn"} onClick={handleNew}>
+          <PlusSvg />
+          Nuevo
+        </button>
         <div className="flex">
-          <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
-            <button
-              className={`${
-                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={handleRefresh}
-            >
-              <RefreshSvg />
-            </button>
-          </Tooltip>
           <Tooltip placement="top" title={"Filtrar"} arrow={{ pointAtCenter: true }}>
             <button
-              className={`${
-                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={handleOpenFilters}
+              className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 p-2 flex justify-center items-center text-xl rounded-full"
+              onClick={handleShowFilters}
             >
-              <FilterSvg />
+              <FilterSvg width={25} height={25} />
+            </button>
+          </Tooltip>
+          <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
+            <button
+              className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 p-2 flex justify-center items-center text-xl rounded-full"
+              onClick={handleRefresh}
+            >
+              <RefreshSvg width={25} height={25} />
             </button>
           </Tooltip>
         </div>
       </section>
-      <MaterialsNomenclatorsFilters open={showFilters} onCancel={() => setShowFilters(false)} onFilter={handleFilter} />
       <Table
         size="small"
         columns={columns}
@@ -218,7 +205,7 @@ const MaterialsNomenclatorsTable: React.FC = () => {
           defaultPageSize: 15,
           total: materialsNomenclators?.total,
           onChange: (page, limit) => {
-            setPage(page);
+            setCurrentPage(page);
             setLimit(limit);
           }
         }}
@@ -231,8 +218,9 @@ const MaterialsNomenclatorsTable: React.FC = () => {
         onCancel={() => {
           setEditModal(false);
         }}
-        initialValues={selectedNomenclator!}
+        defaultValues={selectedNomenclator!}
       />
+      <FilterDrawer open={showFilters} onCancel={() => setShowFilters(false)} onFilter={handleFilterSubmit} onReset={handleFilterReset} />
     </>
   );
 };

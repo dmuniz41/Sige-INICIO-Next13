@@ -167,7 +167,7 @@ const UserTable: React.FC = () => {
 
   return (
     <>
-      <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
+      <section className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <button onClick={handleNew} className={"toolbar-primary-icon-btn"}>
           <PlusSvg />
           Nuevo
@@ -190,7 +190,7 @@ const UserTable: React.FC = () => {
             </button>
           </Tooltip>
         </div>
-      </div>
+      </section>
 
       <CreateUserForm open={createNewModal} onCancel={() => setCreateNewModal(false)} />
       <EditUserForm open={editModal} onCancel={() => setEditModal(false)} defaultValues={selectedUser!} />

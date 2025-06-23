@@ -29,6 +29,7 @@ export const nomenclators = pgTable("nomenclators", {
   value: varchar().notNull()
 });
 
+
 export const clientNomenclators = pgTable("client_nomenclators", {
   idNumber: serial().primaryKey().notNull(), // Numero de cliente
   name: varchar({ length: 255 }).notNull(),

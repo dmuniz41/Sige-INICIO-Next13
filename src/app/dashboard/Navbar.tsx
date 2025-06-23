@@ -12,7 +12,6 @@ export const Navbar = () => {
   const pathname = usePathname();
   const router = useRouter();
   const { data: sessionData } = useSession();
-  console.log("🚀 ~ Navbar ~ sessionData:", sessionData)
 
   const pathSegments = pathname.split("/").filter(Boolean);
   const breadcrumbItems = pathSegments.map((segment, index) => ({
@@ -42,19 +41,19 @@ export const Navbar = () => {
         zIndex: 1
       }}
     >
-      <Space>
+      <Space align="center">
         <Tooltip title="Volver">
           <ArrowLeftOutlined onClick={() => router.back()} style={{ fontSize: 18, cursor: "pointer" }} />
         </Tooltip>
 
-        <Breadcrumb items={breadcrumbItems} />
+        <Breadcrumb className="text-base" items={breadcrumbItems} />
       </Space>
 
       <Space align="center" size="middle">
         <Dropdown menu={{ items }} placement="bottomRight">
           <Space style={{ cursor: "pointer" }}>
             <Avatar icon={<UserOutlined />}  />
-            {/* <Text strong>{sessionData?.user?.userName}</Text> */}
+            <Text strong>{sessionData?.user?.id}</Text>
           </Space>
         </Dropdown>
       </Space>

@@ -89,83 +89,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function PUT(request: Request) {
-  const { ...requestData }: MaterialNomenclators = await request.json();
-  const accessToken = request.headers.get("accessToken");
-
-  try {
-    if (!accessToken || !verifyJWT(accessToken)) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    const decoded = jwt.decode(accessToken) as JwtPayload;
-    logger.info("Actualizar Nomenclador de Material", {
-      method: request.method,
-      url: request.url,
-      body: request.body,
-      user: decoded.userName
-    });
-
-    const isNomenclatorWithCodeExist = await db.select().from(materialNomenclators).where(eq(materialNomenclators.code, requestData.code));
-
-    if (isNomenclatorWithCodeExist.length === 0) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: "El nomenclador de material a actualizar no existe "
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    await db
-      .update(materialNomenclators)
-      .set({ ...requestData, updated_at: new Date() })
-      .where(eq(materialNomenclators.code, requestData.code));
-
-    return new NextResponse(
-      JSON.stringify({
-        ok: true
-      }),
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        status: 200
-      }
-    );
-  } catch (error) {
-    if (error instanceof Error) {
-      logger.error("Error al listar categorias de material", {
-        error: error.message,
-        stack: error.stack,
-        route: "/api/nomenclators/material",
-        method: "PUT"
-      });
-      return NextResponse.json(
-        {
-          ok: false,
-          message: error.message
-        },
-        {
-          status: 500
-        }
-      );
-    }
-  }
-}
-
 export async function GET(request: NextRequest) {
   const accessToken = request.headers.get("accessToken");
   try {
@@ -211,7 +134,7 @@ export async function GET(request: NextRequest) {
 
     const offset = (page - 1) * limit;
 
-        // Build dynamic where conditions
+    // Build dynamic where conditions
     const conditions = [];
 
     if (material_category) {
@@ -222,11 +145,11 @@ export async function GET(request: NextRequest) {
       conditions.push(ilike(materialNomenclators.material_name, `%${material_name}%`));
     }
 
-    if (isDecreaseParam !== null) {
-      const isDecrease = isDecreaseParam === 'true';
+    if (isDecreaseParam !== null && isNotDecreaseParam === null) {
+      const isDecrease = isDecreaseParam === "true";
       conditions.push(eq(materialNomenclators.isDecrease, isDecrease));
-    } else if (isNotDecreaseParam !== null) {
-      const isNotDecrease = isNotDecreaseParam === 'true';
+    } else if (isNotDecreaseParam !== null && isDecreaseParam === null) {
+      const isNotDecrease = isNotDecreaseParam === "true";
       conditions.push(eq(materialNomenclators.isDecrease, !isNotDecrease));
     }
 

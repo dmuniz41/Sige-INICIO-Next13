@@ -1,14 +1,18 @@
 import { Toast } from "@/helpers/customAlert";
+import { MaterialNomenclatorsFilters } from "@/types/DTOs/nomenclators/materials";
 import { CreateNomenclator, UpdateNomenclator } from "@/types/DTOs/nomenclators/nomenclators";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import axios, { AxiosError } from "axios";
+import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 
-const getNomenclatorsAPI = async (page: number = 1, limit: number = 10) => {
-  const token = localStorage.getItem("accessToken");
+const getNomenclatorsAPI = async (page: number = 1, limit: number = 10, filters: MaterialNomenclatorsFilters, accessToken?: string) => {
+  console.log("🚀 ~ getNomenclatorsAPI ~ page:", page)
+  console.log("🚀 ~ getNomenclatorsAPI ~ accessToken:", accessToken)
   const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators?page=${page}&limit=${limit}`, {
-    headers: { accessToken: token }
+    params: filters,
+    headers: { accessToken }
   });
   return response.data;
 };
@@ -45,10 +49,13 @@ const deleteNomenclatorAPI = async (id: number) => {
   return response.data;
 };
 
-const useGetNomenclators = (page: number, limit: number) => {
+const useGetNomenclators = (currentPage: number, pageSize: number, filters: MaterialNomenclatorsFilters) => {
+  const { data: session, status } = useSession();
+  const accessToken = (session?.user as any)?.accessToken;
   const query = useQuery({
     queryKey: ["GetNomenclators"],
-    queryFn: () => getNomenclatorsAPI(page, limit)
+    queryFn: () => getNomenclatorsAPI(currentPage, pageSize, filters, accessToken),
+    enabled: status === "authenticated"
   });
 
   return query;
@@ -56,7 +63,7 @@ const useGetNomenclators = (page: number, limit: number) => {
 
 const useGetNomenclatorsByCategoryCode = (categoryCode: string) => {
   const query = useQuery({
-    queryKey: ["GetNomenclatorsPerCategoryCode", {categoryCode}],
+    queryKey: ["GetNomenclatorsPerCategoryCode", { categoryCode }],
     queryFn: () => getNomenclatorsByCategoryCodeAPI(categoryCode)
   });
 

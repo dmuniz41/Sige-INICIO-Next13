@@ -1,9 +1,10 @@
+import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { db } from "@/db/drizzle";
-import { eq } from "drizzle-orm";
 import { materialNomenclators } from "@/db/migrations/schema";
+import { UpdateMaterialNomenclator } from "@/types/DTOs/nomenclators/materials";
 import { verifyJWT } from "@/libs/jwt";
 import logger from "@/utils/logger";
 
@@ -128,6 +129,83 @@ export async function GET(request: NextRequest, { params }: { params: { code: nu
         stack: error.stack,
         route: "/api/nomenclators/material/[code]",
         method: "GET"
+      });
+      return NextResponse.json(
+        {
+          ok: false,
+          message: error.message
+        },
+        {
+          status: 500
+        }
+      );
+    }
+  }
+}
+
+export async function PUT(request: Request, { params }: { params: { code: number } }) {
+  const { ...requestData }: UpdateMaterialNomenclator = await request.json();
+  const accessToken = request.headers.get("accessToken");
+
+  try {
+    if (!accessToken || !verifyJWT(accessToken)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Su sesión ha expirado, por favor autentiquese nuevamente"
+        },
+        {
+          status: 401
+        }
+      );
+    }
+
+    const decoded = jwt.decode(accessToken) as JwtPayload;
+    logger.info("Actualizar Nomenclador de Material", {
+      method: request.method,
+      url: request.url,
+      body: request.body,
+      user: decoded.userName
+    });
+
+    const isNomenclatorWithCodeExist = await db.select().from(materialNomenclators).where(eq(materialNomenclators.code, params.code));
+
+    if (isNomenclatorWithCodeExist.length === 0) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "El nomenclador de material a actualizar no existe "
+        },
+        {
+          status: 404
+        }
+      );
+    }
+
+    await db
+      .update(materialNomenclators)
+      .set({ ...requestData, updated_at: new Date() })
+      .where(eq(materialNomenclators.code, params.code));
+
+    return new NextResponse(
+      JSON.stringify({
+        ok: true
+      }),
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        status: 200
+      }
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      logger.error("Error al actualizar nomenclador de material", {
+        error: error.message,
+        stack: error.stack,
+        route: "/api/nomenclators/material",
+        method: "PUT"
       });
       return NextResponse.json(
         {

@@ -1,106 +1,95 @@
+import { notification } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import axios, { AxiosError } from "axios";
-import Swal from "sweetalert2";
 
-import { Toast } from "@/helpers/customAlert";
-import { InsertMaterialNomenclator, UpdateMaterialNomenclator } from "@/types/DTOs/nomenclators/materials";
-import { MaterialsNomenclatorsFilters } from "@/app/dashboard/nomenclators/materials/MaterialsNomenclatorsFilters";
+import { InsertMaterialNomenclator, MaterialNomenclatorsFilters, UpdateMaterialNomenclator } from "@/types/DTOs/nomenclators/materials";
 
-const getMaterialNomenclatorsAPI = async (page: number = 1, limit: number = 10, filters: MaterialsNomenclatorsFilters) => {
-  const token = localStorage.getItem("accessToken");
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`, {
-    params: {
-      page,
-      limit,
-      material_category: filters.material_category,
-      material_name: filters.material_name,
-      isDecrease: filters.isDecrease,
-      isNotDecrease: filters.isNotDecrease
-    },
-    headers: { accessToken: token }
+const getMaterialNomenclatorsAPI = async (
+  page: number = 1,
+  limit: number = 10,
+  filters: MaterialNomenclatorsFilters,
+  accessToken: string
+) => {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material?page=${page}&limit=${limit}`, {
+    params: { ...filters },
+    headers: { accessToken }
   });
   return response.data;
 };
 
-const getMaterialNomenclatorsPerCodeAPI = async (code: number) => {
-  const token = localStorage.getItem("accessToken");
+const getMaterialNomenclatorsPerCodeAPI = async (code: number, accessToken: string) => {
   const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material/${code}`, {
-    headers: { accessToken: token }
+    headers: { accessToken }
   });
   return response.data;
 };
 
-const createMaterialNomenclatorsAPI = async (values: InsertMaterialNomenclator) => {
-  const token = localStorage.getItem("accessToken");
+const createMaterialNomenclatorsAPI = async (values: InsertMaterialNomenclator, accessToken: string) => {
   const response = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`,
-    {
-      ...values
-    },
-    {
-      headers: { accessToken: token }
-    }
+    { ...values },
+    { headers: { accessToken } }
   );
   return response.data;
 };
 
-const updateMaterialNomenclatorsAPI = async (values: UpdateMaterialNomenclator) => {
-  const token = localStorage.getItem("accessToken");
-  const response = await axios.put(
-    `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material`,
-    {
-      ...values
-    },
-    {
-      headers: { accessToken: token }
-    }
-  );
+const updateMaterialNomenclatorsAPI = async (id:number, values: UpdateMaterialNomenclator, accessToken: string) => {
+  const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material/${id}`, { ...values }, { headers: { accessToken } });
   return response.data;
 };
 
-const deleteMaterialNomenclatorsAPI = async (code: number) => {
-  const token = localStorage.getItem("accessToken");
+const deleteMaterialNomenclatorsAPI = async (code: number, accessToken: string) => {
   const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/nomenclators/material/${code}`, {
-    headers: { accessToken: token }
+    headers: { accessToken }
   });
   return response.data;
 };
 
-const   useGetMaterialNomenclator = (page: number, limit: number, filters: MaterialsNomenclatorsFilters) => {
+const useGetMaterialNomenclator = (page: number, limit: number, filters: MaterialNomenclatorsFilters) => {
+  const { data: session, status } = useSession();
+  const accessToken = (session?.user as any)?.accessToken;
   const query = useQuery({
     queryKey: ["GetMaterialNomenclators", page, limit, filters],
-    queryFn: () => getMaterialNomenclatorsAPI(page, limit, filters)
+    queryFn: () => getMaterialNomenclatorsAPI(page, limit, filters, accessToken),
+    enabled: status === "authenticated"
   });
 
   return query;
 };
 
 const useGetMaterialNomenclatorPerCode = (code: number) => {
+  const { data: session, status } = useSession();
+  const accessToken = (session?.user as any)?.accessToken;
   const query = useQuery({
     queryKey: ["GetMaterialNomenclatorsPerCode"],
-    queryFn: () => getMaterialNomenclatorsPerCodeAPI(code)
+    queryFn: () => getMaterialNomenclatorsPerCodeAPI(code, accessToken),
+    enabled: status === "authenticated"
   });
 
   return query;
 };
 
 const useCreateMaterialNomenclator = () => {
+  const { data: session } = useSession();
+  const accessToken = (session?.user as any)?.accessToken;
   const queryClient = useQueryClient();
   const query = useMutation({
     mutationKey: ["CreateMaterialNomenclator"],
-    mutationFn: (values: InsertMaterialNomenclator) => createMaterialNomenclatorsAPI(values),
+    mutationFn: (values: InsertMaterialNomenclator) => createMaterialNomenclatorsAPI(values, accessToken),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetMaterialNomenclators"] });
-      Toast.fire({
-        icon: "success",
-        title: "Nomenclador de material creado"
+      notification.success({
+        message: "Nomenclador de material creado",
+        showProgress: true,
+        pauseOnHover: true
       });
     },
     onError: (error: AxiosError<{ ok: boolean; message: string }>) => {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: error?.response?.data?.message
+      const errorMessage = error?.response?.data?.message || "Ha ocurrido un error al crear el nomenclador de material";
+      notification.error({
+        message: "Error",
+        description: errorMessage
       });
     }
   });
@@ -109,22 +98,25 @@ const useCreateMaterialNomenclator = () => {
 };
 
 const useUpdateMaterialNomenclator = () => {
+  const { data: session } = useSession();
+  const accessToken = (session?.user as any)?.accessToken;
   const queryClient = useQueryClient();
   const query = useMutation({
     mutationKey: ["UpdateMaterialNomenclator"],
-    mutationFn: (values: UpdateMaterialNomenclator) => updateMaterialNomenclatorsAPI(values),
+    mutationFn: ({ id, values }: { id: number; values: UpdateMaterialNomenclator; accessToken: string }) => updateMaterialNomenclatorsAPI(id, values, accessToken),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetMaterialNomenclators"] });
-      Toast.fire({
-        icon: "success",
-        title: "Nomenclador de material actualizado"
+      notification.success({
+        message: "Nomenclador de material actualizado",
+        showProgress: true,
+        pauseOnHover: true
       });
     },
     onError: (error: AxiosError<{ ok: boolean; message: string }>) => {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: error?.response?.data?.message
+      const errorMessage = error?.response?.data?.message || "Ha ocurrido un error al actualizar el nomenclador de material";
+      notification.error({
+        message: "Error",
+        description: errorMessage
       });
     }
   });
@@ -133,22 +125,25 @@ const useUpdateMaterialNomenclator = () => {
 };
 
 const useDeleteMaterialNomenclator = () => {
+  const { data: session } = useSession();
+  const accessToken = (session?.user as any)?.accessToken;
   const queryClient = useQueryClient();
   const query = useMutation({
     mutationKey: ["DeleteMaterialNomenclator"],
-    mutationFn: (code: number) => deleteMaterialNomenclatorsAPI(code),
+    mutationFn: (code: number) => deleteMaterialNomenclatorsAPI(code, accessToken),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetMaterialNomenclators"] });
-      Toast.fire({
-        icon: "success",
-        title: "Nomenclador de material eliminado"
+      notification.success({
+        message: "Nomenclador de material eliminado",
+        showProgress: true,
+        pauseOnHover: true
       });
     },
     onError: (error: AxiosError<{ ok: boolean; message: string }>) => {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: error?.response?.data?.message
+      const errorMessage = error?.response?.data?.message || "Ha ocurrido un error al eliminar el nomenclador de material";
+      notification.error({
+        message: "Error",
+        description: errorMessage
       });
     }
   });
