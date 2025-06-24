@@ -61,13 +61,12 @@ export const CreateMaterialNomenclatorForm: React.FC<CollectionCreateFormProps> 
         </div>
       ]}
     >
-      {/* <Spin
+      <Spin
         spinning={isPending}
         indicator={<LoadingOutlined style={{ fontSize: 80 }} spin />}
         size="large"
-        fullscreen
         tip={<span className="text-xl font-bold">Cargando ...</span>}
-      /> */}
+      />
       <Form
         form={form}
         layout="vertical"

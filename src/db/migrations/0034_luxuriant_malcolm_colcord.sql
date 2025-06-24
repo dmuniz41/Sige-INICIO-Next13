@@ -1,0 +1,1 @@
+ALTER TABLE "unit_measure_nomenclators" ALTER COLUMN "deleted_at" SET NOT NULL;

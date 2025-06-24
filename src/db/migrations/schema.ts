@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, varchar, integer, numeric, serial, boolean, decimal, text, date, timestamp, doublePrecision, pgView } from "drizzle-orm/pg-core";
+import { pgTable, varchar, integer, numeric, serial, boolean, text, timestamp, doublePrecision, pgView } from "drizzle-orm/pg-core";
 
 //* TABLAS *//
 export const users = pgTable("users", {
@@ -22,13 +22,20 @@ export const materialNomenclators = pgTable("material_nomenclators", {
   isDecrease: boolean().notNull() // Indica si el los materiales de esa categoria son gastables o no
 });
 
+export const unitMeasureNomenclators = pgTable("unit_measure_nomenclators", {
+  id: serial().primaryKey().notNull(),
+  name: varchar({ length: 100 }).notNull(), // (Ej: m2, cm, m, litros, etc..)
+  created_at: timestamp().notNull(),
+  updated_at: timestamp().defaultNow().notNull(),
+  deleted_at: timestamp()
+});
+
 export const nomenclators = pgTable("nomenclators", {
   id: serial().primaryKey().notNull(),
   category: varchar().notNull(), // Indica el tipo de nomenclador(Unidad de Medida, Moneda, ....)
   categoryCode: varchar().notNull(), // Identificador de la categoria del nomenclador(Unidad de Medida(N_UM), Moneda(N_MO), ....)
   value: varchar().notNull()
 });
-
 
 export const clientNomenclators = pgTable("client_nomenclators", {
   idNumber: serial().primaryKey().notNull(), // Numero de cliente
@@ -97,8 +104,7 @@ export const stockMovements = pgTable("stock_movements", {
   movementDate: timestamp("movement_date").defaultNow(),
   unitMeasure: varchar("unit_measure", { length: 25 }),
   notes: text("notes"),
-  userName: varchar("user_name",{ length: 50 }).notNull()
-
+  userName: varchar("user_name", { length: 50 }).notNull()
 });
 
 //* RELACIONES *//
@@ -379,6 +385,7 @@ export type ClientNomenclator = typeof clientNomenclators.$inferSelect;
 export type MaterialNomenclators = typeof materialNomenclators.$inferSelect;
 export type Nomenclator = typeof nomenclators.$inferSelect;
 export type RepresentativeNomenclator = typeof representativeNomenclators.$inferSelect;
+export type UnitmeasureNomenclator = typeof unitMeasureNomenclators.$inferSelect;
 export type User = typeof users.$inferSelect;
 export type Warehouse = typeof warehouse.$inferSelect;
 export type Material = typeof materials.$inferSelect;

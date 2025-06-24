@@ -1,14 +1,14 @@
+import { and, eq, desc, ilike, isNull } from "drizzle-orm";
 import { db } from "@/db/drizzle";
-import { and, eq, desc, ilike } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-import { materialNomenclators, MaterialNomenclators } from "@/db/migrations/schema";
+import { UnitmeasureNomenclator, unitMeasureNomenclators } from "@/db/migrations/schema";
 import { verifyJWT } from "@/libs/jwt";
 import logger from "@/utils/logger";
 
 export async function POST(request: NextRequest) {
-  const { ...requestData }: MaterialNomenclators = await request.json();
+  const { ...requestData }: UnitmeasureNomenclator = await request.json();
   const accessToken = request.headers.get("accessToken");
   try {
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -24,15 +24,20 @@ export async function POST(request: NextRequest) {
     }
 
     const decoded = jwt.decode(accessToken) as JwtPayload;
-    logger.info("Crear Nomenclador de Material", { method: request.method, url: request.url, body: request.body, user: decoded.userName });
+    logger.info("Crear Nomenclador de Unidad de Medida", {
+      method: request.method,
+      url: request.url,
+      body: request.body,
+      user: decoded.userName
+    });
 
     const DBNomenclator = await db
       .select()
-      .from(materialNomenclators)
+      .from(unitMeasureNomenclators)
       .where(
         and(
-          eq(materialNomenclators.material_name, requestData.material_name),
-          eq(materialNomenclators.material_category, requestData.material_category)
+          isNull(unitMeasureNomenclators.deleted_at), // Ignore deleted nomenclators
+          eq(unitMeasureNomenclators.name, requestData.name)
         )
       );
 
@@ -40,7 +45,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          message: `Ya existe un nomenclador de material con el nombre nombre: {${DBNomenclator[0].material_category} ${DBNomenclator[0].material_name}}`
+          message: `Ya existe un nomenclador de unidad de medida con el nombre nombre: {${DBNomenclator[0].name}}`
         },
         {
           status: 409
@@ -48,10 +53,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await db.insert(materialNomenclators).values({
-      material_category: requestData.material_category,
-      material_name: requestData.material_name,
-      isDecrease: requestData.isDecrease,
+    await db.insert(unitMeasureNomenclators).values({
+      name: requestData.name,
       created_at: new Date(),
       updated_at: new Date()
     });
@@ -70,10 +73,10 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("Error al crear nomenclador de material", {
+      logger.error("Error al crear nomenclador de unidad de medida", {
         error: error.message,
         stack: error.stack,
-        route: "/api/nomenclators/material",
+        route: "/api/nomenclators/unitMeasure",
         method: "POST"
       });
       return NextResponse.json(
@@ -105,7 +108,7 @@ export async function GET(request: NextRequest) {
     }
 
     const decoded = jwt.decode(accessToken) as JwtPayload;
-    logger.info("Listar Nomencladores de Materiales", {
+    logger.info("Listar Nomencladores de Unidades de Medida", {
       method: request.method,
       url: request.url,
       body: request.body,
@@ -115,10 +118,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1", 10); // Default to page 1
     const limit = parseInt(searchParams.get("limit") || "10", 10); // Default to 10 items per page
-    const material_category = searchParams.get("material_category") ?? "";
-    const material_name = searchParams.get("material_name") ?? null;
-    const isDecreaseParam = searchParams.get("isDecrease") ?? null;
-    const isNotDecreaseParam = searchParams.get("isNotDecrease") ?? null;
+    const name = searchParams.get("name") ?? "";
 
     if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
       return NextResponse.json(
@@ -137,32 +137,22 @@ export async function GET(request: NextRequest) {
     // Build dynamic where conditions
     const conditions = [];
 
-    if (material_category) {
-      conditions.push(ilike(materialNomenclators.material_category, `%${material_category}%`));
-    }
+    conditions.push(isNull(unitMeasureNomenclators.deleted_at)); // Ignore deleted nomenclators
 
-    if (material_name) {
-      conditions.push(ilike(materialNomenclators.material_name, `%${material_name}%`));
-    }
-
-    if (isDecreaseParam !== null && isNotDecreaseParam === null) {
-      const isDecrease = isDecreaseParam === "true";
-      conditions.push(eq(materialNomenclators.isDecrease, isDecrease));
-    } else if (isNotDecreaseParam !== null && isDecreaseParam === null) {
-      const isNotDecrease = isNotDecreaseParam === "true";
-      conditions.push(eq(materialNomenclators.isDecrease, !isNotDecrease));
+    if (name) {
+      conditions.push(ilike(unitMeasureNomenclators.name, `%${name}%`));
     }
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
     const paginatedData = await db
       .select()
-      .from(materialNomenclators)
-      .where(whereClause)
-      .orderBy(desc(materialNomenclators.created_at))
+      .from(unitMeasureNomenclators)
+      .where(whereClause) // Ignore deleted nomenclators
+      .orderBy(desc(unitMeasureNomenclators.created_at))
       .limit(limit)
       .offset(offset);
-    const totalCount = await db.$count(materialNomenclators);
+    const totalCount = await db.$count(unitMeasureNomenclators);
 
     return new NextResponse(
       JSON.stringify({
@@ -183,10 +173,10 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("Error al listar los nomencladores de materiales", {
+      logger.error("Error al listar los nomencladores de unidades de medida", {
         error: error.message,
         stack: error.stack,
-        route: "/api/nomenclators/material",
+        route: "/api/nomenclators/unitMeasures",
         method: "GET"
       });
       return NextResponse.json(
