@@ -6,6 +6,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { UnitmeasureNomenclator, unitMeasureNomenclators } from "@/db/migrations/schema";
 import { verifyJWT } from "@/libs/jwt";
 import logger from "@/utils/logger";
+import getRedisClient from "@/libs/redis";
 
 export async function POST(request: NextRequest) {
   const { ...requestData }: UnitmeasureNomenclator = await request.json();
@@ -94,7 +95,12 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   const accessToken = request.headers.get("accessToken");
+  let redisClient; // Declare redisClient outside to ensure it's accessible for finally block (if needed)
+
   try {
+    // Get the connected Redis client
+    redisClient = await getRedisClient();
+
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(
         {
@@ -116,8 +122,8 @@ export async function GET(request: NextRequest) {
     });
 
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get("page") || "1", 10); // Default to page 1
-    const limit = parseInt(searchParams.get("limit") || "10", 10); // Default to 10 items per page
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const limit = parseInt(searchParams.get("limit") || "10", 10);
     const name = searchParams.get("name") ?? "";
 
     if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
@@ -134,10 +140,28 @@ export async function GET(request: NextRequest) {
 
     const offset = (page - 1) * limit;
 
-    // Build dynamic where conditions
-    const conditions = [];
+    const cacheKey = `unitMeasures:${page}:${limit}:${name}`;
 
-    conditions.push(isNull(unitMeasureNomenclators.deleted_at)); // Ignore deleted nomenclators
+    // 1. Try to get data from Redis cache
+    const cachedData = await redisClient.get(cacheKey);
+
+    if (cachedData) {
+      logger.info("Serving Unit Measures from Redis Cache", {
+        cacheKey,
+        user: decoded.userName
+      });
+      return new NextResponse(cachedData, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        status: 200
+      });
+    }
+
+    // 2. If not in cache, fetch from database
+    const conditions = [];
+    conditions.push(isNull(unitMeasureNomenclators.deleted_at));
 
     if (name) {
       conditions.push(ilike(unitMeasureNomenclators.name, `%${name}%`));
@@ -148,29 +172,43 @@ export async function GET(request: NextRequest) {
     const paginatedData = await db
       .select()
       .from(unitMeasureNomenclators)
-      .where(whereClause) // Ignore deleted nomenclators
+      .where(whereClause)
       .orderBy(desc(unitMeasureNomenclators.created_at))
       .limit(limit)
       .offset(offset);
+
     const totalCount = await db.$count(unitMeasureNomenclators);
 
-    return new NextResponse(
-      JSON.stringify({
-        ok: true,
-        total: totalCount,
-        totalPages: Math.ceil(totalCount / limit),
-        page,
-        limit,
-        data: paginatedData
-      }),
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        status: 200
-      }
+    const responseData = {
+      ok: true,
+      total: totalCount,
+      totalPages: Math.ceil(totalCount / limit),
+      page,
+      limit,
+      data: paginatedData
+    };
+
+    // 3. Store the database result in Redis cache
+    const CACHE_EXPIRATION_SECONDS = 300;
+    await redisClient.set(
+      cacheKey,
+      JSON.stringify(responseData),
+      { EX: CACHE_EXPIRATION_SECONDS }
     );
+
+    logger.info("Fetched Unit Measures from DB and cached in Redis", {
+      cacheKey,
+      user: decoded.userName
+    });
+
+    return new NextResponse(JSON.stringify(responseData), {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json"
+      },
+      status: 200
+    });
+    
   } catch (error) {
     if (error instanceof Error) {
       logger.error("Error al listar los nomencladores de unidades de medida", {
