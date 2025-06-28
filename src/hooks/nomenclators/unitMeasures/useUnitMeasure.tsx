@@ -140,7 +140,7 @@ const useDeleteUnitMeasureNomenclator = () => {
   return query;
 };
 
-export const useMaterialNomenclator = () => {
+export const useUnitMeasureNomenclator = () => {
   return {
     useGetUnitMeasureNomenclator,
     useCreateUnitMeasureNomenclator,

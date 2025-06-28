@@ -8,14 +8,15 @@ import type { ColumnsType } from "antd/es/table";
 
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { EditSvg } from "@/app/global/EditSvg";
+import { FilterSvg } from "@/app/global/FilterSvg";
 import { InfoCircleSvg } from "@/app/global/InfoCircleSvg";
-import { MaterialNomenclators } from "@/db/migrations/schema";
+import { MaterialNomenclatorsFilters } from "@/types/DTOs/nomenclators/materials";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
-import { useMaterialNomenclator } from "@/hooks/nomenclators/material/useMaterialNomenclator";
-import { FilterSvg } from "@/app/global/FilterSvg";
-import { MaterialNomenclatorsFilters } from "@/types/DTOs/nomenclators/materials";
+import { UnitmeasureNomenclator } from "@/db/migrations/schema";
+import { useUnitMeasureNomenclator } from "@/hooks/nomenclators/unitMeasures/useUnitMeasure";
 import FilterDrawer from "./FiltersDrawer";
+import { formatDate } from "@/helpers/formatDate";
 
 const UnitMeasuresTable: React.FC = () => {
   const queryClient = useQueryClient();
@@ -25,11 +26,12 @@ const UnitMeasuresTable: React.FC = () => {
   const [limit, setLimit] = useState<number>(15);
   const [filters, setFilters] = useState<MaterialNomenclatorsFilters>({});
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedNomenclator, setSelectedNomenclator] = useState<MaterialNomenclators>();
+  const [selectedNomenclator, setSelectedNomenclator] = useState<UnitmeasureNomenclator>();
 
-  const { useGetMaterialNomenclator, useDeleteMaterialNomenclator } = useMaterialNomenclator();
-  const { mutateAsync: deleteMaterialNomenclator } = useDeleteMaterialNomenclator();
-  const { data: materialsNomenclators, isLoading, isError } = useGetMaterialNomenclator(currentPage, limit, filters);
+  const { useGetUnitMeasureNomenclator, useDeleteUnitMeasureNomenclator } = useUnitMeasureNomenclator();
+  const { mutateAsync: deleteUnitMeasureNomenclator } = useDeleteUnitMeasureNomenclator();
+  const { data: unitMeasureNomenclators, isLoading, isError } = useGetUnitMeasureNomenclator(currentPage, limit, filters);
+  console.log("🚀 ~ unitMeasureNomenclators:", unitMeasureNomenclators)
 
   const handleFilterSubmit = (filters: any) => {
     setCurrentPage(1);
@@ -53,13 +55,13 @@ const UnitMeasuresTable: React.FC = () => {
       confirmButtonText: "Eliminar"
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteMaterialNomenclator(code);
+        deleteUnitMeasureNomenclator(code);
       }
     });
   };
 
   const handleRefresh = () => {
-    queryClient.invalidateQueries({ queryKey: ["GetMaterialNomenclators", currentPage, limit, filters] });
+    queryClient.invalidateQueries({ queryKey: ["GetUnitMeasureNomenclators", currentPage, limit, filters] });
   };
 
   const handleNew = () => {
@@ -70,69 +72,35 @@ const UnitMeasuresTable: React.FC = () => {
     setShowFilters(!showFilters);
   };
 
-  const handleEdit = (record: MaterialNomenclators) => {
+  const handleEdit = (record: UnitmeasureNomenclator) => {
     setSelectedNomenclator(record);
     setEditModal(true);
   };
 
-  const columns: ColumnsType<MaterialNomenclators> = [
+  const columns: ColumnsType<UnitmeasureNomenclator> = [
     {
-      title: (
-        <Tooltip placement="top" title={"Identifica la categoría del material (Ej: PVC, Acrilico, Lona, etc...)"}>
-          <div className="flex w-fit gap-2 items-center">
-            <span className="text-base font-bold">Categoría</span>
-            <InfoCircleSvg width={20} height={20} />
-          </div>
-        </Tooltip>
-      ),
-      dataIndex: "material_category",
+      title: <span className="text-base font-bold">Unidad de Medida</span>,
+      dataIndex: "name",
       width: "30%",
       render(value) {
         return <span className="text-base">{value}</span>;
       }
     },
     {
-      title: (
-        <Tooltip placement="top" title={"Identifica la variante de la categoría seleccionada (Ej: 3mm, 6mm, Transparente, Mate, etc...)"}>
-          <div className="flex w-fit gap-2 items-center">
-            <span className="text-base font-bold">Nombre</span>
-            <InfoCircleSvg width={20} height={20} />
-          </div>
-        </Tooltip>
-      ),
-      dataIndex: "material_name",
+      title: <span className="text-base font-bold">Creado</span>,
+      dataIndex: "created_at",
       width: "30%",
       render(value) {
-        return <span className="text-base">{value}</span>;
+        return <span className="text-base">{formatDate(value)}</span>;
       }
     },
     {
-      title: (
-        <Tooltip
-          placement="top"
-          title={"Si el material es gastable se le aplica un coeficiente de merma durante el calculo de la ficha de costo"}
-        >
-          <div className="flex w-fit gap-2 items-center">
-            <span className="text-base font-bold">Gastable</span>
-            <InfoCircleSvg width={20} height={20} />
-          </div>
-        </Tooltip>
-      ),
-      dataIndex: "isDecrease",
-      width: "5%",
-      render: (_, { ...record }) => (
-        <div className="flex gap-1 ">
-          {record.isDecrease ? (
-            <Tag color="#ffa426" className="text-lg font-semibold">
-              Gastable
-            </Tag>
-          ) : (
-            <Tag color="#34b042" className="text-lg font-semibold">
-              No Gastable
-            </Tag>
-          )}
-        </div>
-      )
+      title: <span className="text-base font-bold">Actualizado</span>,
+      dataIndex: "updated_at",
+      width: "30%",
+      render(value) {
+        return <span className="text-base">{formatDate(value)}</span>;
+      }
     },
     {
       title: <span className="text-base font-bold">Acciones</span>,
@@ -147,7 +115,7 @@ const UnitMeasuresTable: React.FC = () => {
           </Tooltip>
 
           <Tooltip placement="top" title={"Eliminar"} arrow={{ pointAtCenter: true }}>
-            <button onClick={() => handleDelete(record.code)} className="table-delete-action-btn">
+            <button onClick={() => handleDelete(record.id)} className="table-delete-action-btn">
               <DeleteSvg width={20} height={20} />
             </button>
           </Tooltip>
@@ -193,7 +161,7 @@ const UnitMeasuresTable: React.FC = () => {
       <Table
         size="small"
         columns={columns}
-        dataSource={materialsNomenclators?.data}
+        dataSource={unitMeasureNomenclators?.data}
         loading={{
           spinning: isLoading,
           indicator: <Spin indicator={<LoadingOutlined style={{ fontSize: 50, color: "#ff8533" }} spin />} />
@@ -201,7 +169,7 @@ const UnitMeasuresTable: React.FC = () => {
         pagination={{
           position: ["bottomCenter"],
           defaultPageSize: 15,
-          total: materialsNomenclators?.total,
+          total: unitMeasureNomenclators?.total,
           onChange: (page, limit) => {
             setCurrentPage(page);
             setLimit(limit);
