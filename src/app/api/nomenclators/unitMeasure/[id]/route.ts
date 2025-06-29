@@ -7,12 +7,16 @@ import { unitMeasureNomenclators } from "@/db/migrations/schema";
 import { UpdateUnitMeasureNomenclator } from "@/types/DTOs/nomenclators/unitMeasures";
 import { verifyJWT } from "@/libs/jwt";
 import logger from "@/utils/logger";
+import getRedisClient from "@/libs/redis";
 
 export async function PUT(request: Request, { params }: { params: { id: number } }) {
   const { ...requestData }: UpdateUnitMeasureNomenclator = await request.json();
   const accessToken = request.headers.get("accessToken");
 
+  let redisClient;
+
   try {
+    redisClient = await getRedisClient();
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(
         {
@@ -77,6 +81,17 @@ export async function PUT(request: Request, { params }: { params: { id: number }
       .set({ ...requestData, updated_at: new Date() })
       .where(eq(unitMeasureNomenclators.id, params.id));
 
+    // 1. Find all keys that match a pattern
+    const keysToDelete = await redisClient.keys("unitMeasures:*");
+
+    // 2. Delete the found keys
+    if (keysToDelete.length > 0) {
+      await redisClient.del(keysToDelete);
+      logger.info(`Invalidated ${keysToDelete.length} Redis cache keys for unit measures.`);
+    } else {
+      logger.info("No Redis cache keys found to invalidate for unit measures.");
+    }
+
     return new NextResponse(
       JSON.stringify({
         ok: true
@@ -112,7 +127,10 @@ export async function PUT(request: Request, { params }: { params: { id: number }
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: number } }) {
   const accessToken = request.headers.get("accessToken");
+  let redisClient;
+
   try {
+    redisClient = await getRedisClient();
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(
         {
@@ -156,6 +174,17 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: n
     }
 
     await db.update(unitMeasureNomenclators).set({ deleted_at: new Date() }).where(eq(unitMeasureNomenclators.id, params.id));
+
+    // 1. Find all keys that match a pattern
+    const keysToDelete = await redisClient.keys("unitMeasures:*");
+
+    // 2. Delete the found keys
+    if (keysToDelete.length > 0) {
+      await redisClient.del(keysToDelete);
+      logger.info(`Invalidated ${keysToDelete.length} Redis cache keys for unit measures.`);
+    } else {
+      logger.info("No Redis cache keys found to invalidate for unit measures.");
+    }
 
     return new NextResponse(
       JSON.stringify({

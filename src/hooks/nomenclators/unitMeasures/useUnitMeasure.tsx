@@ -31,6 +31,7 @@ const createUnitMeasureNomenclatorAPI = async (values: InsertUnitMeasureNomencla
 };
 
 const updateUnitMeasureNomenclatorAPI = async (id: number, values: UpdateUnitMeasureNomenclator, accessToken: string) => {
+  console.log("🚀 ~ updateUnitMeasureNomenclatorAPI ~ values:", values)
   const response = await axios.put(
     `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/unitMeasure/${id}`,
     { ...values },
@@ -91,7 +92,7 @@ const useUpdateUnitMeasureNomenclator = () => {
   const queryClient = useQueryClient();
   const query = useMutation({
     mutationKey: ["UpdateUnitMeasureNomenclator"],
-    mutationFn: ({ id, values }: { id: number; values: UpdateUnitMeasureNomenclator; accessToken: string }) =>
+    mutationFn: ({ id, values }: { id: number; values: UpdateUnitMeasureNomenclator }) =>
       updateUnitMeasureNomenclatorAPI(id, values, accessToken),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetUnitMeasureNomenclators"] });

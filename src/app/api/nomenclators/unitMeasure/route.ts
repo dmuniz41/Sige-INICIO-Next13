@@ -11,7 +11,10 @@ import getRedisClient from "@/libs/redis";
 export async function POST(request: NextRequest) {
   const { ...requestData }: UnitmeasureNomenclator = await request.json();
   const accessToken = request.headers.get("accessToken");
+  let redisClient;
+
   try {
+    redisClient = await getRedisClient();
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(
         {
@@ -60,6 +63,17 @@ export async function POST(request: NextRequest) {
       updated_at: new Date()
     });
 
+    // 1. Find all keys that match a pattern
+    const keysToDelete = await redisClient.keys("unitMeasures:*");
+
+    // 2. Delete the found keys
+    if (keysToDelete.length > 0) {
+      await redisClient.del(keysToDelete);
+      logger.info(`Invalidated ${keysToDelete.length} Redis cache keys for unit measures.`);
+    } else {
+      logger.info("No Redis cache keys found to invalidate for unit measures.");
+    }
+
     return new NextResponse(
       JSON.stringify({
         ok: true
@@ -95,10 +109,10 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   const accessToken = request.headers.get("accessToken");
-  let redisClient; // Declare redisClient outside to ensure it's accessible for finally block (if needed)
+  let redisClient;
+  const CACHE_EXPIRATION_SECONDS = 10;
 
   try {
-    // Get the connected Redis client
     redisClient = await getRedisClient();
 
     if (!accessToken || !verifyJWT(accessToken)) {
@@ -189,12 +203,7 @@ export async function GET(request: NextRequest) {
     };
 
     // 3. Store the database result in Redis cache
-    const CACHE_EXPIRATION_SECONDS = 300;
-    await redisClient.set(
-      cacheKey,
-      JSON.stringify(responseData),
-      { EX: CACHE_EXPIRATION_SECONDS }
-    );
+    await redisClient.set(cacheKey, JSON.stringify(responseData), { EX: CACHE_EXPIRATION_SECONDS });
 
     logger.info("Fetched Unit Measures from DB and cached in Redis", {
       cacheKey,
@@ -208,7 +217,6 @@ export async function GET(request: NextRequest) {
       },
       status: 200
     });
-    
   } catch (error) {
     if (error instanceof Error) {
       logger.error("Error al listar los nomencladores de unidades de medida", {

@@ -1,22 +1,24 @@
 "use client";
 import { LoadingOutlined } from "@ant-design/icons";
-import { Spin, Table, Tag, Tooltip } from "antd";
+import { Spin, Table, Tooltip } from "antd";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import type { ColumnsType } from "antd/es/table";
 
+import { CreateUnitMeasureNomenclatorForm } from "./CreateUnitMeasureNomenclatorForm";
 import { DeleteSvg } from "@/app/global/DeleteSvg";
 import { EditSvg } from "@/app/global/EditSvg";
 import { FilterSvg } from "@/app/global/FilterSvg";
-import { InfoCircleSvg } from "@/app/global/InfoCircleSvg";
+import { formatDate } from "@/helpers/formatDate";
 import { MaterialNomenclatorsFilters } from "@/types/DTOs/nomenclators/materials";
 import { PlusSvg } from "@/app/global/PlusSvg";
 import { RefreshSvg } from "@/app/global/RefreshSvg";
 import { UnitmeasureNomenclator } from "@/db/migrations/schema";
+import { UpdateUnitMeasureNomenclator } from "@/types/DTOs/nomenclators/unitMeasures";
+import { UpdateUnitMeasureNomenclatorForm } from "./UpdateUnitMeasureNomenclatorForm";
 import { useUnitMeasureNomenclator } from "@/hooks/nomenclators/unitMeasures/useUnitMeasure";
 import FilterDrawer from "./FiltersDrawer";
-import { formatDate } from "@/helpers/formatDate";
 
 const UnitMeasuresTable: React.FC = () => {
   const queryClient = useQueryClient();
@@ -28,10 +30,17 @@ const UnitMeasuresTable: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedNomenclator, setSelectedNomenclator] = useState<UnitmeasureNomenclator>();
 
-  const { useGetUnitMeasureNomenclator, useDeleteUnitMeasureNomenclator } = useUnitMeasureNomenclator();
-  const { mutateAsync: deleteUnitMeasureNomenclator } = useDeleteUnitMeasureNomenclator();
+  const {
+    useCreateUnitMeasureNomenclator,
+    useUpdateUnitMeasureNomenclator,
+    useGetUnitMeasureNomenclator,
+    useDeleteUnitMeasureNomenclator
+  } = useUnitMeasureNomenclator();
+
   const { data: unitMeasureNomenclators, isLoading, isError } = useGetUnitMeasureNomenclator(currentPage, limit, filters);
-  console.log("🚀 ~ unitMeasureNomenclators:", unitMeasureNomenclators)
+  const { mutateAsync: deleteUnitMeasureNomenclator } = useDeleteUnitMeasureNomenclator();
+  const { mutateAsync: createUnitMeasureNomenclator, isPending: isCreatePending } = useCreateUnitMeasureNomenclator();
+  const { mutateAsync: updateUnitMeasureNomenclator, isPending: isUpdatePending } = useUpdateUnitMeasureNomenclator();
 
   const handleFilterSubmit = (filters: any) => {
     setCurrentPage(1);
@@ -41,6 +50,14 @@ const UnitMeasuresTable: React.FC = () => {
   const handleFilterReset = () => {
     setCurrentPage(1);
     setFilters({});
+  };
+
+  const handleCreate = async (values: any) => {
+    await createUnitMeasureNomenclator({ ...values });
+  };
+
+  const handleUpdate = async (id: number, values: UpdateUnitMeasureNomenclator) => {
+    await updateUnitMeasureNomenclator({ id, values: values });
   };
 
   const handleDelete = (code: number) => {
@@ -135,6 +152,20 @@ const UnitMeasuresTable: React.FC = () => {
   return (
     <>
       <section className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
+        <Spin
+          spinning={isCreatePending}
+          indicator={<LoadingOutlined style={{ fontSize: 80 }} spin />}
+          size="large"
+          fullscreen
+          tip={<span className="text-xl font-bold">Creando nuevo nomenclador ...</span>}
+        />
+        <Spin
+          spinning={isUpdatePending}
+          indicator={<LoadingOutlined style={{ fontSize: 80 }} spin />}
+          size="large"
+          fullscreen
+          tip={<span className="text-xl font-bold">Actualizando nomenclador ...</span>}
+        />
         <button className={"toolbar-primary-icon-btn"} onClick={handleNew}>
           <PlusSvg />
           Nuevo
@@ -176,16 +207,17 @@ const UnitMeasuresTable: React.FC = () => {
           }
         }}
         className="shadow-md"
-        rowKey={(record) => record.code}
+        rowKey={(record) => record.id}
       />
-      {/* <CreateMaterialNomenclatorForm open={createNewModal} onCancel={() => setCreateNewModal(false)} /> */}
-      {/* <EditMaterialNomenclatorForm
+      <CreateUnitMeasureNomenclatorForm open={createNewModal} onCancel={() => setCreateNewModal(false)} onCreate={handleCreate} />
+      <UpdateUnitMeasureNomenclatorForm
         open={editModal}
         onCancel={() => {
           setEditModal(false);
         }}
+        onCreate={handleUpdate}
         defaultValues={selectedNomenclator!}
-      /> */}
+      />
       <FilterDrawer open={showFilters} onCancel={() => setShowFilters(false)} onFilter={handleFilterSubmit} onReset={handleFilterReset} />
     </>
   );
