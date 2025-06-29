@@ -3,15 +3,20 @@ import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
+import { UpdateWarehouse } from "@/types/DTOs/warehouse/warehouse";
 import { verifyJWT } from "@/libs/jwt";
 import { warehouse } from "@/db/migrations/schema";
+import getRedisClient from "@/libs/redis";
 import logger from "@/utils/logger";
-import { UpdateWarehouse } from "@/types/DTOs/warehouse/warehouse";
 
 export async function GET(request: NextRequest, { params }: { params: { id: number } }) {
   const id = params.id;
   const accessToken = request.headers.get("accessToken");
+  let redisClient;
+  const CACHE_EXPIRATION_SECONDS = 10;
+
   try {
+    redisClient = await getRedisClient();
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(
         {
@@ -26,6 +31,25 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
     const decoded = jwt.decode(accessToken) as JwtPayload;
     logger.info("Obtener almacen por id", { method: request.method, url: request.url, user: decoded.userName });
 
+    const cacheKey = `warehouse:${id}`;
+
+    // 1. Try to get data from Redis cache
+    const cachedData = await redisClient.get(cacheKey);
+
+    if (cachedData) {
+      logger.info("Serving Warehouse by id from Redis Cache", {
+        cacheKey,
+        user: decoded.userName
+      });
+      return new NextResponse(cachedData, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        status: 200
+      });
+    }
+
     const DBWarehouse = await db.select().from(warehouse).where(eq(warehouse.id, id));
 
     if (DBWarehouse.length === 0) {
@@ -39,8 +63,14 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
         }
       );
     }
-    // await connectDB();
-    // const listOfWarehouses = (await Warehouse.find()).reverse();
+
+    // 3. Store the database result in Redis cache
+    await redisClient.set(cacheKey, JSON.stringify(DBWarehouse), { EX: CACHE_EXPIRATION_SECONDS });
+
+    logger.info("Fetched Warehouse by id from DB and cached in Redis", {
+      cacheKey,
+      user: decoded.userName
+    });
 
     return new NextResponse(
       JSON.stringify({
@@ -56,7 +86,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
     );
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("Error al obtener almacen", {
+      logger.error("Error al obtener almacen por id", {
         error: error.message,
         stack: error.stack,
         route: "/api/warehouse/[id]",
@@ -80,7 +110,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: numb
   const { ...warehouseToUpdate }: UpdateWarehouse = await request.json();
   const accessToken = request.headers.get("accessToken");
 
+  let redisClient;
+
   try {
+    redisClient = await getRedisClient();
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(
         {
@@ -111,6 +144,17 @@ export async function PUT(request: NextRequest, { params }: { params: { id: numb
     }
 
     const updatedWarehouse = await db.update(warehouse).set(warehouseToUpdate).where(eq(warehouse.id, id)).returning();
+
+    // 1. Find all keys that match a pattern
+    const keysToDelete = await redisClient.keys("warehouse:*");
+
+    // 2. Delete the found keys
+    if (keysToDelete.length > 0) {
+      await redisClient.del(keysToDelete);
+      logger.info(`Invalidated ${keysToDelete.length} Redis cache keys for warehouse.`);
+    } else {
+      logger.info("No Redis cache keys found to invalidate for warehouse.");
+    }
 
     return new NextResponse(
       JSON.stringify({
@@ -148,7 +192,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: numb
 export async function DELETE(request: NextRequest, { params }: { params: { id: number } }) {
   const id = params.id;
   const accessToken = request.headers.get("accessToken");
+  let redisClient;
+
   try {
+    redisClient = await getRedisClient();
     if (!accessToken || !verifyJWT(accessToken)) {
       return NextResponse.json(
         {
@@ -178,6 +225,17 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: n
     }
 
     const deletedWarehouse = await db.delete(warehouse).where(eq(warehouse.id, id));
+
+    // 1. Find all keys that match a pattern
+    const keysToDelete = await redisClient.keys("warehouse:*");
+
+    // 2. Delete the found keys
+    if (keysToDelete.length > 0) {
+      await redisClient.del(keysToDelete);
+      logger.info(`Invalidated ${keysToDelete.length} Redis cache keys for warehouse.`);
+    } else {
+      logger.info("No Redis cache keys found to invalidate for warehouse.");
+    }
 
     return new NextResponse(
       JSON.stringify({

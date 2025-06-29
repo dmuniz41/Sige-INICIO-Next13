@@ -5,6 +5,8 @@ import Link from "next/link";
 import Sider from "antd/es/layout/Sider";
 import type { MenuProps } from "antd";
 
+import { WarehouseSvg } from "../global/WarehouseSvg";
+
 // Type for menu items
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -37,6 +39,9 @@ const HumanResourcesIcon = (
 const items: MenuItem[] = [
   getItem("Usuarios", "security", SecurityIcon, [getItem(<Link href="/dashboard/users">Usuarios</Link>, "users")]),
   getItem("Recursos Humanos", "employees", HumanResourcesIcon, [getItem(<Link href="/dashboard/employees">Trabajador</Link>, "employees")]),
+  getItem("Almacenes", "warehouse", <WarehouseSvg width={20} height={20} />, [
+    getItem(<Link href="/dashboard/warehouse">Almacen</Link>, "warehouses")
+  ]),
   getItem("Nomencladores", "nomenclators", HumanResourcesIcon, [
     getItem(<Link href="/dashboard/nomenclators/unitMeasures">Unidades de medida</Link>, "unitMeasures"),
     getItem(<Link href="/dashboard/nomenclators/workArea">Area de trabajo</Link>, "workArea"),
@@ -45,7 +50,6 @@ const items: MenuItem[] = [
     getItem(<Link href="/dashboard/nomenclators/priceUnitMeasure">Precio/Unidad de medida</Link>, "priceUnitMeasure"),
     getItem(<Link href="/dashboard/nomenclators/materials">Materiales</Link>, "materials")
   ])
-  // Add other menu items following the same pattern...
 ];
 
 export const Sidebar = () => {
@@ -53,7 +57,7 @@ export const Sidebar = () => {
 
   const selectedKey =
     items
-      .flatMap((item) => item?.children || [item])
+      .flatMap((item: any) => item?.children || [item])
       .find((child) => child?.key === pathname.split("/").pop())
       ?.key?.toString() || "";
 

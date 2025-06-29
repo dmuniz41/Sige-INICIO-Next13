@@ -33,17 +33,13 @@ const WarehousesTable: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [selectedWarehouse, setSelectedWarehouse] = useState<Warehouse>();
   const { data: sessionData } = useSession();
+  console.log("🚀 ~ sessionData:", sessionData);
   const router = useRouter();
   const searchInput = useRef<InputRef>(null);
   const queryClient = useQueryClient();
 
   const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
-
-  const canList = sessionData?.user.role.includes("Listar Almacén");
-  const canCreate = sessionData?.user.role.includes("Crear Almacén");
-  const canEdit = sessionData?.user.role.includes("Editar Almacén");
-  const canDelete = sessionData?.user.role.includes("Eliminar Almacén");
 
   const { useGetWarehouses, useDeleteWarehouse } = useWarehouse();
   const deleteMutation = useDeleteWarehouse();
@@ -201,42 +197,28 @@ const WarehousesTable: React.FC = () => {
       width: "5%",
       render: (_, { ...record }) => (
         <div className="flex gap-1 justify-center">
-          {!canList ? (
-            <></>
-          ) : (
-            <div className="flex gap-1">
-              <Tooltip placement="top" title={"Ver Almacén"} arrow={{ pointAtCenter: true }}>
-                <button disabled={!canList} onClick={() => handleView(record)} className="table-see-offer-action-btn">
-                  <SeeSvg width={20} height={20} />
-                </button>
-              </Tooltip>
-              <Tooltip placement="top" title={"Ver Movimientos de Inventario"} arrow={{ pointAtCenter: true }}>
-                <button disabled={!canList} onClick={() => handleViewStockMovements(record)} className="table-stock-movement-action-btn">
-                  <ListSvg width={20} height={20} />
-                </button>
-              </Tooltip>
-            </div>
-          )}
-          {canEdit ? (
-            <>
-              <Tooltip placement="top" title={"Editar Almacén"} arrow={{ pointAtCenter: true }}>
-                <button onClick={() => handleEdit(record)} className="table-see-action-btn">
-                  <EditSvg width={20} height={20} />
-                </button>
-              </Tooltip>
-            </>
-          ) : (
-            <></>
-          )}
-          {canDelete ? (
-            <Tooltip placement="top" title={"Eliminar Almacén"} arrow={{ pointAtCenter: true }}>
-              <button onClick={() => handleDelete(record)} className="table-delete-action-btn">
-                <DeleteSvg width={20} height={20} />
+          <div className="flex gap-1">
+            <Tooltip placement="top" title={"Ver Almacén"} arrow={{ pointAtCenter: true }}>
+              <button onClick={() => handleView(record)} className="table-see-offer-action-btn">
+                <SeeSvg width={20} height={20} />
               </button>
             </Tooltip>
-          ) : (
-            <></>
-          )}
+            <Tooltip placement="top" title={"Ver Movimientos de Inventario"} arrow={{ pointAtCenter: true }}>
+              <button onClick={() => handleViewStockMovements(record)} className="table-stock-movement-action-btn">
+                <ListSvg width={20} height={20} />
+              </button>
+            </Tooltip>
+          </div>
+          <Tooltip placement="top" title={"Editar Almacén"} arrow={{ pointAtCenter: true }}>
+            <button onClick={() => handleEdit(record)} className="table-see-action-btn">
+              <EditSvg width={20} height={20} />
+            </button>
+          </Tooltip>
+          <Tooltip placement="top" title={"Eliminar Almacén"} arrow={{ pointAtCenter: true }}>
+            <button onClick={() => handleDelete(record)} className="table-delete-action-btn">
+              <DeleteSvg width={20} height={20} />
+            </button>
+          </Tooltip>
         </div>
       )
     }
@@ -261,20 +243,14 @@ const WarehousesTable: React.FC = () => {
     <>
       <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <div className="flex gap-2">
-          <button disabled={!canCreate} onClick={handleNew} className="toolbar-primary-icon-btn">
+          <button onClick={handleNew} className="toolbar-primary-icon-btn">
             <PlusSvg />
             Nuevo
           </button>
         </div>
         <div className="flex">
           <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canList}
-              className={`${
-                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={handleRefresh}
-            >
+            <button className="flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full" onClick={handleRefresh}>
               <RefreshSvg />
             </button>
           </Tooltip>
