@@ -162,6 +162,7 @@ export async function GET(request: NextRequest) {
       .orderBy(desc(materialNomenclators.created_at))
       .limit(limit)
       .offset(offset);
+      
     const totalCount = await db.$count(materialNomenclators);
 
     return new NextResponse(

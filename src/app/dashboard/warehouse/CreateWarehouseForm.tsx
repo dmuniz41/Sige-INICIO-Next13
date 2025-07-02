@@ -1,22 +1,43 @@
 "use client";
-import { useWarehouse } from "@/hooks/warehouse/useWarehouse";
-import { Form, Input, Modal } from "antd";
+import { Divider, Form, Input, Modal } from "antd";
+import Title from "antd/es/typography/Title";
+
+import { CancelActionModalBtn } from "@/app/global/CancelActionModalBtn";
+import { SaveActionModalBtn } from "@/app/global/SaveActionModalBtn";
 
 interface CollectionCreateFormProps {
   open: boolean;
   onCancel: () => void;
+  onCreate: (values: any) => void;
 }
-export const CreateWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel }) => {
+
+export const CreateWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel, onCreate }) => {
   const [form] = Form.useForm();
 
-  const { useCreateWarehouse } = useWarehouse();
-  const mutation = useCreateWarehouse();
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      onCreate({ ...values });
+      onCancel();
+      form.resetFields();
+    } catch (error: any) {
+      console.log("Validate Failed:", error);
+    }
+  };
+
+  const handleCancel = () => {
+    console.log("Cancelar");
+    form.resetFields();
+    onCancel();
+  };
+
   return (
     <Modal
       className="flex flex-col"
       title={
-        <div className="flex w-full justify-center">
-          <span className="font-semibold text-lg">Nuevo Almacén</span>
+        <div className="grid w-full">
+          <Title level={4}>Nuevo Almacén</Title>
+          <Divider></Divider>
         </div>
       }
       style={{ textAlign: "left" }}
@@ -24,37 +45,15 @@ export const CreateWarehouseForm: React.FC<CollectionCreateFormProps> = ({ open,
       open={open}
       destroyOnClose
       onCancel={onCancel}
-      okType="default"
-      okText="Crear"
-      cancelText="Cancelar"
       footer={[
         <div key="footer" className="flex gap-2 w-full justify-end">
-          <button key="2" className="modal-btn-danger" onClick={onCancel}>
-            Cancelar
-          </button>
-          <button
-            key="1"
-            className="modal-btn-primary "
-            onClick={() => {
-              form
-                .validateFields()
-                .then((values) => {
-                  mutation.mutate(values);
-                  form.resetFields();
-                  onCancel();
-                })
-                .catch((error) => {
-                  console.log("Validate Failed:", error);
-                });
-            }}
-          >
-            Crear
-          </button>
+          <CancelActionModalBtn onClick={handleCancel} />
+          <SaveActionModalBtn onClick={handleSubmit} />
         </div>
       ]}
     >
-      <Form form={form} layout="vertical" name="createUserForm" size="middle">
-        <Form.Item name="name" label="Nombre de Almacén" rules={[{ required: true, message: "Campo requerido" }]}>
+      <Form form={form} layout="vertical" name="createWarehouseForm" size="large">
+        <Form.Item name="name" label={<Title level={5}>Nombre</Title>} rules={[{ required: true, message: "Campo requerido" }]}>
           <Input />
         </Form.Item>
       </Form>
