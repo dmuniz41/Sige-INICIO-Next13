@@ -1,162 +1,92 @@
 "use client";
-import { Button, Input, Space, Spin, Table, Tooltip } from "antd";
-import { createStyles } from "antd-style";
-import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Spin, Table, Tooltip } from "antd";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import dynamic from "next/dynamic";
-import Highlighter from "react-highlight-words";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import Swal from "sweetalert2";
-import type { ColumnType, ColumnsType, TableProps } from "antd/es/table";
-import type { FilterConfirmProps } from "antd/es/table/interface";
-import type { InputRef } from "antd";
+import type { ColumnsType } from "antd/es/table";
 
 import { ArrowsTransferSvg } from "@/app/global/ArrowsTransferSvg";
 import { EditSvg } from "../../../global/EditSvg";
 import { formatDate } from "@/helpers/formatDate";
-import { IMaterialNomenclator } from "@/models/nomenclators/materials";
-import { INomenclator } from "@/models/nomenclator";
 import { Material } from "@/db/migrations/schema";
 import { PlusSvg } from "../../../global/PlusSvg";
 import { RefreshSvg } from "../../../global/RefreshSvg";
-import { RootState, useAppSelector } from "@/store/store";
-import { useAppDispatch } from "@/hooks/hooks";
 import { useMaterials } from "@/hooks/materials/useMaterials";
 import { useQueryClient } from "@tanstack/react-query";
 
-const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
-  ssr: false,
-  loading: () => <p>Loading...</p>
-});
+// const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
+//   ssr: false,
+//   loading: () => <p>Loading...</p>
+// });
 
 type DataIndex = keyof Material;
 
-const useStyles = createStyles(({ css }) => ({
-  customTable: css`
-    .ant-table {
-      .ant-table-container {
-        .ant-table-body,
-        .ant-table-content {
-          scrollbar-width: thin;
-          scrollbar-color: #eaeaea transparent;
-          scrollbar-gutter: stable;
-          overflow-x: auto;
-
-          &::-webkit-scrollbar {
-            height: 8px;
-            width: 8px;
-          }
-
-          &::-webkit-scrollbar-track {
-            background: transparent;
-          }
-
-          &::-webkit-scrollbar-thumb {
-            background-color: #eaeaea;
-            border-radius: 4px;
-          }
-        }
-
-        td.ant-table-cell {
-          white-space: normal;
-          word-break: break-word;
-          max-width: 300px; /* Maximum width for cells */
-          overflow-wrap: break-word;
-        }
-      }
-    }
-  `
-}));
-
 const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
-  const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
-  const [filteredData, setFilteredData] = useState<Material[]>();
-  const searchInput = useRef<InputRef>(null);
   const { data: sessionData } = useSession();
   const router = useRouter();
-  const { styles } = useStyles();
 
   const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
 
-  const canList = sessionData?.user.role.includes("Listar Materiales");
-  const canCreate = sessionData?.user.role.includes("Nuevo Material");
-  const canEdit = sessionData?.user.role.includes("Editar Material");
-  const canDelete = sessionData?.user.role.includes("Eliminar Material");
-  const canAdd = sessionData?.user.role.includes("Añadir Material");
-  const canMinus = sessionData?.user.role.includes("Sustraer Material");
-
-  // PARA REPORTE EN PDF
-  const fields = [
-    {
-      title: "Categoría",
-      custom: true,
-      component: (item: any) => `${item.category}`,
-      width: "20"
-    },
-    {
-      title: "Nombre",
-      custom: true,
-      component: (item: any) => `${item.materialName}`,
-      width: "15"
-    },
-    {
-      title: "Descripción",
-      custom: true,
-      component: (item: any) => `${item.description}`,
-      width: "15"
-    },
-    {
-      title: "Coste Unitario",
-      custom: true,
-      component: (item: any) =>
-        `$ ${item.costPerUnit.toLocaleString("DE", {
-          maximumFractionDigits: 2,
-          minimumFractionDigits: 2
-        })}`,
-      width: "15"
-    },
-    {
-      title: "Existencias",
-      custom: true,
-      component: (item: any) =>
-        `${item.unitsTotal.toLocaleString("DE", {
-          maximumFractionDigits: 2,
-          minimumFractionDigits: 2
-        })}`,
-      width: "10"
-    },
-    {
-      title: "U/M",
-      custom: true,
-      component: (item: any) => `${item.unitMeasure}`,
-      width: "15"
-    },
-    {
-      title: "Proveedor",
-      custom: true,
-      component: (item: any) => `${item.provider}`,
-      width: "10"
-    }
-  ];
+  // // PARA REPORTE EN PDF
+  // const fields = [
+  //   {
+  //     title: "Categoría",
+  //     custom: true,
+  //     component: (item: any) => `${item.category}`,
+  //     width: "20"
+  //   },
+  //   {
+  //     title: "Nombre",
+  //     custom: true,
+  //     component: (item: any) => `${item.materialName}`,
+  //     width: "15"
+  //   },
+  //   {
+  //     title: "Descripción",
+  //     custom: true,
+  //     component: (item: any) => `${item.description}`,
+  //     width: "15"
+  //   },
+  //   {
+  //     title: "Coste Unitario",
+  //     custom: true,
+  //     component: (item: any) =>
+  //       `$ ${item.costPerUnit.toLocaleString("DE", {
+  //         maximumFractionDigits: 2,
+  //         minimumFractionDigits: 2
+  //       })}`,
+  //     width: "15"
+  //   },
+  //   {
+  //     title: "Existencias",
+  //     custom: true,
+  //     component: (item: any) =>
+  //       `${item.unitsTotal.toLocaleString("DE", {
+  //         maximumFractionDigits: 2,
+  //         minimumFractionDigits: 2
+  //       })}`,
+  //     width: "10"
+  //   },
+  //   {
+  //     title: "U/M",
+  //     custom: true,
+  //     component: (item: any) => `${item.unitMeasure}`,
+  //     width: "15"
+  //   },
+  //   {
+  //     title: "Proveedor",
+  //     custom: true,
+  //     component: (item: any) => `${item.provider}`,
+  //     width: "10"
+  //   }
+  // ];
 
   const { useGetMaterials } = useMaterials();
   const { data: materialsQuery, isLoading, isError } = useGetMaterials(page, limit, Number(warehouseId));
-
-  const { nomenclators, materialsNomenclators }: { nomenclators: INomenclator[]; materialsNomenclators: IMaterialNomenclator[] } =
-    useAppSelector((state: RootState) => state?.nomenclator);
-
-  const categoryFilter: any[] = [];
-  materialsNomenclators.map((materialNomenclator) => {
-    categoryFilter.push({
-      text: `${materialNomenclator.name}`,
-      value: `${materialNomenclator.name}`
-    });
-  });
 
   // let PDFReportData: DataType[] = [];
 
@@ -182,95 +112,9 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
     await queryClient.invalidateQueries({ queryKey: ["GetMaterials"] });
   };
 
-  const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
-
-  const handleReset = (clearFilters: () => void) => {
-    clearFilters();
-    setSearchText("");
-  };
-
   const handleStockMovement = (materialId: number) => {
     router.push(`/dashboard/warehouse/${warehouseId}/stockMovement/movementForm?materialId=${materialId}`);
   };
-
-  const onChange: TableProps<Material>["onChange"] = (pagination, filters, sorter, extra) => {
-    setFilteredData(extra.currentDataSource);
-  };
-
-  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<Material> => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
-      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-          style={{ marginBottom: 8, display: "block" }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90 }}
-            className="bg-blue-500 items-center flex"
-          >
-            Search
-          </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({ closeDropdown: false });
-              setSearchText((selectedKeys as string[])[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            Filter
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
-    onFilter: (value, record) =>
-      record[dataIndex]!.toString()
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ""}
-        />
-      ) : (
-        text
-      )
-  });
 
   const columns: ColumnsType<Material> = [
     {
@@ -295,7 +139,6 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
       title: <span className="font-bold">Nombre</span>,
       dataIndex: "name",
       width: "200px",
-      ...getColumnSearchProps("name"),
       ellipsis: {
         showTitle: false
       },
@@ -406,7 +249,6 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
       dataIndex: "provider",
       width: "150px",
       sorter: (a: any, b: any) => a.provider.localeCompare(b.provider),
-      ...getColumnSearchProps("provider"),
       ellipsis: {
         showTitle: false
       },
@@ -420,7 +262,6 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
       title: <span className="font-bold">Fecha de Creación</span>,
       dataIndex: "enterDate",
       width: "150px",
-      ...getColumnSearchProps("enterDate"),
       render: (value: string) => (
         <Tooltip placement="topLeft" title={formatDate(value)}>
           {formatDate(value)}
@@ -431,7 +272,6 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
       title: <span className="font-bold">Fecha de Edición</span>,
       dataIndex: "modifyDate",
       width: "150px",
-      ...getColumnSearchProps("modifyDate"),
       render: (value: string) => (
         <Tooltip placement="topLeft" title={formatDate(value)}>
           {formatDate(value)}
@@ -444,22 +284,18 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
       fixed: "right",
       render: (_, record) => (
         <div className="flex gap-1 justify-center">
-          {canEdit ? (
-            <>
-              <Tooltip placement="top" title={"Movimiento de Inventario"} arrow={{ pointAtCenter: true }}>
-                <button onClick={() => handleStockMovement(record?.id)} className="table-stock-movement-action-btn">
-                  <ArrowsTransferSvg width={25} height={25} />
-                </button>
-              </Tooltip>
-              <Tooltip placement="top" title={"Editar Material"} arrow={{ pointAtCenter: true }}>
-                <button onClick={() => handleEditMaterial(record.id)} className="table-see-action-btn">
-                  <EditSvg width={25} height={25} />
-                </button>
-              </Tooltip>
-            </>
-          ) : (
-            <></>
-          )}
+          <>
+            <Tooltip placement="top" title={"Movimiento de Inventario"} arrow={{ pointAtCenter: true }}>
+              <button onClick={() => handleStockMovement(record?.id)} className="table-stock-movement-action-btn">
+                <ArrowsTransferSvg width={25} height={25} />
+              </button>
+            </Tooltip>
+            <Tooltip placement="top" title={"Editar Material"} arrow={{ pointAtCenter: true }}>
+              <button onClick={() => handleEditMaterial(record.id)} className="table-see-action-btn">
+                <EditSvg width={25} height={25} />
+              </button>
+            </Tooltip>
+          </>
         </div>
       )
     }
@@ -484,20 +320,14 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
     <>
       <div className="flex h-16 w-full bg-white-100 rounded-md shadow-md mb-4 items-center pl-4 gap-4">
         <div className="flex gap-2">
-          <button disabled={!canAdd} onClick={handleAdd} className="toolbar-primary-icon-btn ">
+          <button onClick={handleAdd} className="toolbar-primary-icon-btn ">
             <PlusSvg />
             Nuevo
           </button>
         </div>
         <div className="flex">
           <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
-            <button
-              disabled={!canList}
-              className={`${
-                canList ? "cursor-pointer hover:bg-white-600 ease-in-out duration-300" : "opacity-20 pt-2 pl-2"
-              } flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full`}
-              onClick={handleRefresh}
-            >
+            <button className="flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full" onClick={handleRefresh}>
               <RefreshSvg />
             </button>
           </Tooltip>
@@ -539,7 +369,6 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
           setPage(pagination?.current ?? 1);
           setLimit(pagination?.pageSize ?? 10);
         }}
-        className={`shadow-md ${styles.customTable}`}
         sortDirections={["ascend"]}
         rowKey={(record) => record.id}
         scroll={{ x: 1500 }}
