@@ -1,35 +1,43 @@
-"use client";
-import { LoadingOutlined } from "@ant-design/icons";
-import { Spin, Table, Tooltip } from "antd";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import React, { useState } from "react";
-import Swal from "sweetalert2";
-import type { ColumnsType } from "antd/es/table";
+'use client'
+import { LoadingOutlined } from '@ant-design/icons'
+import { Spin, Table, Tooltip } from 'antd'
+import { useRouter } from 'next/navigation'
+import React, { useState } from 'react'
+import Swal from 'sweetalert2'
+import type { ColumnsType } from 'antd/es/table'
 
-import { ArrowsTransferSvg } from "@/app/global/ArrowsTransferSvg";
-import { EditSvg } from "../../../global/EditSvg";
-import { formatDate } from "@/helpers/formatDate";
-import { Material } from "@/db/migrations/schema";
-import { PlusSvg } from "../../../global/PlusSvg";
-import { RefreshSvg } from "../../../global/RefreshSvg";
-import { useMaterials } from "@/hooks/materials/useMaterials";
-import { useQueryClient } from "@tanstack/react-query";
+import { ArrowsTransferSvg } from '@/app/global/ArrowsTransferSvg'
+import { EditSvg } from '../../../global/EditSvg'
+import { formatDate } from '@/helpers/formatDate'
+import { Material } from '@/db/migrations/schema'
+import { PlusSvg } from '../../../global/PlusSvg'
+import { RefreshSvg } from '../../../global/RefreshSvg'
+import { useMaterials } from '@/hooks/materials/useMaterials'
+import { useQueryClient } from '@tanstack/react-query'
+import { MaterialFilters } from '@/types/DTOs/materials/materials'
 
 // const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
 //   ssr: false,
 //   loading: () => <p>Loading...</p>
 // });
 
-type DataIndex = keyof Material;
+type DataIndex = keyof Material
 
 const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
-  const queryClient = useQueryClient();
-  const { data: sessionData } = useSession();
-  const router = useRouter();
+  const queryClient = useQueryClient()
+  const router = useRouter()
 
-  const [limit, setLimit] = useState<number>(10);
-  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10)
+  const [page, setPage] = useState<number>(1)
+  const [filters, setFilters] = useState<MaterialFilters>({
+    name: '',
+    category: '',
+    description: '',
+    enterDateStart: '',
+    enterDateEnd: '',
+    unitMeasure: '',
+    provider: '',
+  })
 
   // // PARA REPORTE EN PDF
   // const fields = [
@@ -85,8 +93,12 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
   //   }
   // ];
 
-  const { useGetMaterials } = useMaterials();
-  const { data: materialsQuery, isLoading, isError } = useGetMaterials(page, limit, Number(warehouseId));
+  const { useGetMaterials } = useMaterials()
+  const {
+    data: materialsQuery,
+    isLoading,
+    isError,
+  } = useGetMaterials(page, limit,Number(warehouseId), filters)
 
   // let PDFReportData: DataType[] = [];
 
@@ -101,219 +113,231 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
   // };
 
   const handleAdd = (): void => {
-    router.push(`/dashboard/warehouse/${warehouseId}/newMaterial`);
-  };
+    router.push(`/dashboard/warehouse/${warehouseId}/newMaterial`)
+  }
 
   const handleEditMaterial = (materialId: number): void => {
-    router.push(`/dashboard/warehouse/${warehouseId}/editMaterial?materialId=${materialId}`);
-  };
+    router.push(`/dashboard/warehouse/${warehouseId}/editMaterial?materialId=${materialId}`)
+  }
 
   const handleRefresh = async () => {
-    await queryClient.invalidateQueries({ queryKey: ["GetMaterials"] });
-  };
+    await queryClient.invalidateQueries({ queryKey: ['GetMaterials'] })
+  }
 
   const handleStockMovement = (materialId: number) => {
-    router.push(`/dashboard/warehouse/${warehouseId}/stockMovement/movementForm?materialId=${materialId}`);
-  };
+    router.push(
+      `/dashboard/warehouse/${warehouseId}/stockMovement/movementForm?materialId=${materialId}`,
+    )
+  }
 
   const columns: ColumnsType<Material> = [
     {
       title: <span className="font-bold">Código</span>,
-      dataIndex: "id",
-      width: "80px"
+      dataIndex: 'id',
+      width: '80px',
     },
     {
       title: <span className="font-bold">Categoría</span>,
-      dataIndex: "category",
-      width: "150px",
+      dataIndex: 'category',
+      width: '150px',
       ellipsis: {
-        showTitle: false
+        showTitle: false,
       },
       render: (category) => (
         <Tooltip placement="topLeft" title={category}>
           {category}
         </Tooltip>
-      )
+      ),
     },
     {
       title: <span className="font-bold">Nombre</span>,
-      dataIndex: "name",
-      width: "200px",
+      dataIndex: 'name',
+      width: '200px',
       ellipsis: {
-        showTitle: false
+        showTitle: false,
       },
       render: (name) => (
         <Tooltip placement="topLeft" title={name}>
           {name}
         </Tooltip>
-      )
+      ),
     },
     {
       title: <span className="font-bold">Descripción</span>,
-      dataIndex: "description",
-      width: "250px",
+      dataIndex: 'description',
+      width: '250px',
       ellipsis: {
-        showTitle: false
+        showTitle: false,
       },
       render: (description) => (
         <Tooltip placement="topLeft" title={description}>
           {description}
         </Tooltip>
-      )
+      ),
     },
     {
       title: <span className="font-bold">Coste Unitario</span>,
-      dataIndex: "costPerUnit",
-      width: "120px",
+      dataIndex: 'costPerUnit',
+      width: '120px',
       sorter: {
-        compare: (a, b) => a.costPerUnit - b.costPerUnit
+        compare: (a, b) => a.costPerUnit - b.costPerUnit,
       },
       render: (value) => (
         <Tooltip
           placement="topLeft"
-          title={`$ ${value.toLocaleString("DE", {
+          title={`$ ${value.toLocaleString('DE', {
             maximumFractionDigits: 2,
-            minimumFractionDigits: 2
+            minimumFractionDigits: 2,
           })}`}
         >
           <span>
-            ${" "}
-            {value.toLocaleString("DE", {
+            ${' '}
+            {value.toLocaleString('DE', {
               maximumFractionDigits: 2,
-              minimumFractionDigits: 2
+              minimumFractionDigits: 2,
             })}
           </span>
         </Tooltip>
-      )
+      ),
     },
     {
       title: <span className="font-bold">Existencias</span>,
-      dataIndex: "stock",
-      width: "100px",
+      dataIndex: 'stock',
+      width: '100px',
       render: (value) => (
         <Tooltip
           placement="topLeft"
-          title={value.toLocaleString("DE", {
+          title={value.toLocaleString('DE', {
             maximumFractionDigits: 2,
-            minimumFractionDigits: 2
+            minimumFractionDigits: 2,
           })}
         >
           <span>
-            {value.toLocaleString("DE", {
+            {value.toLocaleString('DE', {
               maximumFractionDigits: 2,
-              minimumFractionDigits: 2
+              minimumFractionDigits: 2,
             })}
           </span>
         </Tooltip>
       ),
       sorter: {
-        compare: (a, b) => a.stock - b.stock
-      }
+        compare: (a, b) => a.stock - b.stock,
+      },
     },
     {
       title: <span className="font-bold">Unidad de Medida</span>,
-      dataIndex: "unitMeasure",
-      width: "120px",
+      dataIndex: 'unitMeasure',
+      width: '120px',
       ellipsis: {
-        showTitle: false
+        showTitle: false,
       },
       render: (unitMeasure) => (
         <Tooltip placement="topLeft" title={unitMeasure}>
           {unitMeasure}
         </Tooltip>
-      )
+      ),
     },
     {
       title: <span className="font-bold">Existencias Mínimas</span>,
-      dataIndex: "minimumExistence",
-      width: "150px",
+      dataIndex: 'minimumExistence',
+      width: '150px',
       render: (value) => (
         <Tooltip
           placement="topLeft"
-          title={value.toLocaleString("DE", {
+          title={value.toLocaleString('DE', {
             maximumFractionDigits: 2,
-            minimumFractionDigits: 2
+            minimumFractionDigits: 2,
           })}
         >
           <span>
-            {value.toLocaleString("DE", {
+            {value.toLocaleString('DE', {
               maximumFractionDigits: 2,
-              minimumFractionDigits: 2
+              minimumFractionDigits: 2,
             })}
           </span>
         </Tooltip>
-      )
+      ),
     },
     {
       title: <span className="font-bold">Proveedor</span>,
-      dataIndex: "provider",
-      width: "150px",
+      dataIndex: 'provider',
+      width: '150px',
       sorter: (a: any, b: any) => a.provider.localeCompare(b.provider),
       ellipsis: {
-        showTitle: false
+        showTitle: false,
       },
       render: (provider) => (
         <Tooltip placement="topLeft" title={provider}>
           {provider}
         </Tooltip>
-      )
+      ),
     },
     {
       title: <span className="font-bold">Fecha de Creación</span>,
-      dataIndex: "enterDate",
-      width: "150px",
+      dataIndex: 'enterDate',
+      width: '150px',
       render: (value: string) => (
         <Tooltip placement="topLeft" title={formatDate(value)}>
           {formatDate(value)}
         </Tooltip>
-      )
+      ),
     },
     {
       title: <span className="font-bold">Fecha de Edición</span>,
-      dataIndex: "modifyDate",
-      width: "150px",
+      dataIndex: 'modifyDate',
+      width: '150px',
       render: (value: string) => (
         <Tooltip placement="topLeft" title={formatDate(value)}>
           {formatDate(value)}
         </Tooltip>
-      )
+      ),
     },
     {
       title: <span className="font-bold">Acciones</span>,
-      width: "100px",
-      fixed: "right",
+      width: '100px',
+      fixed: 'right',
       render: (_, record) => (
         <div className="flex gap-1 justify-center">
           <>
-            <Tooltip placement="top" title={"Movimiento de Inventario"} arrow={{ pointAtCenter: true }}>
-              <button onClick={() => handleStockMovement(record?.id)} className="table-stock-movement-action-btn">
+            <Tooltip
+              placement="top"
+              title={'Movimiento de Inventario'}
+              arrow={{ pointAtCenter: true }}
+            >
+              <button
+                onClick={() => handleStockMovement(record?.id)}
+                className="table-stock-movement-action-btn"
+              >
                 <ArrowsTransferSvg width={25} height={25} />
               </button>
             </Tooltip>
-            <Tooltip placement="top" title={"Editar Material"} arrow={{ pointAtCenter: true }}>
-              <button onClick={() => handleEditMaterial(record.id)} className="table-see-action-btn">
+            <Tooltip placement="top" title={'Editar Material'} arrow={{ pointAtCenter: true }}>
+              <button
+                onClick={() => handleEditMaterial(record.id)}
+                className="table-see-action-btn"
+              >
                 <EditSvg width={25} height={25} />
               </button>
             </Tooltip>
           </>
         </div>
-      )
-    }
-  ];
+      ),
+    },
+  ]
 
   if (isLoading)
     return (
       <section className="flex h-full w-full items-center justify-center">
-        <Spin indicator={<LoadingOutlined style={{ fontSize: 70, color: "#ff8533" }} spin />} />
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 70, color: '#ff8533' }} spin />} />
       </section>
-    );
+    )
 
   if (isError) {
     Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "Ocurrió un error al obtener los materiales"
-    });
+      icon: 'error',
+      title: 'Error',
+      text: 'Ocurrió un error al obtener los materiales',
+    })
   }
 
   return (
@@ -326,8 +350,11 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
           </button>
         </div>
         <div className="flex">
-          <Tooltip placement="top" title={"Refrescar"} arrow={{ pointAtCenter: true }}>
-            <button className="flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full" onClick={handleRefresh}>
+          <Tooltip placement="top" title={'Refrescar'} arrow={{ pointAtCenter: true }}>
+            <button
+              className="flex justify-center items-center w-[2.5rem] h-[2.5rem] text-xl rounded-full"
+              onClick={handleRefresh}
+            >
               <RefreshSvg />
             </button>
           </Tooltip>
@@ -364,17 +391,17 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
         size="small"
         columns={columns}
         dataSource={materialsQuery?.data}
-        pagination={{ position: ["bottomCenter"], defaultPageSize: 10 }}
+        pagination={{ position: ['bottomCenter'], defaultPageSize: 10 }}
         onChange={(pagination) => {
-          setPage(pagination?.current ?? 1);
-          setLimit(pagination?.pageSize ?? 10);
+          setPage(pagination?.current ?? 1)
+          setLimit(pagination?.pageSize ?? 10)
         }}
-        sortDirections={["ascend"]}
+        sortDirections={['ascend']}
         rowKey={(record) => record.id}
         scroll={{ x: 1500 }}
       />
     </>
-  );
-};
+  )
+}
 
-export default MaterialsTable;
+export default MaterialsTable
