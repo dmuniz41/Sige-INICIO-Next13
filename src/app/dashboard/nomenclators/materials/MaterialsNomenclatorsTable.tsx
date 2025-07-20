@@ -68,9 +68,9 @@ const MaterialsNomenclatorsTable: React.FC = () => {
     setCreateNewModal(true);
   };
 
-  const handleShowFilters = () => {
-    setShowFilters(!showFilters);
-  };
+    const handleShowFilters = () => {
+      setShowFilters(!showFilters);
+    };
 
   const handleEdit = (record: MaterialNomenclators) => {
     setSelectedNomenclator(record);

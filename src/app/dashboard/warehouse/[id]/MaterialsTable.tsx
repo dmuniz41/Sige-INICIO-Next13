@@ -15,6 +15,8 @@ import { RefreshSvg } from '../../../global/RefreshSvg'
 import { useMaterials } from '@/hooks/materials/useMaterials'
 import { useQueryClient } from '@tanstack/react-query'
 import { MaterialFilters } from '@/types/DTOs/materials/materials'
+import FilterDrawer from './FiltersDrawer'
+import { FilterSvg } from '@/app/global/FilterSvg'
 
 // const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink), {
 //   ssr: false,
@@ -25,7 +27,8 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
   const queryClient = useQueryClient()
   const router = useRouter()
 
-  const [limit, setLimit] = useState<number>(10)
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [limit, setLimit] = useState<number>(15)
   const [page, setPage] = useState<number>(1)
   const [filters, setFilters] = useState<MaterialFilters>({
     name: '',
@@ -36,6 +39,7 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
     unitMeasure: '',
     provider: '',
   })
+  const [showFilters, setShowFilters] = useState(false)
 
   // // PARA REPORTE EN PDF
   // const fields = [
@@ -96,7 +100,7 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
     data: materialsQuery,
     isLoading,
     isError,
-  } = useGetMaterials(page, limit,Number(warehouseId), filters)
+  } = useGetMaterials(page, limit, Number(warehouseId), filters)
 
   // let PDFReportData: DataType[] = [];
 
@@ -109,6 +113,20 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
   // const handleNew = (): void => {
   //   setCreateNewModal(true);
   // };
+
+  const handleFilterSubmit = (filters: any) => {
+    setCurrentPage(1)
+    setFilters(filters)
+  }
+
+  const handleFilterReset = () => {
+    setCurrentPage(1)
+    setFilters({})
+  }
+
+  const handleShowFilters = () => {
+    setShowFilters(!showFilters)
+  }
 
   const handleAdd = (): void => {
     router.push(`/dashboard/warehouse/${warehouseId}/newMaterial`)
@@ -356,6 +374,14 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
               <RefreshSvg />
             </button>
           </Tooltip>
+          <Tooltip placement="top" title={'Filtrar'} arrow={{ pointAtCenter: true }}>
+            <button
+              className="cursor-pointer hover:bg-white-600 ease-in-out duration-300 p-2 flex justify-center items-center text-xl rounded-full"
+              onClick={handleShowFilters}
+            >
+              <FilterSvg width={25} height={25} />
+            </button>
+          </Tooltip>
           {/* <Tooltip placement="top" title={"Generar Reporte"} arrow={{ pointAtCenter: true }}>
             <PDFDownloadLink
               document={<PDFReport fields={fields} data={PDFReportData} title={"REPORTE DE ALMACÉN "} />}
@@ -397,6 +423,13 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
         sortDirections={['ascend']}
         rowKey={(record) => record.id}
         scroll={{ x: 1500 }}
+      />
+
+      <FilterDrawer
+        open={showFilters}
+        onCancel={() => setShowFilters(false)}
+        onFilter={handleFilterSubmit}
+        onReset={handleFilterReset}
       />
     </>
   )
