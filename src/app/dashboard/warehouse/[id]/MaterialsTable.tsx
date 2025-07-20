@@ -29,7 +29,6 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
 
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(15)
-  const [page, setPage] = useState<number>(1)
   const [filters, setFilters] = useState<MaterialFilters>({
     name: '',
     category: '',
@@ -97,10 +96,10 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
 
   const { useGetMaterials } = useMaterials()
   const {
-    data: materialsQuery,
+    data: materials,
     isLoading,
     isError,
-  } = useGetMaterials(page, limit, Number(warehouseId), filters)
+  } = useGetMaterials(currentPage, limit, Number(warehouseId), filters)
 
   // let PDFReportData: DataType[] = [];
 
@@ -114,7 +113,7 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
   //   setCreateNewModal(true);
   // };
 
-  const handleFilterSubmit = (filters: any) => {
+  const handleFilterSubmit = (filters: MaterialFilters) => {
     setCurrentPage(1)
     setFilters(filters)
   }
@@ -414,11 +413,21 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
       <Table
         size="small"
         columns={columns}
-        dataSource={materialsQuery?.data}
-        pagination={{ position: ['bottomCenter'], defaultPageSize: 10 }}
-        onChange={(pagination) => {
-          setPage(pagination?.current ?? 1)
-          setLimit(pagination?.pageSize ?? 10)
+        dataSource={materials?.data}
+        loading={{
+          spinning: isLoading,
+          indicator: (
+            <Spin indicator={<LoadingOutlined style={{ fontSize: 50, color: '#ff8533' }} spin />} />
+          ),
+        }}
+        pagination={{
+          position: ['bottomCenter'],
+          defaultPageSize: 15,
+          total: materials?.total,
+          onChange: (page, limit) => {
+            setCurrentPage(page)
+            setLimit(limit)
+          },
         }}
         sortDirections={['ascend']}
         rowKey={(record) => record.id}

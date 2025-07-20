@@ -86,24 +86,24 @@ export async function GET(request: NextRequest, { params }: { params: { warehous
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-    const cacheKey = `materials:${warehouseId}:${page}:${limit}`
+    // const cacheKey = `materials:${warehouseId}:${page}:${limit}`
 
     // 1. Try to get data from Redis cache
-    const cachedData = await redisClient.get(cacheKey)
+    // const cachedData = await redisClient.get(cacheKey)
 
-    if (cachedData) {
-      logger.info('Serving Materials from Redis Cache', {
-        cacheKey,
-        user: decoded.userName,
-      })
-      return new NextResponse(cachedData, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
-        },
-        status: 200,
-      })
-    }
+    // if (cachedData) {
+    //   logger.info('Serving Materials from Redis Cache', {
+    //     cacheKey,
+    //     user: decoded.userName,
+    //   })
+    //   return new NextResponse(cachedData, {
+    //     headers: {
+    //       'Access-Control-Allow-Origin': '*',
+    //       'Content-Type': 'application/json',
+    //     },
+    //     status: 200,
+    //   })
+    // }
 
     const responseData = await db
       .select()
@@ -115,15 +115,15 @@ export async function GET(request: NextRequest, { params }: { params: { warehous
 
     const totalCount = await db.$count(materials)
 
-    // 3. Store the database result in Redis cache
-    await redisClient.set(cacheKey, JSON.stringify(responseData), {
-      EX: CACHE_EXPIRATION_SECONDS,
-    })
+    // // 3. Store the database result in Redis cache
+    // await redisClient.set(cacheKey, JSON.stringify(responseData), {
+    //   EX: CACHE_EXPIRATION_SECONDS,
+    // })
 
-    logger.info('Fetched Materials from DB and cached in Redis', {
-      cacheKey,
-      user: decoded.userName,
-    })
+    // logger.info('Fetched Materials from DB and cached in Redis', {
+    //   cacheKey,
+    //   user: decoded.userName,
+    // })
 
     return new NextResponse(
       JSON.stringify({

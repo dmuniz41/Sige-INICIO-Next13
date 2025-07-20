@@ -1,4 +1,3 @@
-import { Toast } from '@/helpers/customAlert'
 import {
   InsertMaterial,
   MaterialFilters,
@@ -10,7 +9,6 @@ import { notification } from 'antd'
 
 import axios, { AxiosError } from 'axios'
 import { useSession } from 'next-auth/react'
-import Swal from 'sweetalert2'
 
 const getMaterialsAPI = async (
   page: number = 1,
@@ -92,7 +90,7 @@ const useGetMaterials = (
   const accessToken = session?.user?.accessToken
 
   const query = useQuery({
-    queryKey: ['GetMaterials', page, limit, warehouseId],
+    queryKey: ['GetMaterials', page, limit, warehouseId, filters],
     queryFn: () => getMaterialsAPI(page, limit, filters, warehouseId, accessToken),
     enabled: status === 'authenticated',
     placeholderData: (previousData) => previousData,
@@ -100,6 +98,7 @@ const useGetMaterials = (
 
   return query
 }
+
 const useGetMaterialById = (materialId: number, warehouseId: number) => {
   const { data: session, status } = useSession()
   const accessToken = session?.user?.accessToken
