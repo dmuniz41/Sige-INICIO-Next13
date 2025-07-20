@@ -21,8 +21,6 @@ import { MaterialFilters } from '@/types/DTOs/materials/materials'
 //   loading: () => <p>Loading...</p>
 // });
 
-type DataIndex = keyof Material
-
 const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
   const queryClient = useQueryClient()
   const router = useRouter()

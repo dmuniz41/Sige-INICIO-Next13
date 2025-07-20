@@ -1,4 +1,4 @@
-import { eq, and, desc, sum } from 'drizzle-orm'
+import { eq, and, desc, sum, ilike } from 'drizzle-orm'
 import { JwtPayload } from 'jsonwebtoken'
 import { NextRequest, NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken'
@@ -39,6 +39,11 @@ export async function GET(request: NextRequest, { params }: { params: { warehous
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '1', 10) // Default to page 1
     const limit = parseInt(searchParams.get('limit') || '10', 10) // Default to 10 items per page
+    const name = searchParams.get('name') ?? ''
+    const category = searchParams.get('category') ?? null
+    const description = searchParams.get('description') ?? null
+    const unitMeasure = searchParams.get('unitMeasure') ?? null
+    const provider = searchParams.get('provider') ?? null
 
     if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
       return NextResponse.json(
@@ -53,6 +58,34 @@ export async function GET(request: NextRequest, { params }: { params: { warehous
     }
 
     const offset = (page - 1) * limit
+
+    // Build dynamic where conditions
+    const conditions = []
+
+    conditions.push(eq(materials.warehouseId, warehouseId))
+
+    if (name) {
+      conditions.push(ilike(materials.name, `%${name}%`))
+    }
+
+    if (category) {
+      conditions.push(ilike(materials.category, `%${category}%`))
+    }
+    
+    if (description) {
+      conditions.push(ilike(materials.description, `%${description}%`))
+    }
+
+    if (unitMeasure) {
+      conditions.push(ilike(materials.unitMeasure, `%${unitMeasure}%`))
+    }
+
+    if (provider) {
+      conditions.push(ilike(materials.provider, `%${provider}%`))
+    }
+
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
     const cacheKey = `materials:${warehouseId}:${page}:${limit}`
 
     // 1. Try to get data from Redis cache
@@ -75,7 +108,7 @@ export async function GET(request: NextRequest, { params }: { params: { warehous
     const responseData = await db
       .select()
       .from(materials)
-      .where(eq(materials.warehouseId, warehouseId))
+      .where(whereClause)
       .orderBy(desc(materials.id))
       .limit(limit)
       .offset(offset)
