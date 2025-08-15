@@ -152,28 +152,18 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
       width: '80px',
     },
     {
-      title: <span className="font-bold">Categoría</span>,
+      title: <span className="font-bold">Categoría / Nombre</span>,
       dataIndex: 'category',
       width: '150px',
       ellipsis: {
         showTitle: false,
       },
-      render: (category) => (
-        <Tooltip placement="topLeft" title={category}>
-          {category}
-        </Tooltip>
-      ),
-    },
-    {
-      title: <span className="font-bold">Nombre</span>,
-      dataIndex: 'name',
-      width: '200px',
-      ellipsis: {
-        showTitle: false,
-      },
-      render: (name) => (
-        <Tooltip placement="topLeft" title={name}>
-          {name}
+      render: (_, record) => (
+        <Tooltip placement="topLeft" title={record.category}>
+          <div className="grid gap-1">
+            <div>{record.category}</div>
+            <div>{record.name}</div>
+          </div>
         </Tooltip>
       ),
     },
@@ -216,96 +206,23 @@ const MaterialsTable = ({ warehouseId }: { warehouseId: string }) => {
       ),
     },
     {
-      title: <span className="font-bold">Existencias</span>,
+      title: <span className="font-bold">Existencias / UM</span>,
       dataIndex: 'stock',
       width: '100px',
-      render: (value) => (
-        <Tooltip
-          placement="topLeft"
-          title={value.toLocaleString('DE', {
-            maximumFractionDigits: 2,
-            minimumFractionDigits: 2,
-          })}
-        >
+      render: (value, record) => (
+        <div className="grid">
           <span>
             {value.toLocaleString('DE', {
               maximumFractionDigits: 2,
               minimumFractionDigits: 2,
             })}
           </span>
-        </Tooltip>
+          {record.unitMeasure}
+        </div>
       ),
       sorter: {
         compare: (a, b) => a.stock - b.stock,
       },
-    },
-    {
-      title: <span className="font-bold">Unidad de Medida</span>,
-      dataIndex: 'unitMeasure',
-      width: '120px',
-      ellipsis: {
-        showTitle: false,
-      },
-      render: (unitMeasure) => (
-        <Tooltip placement="topLeft" title={unitMeasure}>
-          {unitMeasure}
-        </Tooltip>
-      ),
-    },
-    {
-      title: <span className="font-bold">Existencias Mínimas</span>,
-      dataIndex: 'minimumExistence',
-      width: '150px',
-      render: (value) => (
-        <Tooltip
-          placement="topLeft"
-          title={value.toLocaleString('DE', {
-            maximumFractionDigits: 2,
-            minimumFractionDigits: 2,
-          })}
-        >
-          <span>
-            {value.toLocaleString('DE', {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2,
-            })}
-          </span>
-        </Tooltip>
-      ),
-    },
-    {
-      title: <span className="font-bold">Proveedor</span>,
-      dataIndex: 'provider',
-      width: '150px',
-      sorter: (a: any, b: any) => a.provider.localeCompare(b.provider),
-      ellipsis: {
-        showTitle: false,
-      },
-      render: (provider) => (
-        <Tooltip placement="topLeft" title={provider}>
-          {provider}
-        </Tooltip>
-      ),
-    },
-    {
-      title: <span className="font-bold">Fecha de Creación</span>,
-      dataIndex: 'enterDate',
-      width: '150px',
-      render: (value: string) => (
-        <Tooltip placement="topLeft" title={formatDate(value)}>
-          {formatDate(value)}
-        </Tooltip>
-      ),
-    },
-    {
-      title: <span className="font-bold">Fecha de Edición</span>,
-      dataIndex: 'modifyDate',
-      width: '150px',
-      render: (value: string) => (
-        <Tooltip placement="topLeft" title={formatDate(value)}>
-          {formatDate(value)}
-        </Tooltip>
-      ),
     },
     {
       title: <span className="font-bold">Acciones</span>,
