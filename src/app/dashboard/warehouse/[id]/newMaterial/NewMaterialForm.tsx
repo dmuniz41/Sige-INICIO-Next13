@@ -5,33 +5,39 @@ import Swal from 'sweetalert2'
 import Title from 'antd/es/typography/Title'
 
 import { InsertMaterial } from '@/types/DTOs/materials/materials'
-import { Nomenclator } from '../../../../../db/migrations/schema'
+import { MaterialNomenclators, Nomenclator } from '../../../../../db/migrations/schema'
 import { useMaterialNomenclator } from '@/hooks/nomenclators/material/useMaterialNomenclator'
 import { useMaterials } from '@/hooks/materials/useMaterials'
 import { useNomenclator } from '@/hooks/nomenclators/useNomenclator'
+import { useState } from 'react'
 
 export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
   const [form] = Form.useForm()
   const router = useRouter()
+  const [selectedMaterialNomenclator, setSelectedMaterialNomenclator] = useState<MaterialNomenclators>()
+  console.log("🚀 ~ NewMaterialForm ~ materialName:", selectedMaterialNomenclator)
+
+
   const { useGetNomenclatorsByCategoryCode } = useNomenclator()
   const { useGetMaterialNomenclator } = useMaterialNomenclator()
   const { data: materialCategory } = useGetMaterialNomenclator(1, 100)
+  console.log("🚀 ~ NewMaterialForm ~ materialCategory:", materialCategory)
   const { data: unitMeasures } = useGetNomenclatorsByCategoryCode('N_UM')
   const { data: providers } = useGetNomenclatorsByCategoryCode('N_PRO')
 
   const { useAddMaterial } = useMaterials()
   const { mutateAsync: addMaterialMutation, isPending: isAddMaterialPending } = useAddMaterial()
 
-  const category: SelectProps['options'] = materialCategory?.data?.map(
-    (materialCategoryNomenclator: MaterialCategoryNomenclators) => {
+  const categoryOptions: SelectProps['options'] = materialCategory?.data?.map(
+    (materialCategoryNomenclator: MaterialNomenclators) => {
       return {
-        label: `${materialCategoryNomenclator.value}`,
-        value: `${materialCategoryNomenclator.value}`,
+        label: `${materialCategoryNomenclator.material_category} ${materialCategoryNomenclator.material_name}`,
+        value: `${materialCategoryNomenclator.code}`,
       }
     },
   )
 
-  const unitMeasure: SelectProps['options'] = unitMeasures?.data?.map(
+  const unitMeasureOptions: SelectProps['options'] = unitMeasures?.data?.map(
     (unitMeasure: Nomenclator) => {
       return {
         label: `${unitMeasure.value}`,
@@ -55,8 +61,8 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
           warehouseId: Number(warehouseId),
           category: values.category,
           costPerUnit: values.costPerUnit,
-          description: values.description,
-          name: values.name,
+          description: selectedMaterialNomenclator?.material_category ?? "description",
+          name: selectedMaterialNomenclator?.material_name ?? "name",
           minimumExistence: values.minimumExistence,
           provider: values.provider,
           unitMeasure: values.unitMeasure,
@@ -106,19 +112,27 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
           </Row>
         </Col>
       </Row>
+
       {/* FORMULARIO */}
       <Form form={form} layout="vertical" name="newMaterialForm" size="large">
         <Row className="mx-4">
-          <Col span={12} className='p-4'>
+          <Col span={12} className="p-4">
             <Form.Item
               name="category"
-              label={<Title level={4}>Categoría</Title>}
+              label={<Title level={4}>Nombre de material</Title>}
               rules={[{ required: true, message: 'Campo requerido' }]}
             >
               <Select
                 allowClear
+                onChange={(value, option) => {
+                  setSelectedMaterialNomenclator(
+                    materialCategory?.data?.find(
+                      (e: MaterialNomenclators) => e.code == value,
+                    ),
+                  )
+                }}
                 style={{ width: '100%' }}
-                options={category}
+                options={categoryOptions}
                 showSearch
                 optionFilterProp="children"
                 filterOption={(input: any, option: any) =>
@@ -131,17 +145,9 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
                 }
               />
             </Form.Item>
-            <Form.Item
-              name="name"
-              label={<Title level={4}>Nombre del material</Title>}
-              rules={[{ required: true, message: 'Campo requerido' }]}
-            >
-              <Input />
-            </Form.Item>
             <Form.Item name="description" label={<Title level={4}>Descripción</Title>}>
               <Input />
             </Form.Item>
-
             <Form.Item
               name="provider"
               label={<Title level={4}>Proveedor</Title>}
@@ -163,8 +169,6 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
                 }
               />
             </Form.Item>
-          </Col>
-          <Col span={12} className='p-4'>
             <Form.Item
               name="costPerUnit"
               label={<Title level={4}>Costo por unidad de medida</Title>}
@@ -180,7 +184,7 @@ export const NewMaterialForm = ({ warehouseId }: { warehouseId: string }) => {
               <Select
                 allowClear
                 style={{ width: '100%' }}
-                options={unitMeasure}
+                options={unitMeasureOptions}
                 showSearch
                 optionFilterProp="children"
                 filterOption={(input: any, option: any) =>

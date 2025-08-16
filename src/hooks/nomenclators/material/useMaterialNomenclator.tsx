@@ -79,7 +79,7 @@ const useGetMaterialNomenclator = (
   const accessToken = (session?.user as any)?.accessToken
   const query = useQuery({
     queryKey: ['GetMaterialNomenclators', page, limit, filters],
-    queryFn: () => getMaterialNomenclatorsAPI(page, limit, accessToken,filters),
+    queryFn: () => getMaterialNomenclatorsAPI(page, limit, accessToken, filters),
     enabled: status === 'authenticated',
   })
 
