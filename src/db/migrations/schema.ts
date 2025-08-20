@@ -392,6 +392,7 @@ export const materialStockMovementsView = pgView("material_stock_movements", {
 
 export type ClientNomenclator = typeof clientNomenclators.$inferSelect;
 export type MaterialNomenclators = typeof materialNomenclators.$inferSelect;
+export type ProviderNomenclators = typeof providerNomenclators.$inferSelect;
 export type Nomenclator = typeof nomenclators.$inferSelect;
 export type RepresentativeNomenclator = typeof representativeNomenclators.$inferSelect;
 export type UnitmeasureNomenclator = typeof unitMeasureNomenclators.$inferSelect;
