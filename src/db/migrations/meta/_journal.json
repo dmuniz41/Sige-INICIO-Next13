@@ -183,6 +183,13 @@
       "when": 1750730338608,
       "tag": "0034_luxuriant_malcolm_colcord",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1755655241120,
+      "tag": "0035_real_stellaris",
+      "breakpoints": true
     }
   ]
 }

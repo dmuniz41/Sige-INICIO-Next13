@@ -22,6 +22,15 @@ export const materialNomenclators = pgTable("material_nomenclators", {
   isDecrease: boolean().notNull() // Indica si el los materiales de esa categoria son gastables o no
 });
 
+export const providerNomenclators = pgTable("provider_nomenclators", {
+  id: serial().primaryKey().notNull(),
+  name: varchar({ length: 100 }).notNull(),
+  contact: varchar({ length: 20 }).notNull(), // Numero de telefono para contactar con el proveedor
+  created_at: timestamp().notNull(),
+  updated_at: timestamp().defaultNow().notNull(),
+  deleted_at: timestamp(), 
+});
+
 export const unitMeasureNomenclators = pgTable("unit_measure_nomenclators", {
   id: serial().primaryKey().notNull(),
   name: varchar({ length: 100 }).notNull(), // (Ej: m2, cm, m, litros, etc..)
