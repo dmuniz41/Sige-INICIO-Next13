@@ -1,4 +1,4 @@
-import { and, eq, desc, ilike, ne, isNull, isNotNull } from "drizzle-orm";
+import { and, eq, ne, isNull } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
