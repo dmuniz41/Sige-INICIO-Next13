@@ -5,5 +5,10 @@ export type CreateProviderNomenclator = {
 
 export type UpdateProviderNomenclator = {
   name: string
-  contact: string
+  contact?: string
+}
+
+export type ProviderNomenclatorsFilters = {
+  name?: string,
+  contact?: string
 }

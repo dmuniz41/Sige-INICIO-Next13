@@ -20,7 +20,6 @@ const getUnitMeasureNomenclatorsAPI = async (
   return response.data;
 };
 
-
 const createUnitMeasureNomenclatorAPI = async (values: InsertUnitMeasureNomenclator, accessToken: string) => {
   const response = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/nomenclators/unitMeasure`,
