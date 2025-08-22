@@ -222,7 +222,7 @@ const useDeleteProviderNomenclator = () => {
  * Facilita la importación y uso de todas las funcionalidades en un solo lugar.
  * @returns {object} Un objeto que contiene los hooks para obtener, crear, actualizar y eliminar nomencladores de proveedor.
  */
-export const useUnitMeasureNomenclator = () => {
+export const useProvider = () => {
   return {
     useGetProviderNomenclators,
     useCreateProviderNomenclator,

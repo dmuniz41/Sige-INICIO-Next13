@@ -22,6 +22,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {children}
           </div>
         </Layout.Content>
+        <Layout.Footer style={{  textAlign: "center",borderTop: '1px solid #e8e8e8' }}>Grupo INICIO {new Date().getFullYear()}</Layout.Footer>
       </Layout>
     </Layout>
   );
